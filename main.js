@@ -33,8 +33,8 @@ const MAP_TILES_X = SUPER_W * SUPER_TILE;
 const TILE = canvas.width / MAP_TILES_X;
 
 /* radii use TILE (world units) */
-const DESPAWN_RADIUS = SUPER_TILE * TILE * 8;
-const RESPAWN_RADIUS = SUPER_TILE * TILE * 7.5;
+const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
+const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
 
 let collectedCount = 0;
 
@@ -93,6 +93,19 @@ function patternCenter(sx, sy) {
     x: (sx * SUPER_TILE + SUPER_TILE / 2) * TILE,
     y: (sy * SUPER_TILE + SUPER_TILE / 2) * TILE,
   };
+}
+
+function pickPatternsBySize(patterns) {
+  return [...patterns].sort((a, b) => {
+    const areaA = a.length * a[0].length;
+    const areaB = b.length * b[0].length;
+
+    // very gentle rarity curve
+    const wA = 1 / Math.pow(areaA, 0.25);
+    const wB = 1 / Math.pow(areaB, 0.25);
+
+    return Math.random() * wB - Math.random() * wA;
+  });
 }
 
 /* ===== PATTERN PLACEMENT ===== */
@@ -162,7 +175,7 @@ for (let sy = 0; sy < SUPER_H; sy++) {
   for (let sx = 0; sx < SUPER_W; sx++) {
     if (superOccupied[sy][sx]) continue;
 
-    const shuffled = [...PATTERNS].sort(() => Math.random() - 0.5);
+    const shuffled = pickPatternsBySize(PATTERNS);
     for (const base of shuffled) {
       const pat = rotateRandom(base);
       if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
