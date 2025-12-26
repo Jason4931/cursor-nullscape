@@ -33,8 +33,8 @@ const MAP_TILES_X = SUPER_W * SUPER_TILE;
 const TILE = canvas.width / MAP_TILES_X;
 
 /* radii use TILE (world units) */
-const DESPAWN_RADIUS = SUPER_TILE * TILE * 4;
-const RESPAWN_RADIUS = SUPER_TILE * TILE * 3;
+const DESPAWN_RADIUS = SUPER_TILE * TILE * 8;
+const RESPAWN_RADIUS = SUPER_TILE * TILE * 7.5;
 
 let collectedCount = 0;
 
