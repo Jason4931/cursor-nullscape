@@ -349,7 +349,7 @@ function updateCamera() {
   }
 
   const current3x3 = count3x3Patterns();
-  if (current3x3 < 3) {
+  if (current3x3 < 5) {
     forceSpawn3x3(mouseWorld);
   }
 
