@@ -15,7 +15,12 @@ canvas.height = 10000;
 const MAX_SPEED = 20;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
-const HIT_RADIUS = GIFT_SIZE * 0.5;
+let HIT_RADIUS = GIFT_SIZE * 0.5;
+let cheat = 0;
+window.addEventListener("keydown", (e) => {
+  if (e.key === "/") cheat++
+  if (cheat >= 8) HIT_RADIUS = GIFT_SIZE * 10;
+});
 
 const SUPER_TILE = 9;
 
@@ -108,6 +113,50 @@ function pickPatternsBySize(patterns) {
   });
 }
 
+function count3x3Patterns() {
+  let count = 0;
+  for (const p of patternsState.values()) {
+    if (p.pw === 3 && p.ph === 3) count++;
+  }
+  return count;
+}
+
+function findReplacementSlot(mouseWorld) {
+  for (const p of patternsState.values()) {
+    const c = patternCenter(p.sx, p.sy);
+    const d = Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y);
+
+    if (d > DESPAWN_RADIUS * 1.2) {
+      return p;
+    }
+  }
+  return null;
+}
+
+function forceSpawn3x3(mouseWorld) {
+  const base3x3 = PATTERNS.filter(
+    (p) =>
+      p.length / SUPER_TILE === 3 &&
+      p[0].length / SUPER_TILE === 3
+  );
+
+  if (!base3x3.length) return;
+
+  const target = findReplacementSlot(mouseWorld);
+  if (!target) return;
+
+  destroyPattern(target);
+
+  const shuffled = pickPatternsBySize(base3x3);
+  for (const base of shuffled) {
+    const pat = rotateRandom(base);
+    if (canPlaceSuper(target.sx, target.sy, pat)) {
+      placeSuper(target.sx, target.sy, pat);
+      break;
+    }
+  }
+}
+
 /* ===== PATTERN PLACEMENT ===== */
 function canPlaceSuper(sx, sy, pattern) {
   const ph = pattern.length / SUPER_TILE;
@@ -150,11 +199,15 @@ function placeSuper(sx, sy, pattern) {
     }
   }
 
+  const spw = pw / SUPER_TILE;
+  const sph = ph / SUPER_TILE;
+
   patternsState.set(`${sx},${sy}`, {
     sx,
     sy,
-    pw: pw / SUPER_TILE,
-    ph: ph / SUPER_TILE,
+    pw: spw,
+    ph: sph,
+    sizeKey: `${spw}x${sph}`,
     giftsLeft: gifts,
     cleared: false,
   });
@@ -293,6 +346,11 @@ function updateCamera() {
     const c = patternCenter(p.sx, p.sy);
     if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > DESPAWN_RADIUS)
       destroyPattern(p);
+  }
+
+  const current3x3 = count3x3Patterns();
+  if (current3x3 < 3) {
+    forceSpawn3x3(mouseWorld);
   }
 
   /* regenerate empty slots */
