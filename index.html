@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursor Nullscape</title>
+    <meta
+      name="description"
+      content="Play roblox nullscape with cursor (PC required)"
+    />
+    <meta
+      name="keywords"
+      content="roblox nullscape, cursor nullscape, nullscape game, pc game, online game"
+    />
+    <link rel="canonical" href="https://cursor-nullscape.vercel.app/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Jason4931, Nullscape Developers" />
+    <meta name="publisher" content="Jason4931" />
+    <style>
+      #viewport {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: contain;
+        background-position: center;
+        background-blend-mode: multiply;
+        background-color: #000;
+      }
+      canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #111;
+        transition: background-color 0.2s ease;
+        animation: bg 60s infinite;
+      }
+      @keyframes bg {
+        0% {
+          background: #111;
+        }
+        14% {
+          background: #100;
+        }
+        29% {
+          background: #010;
+        }
+        43% {
+          background: #001;
+        }
+        57% {
+          background: #110;
+        }
+        71% {
+          background: #101;
+        }
+        86% {
+          background: #011;
+        }
+        100% {
+          background: #111;
+        }
+      }
+      #counter {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        margin: 0;
+        color: #fff;
+        font-family: monospace;
+        font-size: 24px;
+        pointer-events: none;
+        user-select: none;
+        z-index: 10;
+      }
+    </style>
+    <!-- <meta
+      name="google-site-verification"
+      content="uoM9zl7asfE0uft1FwDiV5z1ZEQKeezhEW71Hj0f7iY"
+    /> -->
+  </head>
+  <body>
+    <div id="viewport">
+      <canvas id="screen" width="1920" height="1200"></canvas>
+      <p id="counter">Collected: 0</p>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
