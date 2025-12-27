@@ -48,7 +48,7 @@ let mouseWorld = { x: 0, y: 0 };
 /* radii use TILE (world units) */
 const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
 const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
-let RENDER_RADIUS = RESPAWN_RADIUS;
+let RENDER_RADIUS = RESPAWN_RADIUS * 1.4;
 
 let collectedCount = 0;
 
@@ -271,15 +271,25 @@ for (let sy = minSY; sy <= maxSY; sy++) {
 
 /* ===== DRAW ===== */
 function drawGrid() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Clear only visible area (viewport + margin for movement)
+  const margin = MAX_SPEED * 2;
+  const visibleX = -camX;
+  const visibleY = -camY;
+  const visibleW = viewport.clientWidth + margin;
+  const visibleH = viewport.clientHeight + margin;
+  ctx.clearRect(
+    visibleX - margin,
+    visibleY - margin,
+    visibleW + 2 * margin,
+    visibleH + 2 * margin
+  );
 
-  // floors
+  // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
   ctx.fillStyle = "#333";
   for (const t of floorTiles) {
     const dx = t.x + TILE / 2 - mouseWorld.x;
     const dy = t.y + TILE / 2 - mouseWorld.y;
     if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
-
     ctx.fillRect(t.x, t.y, TILE, TILE);
   }
 
