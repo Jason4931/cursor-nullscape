@@ -27,6 +27,10 @@ window.addEventListener("keydown", (e) => {
 
 const SUPER_TILE = 9;
 
+/* ===== REGEN THROTTLE ===== */
+const REGEN_INTERVAL = 400;
+let lastRegenTime = 0;
+
 /* ===== GRID / SUPERGRID CALC ===== */
 const SUPER_W = Math.max(
   1,
@@ -386,30 +390,35 @@ function updateCamera() {
     forceSpawn3x3(mouseWorld);
   }
 
-  /* regenerate empty slots */
-  const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
-    mouseWorld.x,
-    mouseWorld.y,
-    RESPAWN_RADIUS
-  );
+  /* regenerate empty slots (THROTTLED) */
+  const now = performance.now();
+  if (now - lastRegenTime > REGEN_INTERVAL) {
+    lastRegenTime = now;
 
-  for (let sy = minSY; sy <= maxSY; sy++) {
-    for (let sx = minSX; sx <= maxSX; sx++) {
-      if (superOccupied[sy][sx]) continue;
+    const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
+      mouseWorld.x,
+      mouseWorld.y,
+      RESPAWN_RADIUS
+    );
 
-      const c = patternCenter(sx, sy);
-      if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > RESPAWN_RADIUS)
-        continue;
+    for (let sy = minSY; sy <= maxSY; sy++) {
+      for (let sx = minSX; sx <= maxSX; sx++) {
+        if (superOccupied[sy][sx]) continue;
 
-      const shuffled = pickPatternsBySize(PATTERNS);
-      for (const base of shuffled) {
-        const pat = rotateRandom(base);
-        if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
+        const c = patternCenter(sx, sy);
+        if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > RESPAWN_RADIUS)
           continue;
 
-        if (canPlaceSuper(sx, sy, pat)) {
-          placeSuper(sx, sy, pat);
-          break;
+        const shuffled = pickPatternsBySize(PATTERNS);
+        for (const base of shuffled) {
+          const pat = rotateRandom(base);
+          if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
+            continue;
+
+          if (canPlaceSuper(sx, sy, pat)) {
+            placeSuper(sx, sy, pat);
+            break;
+          }
         }
       }
     }
