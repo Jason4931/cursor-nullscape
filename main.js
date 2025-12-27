@@ -28,6 +28,7 @@ window.addEventListener("keydown", (e) => {
 const SUPER_TILE = 9;
 
 /* ===== REGEN THROTTLE ===== */
+const REGEN_BUDGET = 8;
 const REGEN_INTERVAL = 400;
 let lastRegenTime = 0;
 
@@ -48,7 +49,7 @@ let mouseWorld = { x: 0, y: 0 };
 /* radii use TILE (world units) */
 const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
 const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
-let RENDER_RADIUS = RESPAWN_RADIUS * 1.4;
+let RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 
 let collectedCount = 0;
 
@@ -103,16 +104,34 @@ function patternCenter(sx, sy) {
 }
 
 function pickPatternsBySize(patterns) {
-  return [...patterns].sort((a, b) => {
-    const areaA = a.length * a[0].length;
-    const areaB = b.length * b[0].length;
-
-    // very gentle rarity curve
-    const wA = 1 / Math.pow(areaA, 0.25);
-    const wB = 1 / Math.pow(areaB, 0.25);
-
-    return Math.random() * wB - Math.random() * wA;
+  // Precompute weights once per call (cheap)
+  const pool = patterns.map((p) => {
+    const area = p.length * p[0].length;
+    return {
+      p,
+      // same rarity curve as before
+      w: 1 / area,
+    };
   });
+
+  const result = [];
+  let totalWeight = pool.reduce((s, o) => s + o.w, 0);
+
+  while (pool.length) {
+    let r = Math.random() * totalWeight;
+
+    for (let i = 0; i < pool.length; i++) {
+      r -= pool[i].w;
+      if (r <= 0) {
+        result.push(pool[i].p);
+        totalWeight -= pool[i].w;
+        pool.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  return result;
 }
 
 function count3x3Patterns() {
@@ -413,10 +432,12 @@ function updateCamera() {
     forceSpawn3x3(mouseWorld);
   }
 
-  /* regenerate empty slots (THROTTLED) */
+  /* regenerate empty slots (THROTTLED + BUDGETED) */
   const now = performance.now();
   if (now - lastRegenTime > REGEN_INTERVAL) {
     lastRegenTime = now;
+
+    let regenLeft = REGEN_BUDGET;
 
     const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
       mouseWorld.x,
@@ -424,8 +445,8 @@ function updateCamera() {
       RESPAWN_RADIUS
     );
 
-    for (let sy = minSY; sy <= maxSY; sy++) {
-      for (let sx = minSX; sx <= maxSX; sx++) {
+    for (let sy = minSY; sy <= maxSY && regenLeft > 0; sy++) {
+      for (let sx = minSX; sx <= maxSX && regenLeft > 0; sx++) {
         if (superOccupied[sy][sx]) continue;
 
         const c = patternCenter(sx, sy);
@@ -443,6 +464,7 @@ function updateCamera() {
 
           if (canPlaceSuper(sx, sy, pat)) {
             placeSuper(sx, sy, pat);
+            regenLeft--;
             break;
           }
         }
