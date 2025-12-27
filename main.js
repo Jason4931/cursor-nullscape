@@ -19,7 +19,10 @@ let HIT_RADIUS = GIFT_SIZE * 0.5;
 let cheat = 0;
 window.addEventListener("keydown", (e) => {
   if (e.key === "/") cheat++;
-  if (cheat >= 8) HIT_RADIUS = GIFT_SIZE * 10;
+  if (cheat >= 8) {
+    HIT_RADIUS = GIFT_SIZE * 10;
+    RENDER_RADIUS = RESPAWN_RADIUS * 10;
+  }
 });
 
 const SUPER_TILE = 9;
@@ -41,7 +44,7 @@ let mouseWorld = { x: 0, y: 0 };
 /* radii use TILE (world units) */
 const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
 const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
-const RENDER_RADIUS = RESPAWN_RADIUS;
+let RENDER_RADIUS = RESPAWN_RADIUS;
 
 let collectedCount = 0;
 
@@ -157,6 +160,20 @@ function forceSpawn3x3(mouseWorld) {
   }
 }
 
+function superRangeFromRadius(x, y, r) {
+  const minSX = Math.max(0, Math.floor((x - r) / (SUPER_TILE * TILE)));
+  const maxSX = Math.min(
+    SUPER_W - 1,
+    Math.floor((x + r) / (SUPER_TILE * TILE))
+  );
+  const minSY = Math.max(0, Math.floor((y - r) / (SUPER_TILE * TILE)));
+  const maxSY = Math.min(
+    SUPER_H - 1,
+    Math.floor((y + r) / (SUPER_TILE * TILE))
+  );
+  return { minSX, maxSX, minSY, maxSY };
+}
+
 /* ===== PATTERN PLACEMENT ===== */
 function canPlaceSuper(sx, sy, pattern) {
   const ph = pattern.length / SUPER_TILE;
@@ -224,8 +241,14 @@ function destroyPattern(p) {
 }
 
 /* ===== INITIAL MAP ===== */
-for (let sy = 0; sy < SUPER_H; sy++) {
-  for (let sx = 0; sx < SUPER_W; sx++) {
+const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
+  mouseWorld.x,
+  mouseWorld.y,
+  RESPAWN_RADIUS
+);
+
+for (let sy = minSY; sy <= maxSY; sy++) {
+  for (let sx = minSX; sx <= maxSX; sx++) {
     if (superOccupied[sy][sx]) continue;
 
     const shuffled = pickPatternsBySize(PATTERNS);
@@ -364,15 +387,21 @@ function updateCamera() {
   }
 
   /* regenerate empty slots */
-  for (let sy = 0; sy < SUPER_H; sy++) {
-    for (let sx = 0; sx < SUPER_W; sx++) {
+  const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
+    mouseWorld.x,
+    mouseWorld.y,
+    RESPAWN_RADIUS
+  );
+
+  for (let sy = minSY; sy <= maxSY; sy++) {
+    for (let sx = minSX; sx <= maxSX; sx++) {
       if (superOccupied[sy][sx]) continue;
 
       const c = patternCenter(sx, sy);
       if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > RESPAWN_RADIUS)
         continue;
 
-      const shuffled = [...PATTERNS].sort(() => Math.random() - 0.5);
+      const shuffled = pickPatternsBySize(PATTERNS);
       for (const base of shuffled) {
         const pat = rotateRandom(base);
         if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
