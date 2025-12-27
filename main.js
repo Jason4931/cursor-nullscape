@@ -18,7 +18,7 @@ const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE * 0.5;
 let cheat = 0;
 window.addEventListener("keydown", (e) => {
-  if (e.key === "/") cheat++
+  if (e.key === "/") cheat++;
   if (cheat >= 8) HIT_RADIUS = GIFT_SIZE * 10;
 });
 
@@ -135,9 +135,7 @@ function findReplacementSlot(mouseWorld) {
 
 function forceSpawn3x3(mouseWorld) {
   const base3x3 = PATTERNS.filter(
-    (p) =>
-      p.length / SUPER_TILE === 3 &&
-      p[0].length / SUPER_TILE === 3
+    (p) => p.length / SUPER_TILE === 3 && p[0].length / SUPER_TILE === 3
   );
 
   if (!base3x3.length) return;
@@ -209,7 +207,7 @@ function placeSuper(sx, sy, pattern) {
     ph: sph,
     sizeKey: `${spw}x${sph}`,
     giftsLeft: gifts,
-    cleared: false,
+    cleared: gifts === 0,
   });
 }
 
