@@ -80,13 +80,6 @@ function rotateMatrix90(m) {
   return r;
 }
 
-function rotateRandom(m) {
-  let r = m;
-  const t = Math.floor(Math.random() * 4);
-  for (let i = 0; i < t; i++) r = rotateMatrix90(r);
-  return r;
-}
-
 function getCanvasScale() {
   return {
     x: canvas.width / canvas.offsetWidth,
@@ -155,8 +148,11 @@ function forceSpawn3x3(mouseWorld) {
   destroyPattern(target);
 
   const shuffled = pickPatternsBySize(base3x3);
-  for (const base of shuffled) {
-    const pat = rotateRandom(base);
+  for (let i = 0; i < shuffled.length; i++) {
+    const base = shuffled[i];
+    const baseIndex = PATTERNS.indexOf(base);
+    const pat = pickRotatedPattern(baseIndex);
+
     if (canPlaceSuper(target.sx, target.sy, pat)) {
       placeSuper(target.sx, target.sy, pat);
       break;
@@ -177,6 +173,20 @@ function superRangeFromRadius(x, y, r) {
   );
   return { minSX, maxSX, minSY, maxSY };
 }
+
+function pickRotatedPattern(index) {
+  const variants = ROTATED_PATTERNS[index];
+  return variants[(Math.random() * 4) | 0];
+}
+
+/* ===== PRECOMPUTE ROTATED PATTERNS ===== */
+const ROTATED_PATTERNS = PATTERNS.map((base) => {
+  const r0 = base;
+  const r1 = rotateMatrix90(r0);
+  const r2 = rotateMatrix90(r1);
+  const r3 = rotateMatrix90(r2);
+  return [r0, r1, r2, r3];
+});
 
 /* ===== PATTERN PLACEMENT ===== */
 function canPlaceSuper(sx, sy, pattern) {
@@ -256,8 +266,11 @@ for (let sy = minSY; sy <= maxSY; sy++) {
     if (superOccupied[sy][sx]) continue;
 
     const shuffled = pickPatternsBySize(PATTERNS);
-    for (const base of shuffled) {
-      const pat = rotateRandom(base);
+    for (let i = 0; i < shuffled.length; i++) {
+      const base = shuffled[i];
+      const baseIndex = PATTERNS.indexOf(base);
+      const pat = pickRotatedPattern(baseIndex);
+
       if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
         continue;
 
@@ -420,8 +433,11 @@ function updateCamera() {
           continue;
 
         const shuffled = pickPatternsBySize(PATTERNS);
-        for (const base of shuffled) {
-          const pat = rotateRandom(base);
+        for (let i = 0; i < shuffled.length; i++) {
+          const base = shuffled[i];
+          const baseIndex = PATTERNS.indexOf(base);
+          const pat = pickRotatedPattern(baseIndex);
+
           if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
             continue;
 
