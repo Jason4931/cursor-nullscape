@@ -36,10 +36,12 @@ const SUPER_H = Math.max(
 
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
 const TILE = canvas.width / MAP_TILES_X;
+let mouseWorld = { x: 0, y: 0 };
 
 /* radii use TILE (world units) */
 const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
 const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
+const RENDER_RADIUS = RESPAWN_RADIUS;
 
 let collectedCount = 0;
 
@@ -246,11 +248,21 @@ function drawGrid() {
 
   // floors
   ctx.fillStyle = "#333";
-  for (const t of floorTiles) ctx.fillRect(t.x, t.y, TILE, TILE);
+  for (const t of floorTiles) {
+    const dx = t.x + TILE / 2 - mouseWorld.x;
+    const dy = t.y + TILE / 2 - mouseWorld.y;
+    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+
+    ctx.fillRect(t.x, t.y, TILE, TILE);
+  }
 
   // gifts (center inside the tile)
   if (gift.complete) {
     for (const g of giftPositions) {
+      const dx = g.x + TILE / 2 - mouseWorld.x;
+      const dy = g.y + TILE / 2 - mouseWorld.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+
       ctx.drawImage(
         gift,
         g.x + (TILE - GIFT_SIZE) / 2,
@@ -320,7 +332,7 @@ function updateCamera() {
   camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
 
-  const mouseWorld = screenToWorld(mouseX, mouseY);
+  mouseWorld = screenToWorld(mouseX, mouseY);
 
   /* collect gifts */
   for (let i = giftPositions.length - 1; i >= 0; i--) {
