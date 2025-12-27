@@ -387,11 +387,27 @@ function updateCamera() {
   let vx = 0,
     vy = 0;
 
-  if (mouseX < w * 0.4) vx = MAX_SPEED * (1 - mouseX / (w * 0.4));
-  else if (mouseX > w * 0.6) vx = -MAX_SPEED * ((mouseX - w * 0.6) / (w * 0.4));
+  let edgeFactorX = 0;
+  let edgeFactorY = 0;
 
-  if (mouseY < h * 0.4) vy = MAX_SPEED * (1 - mouseY / (h * 0.4));
-  else if (mouseY > h * 0.6) vy = -MAX_SPEED * ((mouseY - h * 0.6) / (h * 0.4));
+  if (mouseX < w * 0.4) {
+    vx = MAX_SPEED * (1 - mouseX / (w * 0.4));
+    edgeFactorX = 1 - mouseX / (w * 0.4);
+  } else if (mouseX > w * 0.6) {
+    vx = -MAX_SPEED * ((mouseX - w * 0.6) / (w * 0.4));
+    edgeFactorX = (mouseX - w * 0.6) / (w * 0.4);
+  }
+
+  if (mouseY < h * 0.4) {
+    vy = MAX_SPEED * (1 - mouseY / (h * 0.4));
+    edgeFactorY = 1 - mouseY / (h * 0.4);
+  } else if (mouseY > h * 0.6) {
+    vy = -MAX_SPEED * ((mouseY - h * 0.6) / (h * 0.4));
+    edgeFactorY = (mouseY - h * 0.6) / (h * 0.4);
+  }
+
+  const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
+  const dynamicHitRadius = HIT_RADIUS * (1 + edgeFactor * 1);
 
   camX += vx;
   camY += vy;
@@ -409,7 +425,7 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouseWorld.x;
     const dy = g.y + TILE / 2 - mouseWorld.y;
 
-    if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) {
+    if (dx * dx + dy * dy < dynamicHitRadius * dynamicHitRadius) {
       giftPositions.splice(i, 1);
       collectedCount++;
       counterEl.textContent = `Collected: ${collectedCount}`;
