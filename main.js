@@ -7,6 +7,8 @@ const counterEl = document.getElementById("counter");
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
+const goldGift = new Image();
+goldGift.src = "./ASSET/Misc/GoldGifts.png";
 
 /* ===== CONFIG ===== */
 canvas.width = 10000;
@@ -243,7 +245,16 @@ function placeSuper(sx, sy, pattern) {
       }
 
       if (pattern[y][x] === 2 || pattern[y][x] === 3) {
-        giftPositions.push({ x: wx, y: wy, sx, sy });
+        const isGolden = Math.random() < 0.01;
+
+        giftPositions.push({
+          x: wx,
+          y: wy,
+          sx,
+          sy,
+          golden: isGolden,
+        });
+
         gifts++;
       }
     }
@@ -332,8 +343,10 @@ function drawGrid() {
       const dy = g.y + TILE / 2 - mouseWorld.y;
       if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
+      const img = g.golden ? goldGift : gift;
+
       ctx.drawImage(
-        gift,
+        img,
         g.x + (TILE - GIFT_SIZE) / 2,
         g.y + (TILE - GIFT_SIZE) / 2,
         GIFT_SIZE,
@@ -426,8 +439,10 @@ function updateCamera() {
     const dy = g.y + TILE / 2 - mouseWorld.y;
 
     if (dx * dx + dy * dy < dynamicHitRadius * dynamicHitRadius) {
+      const value = g.golden ? 5 : 1;
+
       giftPositions.splice(i, 1);
-      collectedCount++;
+      collectedCount += value;
       counterEl.textContent = `Collected: ${collectedCount}`;
 
       const p = patternsState.get(`${g.sx},${g.sy}`);
