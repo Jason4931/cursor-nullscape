@@ -131,7 +131,7 @@ canvas.height = 10000;
 const MAX_SPEED = 20;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
-let HIT_RADIUS = GIFT_SIZE * 0.5;
+let HIT_RADIUS = GIFT_SIZE;
 let cheat = 0;
 window.addEventListener("keydown", (e) => {
   if (e.key === "/") cheat++;
