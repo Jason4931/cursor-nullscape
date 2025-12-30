@@ -42,8 +42,8 @@
         background: #111;
         transition: background-color 0.2s ease;
         animation: bg 60s infinite;
-        box-shadow: 0 0 240px rgba(255, 0, 0, 0.6),
-          0 0 240px rgba(255, 0, 0, 0.35), inset 0 0 140px rgba(255, 0, 0, 0.4);
+        box-shadow: 0 0 240px rgba(255, 0, 0, 0.5),
+          0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5);
       }
       @keyframes bg {
         0% {
@@ -71,17 +71,173 @@
           background: #111;
         }
       }
+      @keyframes bg-epileptic-lol {
+        0% {
+          background: #888;
+        }
+        14% {
+          background: #800;
+        }
+        29% {
+          background: #080;
+        }
+        43% {
+          background: #008;
+        }
+        57% {
+          background: #880;
+        }
+        71% {
+          background: #808;
+        }
+        86% {
+          background: #088;
+        }
+        100% {
+          background: #888;
+        }
+      }
       #counter {
         position: absolute;
-        left: 12px;
-        bottom: 12px;
+        left: 1vw;
+        bottom: 1vw;
         margin: 0;
         color: #fff;
         font-family: monospace;
-        font-size: 24px;
+        font-size: 1.5vw;
         pointer-events: none;
         user-select: none;
         z-index: 10;
+      }
+      #settings-btn {
+        position: absolute;
+        right: 1vw;
+        bottom: 1vw;
+        font-size: 4vw;
+        cursor: pointer;
+        user-select: none;
+        z-index: 20;
+        transition: opacity 1.5s ease;
+        filter: invert();
+      }
+      #settings-panel {
+        position: absolute;
+        right: 1vw;
+        bottom: 6vw;
+        padding: 1vw 1vw;
+        font-size: 1vw;
+        width: 11vw;
+        background: rgba(0, 0, 0, 0.85);
+        border: 0.1vw solid #333;
+        color: white;
+        font-family: monospace;
+        display: none;
+        z-index: 20;
+      }
+      #graphics-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 6vw;
+        height: 0.4vw;
+        background: #333;
+        border-radius: 1vw;
+        outline: none;
+      }
+      #graphics-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      #graphics-slider::-moz-range-thumb {
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .setting-row {
+        margin-bottom: 0.6vw;
+      }
+      .setting-row label {
+        cursor: pointer;
+        user-select: none;
+      }
+      #settings-panel hr {
+        border: none;
+        border-top: 0.1vw solid #333;
+        margin: 0.8vw 0.1vw;
+      }
+      .range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 6vw;
+        height: 0.4vw;
+        background: #333;
+        border-radius: 1vw;
+        outline: none;
+      }
+      .range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .range::-moz-range-thumb {
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .toggle {
+        position: relative;
+        width: 2.6vw;
+        height: 1.3vw;
+      }
+      .toggle input {
+        display: none;
+      }
+      .slider-toggle {
+        position: absolute;
+        cursor: pointer;
+        background: #333;
+        border-radius: 2vw;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: 0.2s;
+      }
+      .slider-toggle::before {
+        content: "";
+        position: absolute;
+        height: 1vw;
+        width: 1vw;
+        left: 0.15vw;
+        bottom: 0.15vw;
+        background: white;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      .toggle input:checked + .slider-toggle {
+        background: #4caf50;
+      }
+      .toggle input:checked + .slider-toggle::before {
+        transform: translateX(1.3vw);
+      }
+      .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.6vw;
+        gap: 0.5vw;
       }
     </style>
     <!-- <meta
@@ -93,6 +249,68 @@
     <div id="viewport">
       <canvas id="screen" width="1920" height="1200"></canvas>
       <p id="counter">Collected: 0</p>
+      <div id="settings-btn">⚙</div>
+      <div id="settings-panel">
+        <div class="setting-row">
+          <span>Graphics</span>
+          <input
+            id="graphics-slider"
+            class="range"
+            type="range"
+            min="0"
+            max="3"
+            step="1"
+          />
+        </div>
+        <div class="setting-row">
+          <span>Show grids</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-grids" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show floor</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-floor" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show border</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-border" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>SFX Volume</span>
+          <input
+            id="sfx-volume"
+            class="range"
+            type="range"
+            min="0"
+            max="100"
+            step="10"
+            value="50"
+          />
+        </div>
+        <hr />
+        <div class="setting-row">
+          <span>Epileptic mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-epileptic" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Blindness</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-blindness" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+      </div>
     </div>
     <script type="module" src="./main.js"></script>
   </body>

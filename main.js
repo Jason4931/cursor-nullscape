@@ -4,11 +4,117 @@ const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
 const counterEl = document.getElementById("counter");
+const settingsBtn = document.getElementById("settings-btn");
+const settingsPanel = document.getElementById("settings-panel");
+const graphicsSlider = document.getElementById("graphics-slider");
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
 const goldGift = new Image();
 goldGift.src = "./ASSET/Misc/GoldGifts.png";
+
+/* ===== SETTINGS ===== */
+let settingsEnabled = true;
+let showGrids = false; // default: off
+let showFloor = true; // default: on
+let showBorder = true; // default: on
+let sfxVolume = 50; // 0–100, default 50 (snaps by 10)
+let epilepticMode = false; // fun, default off
+let blindnessMode = false; // fun, default off
+graphicsSlider.value = 0;
+settingsBtn.addEventListener("click", () => {
+  if (settingsPanel.style.display === "block") {
+    settingsPanel.style.display = "none";
+  } else {
+    settingsPanel.style.display = "block";
+  }
+});
+graphicsSlider.addEventListener("input", () => {
+  const v = Number(graphicsSlider.value);
+
+  if (v === 0) setGraphicsLow();
+  else if (v === 1) setGraphicsMedium();
+  else if (v === 2) setGraphicsHigh();
+  else setGraphicsUltra();
+});
+toggle("toggle-grids", (v) => {
+  showGrids = v;
+});
+toggle("toggle-floor", (v) => {
+  showFloor = v;
+});
+toggle("toggle-border", (v) => {
+  showBorder = v;
+  canvas.style.boxShadow = showBorder
+    ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
+    : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
+});
+toggle("toggle-epileptic", (v) => {
+  epilepticMode = v;
+  canvas.style.animation = epilepticMode
+    ? "bg-epileptic-lol 1s infinite"
+    : "bg 60s infinite";
+});
+toggle("toggle-blindness", (v) => {
+  blindnessMode = v;
+  RENDER_RADIUS =
+    cheat >= 8
+      ? RESPAWN_RADIUS * 10
+      : blindnessMode
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
+});
+document.getElementById("sfx-volume").oninput = (e) => {
+  sfxVolume = e.target.value / 100;
+  // TODO: add sfx on gift
+};
+function toggle(id, fn) {
+  const el = document.getElementById(id);
+  el.onchange = () => fn(el.checked);
+}
+function setGraphicsLow() {
+  REGEN_BUDGET = 8;
+  REGEN_INTERVAL = 400;
+  DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
+  RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
+  RENDER_RADIUS =
+    cheat >= 8
+      ? RESPAWN_RADIUS * 10
+      : blindnessMode
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
+}
+function setGraphicsMedium() {
+  REGEN_BUDGET = 12;
+  REGEN_INTERVAL = 300;
+  DESPAWN_RADIUS = SUPER_TILE * TILE * 7.5;
+  RESPAWN_RADIUS = SUPER_TILE * TILE * 6;
+  RENDER_RADIUS =
+    cheat >= 8
+      ? RESPAWN_RADIUS * 10
+      : blindnessMode
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
+}
+function setGraphicsHigh() {
+  REGEN_BUDGET = 18;
+  REGEN_INTERVAL = 180;
+  DESPAWN_RADIUS = SUPER_TILE * TILE * 10;
+  RESPAWN_RADIUS = SUPER_TILE * TILE * 8;
+  RENDER_RADIUS =
+    cheat >= 8
+      ? RESPAWN_RADIUS * 10
+      : blindnessMode
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
+}
+function setGraphicsUltra() {
+  REGEN_BUDGET = 28;
+  REGEN_INTERVAL = 100;
+  DESPAWN_RADIUS = SUPER_TILE * TILE * 14;
+  RESPAWN_RADIUS = SUPER_TILE * TILE * 11;
+  RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 10;
+}
 
 /* ===== CONFIG ===== */
 canvas.width = 10000;
@@ -30,8 +136,8 @@ window.addEventListener("keydown", (e) => {
 const SUPER_TILE = 9;
 
 /* ===== REGEN THROTTLE ===== */
-const REGEN_BUDGET = 8;
-const REGEN_INTERVAL = 400;
+let REGEN_BUDGET = 8;
+let REGEN_INTERVAL = 400;
 let lastRegenTime = 0;
 
 /* ===== GRID / SUPERGRID CALC ===== */
@@ -49,8 +155,8 @@ const TILE = canvas.width / MAP_TILES_X;
 let mouseWorld = { x: 0, y: 0 };
 
 /* radii use TILE (world units) */
-const DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
-const RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
+let DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
+let RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
 let RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 
 let collectedCount = 0;
@@ -328,7 +434,7 @@ function drawGrid() {
   );
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
-  ctx.fillStyle = "#333";
+  ctx.fillStyle = showFloor ? "#333" : "#3331";
   for (const t of floorTiles) {
     const dx = t.x + TILE / 2 - mouseWorld.x;
     const dy = t.y + TILE / 2 - mouseWorld.y;
@@ -356,8 +462,8 @@ function drawGrid() {
   }
 
   // optional grid overlay (kept)
-  ctx.strokeStyle = "#fff1";
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = showGrids ? "#fff" : "#fff1";
+  ctx.lineWidth = showGrids ? 3 : 1;
   const stepX = canvas.width / GRID_DIVS;
   const stepY = canvas.height / GRID_DIVS;
   for (let i = 1; i < GRID_DIVS; i++) {
@@ -448,6 +554,12 @@ function updateCamera() {
       const p = patternsState.get(`${g.sx},${g.sy}`);
       if (p && --p.giftsLeft === 0) p.cleared = true;
     }
+  }
+  if (collectedCount >= 100 && settingsEnabled) {
+    settingsBtn.style.opacity = "0";
+    settingsBtn.style.pointerEvents = "none";
+    settingsEnabled = false;
+    settingsPanel.style.display = "none";
   }
 
   /* despawn cleared patterns */
