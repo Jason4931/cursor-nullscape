@@ -21,6 +21,8 @@ let showBorder = true; // default: on
 let sfxVolume = 50; // 0–100, default 50 (snaps by 10)
 let epilepticMode = false; // fun, default off
 let blindnessMode = false; // fun, default off
+let reducedMotion = false; // accessibility
+let drunkCamera = false; // fun
 graphicsSlider.value = 0;
 settingsBtn.addEventListener("click", () => {
   if (settingsPanel.style.display === "block") {
@@ -63,6 +65,12 @@ toggle("toggle-blindness", (v) => {
       : blindnessMode
       ? 200
       : RESPAWN_RADIUS * 1.3;
+});
+toggle("toggle-reduced-motion", (v) => {
+  reducedMotion = v;
+});
+toggle("toggle-drunk-camera", (v) => {
+  drunkCamera = v;
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = e.target.value / 100;
@@ -526,14 +534,21 @@ function updateCamera() {
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
-  const dynamicHitRadius = HIT_RADIUS * (1 + edgeFactor * 1);
+  const dynamicHitRadius =
+    HIT_RADIUS * (1 + edgeFactor * (drunkCamera ? 1.5 : 1));
 
-  camX += vx;
-  camY += vy;
+  const motionScale = reducedMotion ? 0.5 : 1;
+  camX += vx * motionScale;
+  camY += vy * motionScale;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
   camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
+  if (drunkCamera) {
+    const t = performance.now() * 0.002;
+    camX += Math.sin(t * 1.3) * 2;
+    camY += Math.cos(t * 1.7) * 2;
+  }
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
 
   mouseWorld = screenToWorld(mouseX, mouseY);
