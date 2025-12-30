@@ -534,8 +534,13 @@ function updateCamera() {
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
-  const dynamicHitRadius =
-    HIT_RADIUS * (1 + edgeFactor * (drunkCamera ? 1.5 : 1));
+  let edgeMultiplier = 1;
+  if (reducedMotion) {
+    edgeMultiplier = drunkCamera ? 1 : 0.5;
+  } else {
+    edgeMultiplier = drunkCamera ? 1.5 : 1;
+  }
+  const dynamicHitRadius = HIT_RADIUS * (1 + edgeFactor * edgeMultiplier);
 
   const motionScale = reducedMotion ? 0.5 : 1;
   camX += vx * motionScale;
