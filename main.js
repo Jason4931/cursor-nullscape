@@ -1,4 +1,6 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
+import { createEntityHost } from "./entityHost.js";
+import { setup as spawnBell } from "./Enemies/Bell.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -7,6 +9,9 @@ const counterEl = document.getElementById("counter");
 const settingsBtn = document.getElementById("settings-btn");
 const settingsPanel = document.getElementById("settings-panel");
 const graphicsSlider = document.getElementById("graphics-slider");
+
+const entityHost = createEntityHost(canvas, ctx);
+let lastEntitySpawnAt = 0;
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
@@ -571,6 +576,15 @@ function updateCamera() {
       collectedCount += value;
       counterEl.textContent = `Collected: ${collectedCount}`;
 
+      if (
+        Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
+      ) {
+        lastEntitySpawnAt = collectedCount;
+        // spawnExampleEntity(entityHost);
+        /* ===== SPAWN ===== */
+        spawnBell(entityHost);
+      }
+
       const p = patternsState.get(`${g.sx},${g.sy}`);
       if (p && --p.giftsLeft === 0) p.cleared = true;
     }
@@ -637,9 +651,18 @@ function updateCamera() {
 }
 
 /* ===== LOOP ===== */
-function loop() {
+let lastTime = performance.now();
+
+function loop(now) {
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+
   updateCamera();
   drawGrid();
+
+  entityHost.update(dt);
+  entityHost.draw();
+
   requestAnimationFrame(loop);
 }
 
