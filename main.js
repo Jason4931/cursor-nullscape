@@ -20,15 +20,26 @@ goldGift.src = "./ASSET/Misc/GoldGifts.png";
 
 /* ===== SETTINGS ===== */
 let settingsEnabled = true;
-let showGrids = false; // default: off
-let showFloor = true; // default: on
-let showBorder = true; // default: on
-let sfxVolume = 50; // 0–100, default 50 (snaps by 10)
-let epilepticMode = false; // fun, default off
-let blindnessMode = false; // fun, default off
-let reducedMotion = false; // accessibility
-let drunkCamera = false; // fun
-graphicsSlider.value = 0;
+let showBorder = JSON.parse(localStorage.getItem("border")) ?? true;
+let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
+let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
+let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
+let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
+let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
+let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
+let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
+graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
+
+document.getElementById("toggle-grids").checked = showGrids;
+document.getElementById("toggle-floor").checked = showFloor;
+document.getElementById("toggle-border").checked = showBorder;
+document.getElementById("toggle-epileptic").checked = epilepticMode;
+document.getElementById("toggle-blindness").checked = blindnessMode;
+document.getElementById("toggle-reduced-motion").checked = reducedMotion;
+document.getElementById("toggle-drunk-camera").checked = drunkCamera;
+document.getElementById("sfx-volume").value = sfxVolume;
+graphicsSlider.dispatchEvent(new Event("input"));
+
 settingsBtn.addEventListener("click", () => {
   if (settingsPanel.style.display === "block") {
     settingsPanel.style.display = "none";
@@ -38,6 +49,7 @@ settingsBtn.addEventListener("click", () => {
 });
 graphicsSlider.addEventListener("input", () => {
   const v = Number(graphicsSlider.value);
+  localStorage.setItem("graphicsLevel", graphicsSlider.value);
 
   if (v === 0) setGraphicsLow();
   else if (v === 1) setGraphicsMedium();
@@ -79,11 +91,15 @@ toggle("toggle-drunk-camera", (v) => {
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = e.target.value / 100;
+  localStorage.setItem("sfxVolume", sfxVolume);
   // TODO: add sfx on gift
 };
 function toggle(id, fn) {
   const el = document.getElementById(id);
-  el.onchange = () => fn(el.checked);
+  el.onchange = () => {
+    fn(el.checked);
+    localStorage.setItem(id.replace("toggle-", ""), el.checked);
+  };
 }
 function setGraphicsLow() {
   REGEN_BUDGET = 8;
@@ -128,6 +144,41 @@ function setGraphicsUltra() {
   RESPAWN_RADIUS = SUPER_TILE * TILE * 11;
   RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 10;
 }
+
+document.getElementById("reset-settings").onclick = () => {
+  localStorage.removeItem("border");
+  localStorage.removeItem("floor");
+  localStorage.removeItem("grids");
+  localStorage.removeItem("reduced-motion");
+  localStorage.removeItem("epileptic");
+  localStorage.removeItem("blindness");
+  localStorage.removeItem("drunk-camera");
+  localStorage.removeItem("graphicsLevel");
+  localStorage.removeItem("sfxVolume");
+  showBorder = true;
+  showFloor = true;
+  showGrids = false;
+  reducedMotion = false;
+  epilepticMode = false;
+  blindnessMode = false;
+  drunkCamera = false;
+  sfxVolume = 0.5;
+  document.getElementById("toggle-border").checked = true;
+  document.getElementById("toggle-floor").checked = true;
+  document.getElementById("toggle-grids").checked = false;
+  document.getElementById("toggle-reduced-motion").checked = false;
+  document.getElementById("toggle-epileptic").checked = false;
+  document.getElementById("toggle-blindness").checked = false;
+  document.getElementById("toggle-drunk-camera").checked = false;
+  document.getElementById("sfx-volume").value = 50;
+  graphicsSlider.value = 0;
+  graphicsSlider.dispatchEvent(new Event("input"));
+  canvas.style.animation = "bg 60s infinite";
+  canvas.style.boxShadow =
+    "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
+
+  RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
+};
 
 /* ===== CONFIG ===== */
 canvas.width = 10000;
@@ -191,6 +242,17 @@ let floorTiles = [];
 
 /* ===== PATTERN STATE ===== */
 const patternsState = new Map();
+canvas.style.animation = epilepticMode
+  ? "bg-epileptic-lol 1s infinite"
+  : "bg 60s infinite";
+canvas.style.boxShadow = showBorder
+  ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
+  : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
+RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
+if (graphicsSlider.value === "0") setGraphicsLow();
+else if (graphicsSlider.value === "1") setGraphicsMedium();
+else if (graphicsSlider.value === "2") setGraphicsHigh();
+else setGraphicsUltra();
 
 /* ===== HELPERS ===== */
 function rotateMatrix90(m) {

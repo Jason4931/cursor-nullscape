@@ -239,6 +239,24 @@
         margin-bottom: 0.6vw;
         gap: 0.5vw;
       }
+      #reset-settings {
+        background: #111;
+        color: #fff;
+        border: 0.1vw solid #444;
+        padding: 0.6vw 0;
+        font-family: monospace;
+        font-size: 0.9vw;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.1s ease, border-color 0.2s;
+      }
+      #reset-settings:hover {
+        background: #200;
+        border-color: #800;
+      }
+      #reset-settings:active {
+        transform: scale(0.97);
+        background: #400;
+      }
     </style>
     <!-- <meta
       name="google-site-verification"
@@ -323,6 +341,15 @@
             <input type="checkbox" id="toggle-drunk-camera" />
             <span class="slider-toggle"></span>
           </label>
+        </div>
+        <hr />
+        <div class="setting-row" style="margin: 0">
+          <button
+            id="reset-settings"
+            style="width: 100%; font-family: monospace"
+          >
+            Reset
+          </button>
         </div>
       </div>
     </div>
