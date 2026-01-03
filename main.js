@@ -203,6 +203,9 @@ const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
 let cheat = 0;
+const SUPER_TILE = 9;
+
+/* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
   if (e.key === "/") cheat++;
   if (cheat >= 8) {
@@ -210,8 +213,23 @@ window.addEventListener("keydown", (e) => {
     RENDER_RADIUS = RESPAWN_RADIUS * 10;
   }
 });
+let reducedMotionHoldActive = false;
+let reducedMotionBeforeHold = reducedMotion;
+window.addEventListener("keydown", (e) => {
+  if (reducedMotionHoldActive) return;
+  if (e.key !== "Shift" && e.key !== "Control") return;
 
-const SUPER_TILE = 9;
+  reducedMotionHoldActive = true;
+  reducedMotionBeforeHold = reducedMotion;
+  reducedMotion = !reducedMotionBeforeHold;
+});
+window.addEventListener("keyup", (e) => {
+  if (!reducedMotionHoldActive) return;
+  if (e.key !== "Shift" && e.key !== "Control") return;
+
+  reducedMotion = reducedMotionBeforeHold;
+  reducedMotionHoldActive = false;
+});
 
 /* ===== REGEN THROTTLE ===== */
 let REGEN_BUDGET = 8;
