@@ -1,4 +1,4 @@
-import { mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse, attachMouseListener } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";

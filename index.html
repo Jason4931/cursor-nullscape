@@ -34,6 +34,7 @@
         background-position: center;
         background-blend-mode: multiply;
         background-color: #000;
+        overflow: hidden;
       }
       canvas {
         position: absolute;
@@ -107,7 +108,7 @@
         font-size: 1.5vw;
         pointer-events: none;
         user-select: none;
-        z-index: 10;
+        z-index: 1000;
       }
       #settings-btn {
         position: absolute;
@@ -257,6 +258,56 @@
         transform: scale(0.97);
         background: #400;
       }
+      #death-screen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: none;
+        z-index: 999;
+      }
+      #death-image {
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        max-width: 30vw;
+        max-height: 60vh;
+      }
+      #death-text {
+        position: absolute;
+        top: 27%;
+        left: 41%;
+        transform: translateY(-50%);
+        color: white;
+        font-family: monospace;
+        font-size: 3vw;
+        white-space: nowrap;
+      }
+      #retry-btn {
+        position: absolute;
+        right: 1vw;
+        bottom: 1vw;
+        font-size: 4vw;
+        cursor: pointer;
+        user-select: none;
+        opacity: 0;
+        pointer-events: none;
+        filter: invert();
+        transition: opacity 2.4s ease;
+        animation: spin 4s linear infinite;
+      }
+      body.player-dead {
+        filter: grayscale(1) brightness(0.6);
+        transition: filter 0.5s ease;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
     <!-- <meta
       name="google-site-verification"
@@ -351,6 +402,11 @@
             Reset
           </button>
         </div>
+      </div>
+      <div id="death-screen">
+        <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
+        <div id="death-text">You died</div>
+        <div id="retry-btn">↻</div>
       </div>
     </div>
     <script type="module" src="./main.js"></script>

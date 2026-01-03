@@ -1,6 +1,7 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
 import { createEntityHost } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
+import { setup as spawnMart } from "./Enemies/Mart.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -12,6 +13,19 @@ const graphicsSlider = document.getElementById("graphics-slider");
 
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
+const ENTITY_POOL = [
+  {
+    name: "Bell",
+    spawn: () => spawnBell(entityHost),
+    start: 100,
+  },
+  {
+    name: "Mart",
+    spawn: () => spawnMart(entityHost),
+    start: 100,
+  },
+  // add more later
+];
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
@@ -642,9 +656,13 @@ function updateCamera() {
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
       ) {
         lastEntitySpawnAt = collectedCount;
-        // spawnExampleEntity(entityHost);
-        /* ===== SPAWN ===== */
-        spawnBell(entityHost);
+
+        const unlocked = ENTITY_POOL.filter((e) => collectedCount >= e.start);
+
+        if (unlocked.length > 0) {
+          const pick = unlocked[(Math.random() * unlocked.length) | 0];
+          pick.spawn();
+        }
       }
 
       const p = patternsState.get(`${g.sx},${g.sy}`);

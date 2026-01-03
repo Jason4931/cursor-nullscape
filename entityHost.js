@@ -50,3 +50,27 @@ export function createEntityHost(canvas, ctx) {
     draw,
   };
 }
+
+let dies = false;
+export function death(name = "Unknown") {
+  if (dies) return;
+  dies = true;
+  document.body.classList.add("player-dead");
+  setTimeout(() => {
+    document.body.classList.remove("player-dead");
+    const canvas = document.getElementById("screen");
+    const screen = document.getElementById("death-screen");
+    const text = document.getElementById("death-text");
+    const retry = document.getElementById("retry-btn");
+
+    canvas.style.display = "none";
+    text.textContent = `You died to ${name}`;
+    screen.style.display = "block";
+
+    setTimeout(() => {
+      retry.style.opacity = "1";
+      retry.style.pointerEvents = "auto";
+      retry.onclick = () => location.reload();
+    }, 5000);
+  }, 500);
+}

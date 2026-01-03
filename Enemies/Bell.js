@@ -20,7 +20,7 @@ export function setup(host) {
     rotationTime: 0,
 
     phase: "disappear",
-    timer: 0.5,
+    timer: 0.8,
     waitDuration: { min: 4, max: 6 },
 
     initialized: false,
