@@ -33,7 +33,7 @@ export function setup(host) {
       const cx = host.canvas.width / 2;
       const cy = host.canvas.height / 2;
 
-      const r = Math.random() * 200;
+      const r = Math.random() * 400;
       const a = Math.random() * Math.PI * 2;
 
       state.x = cx + Math.cos(a) * r;
@@ -48,7 +48,7 @@ export function setup(host) {
     if (state.mode === "target" && state.modeTimer >= 10) {
       state.modeTimer = 0;
 
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.333) {
         state.mode = "random";
 
         const a = Math.random() * Math.PI * 2;
