@@ -19,8 +19,8 @@ export function setup(host) {
     rotation: 0,
     rotationTime: 0,
 
-    phase: "disappear",
-    timer: 0.8,
+    phase: "appear",
+    timer: 0,
     waitDuration: { min: 4, max: 6 },
 
     initialized: false,
@@ -72,7 +72,9 @@ export function setup(host) {
     }
 
     if (!state.initialized) {
-      teleport();
+      setTimeout(() => {
+        teleport();
+      }, 100);
       state.initialized = true;
     }
 
