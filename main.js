@@ -1,5 +1,5 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
-import { createEntityHost } from "./entityHost.js";
+import { createEntityHost, updateMouseWorld } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 
@@ -738,6 +738,7 @@ function loop(now) {
   lastTime = now;
 
   updateCamera();
+  updateMouseWorld(canvas, camX, camY);
   drawGrid();
 
   entityHost.update(dt);

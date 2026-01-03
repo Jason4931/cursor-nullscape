@@ -49,7 +49,6 @@ export function setup(host) {
       state.modeTimer = 0;
 
       if (Math.random() < 0.2) {
-        console.log("rand");
         state.mode = "random";
 
         const a = Math.random() * Math.PI * 2;

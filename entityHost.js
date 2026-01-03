@@ -1,16 +1,25 @@
 let mouseListenerAttached = false;
-export const mouse = { x: 0, y: 0 };
+export const mouse = {
+  x: 0,
+  y: 0,
+  _clientX: 0,
+  _clientY: 0,
+};
+export function updateMouseWorld(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  mouse.x = (mouse._clientX - rect.left) * scaleX;
+  mouse.y = (mouse._clientY - rect.top) * scaleY;
+}
 export function attachMouseListener(canvas, onMove) {
   if (mouseListenerAttached) return;
   mouseListenerAttached = true;
 
   canvas.addEventListener("mousemove", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    mouse.x = (e.clientX - rect.left) * scaleX;
-    mouse.y = (e.clientY - rect.top) * scaleY;
+    mouse._clientX = e.clientX;
+    mouse._clientY = e.clientY;
 
     if (typeof onMove === "function") {
       onMove(mouse);
