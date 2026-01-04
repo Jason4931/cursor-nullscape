@@ -72,7 +72,7 @@ export function setup(host) {
         state.startY = state.y;
 
         state.chargeTime = 0;
-        state.chargeDuration = 2 + Math.random() * 1;
+        state.chargeDuration = 2 + Math.random();
       }
     } else if (state.state === "charging") {
       state.chargeTime += dt;

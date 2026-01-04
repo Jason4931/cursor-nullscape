@@ -22,6 +22,7 @@ export function setup(host) {
     randomDirY: 0,
 
     wobbleTime: 0,
+    _targetDuration: 9 + Math.random(),
   };
 
   attachMouseListener(host.canvas);
@@ -45,7 +46,7 @@ export function setup(host) {
     state.modeTimer += dt;
     state.wobbleTime += dt;
 
-    if (state.mode === "target" && state.modeTimer >= 10) {
+    if (state.mode === "target" && state.modeTimer >= state._targetDuration) {
       state.modeTimer = 0;
 
       if (Math.random() < 0.333) {
@@ -55,6 +56,7 @@ export function setup(host) {
         state.randomDirX = Math.cos(a);
         state.randomDirY = Math.sin(a);
       }
+      state._targetDuration = 9 + Math.random();
     }
 
     if (state.mode === "random" && state.modeTimer >= 10) {

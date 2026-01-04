@@ -4,6 +4,7 @@ import { createEntityHost, updateMouseWorld } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
+import { setup as spawnICBM } from "./Enemies/ICBM.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -16,23 +17,29 @@ const graphicsSlider = document.getElementById("graphics-slider");
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 const ENTITY_POOL = [
-  // {
-  //   name: "Bell",
-  //   spawn: () => spawnBell(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Bell.png",
-  // },
-  // {
-  //   name: "Mart",
-  //   spawn: () => spawnMart(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Mart.png",
-  // },
+  {
+    name: "Bell",
+    spawn: () => spawnBell(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Bell.png",
+  },
+  {
+    name: "Mart",
+    spawn: () => spawnMart(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Mart.png",
+  },
   {
     name: "Baby",
     spawn: () => spawnBaby(entityHost),
     start: 100,
     src: "./ASSET/Enemies/Baby.png",
+  },
+  {
+    name: "ICBM",
+    spawn: () => spawnICBM(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/ICBM.png",
   },
   // add more later
 ];

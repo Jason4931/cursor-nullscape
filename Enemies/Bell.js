@@ -21,7 +21,6 @@ export function setup(host) {
 
     phase: "appear",
     timer: 0,
-    waitDuration: { min: 4, max: 6 },
 
     initialized: false,
 
@@ -98,9 +97,7 @@ export function setup(host) {
       }
     } else if (state.phase === "wait") {
       if (!state._waitTarget) {
-        state._waitTarget =
-          state.waitDuration.min +
-          Math.random() * (state.waitDuration.max - state.waitDuration.min);
+        state._waitTarget = 5 + Math.random();
       }
 
       if (state.timer >= state._waitTarget) {

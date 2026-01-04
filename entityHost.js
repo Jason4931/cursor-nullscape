@@ -85,6 +85,18 @@ const DEATH_MESSAGES = {
     "You died to Baby.",
     "You became victim to Baby.",
   ],
+  ICBM: [
+    "You got nuked.",
+    "You got streamsniped with an ICBM.",
+    "You took the epic way out, dying in a fiery explosion.",
+    "You tried to face-tank an ICBM.",
+    "You has exploded into about 6.5 pieces.",
+    "You killed! (ICBM)",
+    "You are is death. ICBM is win.",
+    "Winner! A Winner is you!",
+    "You are out of this world!",
+    "You ended being nothing more then ICBM target practice.",
+  ],
   Unknown: ["You died.", "Skill issue.", "That wasn’t supposed to happen."],
 };
 function getDeathMessage(name) {
