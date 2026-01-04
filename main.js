@@ -204,6 +204,8 @@ const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
 let cheat = 0;
 const SUPER_TILE = 9;
+let lagDebt = 0;
+let lagFactor = 1;
 
 /* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
@@ -265,6 +267,7 @@ const SUPER_H = Math.max(
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
 const TILE = canvas.width / MAP_TILES_X;
 let mouseWorld = { x: 0, y: 0 };
+let prevMouseWorld = { x: 0, y: 0 };
 
 /* radii use TILE (world units) */
 let DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
@@ -655,7 +658,8 @@ function updateCamera() {
   } else {
     edgeMultiplier = drunkCamera ? 1.5 : 1;
   }
-  const dynamicHitRadius = HIT_RADIUS * (1 + edgeFactor * edgeMultiplier);
+  const dynamicHitRadius =
+    HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
 
   const motionScale = reducedMotion ? 0.5 : 1;
   camX += vx * motionScale;
@@ -774,6 +778,21 @@ function loop(now) {
   updateCamera();
   updateMouseWorld(canvas, camX, camY);
   drawGrid();
+
+  // lag detection
+  const dx = mouseWorld.x - prevMouseWorld.x;
+  const dy = mouseWorld.y - prevMouseWorld.y;
+  const dist = Math.hypot(dx, dy);
+  const TELEPORT_THRESHOLD = TILE * 2;
+  if (dist > TELEPORT_THRESHOLD) {
+    lagDebt += (dist / TELEPORT_THRESHOLD) * 0.15;
+  } else {
+    lagDebt -= 0.08;
+  }
+  lagDebt = Math.max(0, Math.min(lagDebt, 1));
+  lagFactor = 1 + lagDebt;
+  prevMouseWorld.x = mouseWorld.x;
+  prevMouseWorld.y = mouseWorld.y;
 
   entityHost.update(dt);
   entityHost.draw();
