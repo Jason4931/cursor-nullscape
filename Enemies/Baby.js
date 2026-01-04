@@ -52,7 +52,7 @@ export function setup(host) {
     state.timer += dt;
 
     if (state.state === "idle") {
-      if (state.timer >= 0.5) {
+      if (state.timer >= 1) {
         state.timer = 0;
         state.state = "indicator";
 
@@ -134,10 +134,14 @@ export function setup(host) {
       }
     }
 
+    const jitter =
+      state.state === "charging" ? 2 : state.state === "indicator" ? 1 : 0.5;
+    const drawX = state.x + (Math.random() - 0.5) * jitter * 2;
+    const drawY = state.y + (Math.random() - 0.5) * jitter * 2;
     ctx.drawImage(
       enemy,
-      state.x - state.size / 2,
-      state.y - state.size / 2,
+      drawX - state.size / 2,
+      drawY - state.size / 2,
       state.size,
       state.size
     );

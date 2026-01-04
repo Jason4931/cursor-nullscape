@@ -16,18 +16,18 @@ const graphicsSlider = document.getElementById("graphics-slider");
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 const ENTITY_POOL = [
-  {
-    name: "Bell",
-    spawn: () => spawnBell(entityHost),
-    start: 100,
-    src: "./ASSET/Enemies/Bell.png",
-  },
-  {
-    name: "Mart",
-    spawn: () => spawnMart(entityHost),
-    start: 100,
-    src: "./ASSET/Enemies/Mart.png",
-  },
+  // {
+  //   name: "Bell",
+  //   spawn: () => spawnBell(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Bell.png",
+  // },
+  // {
+  //   name: "Mart",
+  //   spawn: () => spawnMart(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Mart.png",
+  // },
   {
     name: "Baby",
     spawn: () => spawnBaby(entityHost),
