@@ -3,6 +3,7 @@ import { registerEntitySpawn } from "./entityPanel.js";
 import { createEntityHost, updateMouseWorld } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
+import { setup as spawnBaby } from "./Enemies/Baby.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -26,6 +27,12 @@ const ENTITY_POOL = [
     spawn: () => spawnMart(entityHost),
     start: 100,
     src: "./ASSET/Enemies/Mart.png",
+  },
+  {
+    name: "Baby",
+    spawn: () => spawnBaby(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Baby.png",
   },
   // add more later
 ];

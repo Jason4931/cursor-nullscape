@@ -73,6 +73,18 @@ const DEATH_MESSAGES = {
     "Mart killed you in cold blood.",
     "You were killed by Mart.",
   ],
+  Baby: [
+    "You got cornered and killed by Baby.",
+    "You killed Baby. Wait, no, Baby killed you.",
+    "You are dead. Baby may or may not be involved.",
+    "Baby headshot you.",
+    "You got too confident and died to Baby.",
+    "You couldn't survive Baby.",
+    "You died. Blame the Baby. Maybe consider not picking Baby next time?",
+    "Baby just clipped you.",
+    "You died to Baby.",
+    "You became victim to Baby.",
+  ],
   Unknown: ["You died.", "Skill issue.", "That wasn’t supposed to happen."],
 };
 function getDeathMessage(name) {
