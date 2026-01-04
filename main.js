@@ -1,4 +1,5 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
+import { registerEntitySpawn } from "./entityPanel.js";
 import { createEntityHost, updateMouseWorld } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
@@ -18,11 +19,13 @@ const ENTITY_POOL = [
     name: "Bell",
     spawn: () => spawnBell(entityHost),
     start: 100,
+    src: "./ASSET/Enemies/Bell.png",
   },
   {
     name: "Mart",
     spawn: () => spawnMart(entityHost),
     start: 100,
+    src: "./ASSET/Enemies/Mart.png",
   },
   // add more later
 ];
@@ -241,7 +244,7 @@ input.addEventListener("input", () => {
   img.style.transition = "none";
   img.style.transform = `translate(-50%, -50%) rotate(${
     Math.random() * 8 - 4
-  }deg) scale(1.02)`;
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -700,6 +703,7 @@ function updateCamera() {
         if (unlocked.length > 0) {
           const pick = unlocked[(Math.random() * unlocked.length) | 0];
           pick.spawn();
+          registerEntitySpawn(pick.name, pick.src);
         }
       }
 

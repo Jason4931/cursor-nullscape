@@ -322,6 +322,51 @@
           transform: rotate(360deg);
         }
       }
+      #entity-panel {
+        position: absolute;
+        top: 0;
+        left: 25%;
+        transform: translateX(-50%);
+        width: 50%;
+        min-height: 4vw;
+        background: #0a3cff80;
+        border: 0.1vw solid #0a3cff;
+        border-top: none;
+        transform: translateY(-100%);
+        transition: transform 0.35s ease;
+        z-index: 50;
+        padding: 0.6vw 1vw;
+        box-sizing: border-box;
+      }
+      #entity-panel.open {
+        transform: translateY(0);
+      }
+      #entity-panel-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6vw;
+      }
+      .entity-slot {
+        position: relative;
+        width: 3vw;
+        height: 3vw;
+      }
+      .entity-slot img {
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+      .entity-count {
+        position: absolute;
+        right: -0.3vw;
+        bottom: -0.3vw;
+        background: #00000080;
+        color: #fff;
+        font-family: monospace;
+        font-size: 0.8vw;
+        padding: 0.1vw 0.3vw;
+        border-radius: 0.3vw;
+      }
     </style>
     <!-- <meta
       name="google-site-verification"
@@ -330,6 +375,9 @@
   </head>
   <body>
     <div id="viewport">
+      <div id="entity-panel">
+        <div id="entity-panel-content"></div>
+      </div>
       <canvas id="screen" width="1920" height="1200"></canvas>
       <p id="counter">Collected: 0</p>
       <div id="settings-btn">⚙</div>
