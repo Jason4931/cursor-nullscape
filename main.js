@@ -16,6 +16,7 @@ const graphicsSlider = document.getElementById("graphics-slider");
 
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
+let lastEntityPicked;
 const ENTITY_POOL = [
   {
     name: "Bell",
@@ -715,7 +716,14 @@ function updateCamera() {
         const unlocked = ENTITY_POOL.filter((e) => collectedCount >= e.start);
 
         if (unlocked.length > 0) {
-          const pick = unlocked[(Math.random() * unlocked.length) | 0];
+          let pick;
+          while (true) {
+            pick = unlocked[(Math.random() * unlocked.length) | 0];
+            if (lastEntityPicked !== pick.name) {
+              lastEntityPicked = pick.name;
+              break;
+            }
+          }
           pick.spawn();
           registerEntitySpawn(pick.name, pick.src);
         }
