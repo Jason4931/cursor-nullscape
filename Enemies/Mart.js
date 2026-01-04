@@ -72,7 +72,7 @@ export function setup(host) {
       const dist = Math.hypot(dx, dy);
 
       if (dist <= state.size * 0.5) {
-        death("Mart");
+        death("Mart", "#43aeff");
         return;
       }
 

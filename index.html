@@ -275,12 +275,26 @@
       }
       #death-text {
         position: absolute;
-        top: 27%;
-        left: 41%;
+        top: 1.5vw;
+        left: 1vw;
         transform: translateY(-50%);
         color: white;
         font-family: monospace;
-        font-size: 3vw;
+        font-size: 1vw;
+        white-space: nowrap;
+      }
+      #death-input {
+        position: absolute;
+        top: 50%;
+        left: 42.5%;
+        width: 50vw;
+        transform: translateY(-50%);
+        color: white;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: monospace;
+        font-size: 5vw;
         white-space: nowrap;
       }
       #retry-btn {
@@ -406,6 +420,7 @@
       <div id="death-screen">
         <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
         <div id="death-text">You died</div>
+        <input type="text" id="death-input" />
         <div id="retry-btn">↻</div>
       </div>
     </div>

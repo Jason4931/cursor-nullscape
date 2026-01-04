@@ -230,6 +230,22 @@ window.addEventListener("keyup", (e) => {
   reducedMotion = reducedMotionBeforeHold;
   reducedMotionHoldActive = false;
 });
+const input = document.getElementById("death-input");
+const img = document.getElementById("death-image");
+let wobbleTimer;
+input.addEventListener("input", () => {
+  clearTimeout(wobbleTimer);
+
+  img.style.transition = "none";
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.02)`;
+
+  wobbleTimer = setTimeout(() => {
+    img.style.transition = "transform 0.5s ease-out";
+    img.style.transform = "translate(-50%, -50%) rotate(0deg) scale(1)";
+  }, 30);
+});
 
 /* ===== REGEN THROTTLE ===== */
 let REGEN_BUDGET = 8;
