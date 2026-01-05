@@ -1,4 +1,4 @@
-import { mouse, attachMouseListener } from "../entityHost.js";
+import { mouse, attachMouseListener, toggleBellLeniency } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
@@ -58,6 +58,7 @@ export function setup(host) {
 
     if (hovering && !state.wasHovering && !state.hitActive) {
       state.hitActive = true;
+      toggleBellLeniency(true);
       state.hitTimer = 0;
     }
 
@@ -67,6 +68,7 @@ export function setup(host) {
       state.hitTimer += dt;
       if (state.hitTimer >= state.hitCooldown) {
         state.hitActive = false;
+        toggleBellLeniency(false);
       }
     }
 

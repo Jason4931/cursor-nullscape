@@ -142,8 +142,13 @@ function getDeathMessage(name) {
 }
 
 let dies = false;
+let bellLeniency = false;
+export function toggleBellLeniency(state) {
+  bellLeniency = state;
+}
 export function death(name = "Unknown", color = "#f70000") {
   if (dies) return;
+  if (bellLeniency) return;
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {

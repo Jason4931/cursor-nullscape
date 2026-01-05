@@ -13,6 +13,7 @@ export function setup(host) {
     circleRadius: 40,
     maxCircleRadius: 210,
     rotation: 90,
+    startY: 0,
 
     phase: "lock",
     timer: 0,
@@ -56,6 +57,8 @@ export function setup(host) {
         state.timer = 0;
         state.deployDuration = 2 + Math.random();
         state.phase = "deploy";
+        state.startY = state.lockPosY - 100;
+        state.y = state.startY;
       }
     } else if (state.phase === "deploy") {
       state.x = state.lockPosX;
@@ -75,6 +78,8 @@ export function setup(host) {
       const effectiveDuration = state.deployDuration - delay;
       const missileT = Math.min(missileTime / effectiveDuration, 1);
 
+      const t = Math.min(missileTime / effectiveDuration, 1);
+      state.y = state.startY + (state.lockPosY - state.startY) * easeIn(t);
       state.opacity = easeIn(missileT);
       state.currentSize = state.size * (2 - easeIn(missileT));
       state.rotation = -90 * (1 - easeOut(Math.min(missileTime, 1)));

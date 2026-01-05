@@ -138,10 +138,10 @@ export function setup(host) {
       state.state === "charging" ? 2 : state.state === "indicator" ? 1 : 0.5;
     const rotJitter =
       state.state === "charging"
-        ? 0.08
+        ? 0.16
         : state.state === "indicator"
-        ? 0.04
-        : 0.02;
+        ? 0.08
+        : 0.04;
     const drawX = state.x + (Math.random() - 0.5) * jitter * 2;
     const drawY = state.y + (Math.random() - 0.5) * jitter * 2;
     const rot = (Math.random() - 0.5) * rotJitter * 2;
