@@ -12,6 +12,7 @@ export function setup(host) {
     currentSize: 100,
     circleRadius: 40,
     maxCircleRadius: 210,
+    rotation: 90,
 
     phase: "lock",
     timer: 0,
@@ -46,7 +47,7 @@ export function setup(host) {
       state.lockPosY = mouse.y;
 
       const t = Math.min(state.timer, 1);
-      state.circleRadius = 50 - easeOut(t) * (50 - 40);
+      state.circleRadius = 80 - easeOut(t) * (80 - 40);
       state.circleOpacity = easeOut(t) * 0.75;
       state.opacity = 0;
       state.currentSize = state.size * 2;
@@ -76,6 +77,7 @@ export function setup(host) {
 
       state.opacity = easeIn(missileT);
       state.currentSize = state.size * (2 - easeIn(missileT));
+      state.rotation = -90 * (1 - easeOut(Math.min(missileTime, 1)));
 
       if (state.timer >= state.deployDuration) {
         const dx = mouse.x - state.lockPosX;
@@ -109,9 +111,10 @@ export function setup(host) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     if (
-      state.phase === "lock" ||
-      state.phase === "deploy" ||
-      state.phase === "idle"
+      (state.phase === "lock" ||
+        state.phase === "deploy" ||
+        state.phase === "idle") &&
+      state.circleOpacity >= 0
     ) {
       const grad = ctx.createRadialGradient(
         state.lockPosX,
@@ -142,9 +145,13 @@ export function setup(host) {
     }
 
     if (state.phase === "deploy" || state.phase === "idle") {
+      ctx.save();
       ctx.globalAlpha = state.opacity;
+      ctx.translate(state.x, state.y);
+      ctx.rotate((state.rotation * Math.PI) / 180);
       const s = state.currentSize;
-      ctx.drawImage(missile, state.x - s / 2, state.y - s / 2, s, s);
+      ctx.drawImage(missile, -s / 2, -s / 2, s, s);
+      ctx.restore();
     }
 
     ctx.restore();

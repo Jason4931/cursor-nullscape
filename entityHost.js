@@ -109,10 +109,35 @@ const DEATH_MESSAGES = {
     "You ran into Skinwalker.",
     "Avoiding the Skinwalker proved beyond your abilities.",
   ],
-  Unknown: ["You died.", "Skill issue.", "That wasn’t supposed to happen."],
+  Springer: [
+    "You? Checkmate.",
+    "You were flattened.",
+    "You need to be scraped off the floor.",
+    "You are a little bit shorter now... a bit dead too.",
+    "You are a pancake now!",
+    "That's some poor Chess Play from you.",
+    "I dub thee, you Flats-a-Lot!",
+    "Anyone got a mop?",
+    "Talk about a headache...",
+  ],
+  Unknown: [
+    "You didn’t see it coming.",
+    "Something found you first.",
+    "You made a fatal mistake.",
+    "You vanished without explanation.",
+    "Whatever that was, it won.",
+    "You were erased from the equation.",
+    "You crossed the wrong path.",
+    "You survived everything… except this.",
+    "You are gone. No further details available.",
+    "You were defeated by something unnamed.",
+  ],
 };
 function getDeathMessage(name) {
-  const list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
+  const list =
+    Math.random() < 0.9
+      ? DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown
+      : DEATH_MESSAGES.Unknown;
   return list[(Math.random() * list.length) | 0];
 }
 
@@ -124,6 +149,7 @@ export function death(name = "Unknown", color = "#f70000") {
   setTimeout(() => {
     document.body.classList.remove("player-dead");
     const canvas = document.getElementById("screen");
+    const image = document.getElementById("death-image");
     const screen = document.getElementById("death-screen");
     const text = document.getElementById("death-text");
     const input = document.getElementById("death-input");
@@ -133,13 +159,19 @@ export function death(name = "Unknown", color = "#f70000") {
     text.textContent = getDeathMessage(name);
     text.style.color = color;
     screen.style.display = "block";
+    image.style.opacity = "1";
     input.focus();
     input.select();
+    input.addEventListener("input", () => {
+      if (input.value.toLowerCase() === "shutup") {
+        location.reload();
+      }
+    });
 
     setTimeout(() => {
       retry.style.opacity = "1";
       retry.style.pointerEvents = "auto";
       retry.onclick = () => location.reload();
     }, 5000);
-  }, 500);
+  }, 200);
 }

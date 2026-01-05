@@ -6,6 +6,7 @@ import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
 import { setup as spawnICBM } from "./Enemies/ICBM.js";
 import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
+import { setup as spawnSpringer } from "./Enemies/Springer.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -20,24 +21,24 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let skinwalkerCount = 0;
 const ENTITY_POOL = [
-  {
-    name: "Bell",
-    spawn: () => spawnBell(entityHost),
-    start: 100,
-    src: "./ASSET/Enemies/Bell.png",
-  },
-  {
-    name: "Mart",
-    spawn: () => spawnMart(entityHost),
-    start: 100,
-    src: "./ASSET/Enemies/Mart.png",
-  },
-  {
-    name: "Baby",
-    spawn: () => spawnBaby(entityHost),
-    start: 100,
-    src: "./ASSET/Enemies/Baby.png",
-  },
+  // {
+  //   name: "Bell",
+  //   spawn: () => spawnBell(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Bell.png",
+  // },
+  // {
+  //   name: "Mart",
+  //   spawn: () => spawnMart(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Mart.png",
+  // },
+  // {
+  //   name: "Baby",
+  //   spawn: () => spawnBaby(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Baby.png",
+  // },
   {
     name: "ICBM",
     spawn: () => spawnICBM(entityHost),
@@ -50,6 +51,12 @@ const ENTITY_POOL = [
     start: 100,
     src: "./ASSET/Enemies/Skinwalker.png",
   },
+  // {
+  //   name: "Springer",
+  //   spawn: () => spawnSpringer(entityHost),
+  //   start: 100,
+  //   src: "./ASSET/Enemies/Springer.png",
+  // },
   // add more later
 ];
 
@@ -228,6 +235,7 @@ const MAX_SPEED = 20;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
+let dynamicHitRadius;
 let cheat = 0;
 const SUPER_TILE = 9;
 let lagDebt = 0;
@@ -310,6 +318,8 @@ const superOccupied = Array.from({ length: SUPER_H }, () =>
 /* ===== STATE ===== */
 let camX = 0;
 let camY = 0;
+let camVX = 0;
+let camVY = 0;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
@@ -332,6 +342,11 @@ else if (graphicsSlider.value === "2") setGraphicsHigh();
 else setGraphicsUltra();
 
 /* ===== HELPERS ===== */
+export function moveCamera(x, y) {
+  camVX += x;
+  camVY += y;
+}
+
 function rotateMatrix90(m) {
   const h = m.length;
   const w = m[0].length;
@@ -498,11 +513,16 @@ function placeSuper(sx, sy, pattern) {
       const wx = (sx * SUPER_TILE + x) * TILE;
       const wy = (sy * SUPER_TILE + y) * TILE;
 
-      if (pattern[y][x] === 1 || pattern[y][x] === 2) {
+      if (
+        pattern[y][x] === 1 ||
+        pattern[y][x] === 2 ||
+        pattern[y][x] === 4 ||
+        pattern[y][x] === 5
+      ) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
-      if (pattern[y][x] === 2 || pattern[y][x] === 3) {
+      if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const isGolden = Math.random() < 0.01;
 
         giftPositions.push({
@@ -529,6 +549,7 @@ function placeSuper(sx, sy, pattern) {
     sizeKey: `${spw}x${sph}`,
     giftsLeft: gifts,
     cleared: gifts === 0,
+    pattern,
   });
 }
 
@@ -540,6 +561,53 @@ function destroyPattern(p) {
     for (let x = 0; x < p.pw; x++) superOccupied[p.sy + y][p.sx + x] = false;
 
   patternsState.delete(`${p.sx},${p.sy}`);
+}
+
+export function pickRandomPlaced4or5() {
+  // build list of placed patterns that actually contain a 4 or 5
+  const candidates = [];
+  for (const p of patternsState.values()) {
+    const pat = p.pattern;
+    if (!pat) continue;
+    let found = false;
+    for (let y = 0; y < pat.length && !found; y++) {
+      for (let x = 0; x < pat[0].length; x++) {
+        if (pat[y][x] === 4 || pat[y][x] === 5) {
+          found = true;
+          break;
+        }
+      }
+    }
+    if (found) candidates.push(p);
+  }
+
+  if (candidates.length === 0) return null;
+
+  // pick random pattern
+  const pickedPattern = candidates[(Math.random() * candidates.length) | 0];
+  const pat = pickedPattern.pattern;
+
+  // collect all 4/5 coords in that pattern
+  const coords = [];
+  for (let y = 0; y < pat.length; y++) {
+    for (let x = 0; x < pat[0].length; x++) {
+      const v = pat[y][x];
+      if (v === 4 || v === 5) coords.push({ x, y, v });
+    }
+  }
+
+  if (coords.length === 0) return null; // should not happen because we filtered, but safe
+
+  const c = coords[(Math.random() * coords.length) | 0];
+
+  // convert to world coords; using tile center
+  const worldX = (pickedPattern.sx * SUPER_TILE + c.x) * TILE + TILE / 2;
+  const worldY = (pickedPattern.sy * SUPER_TILE + c.y) * TILE + TILE / 2;
+
+  return {
+    x: worldX,
+    y: worldY,
+  };
 }
 
 /* ===== INITIAL MAP ===== */
@@ -684,8 +752,7 @@ function updateCamera() {
   } else {
     edgeMultiplier = drunkCamera ? 1.5 : 1;
   }
-  const dynamicHitRadius =
-    HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
+  dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
 
   const motionScale = reducedMotion ? 0.5 : 1;
   camX += vx * motionScale;
@@ -812,6 +879,35 @@ function loop(now) {
   updateCamera();
   updateMouseWorld(canvas, camX, camY);
   drawGrid();
+
+  // hitradius
+  const g = ctx.createRadialGradient(
+    mouseWorld.x,
+    mouseWorld.y,
+    0,
+    mouseWorld.x,
+    mouseWorld.y,
+    dynamicHitRadius
+  );
+  g.addColorStop(0, "rgba(0, 0, 255, 0)");
+  g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
+  ctx.beginPath();
+  ctx.arc(
+    mouseWorld.x,
+    mouseWorld.y,
+    dynamicHitRadius - GIFT_SIZE / 2,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  entityHost.draw();
+
+  camX += camVX;
+  camY += camVY;
+  camVX *= 0.88;
+  camVY *= 0.88;
 
   // lag detection
   const dx = mouseWorld.x - prevMouseWorld.x;
