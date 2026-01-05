@@ -97,7 +97,7 @@ export function setup(host) {
       }
     } else if (state.phase === "wait") {
       if (!state._waitTarget) {
-        state._waitTarget = 5 + Math.random();
+        state._waitTarget = 4.5 + Math.random();
       }
 
       if (state.timer >= state._waitTarget) {

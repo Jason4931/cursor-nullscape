@@ -5,6 +5,7 @@ import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
 import { setup as spawnICBM } from "./Enemies/ICBM.js";
+import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -17,6 +18,7 @@ const graphicsSlider = document.getElementById("graphics-slider");
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
+let skinwalkerCount = 0;
 const ENTITY_POOL = [
   {
     name: "Bell",
@@ -41,6 +43,12 @@ const ENTITY_POOL = [
     spawn: () => spawnICBM(entityHost),
     start: 100,
     src: "./ASSET/Enemies/ICBM.png",
+  },
+  {
+    name: "Skinwalker",
+    spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++),
+    start: 100,
+    src: "./ASSET/Enemies/Skinwalker.png",
   },
   // add more later
 ];

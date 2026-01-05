@@ -97,6 +97,18 @@ const DEATH_MESSAGES = {
     "You are out of this world!",
     "You ended being nothing more then ICBM target practice.",
   ],
+  Skinwalker: [
+    "You were AFK and got promptly punished by Skinwalker.",
+    "You forgot Skinwalker was active.",
+    "You ran into Skinwalker while trying to survive.",
+    "Skinwalker killed you just by copying your moves.",
+    "You died. Consider not dying next time.",
+    "You couldn't dodge Skinwalker.",
+    "Skinwalker killed you without doing anything.",
+    "You died at the hands of Skinwalker.",
+    "You ran into Skinwalker.",
+    "Avoiding the Skinwalker proved beyond your abilities.",
+  ],
   Unknown: ["You died.", "Skill issue.", "That wasn’t supposed to happen."],
 };
 function getDeathMessage(name) {
