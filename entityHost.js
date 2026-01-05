@@ -148,7 +148,9 @@ export function toggleBellLeniency(state) {
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies) return;
-  if (bellLeniency) return;
+  if (bellLeniency) {
+    if (Math.random() < 0.667) return;
+  }
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {
