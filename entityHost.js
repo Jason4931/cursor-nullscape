@@ -159,7 +159,6 @@ export function death(name = "Unknown", color = "#f70000") {
     text.textContent = getDeathMessage(name);
     text.style.color = color;
     screen.style.display = "block";
-    image.style.opacity = "1";
     input.focus();
     input.select();
     input.addEventListener("input", () => {
@@ -167,7 +166,9 @@ export function death(name = "Unknown", color = "#f70000") {
         location.reload();
       }
     });
-
+    setTimeout(() => {
+      image.style.opacity = "1";
+    }, 200);
     setTimeout(() => {
       retry.style.opacity = "1";
       retry.style.pointerEvents = "auto";
