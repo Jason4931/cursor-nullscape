@@ -21,24 +21,24 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let skinwalkerCount = 0;
 const ENTITY_POOL = [
-  // {
-  //   name: "Bell",
-  //   spawn: () => spawnBell(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Bell.png",
-  // },
-  // {
-  //   name: "Mart",
-  //   spawn: () => spawnMart(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Mart.png",
-  // },
-  // {
-  //   name: "Baby",
-  //   spawn: () => spawnBaby(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Baby.png",
-  // },
+  {
+    name: "Bell",
+    spawn: () => spawnBell(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Bell.png",
+  },
+  {
+    name: "Mart",
+    spawn: () => spawnMart(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Mart.png",
+  },
+  {
+    name: "Baby",
+    spawn: () => spawnBaby(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Baby.png",
+  },
   {
     name: "ICBM",
     spawn: () => spawnICBM(entityHost),
@@ -51,12 +51,12 @@ const ENTITY_POOL = [
     start: 100,
     src: "./ASSET/Enemies/Skinwalker.png",
   },
-  // {
-  //   name: "Springer",
-  //   spawn: () => spawnSpringer(entityHost),
-  //   start: 100,
-  //   src: "./ASSET/Enemies/Springer.png",
-  // },
+  {
+    name: "Springer",
+    spawn: () => spawnSpringer(entityHost),
+    start: 100,
+    src: "./ASSET/Enemies/Springer.png",
+  },
   // add more later
 ];
 
