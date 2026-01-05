@@ -563,22 +563,32 @@ function destroyPattern(p) {
   patternsState.delete(`${p.sx},${p.sy}`);
 }
 
-export function pickRandomPlaced4or5() {
-  // build list of placed patterns that actually contain a 4 or 5
+export function pickRandomPlaced4or5(radius = 1000) {
+  // build list of placed patterns that actually contain a 4 or 5 AND are near the cursor
   const candidates = [];
   for (const p of patternsState.values()) {
     const pat = p.pattern;
     if (!pat) continue;
-    let found = false;
-    for (let y = 0; y < pat.length && !found; y++) {
+
+    // check if pattern contains 4 or 5
+    let hasTarget = false;
+    for (let y = 0; y < pat.length && !hasTarget; y++) {
       for (let x = 0; x < pat[0].length; x++) {
         if (pat[y][x] === 4 || pat[y][x] === 5) {
-          found = true;
+          hasTarget = true;
           break;
         }
       }
     }
-    if (found) candidates.push(p);
+    if (!hasTarget) continue;
+
+    // check distance to cursor
+    const center = patternCenter(p.sx, p.sy);
+    const dx = center.x - mouseWorld.x;
+    const dy = center.y - mouseWorld.y;
+    if (dx * dx + dy * dy <= radius * radius) {
+      candidates.push(p);
+    }
   }
 
   if (candidates.length === 0) return null;
