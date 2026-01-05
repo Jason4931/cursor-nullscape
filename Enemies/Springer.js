@@ -93,7 +93,7 @@ export function setup(host) {
       const cy = mouse.y - state.ringCenterY;
       const dist = Math.hypot(cx, cy);
 
-      const thickness = 16;
+      const thickness = 32;
       const insideRing =
         dist >= ringRadius - thickness / 2 &&
         dist <= ringRadius + thickness / 2;
@@ -175,7 +175,7 @@ export function setup(host) {
       const alpha = (1 - growT) * 0.6;
 
       const segments = 1000;
-      const segLen = 18;
+      const segLen = 36;
       const segWidth = 4;
 
       ctx.save();
