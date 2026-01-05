@@ -912,8 +912,6 @@ function loop(now) {
   ctx.fillStyle = g;
   ctx.fill();
 
-  entityHost.draw();
-
   camX += camVX;
   camY += camVY;
   camVX *= 0.88;
