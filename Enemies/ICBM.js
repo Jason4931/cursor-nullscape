@@ -82,7 +82,7 @@ export function setup(host) {
       state.y = state.startY + (state.lockPosY - state.startY) * easeIn(t);
       state.opacity = easeIn(missileT);
       state.currentSize = state.size * (2 - easeIn(missileT));
-      state.rotation = -90 * (1 - easeOut(Math.min(missileTime, 1)));
+      state.rotation = -15 + -90 * (1 - easeOut(missileT));
 
       if (state.timer >= state.deployDuration) {
         const dx = mouse.x - state.lockPosX;
