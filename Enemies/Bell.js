@@ -1,4 +1,8 @@
-import { mouse, attachMouseListener, toggleBellLeniency } from "../entityHost.js";
+import {
+  mouse,
+  attachMouseListener,
+  toggleBellLeniency,
+} from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";

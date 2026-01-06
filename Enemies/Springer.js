@@ -1,4 +1,9 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import {
+  death,
+  mouse,
+  attachMouseListener,
+  toggleTripmineLeniency,
+} from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5 } from "../main.js";
 
 const enemy = new Image();
@@ -15,6 +20,7 @@ export function setup(host) {
 
     phase: "landing",
     timer: 0,
+    leniencyTimer: null,
 
     landingDuration: 3,
 
@@ -39,6 +45,21 @@ export function setup(host) {
 
   function pickIdleDuration() {
     state.idleDuration = 4.5 + Math.random();
+  }
+
+  function applyTripmineLeniency(strength01) {
+    const duration = Math.min(1, strength01); // seconds, capped at 1s
+
+    toggleTripmineLeniency(true);
+
+    if (state.leniencyTimer) {
+      clearTimeout(state.leniencyTimer);
+    }
+
+    state.leniencyTimer = setTimeout(() => {
+      toggleTripmineLeniency(false);
+      state.leniencyTimer = null;
+    }, duration * 1000);
   }
 
   function enterLanding() {
@@ -99,13 +120,17 @@ export function setup(host) {
         dist <= ringRadius + thickness / 2;
 
       if (insideRing && !state.wasInsideRing) {
+        const power01 = clamp(1 - growT, 0, 1); // stronger earlier
         const strength =
-          Math.min(host.canvas.width, host.canvas.height) * 0.03 * (1 - growT);
+          Math.min(host.canvas.width, host.canvas.height) * 0.03 * power01;
 
         const nx = dist ? cx / dist : 0;
         const ny = dist ? cy / dist : 0;
 
-        if (state.timer > 0.1) moveCamera(-nx * strength, -ny * strength);
+        if (state.timer > 0.1) {
+          moveCamera(-nx * strength, -ny * strength);
+          applyTripmineLeniency(power01);
+        }
       }
 
       state.wasInsideRing = insideRing;

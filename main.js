@@ -1,6 +1,6 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
 import { registerEntitySpawn } from "./entityPanel.js";
-import { createEntityHost, updateMouseWorld } from "./entityHost.js";
+import { createEntityHost, updateMouseWorld, death } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -64,6 +64,8 @@ const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
 const goldGift = new Image();
 goldGift.src = "./ASSET/Misc/GoldGifts.png";
+const tripmine = new Image();
+tripmine.src = "./ASSET/Curses/Tripmine.png";
 
 /* ===== SETTINGS ===== */
 let settingsEnabled = true;
@@ -522,18 +524,29 @@ function placeSuper(sx, sy, pattern) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
+      const isTripmineEnabled = collectedCount > 500;
+
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
-        const isGolden = Math.random() < 0.01;
+        const r = Math.random();
+        let type = "gift";
+        if (isTripmineEnabled) {
+          if (r < 0.01) type = "gold"; // 1%
+          else if (r < 0.1) type = "tripmine"; // 9%
+          else type = "gift"; // 90%
+        } else {
+          type = r < 0.01 ? "gold" : "gift"; // original
+        }
 
         giftPositions.push({
           x: wx,
           y: wy,
           sx,
           sy,
-          golden: isGolden,
+          type, // "gift", "gold", or "tripmine"
+          golden: type === "gold",
         });
 
-        gifts++;
+        if (type !== "tripmine") gifts++; // tripmine does not count
       }
     }
   }
@@ -679,7 +692,7 @@ function drawGrid() {
       const dy = g.y + TILE / 2 - mouseWorld.y;
       if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
-      const img = g.golden ? goldGift : gift;
+      const img = g.golden ? goldGift : g.type === "tripmine" ? tripmine : gift;
 
       ctx.drawImage(
         img,
@@ -786,10 +799,17 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouseWorld.x;
     const dy = g.y + TILE / 2 - mouseWorld.y;
 
-    if (dx * dx + dy * dy < dynamicHitRadius * dynamicHitRadius) {
-      const value = g.golden ? 5 : 1;
+    const radius = g.type === "tripmine" ? GIFT_SIZE / 2 : dynamicHitRadius;
 
+    if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
+
+      if (g.type === "tripmine") {
+        death("Tripmine", "#FF00FF"); // tripmine kills
+        continue;
+      }
+
+      const value = g.golden ? 5 : 1;
       collectedCount += value;
       counterEl.textContent = `Collected: ${collectedCount}`;
 

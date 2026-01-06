@@ -120,6 +120,18 @@ const DEATH_MESSAGES = {
     "Anyone got a mop?",
     "Talk about a headache...",
   ],
+  Tripmine: [
+    "Tripmine killed you through its murderous aura.",
+    "You died, I wasn't paying attention though so don't know why.",
+    "You couldn't handle the nullscape and died to a tripmine.",
+    "You died to a tripmine.",
+    "You tripped up to a mine.",
+    "You ran into a tripmine.",
+    "You, remember to watch where your going.",
+    "You stopped paying attention.",
+    "You exploded.",
+    "Tripmine fragged you.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
@@ -143,12 +155,19 @@ function getDeathMessage(name) {
 
 let dies = false;
 let bellLeniency = false;
+let tripmineLeniency = false;
 export function toggleBellLeniency(state) {
   bellLeniency = state;
+}
+export function toggleTripmineLeniency(state) {
+  tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies) return;
   if (bellLeniency) {
+    if (Math.random() < 0.667) return;
+  }
+  if (tripmineLeniency && name === "Tripmine") {
     if (Math.random() < 0.667) return;
   }
   dies = true;
