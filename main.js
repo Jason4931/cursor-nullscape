@@ -542,7 +542,7 @@ function placeSuper(sx, sy, pattern) {
         let type = "gift";
         if (isTripmineEnabled) {
           if (r < 0.01) type = "gold"; // 1%
-          else if (r < Math.min(0.00018 * collectedCount - 0.08, 0.1))
+          else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
             type = "tripmine"; // 1-9%
           else type = "gift"; // 98-90%
         } else {
