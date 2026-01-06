@@ -372,18 +372,15 @@ function rotateMatrix90(m) {
   return r;
 }
 
-function getCanvasScale() {
-  return {
-    x: canvas.width / canvas.offsetWidth,
-    y: canvas.height / canvas.offsetHeight,
-  };
-}
-
 function screenToWorld(mx, my) {
-  const s = getCanvasScale();
+  const rect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
   return {
-    x: (mx - camX) * s.x,
-    y: (my - camY) * s.y,
+    x: (mx - rect.left) * scaleX,
+    y: (my - rect.top) * scaleY,
   };
 }
 
