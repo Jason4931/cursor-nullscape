@@ -24,7 +24,6 @@ export function setup(host) {
     randomTimer: 0,
     randomDuration: 9 + Math.random(),
   };
-  const pos = { x: 0, y: 0 };
 
   attachMouseListener(host.canvas);
 
@@ -38,6 +37,7 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    const now = performance.now();
 
     if (!state.initialized) {
       const cx = host.canvas.width / 2;
@@ -46,12 +46,8 @@ export function setup(host) {
       const r = Math.random() * 400;
       const a = Math.random() * Math.PI * 2;
 
-      pos.x = cx + Math.cos(a) * r;
-      pos.y = cy + Math.sin(a) * r;
-      state.x = pos.x;
-      state.y = pos.y;
-
-      fleshPositions.add(pos);
+      state.x = cx + Math.cos(a) * r;
+      state.y = cy + Math.sin(a) * r;
 
       pickRandomDir();
       state.initialized = true;
@@ -99,8 +95,17 @@ export function setup(host) {
 
     state.x += dx * state.speed * dt;
     state.y += dy * state.speed * dt;
-    pos.x = state.x;
-    pos.y = state.y;
+
+    fleshPositions.add({
+      x: state.x,
+      y: state.y,
+      until: now + 30000,
+    });
+    for (const p of fleshPositions) {
+      if (p.until <= now) {
+        fleshPositions.delete(p);
+      }
+    }
   }
 
   function draw(ctx) {

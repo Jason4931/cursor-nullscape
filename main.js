@@ -721,7 +721,7 @@ function drawGrid() {
         const ddx = cx - fx;
         const ddy = cy - fy;
 
-        if (ddx * ddx + ddy * ddy < (TILE * 15) ** 2) {
+        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
           corrupted = true;
           break;
         }
