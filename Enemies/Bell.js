@@ -80,7 +80,9 @@ export function setup(host) {
       state.hitTimer += dt;
       if (state.hitTimer >= state.hitCooldown) {
         state.hitActive = false;
-        toggleBellLeniency(false);
+        setTimeout(() => {
+          toggleBellLeniency(false);
+        }, 1000);
       }
     }
 
