@@ -132,6 +132,18 @@ const DEATH_MESSAGES = {
     "You exploded.",
     "Tripmine fragged you.",
   ],
+  Flesh: [
+    "You were assimilated.",
+    "You were taken by the flesh.",
+    "You have been assimilated.",
+    "You were absorbed.",
+    "You got grabbed by the flesh.",
+    "You are failure. Flesh is win.",
+    "You are part of the flesh.",
+    "You failed to run from flesh.",
+    "You forgot you couldn't use your abilities.",
+    "You have always been part of the flesh.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

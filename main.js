@@ -7,6 +7,7 @@ import { setup as spawnBaby } from "./Enemies/Baby.js";
 import { setup as spawnICBM } from "./Enemies/ICBM.js";
 import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
+import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -20,6 +21,8 @@ const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let skinwalkerCount = 0;
+export const fleshPositions = new Set();
+export const cleanseZones = [];
 const ENTITY_POOL = [
   {
     name: "Bell",
@@ -56,6 +59,12 @@ const ENTITY_POOL = [
     spawn: () => spawnSpringer(entityHost),
     start: 100,
     src: "./ASSET/Enemies/Springer.png",
+  },
+  {
+    name: "Flesh",
+    spawn: () => spawnFlesh(entityHost),
+    start: 500,
+    src: "./ASSET/Enemies/Flesh.png",
   },
   // add more later
 ];
@@ -301,7 +310,7 @@ const SUPER_H = Math.max(
 );
 
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
-const TILE = canvas.width / MAP_TILES_X;
+export const TILE = canvas.width / MAP_TILES_X;
 let mouseWorld = { x: 0, y: 0 };
 let prevMouseWorld = { x: 0, y: 0 };
 
@@ -324,6 +333,8 @@ let camVX = 0;
 let camVY = 0;
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
+let slowness = false;
+let slownessTimeout = null;
 
 /* ===== TILE DATA ===== */
 let giftPositions = [];
@@ -344,6 +355,9 @@ else if (graphicsSlider.value === "2") setGraphicsHigh();
 else setGraphicsUltra();
 
 /* ===== HELPERS ===== */
+export function setSlowness(v) {
+  slowness = v;
+}
 export function moveCamera(x, y) {
   camVX += x;
   camVY += y;
@@ -664,6 +678,8 @@ for (let sy = minSY; sy <= maxSY; sy++) {
 
 /* ===== DRAW ===== */
 function drawGrid() {
+  let cursorOnCorruptedTile = false;
+
   // Clear only visible area (viewport + margin for movement)
   const margin = MAX_SPEED * 2;
   const visibleX = -camX;
@@ -678,12 +694,76 @@ function drawGrid() {
   );
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
-  ctx.fillStyle = showFloor ? "#333" : "#3331";
   for (const t of floorTiles) {
-    const dx = t.x + TILE / 2 - mouseWorld.x;
-    const dy = t.y + TILE / 2 - mouseWorld.y;
+    const cx = t.x + TILE / 2;
+    const cy = t.y + TILE / 2;
+
+    const dx = cx - mouseWorld.x;
+    const dy = cy - mouseWorld.y;
     if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+
+    let corrupted = false;
+    let blocked = false;
+
+    for (const z of cleanseZones) {
+      const zx = cx - z.x;
+      const zy = cy - z.y;
+      if (zx * zx + zy * zy < z.r * z.r) {
+        blocked = true;
+        break;
+      }
+    }
+    if (!blocked) {
+      for (const f of fleshPositions) {
+        const fx = f.x;
+        const fy = f.y;
+
+        const ddx = cx - fx;
+        const ddy = cy - fy;
+
+        if (ddx * ddx + ddy * ddy < (TILE * 15) ** 2) {
+          corrupted = true;
+          break;
+        }
+      }
+    }
+
+    // cursor inside this tile?
+    if (corrupted) {
+      if (
+        mouseWorld.x >= t.x &&
+        mouseWorld.x <= t.x + TILE &&
+        mouseWorld.y >= t.y &&
+        mouseWorld.y <= t.y + TILE
+      ) {
+        cursorOnCorruptedTile = true;
+      }
+    }
+
+    ctx.fillStyle = showFloor
+      ? corrupted
+        ? `rgba(120, 0, 0, ${0.425 + Math.random() * 0.25})`
+        : "#333"
+      : corrupted
+      ? `rgba(120, 0, 0, 0.066)`
+      : "#3331";
+
     ctx.fillRect(t.x, t.y, TILE, TILE);
+  }
+  if (cursorOnCorruptedTile) {
+    slowness = true;
+
+    if (slownessTimeout) {
+      clearTimeout(slownessTimeout);
+      slownessTimeout = null;
+    }
+  } else {
+    if (slowness && !slownessTimeout) {
+      slownessTimeout = setTimeout(() => {
+        slowness = false;
+        slownessTimeout = null;
+      }, 3000);
+    }
   }
 
   // gifts (center inside the tile)
@@ -779,8 +859,9 @@ function updateCamera() {
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
 
   const motionScale = reducedMotion ? 0.5 : 1;
-  camX += vx * motionScale;
-  camY += vy * motionScale;
+  const slowScale = slowness ? 0.25 : 1;
+  camX += vx * motionScale * slowScale;
+  camY += vy * motionScale * slowScale;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
@@ -861,6 +942,11 @@ function updateCamera() {
 
   /* regenerate empty slots (THROTTLED + BUDGETED) */
   const now = performance.now();
+  for (let i = cleanseZones.length - 1; i >= 0; i--) {
+    if (cleanseZones[i].expiresAt <= now) {
+      cleanseZones.splice(i, 1);
+    }
+  }
   if (now - lastRegenTime > REGEN_INTERVAL) {
     lastRegenTime = now;
 
@@ -955,6 +1041,14 @@ function loop(now) {
 
   entityHost.update(dt);
   entityHost.draw();
+
+  if (slowness) {
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = "rgba(255, 0, 0, 0.18)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
 
   requestAnimationFrame(loop);
 }

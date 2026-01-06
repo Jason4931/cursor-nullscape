@@ -3,6 +3,7 @@ import {
   attachMouseListener,
   toggleBellLeniency,
 } from "../entityHost.js";
+import { cleanseZones, setSlowness, TILE } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
@@ -64,6 +65,13 @@ export function setup(host) {
       state.hitActive = true;
       toggleBellLeniency(true);
       state.hitTimer = 0;
+      cleanseZones.push({
+        x: state.x,
+        y: state.y,
+        r: TILE * 18,
+        expiresAt: performance.now() + 10000, // 10 seconds
+      });
+      setSlowness(false);
     }
 
     state.wasHovering = hovering;
