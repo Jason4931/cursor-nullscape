@@ -20,6 +20,7 @@ const graphicsSlider = document.getElementById("graphics-slider");
 const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
+let tripmineExplosion = null;
 let skinwalkerCount = 0;
 export const fleshPositions = new Set();
 export const cleanseZones = [];
@@ -884,7 +885,11 @@ function updateCamera() {
       giftPositions.splice(i, 1);
 
       if (g.type === "tripmine") {
-        death("Tripmine", "#FF00FF"); // tripmine kills
+        tripmineExplosion = {
+          x: g.x + TILE / 2,
+          y: g.y + TILE / 2,
+          t: performance.now(),
+        };
         continue;
       }
 
@@ -1035,6 +1040,38 @@ function loop(now) {
   lagFactor = 1 + lagDebt;
   prevMouseWorld.x = mouseWorld.x;
   prevMouseWorld.y = mouseWorld.y;
+
+  if (tripmineExplosion) {
+    const age = performance.now() - tripmineExplosion.t;
+    const r = TILE * (4 + age * 0.04);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    const g = ctx.createRadialGradient(
+      tripmineExplosion.x,
+      tripmineExplosion.y,
+      0,
+      tripmineExplosion.x,
+      tripmineExplosion.y,
+      r
+    );
+
+    g.addColorStop(0, "rgba(255, 0, 255, 0.5)");
+    g.addColorStop(1, "rgba(255, 0, 255, 0.1)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(tripmineExplosion.x, tripmineExplosion.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    if (age > 80) {
+      tripmineExplosion = null;
+      death("Tripmine", "#FF00FF");
+    }
+  }
 
   entityHost.update(dt);
   entityHost.draw();
