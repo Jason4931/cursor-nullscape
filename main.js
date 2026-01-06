@@ -855,8 +855,6 @@ function updateCamera() {
   }
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
 
-  mouseWorld = screenToWorld(mouseX, mouseY);
-
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.25 : 1;
   camX += vx * motionScale * slowScale;
@@ -871,6 +869,8 @@ function updateCamera() {
     camY += Math.cos(t * 1.7) * 2;
   }
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
+
+  mouseWorld = screenToWorld(mouseX, mouseY);
 
   /* collect gifts */
   for (let i = giftPositions.length - 1; i >= 0; i--) {
