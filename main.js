@@ -1058,6 +1058,12 @@ function loop(now) {
   updateMouseWorld(canvas, camX, camY);
   drawGrid();
 
+  // simple cursor
+  ctx.beginPath();
+  ctx.arc(mouseWorld.x, mouseWorld.y, 8, 0, Math.PI * 2);
+  ctx.fillStyle = "white";
+  ctx.fill();
+
   // hitradius
   const g = ctx.createRadialGradient(
     mouseWorld.x,
@@ -1080,6 +1086,7 @@ function loop(now) {
   ctx.fillStyle = g;
   ctx.fill();
 
+  // camera smoothing
   camX += camVX;
   camY += camVY;
   camVX *= 0.88;
@@ -1100,6 +1107,7 @@ function loop(now) {
   prevMouseWorld.x = mouseWorld.x;
   prevMouseWorld.y = mouseWorld.y;
 
+  // tripmine explosion
   if (tripmineExplosion) {
     const age = performance.now() - tripmineExplosion.t;
     const r = TILE * (4 + age * 0.04);
@@ -1135,6 +1143,7 @@ function loop(now) {
   entityHost.update(dt);
   entityHost.draw();
 
+  // slowness
   if (slowness) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
