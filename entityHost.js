@@ -181,6 +181,7 @@ let dies = false;
 let toggleDeath = true;
 let bellLeniency = false;
 let tripmineLeniency = false;
+let tripmineCustomLeniency = 0;
 export function toggleToggleDeath() {
   toggleDeath = !toggleDeath;
 }
@@ -188,15 +189,19 @@ export function toggleBellLeniency(state) {
   bellLeniency = state;
 }
 export function toggleTripmineLeniency(state) {
-  tripmineLeniency = state;
+  if (typeof state === "number") tripmineCustomLeniency = state;
+  else if (typeof state === "boolean") tripmineLeniency = state;
+  console.log(tripmineCustomLeniency);
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies || !toggleDeath) return;
   if (bellLeniency) {
     if (Math.random() < 0.667) return;
   }
-  if (tripmineLeniency && name === "Tripmine") {
-    if (Math.random() < 0.667) return;
+  if (name === "Tripmine") {
+    if (tripmineLeniency && Math.random() < 0.667) return;
+    if (tripmineCustomLeniency && Math.random() < tripmineCustomLeniency)
+      return;
   }
   dies = true;
   document.body.classList.add("player-dead");

@@ -5,6 +5,7 @@ import {
   updateMouseWorld,
   death,
   toggleToggleDeath,
+  toggleTripmineLeniency,
 } from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
@@ -907,6 +908,9 @@ function updateCamera() {
     edgeMultiplier = drunkCamera ? 1.5 : 1;
   }
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
+  toggleTripmineLeniency(
+    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.333
+  );
 
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.25 : 1;
