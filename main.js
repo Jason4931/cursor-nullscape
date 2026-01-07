@@ -923,7 +923,7 @@ function updateCamera() {
   }
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
   toggleTripmineLeniency(
-    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.333
+    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.667
   );
 
   const motionScale = reducedMotion ? 0.5 : 1;
