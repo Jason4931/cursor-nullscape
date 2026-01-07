@@ -29,6 +29,7 @@ const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
+let lastCursorInfectAt = 0;
 let skinwalkerCount = 0;
 let babyCount = 0;
 export const fleshPositions = new Set();
@@ -943,6 +944,21 @@ function updateCamera() {
 
   mouseWorld = screenToWorld(mouseX, mouseY);
 
+  // cursor spreads infection while slowed
+  if (slowness) {
+    const now = performance.now();
+
+    if (now - lastCursorInfectAt > 120) {
+      fleshPositions.add({
+        x: mouseWorld.x,
+        y: mouseWorld.y,
+        until: now + 18750,
+      });
+
+      lastCursorInfectAt = now;
+    }
+  }
+
   /* collect gifts */
   for (let i = giftPositions.length - 1; i >= 0; i--) {
     const g = giftPositions[i];
@@ -1170,6 +1186,9 @@ function loop(now) {
     ctx.fillStyle = "rgba(255, 0, 0, 0.18)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
+  }
+  for (const f of [...fleshPositions]) {
+    if (f.until <= now) fleshPositions.delete(f);
   }
 
   requestAnimationFrame(loop);

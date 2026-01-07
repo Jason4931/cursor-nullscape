@@ -99,13 +99,8 @@ export function setup(host) {
     fleshPositions.add({
       x: state.x,
       y: state.y,
-      until: now + 30000,
+      until: now + 25000,
     });
-    for (const p of fleshPositions) {
-      if (p.until <= now) {
-        fleshPositions.delete(p);
-      }
-    }
   }
 
   function draw(ctx) {

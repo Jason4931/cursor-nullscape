@@ -11,7 +11,7 @@ export function setup(host) {
     y: 0,
 
     size: 100,
-    speed: 100,
+    speed: 50,
 
     initialized: false,
 
