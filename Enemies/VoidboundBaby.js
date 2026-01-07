@@ -136,13 +136,13 @@ export function setup(host) {
     }
 
     const jitter =
-      state.state === "charging" ? 2 : state.state === "indicator" ? 1 : 0.5;
+      state.state === "charging" ? 4 : state.state === "indicator" ? 2 : 1;
     const rotJitter =
       state.state === "charging"
-        ? 0.16
+        ? 0.32
         : state.state === "indicator"
-        ? 0.08
-        : 0.04;
+        ? 0.16
+        : 0.08;
     const drawX = state.x + (Math.random() - 0.5) * jitter * 2;
     const drawY = state.y + (Math.random() - 0.5) * jitter * 2;
     const rot = (Math.random() - 0.5) * rotJitter * 2;

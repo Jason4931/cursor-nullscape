@@ -45,7 +45,6 @@
         animation: bg 60s infinite;
         box-shadow: 0 0 240px rgba(255, 0, 0, 0.5),
           0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5);
-        cursor: none;
       }
       @keyframes bg {
         0% {
@@ -449,6 +448,13 @@
           <span>Reduced motion</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-reduced-motion" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span style="font-size: 0.95vw">Accurate Cursor</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-accurate-cursor" />
             <span class="slider-toggle"></span>
           </label>
         </div>

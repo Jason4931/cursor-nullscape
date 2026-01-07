@@ -107,6 +107,7 @@ let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
+let accurateCursor = JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
@@ -117,6 +118,7 @@ document.getElementById("toggle-epileptic").checked = epilepticMode;
 document.getElementById("toggle-blindness").checked = blindnessMode;
 document.getElementById("toggle-reduced-motion").checked = reducedMotion;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
+document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("sfx-volume").value = sfxVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
 
@@ -168,6 +170,11 @@ toggle("toggle-reduced-motion", (v) => {
 });
 toggle("toggle-drunk-camera", (v) => {
   drunkCamera = v;
+});
+toggle("toggle-accurate-cursor", (v) => {
+  accurateCursor = v;
+  if (accurateCursor) canvas.style.cursor = "none";
+  else canvas.style.cursor = "auto";
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = e.target.value / 100;
@@ -233,6 +240,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("epileptic");
   localStorage.removeItem("blindness");
   localStorage.removeItem("drunk-camera");
+  localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.removeItem("sfxVolume");
   showBorder = true;
@@ -242,6 +250,7 @@ document.getElementById("reset-settings").onclick = () => {
   epilepticMode = false;
   blindnessMode = false;
   drunkCamera = false;
+  accurateCursor = false;
   sfxVolume = 0.5;
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
@@ -250,12 +259,15 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-epileptic").checked = false;
   document.getElementById("toggle-blindness").checked = false;
   document.getElementById("toggle-drunk-camera").checked = false;
+  document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
   canvas.style.boxShadow =
     "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
+  if (accurateCursor) canvas.style.cursor = "none";
+  else canvas.style.cursor = "auto";
 
   RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 };
@@ -407,6 +419,8 @@ if (graphicsSlider.value === "0") setGraphicsLow();
 else if (graphicsSlider.value === "1") setGraphicsMedium();
 else if (graphicsSlider.value === "2") setGraphicsHigh();
 else setGraphicsUltra();
+if (accurateCursor) canvas.style.cursor = "none";
+else canvas.style.cursor = "auto";
 
 /* ===== HELPERS ===== */
 export function setSlowness(v) {
@@ -1063,10 +1077,12 @@ function loop(now) {
   drawGrid();
 
   // simple cursor
-  ctx.beginPath();
-  ctx.arc(mouseWorld.x, mouseWorld.y, 8, 0, Math.PI * 2);
-  ctx.fillStyle = "white";
-  ctx.fill();
+  if (accurateCursor) {
+    ctx.beginPath();
+    ctx.arc(mouseWorld.x, mouseWorld.y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+  }
 
   // hitradius
   const g = ctx.createRadialGradient(
