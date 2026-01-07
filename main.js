@@ -9,6 +9,7 @@ import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
+import { setup as spawnNIL } from "./Enemies/NIL.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -74,6 +75,12 @@ const ENTITY_POOL = [
     spawn: () => spawnFlesh(entityHost),
     start: 500,
     src: "./ASSET/Enemies/Flesh.png",
+  },
+  {
+    name: "NIL",
+    spawn: () => spawnNIL(entityHost),
+    start: 500,
+    src: "./ASSET/Enemies/NIL.png",
   },
   // add more later
 ];
