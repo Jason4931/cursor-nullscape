@@ -191,7 +191,6 @@ export function toggleBellLeniency(state) {
 export function toggleTripmineLeniency(state) {
   if (typeof state === "number") tripmineCustomLeniency = state;
   else if (typeof state === "boolean") tripmineLeniency = state;
-  console.log(tripmineCustomLeniency);
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies || !toggleDeath) return;
