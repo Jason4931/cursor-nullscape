@@ -178,8 +178,12 @@ function getDeathMessage(name) {
 }
 
 let dies = false;
+let toggleDeath = true;
 let bellLeniency = false;
 let tripmineLeniency = false;
+export function toggleToggleDeath() {
+  toggleDeath = !toggleDeath;
+}
 export function toggleBellLeniency(state) {
   bellLeniency = state;
 }
@@ -187,7 +191,7 @@ export function toggleTripmineLeniency(state) {
   tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
-  if (dies) return;
+  if (dies || !toggleDeath) return;
   if (bellLeniency) {
     if (Math.random() < 0.667) return;
   }

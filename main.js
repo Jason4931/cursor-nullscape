@@ -1,6 +1,11 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
 import { registerEntitySpawn } from "./entityPanel.js";
-import { createEntityHost, updateMouseWorld, death } from "./entityHost.js";
+import {
+  createEntityHost,
+  updateMouseWorld,
+  death,
+  toggleToggleDeath,
+} from "./entityHost.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -151,7 +156,7 @@ toggle("toggle-epileptic", (v) => {
 toggle("toggle-blindness", (v) => {
   blindnessMode = v;
   RENDER_RADIUS =
-    cheat >= 8
+    cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
       ? 200
@@ -181,7 +186,7 @@ function setGraphicsLow() {
   DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
   RENDER_RADIUS =
-    cheat >= 8
+    cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
       ? 200
@@ -193,7 +198,7 @@ function setGraphicsMedium() {
   DESPAWN_RADIUS = SUPER_TILE * TILE * 7.5;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 6;
   RENDER_RADIUS =
-    cheat >= 8
+    cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
       ? 200
@@ -205,7 +210,7 @@ function setGraphicsHigh() {
   DESPAWN_RADIUS = SUPER_TILE * TILE * 10;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 8;
   RENDER_RADIUS =
-    cheat >= 8
+    cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
       ? 200
@@ -271,9 +276,41 @@ let lagFactor = 1;
 /* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
   if (e.key === "/") cheat++;
-  if (cheat >= 8) {
+  if (cheat >= 8 && cheat <= 16) {
     HIT_RADIUS = GIFT_SIZE * 10;
     RENDER_RADIUS = RESPAWN_RADIUS * 10;
+  }
+});
+const topLeftInput = document.getElementById("spawn-input");
+document.addEventListener("keydown", (e) => {
+  if (e.key === "\\") {
+    if (topLeftInput.style.display === "none") {
+      topLeftInput.value = "";
+      topLeftInput.style.display = "block";
+      topLeftInput.focus();
+    } else {
+      topLeftInput.value = "";
+      topLeftInput.style.display = "none";
+      topLeftInput.blur();
+    }
+  }
+});
+topLeftInput.addEventListener("input", () => {
+  const input = topLeftInput.value.trim().toLowerCase();
+  if (input === "\\") topLeftInput.value = "";
+  const entity = ENTITY_POOL.find((e) => e.name.toLowerCase() === input);
+  if (entity) {
+    entity.spawn();
+    registerEntitySpawn(entity.name, entity.src);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "toggledeath") {
+    toggleToggleDeath();
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
   }
 });
 let reducedMotionHoldActive = false;
