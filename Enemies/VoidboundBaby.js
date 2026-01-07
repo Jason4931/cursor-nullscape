@@ -17,7 +17,7 @@ export function setup(host) {
 
     dirX: 0,
     dirY: 0,
-    lineLength: 1350,
+    lineLength: 1125,
 
     chargeTime: 0,
     chargeDuration: 0,
