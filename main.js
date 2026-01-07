@@ -7,6 +7,7 @@ import { setup as spawnBaby } from "./Enemies/Baby.js";
 import { setup as spawnICBM } from "./Enemies/ICBM.js";
 import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
+import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 
 const canvas = document.getElementById("screen");
@@ -22,6 +23,7 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
 let skinwalkerCount = 0;
+let babyCount = 0;
 export const fleshPositions = new Set();
 export const cleanseZones = [];
 const ENTITY_POOL = [
@@ -60,6 +62,12 @@ const ENTITY_POOL = [
     spawn: () => spawnSpringer(entityHost),
     start: 100,
     src: "./ASSET/Enemies/Springer.png",
+  },
+  {
+    name: "VoidboundBaby",
+    spawn: () => spawnVoidboundBaby(entityHost),
+    start: 200,
+    src: "./ASSET/Enemies/VoidboundBaby.png",
   },
   {
     name: "Flesh",
@@ -909,6 +917,13 @@ function updateCamera() {
           while (true) {
             pick = unlocked[(Math.random() * unlocked.length) | 0];
             if (lastEntityPicked !== pick.name) {
+              if (pick.name === "Baby") {
+                babyCount++;
+              } else if (pick.name === "VoidboundBaby") {
+                if (babyCount < 2) {
+                  continue;
+                }
+              }
               lastEntityPicked = pick.name;
               break;
             }

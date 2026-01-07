@@ -1,7 +1,7 @@
 import { death, mouse, attachMouseListener } from "../entityHost.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Baby.png";
+enemy.src = "./ASSET/Enemies/VoidboundBaby.png";
 
 export function setup(host) {
   const state = {
@@ -17,7 +17,7 @@ export function setup(host) {
 
     dirX: 0,
     dirY: 0,
-    lineLength: 900,
+    lineLength: 1350,
 
     chargeTime: 0,
     chargeDuration: 0,
@@ -52,7 +52,7 @@ export function setup(host) {
     state.timer += dt;
 
     if (state.state === "idle") {
-      if (state.timer >= 1) {
+      if (state.timer >= 0.5) {
         state.timer = 0;
         state.state = "indicator";
 
@@ -64,7 +64,7 @@ export function setup(host) {
         state.dirY = dy / d;
       }
     } else if (state.state === "indicator") {
-      if (state.timer >= 1) {
+      if (state.timer >= 0.5) {
         state.timer = 0;
         state.state = "charging";
 
@@ -72,7 +72,7 @@ export function setup(host) {
         state.startY = state.y;
 
         state.chargeTime = 0;
-        state.chargeDuration = 2 + Math.random();
+        state.chargeDuration = 0.5 + Math.random();
       }
     } else if (state.state === "charging") {
       state.chargeTime += dt;
@@ -80,10 +80,11 @@ export function setup(host) {
       let t = state.chargeTime / state.chargeDuration;
       if (t > 1) t = 1;
 
-      const ease = 1 - Math.pow(1 - t, 3);
+      const k = 0.3;
+      const easedT = t * (1 - k) + t * t * k;
 
-      state.x = state.startX + state.dirX * state.lineLength * ease;
-      state.y = state.startY + state.dirY * state.lineLength * ease;
+      state.x = state.startX + state.dirX * state.lineLength * easedT;
+      state.y = state.startY + state.dirY * state.lineLength * easedT;
 
       const dx = mouse.x - state.x;
       const dy = mouse.y - state.y;
@@ -108,8 +109,8 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     if (state.state === "indicator") {
-      const alpha = 1 - state.timer;
-      ctx.fillStyle = `rgba(255,0,0,${alpha})`;
+      const alpha = 0.5 - state.timer;
+      ctx.fillStyle = `rgba(255,0,255,${alpha})`;
 
       const dashLength = 30;
       const gapLength = 20;
