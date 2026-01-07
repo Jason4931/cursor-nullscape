@@ -144,6 +144,18 @@ const DEATH_MESSAGES = {
     "You forgot you couldn't use your abilities.",
     "You have always been part of the flesh.",
   ],
+  NIL: [
+    "You are not a real thing. You were just imagining things.",
+    "Nobody died.",
+    "You? You aren't here. You were never here.",
+    "It says here I'm supposed to write a death message.. but no death has occurred.",
+    "You.",
+    "There is no such thing as nil. You must be hallucinating. You were never here in the first place.",
+    "What? You can't be dead, because you don't exist.",
+    "A mysterious message appeared to me, saying a death has occurred. But nothing happened.. how spooky.",
+    "Nil.",
+    "Everyone is healthy and alive.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
