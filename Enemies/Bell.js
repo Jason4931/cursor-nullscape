@@ -69,7 +69,7 @@ export function setup(host) {
         x: state.x,
         y: state.y,
         r: TILE * 18,
-        expiresAt: performance.now() + 10000, // 10 seconds
+        expiresAt: performance.now() + 10000,
       });
       setSlowness(false);
     }

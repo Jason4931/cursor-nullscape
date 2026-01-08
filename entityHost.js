@@ -156,6 +156,18 @@ const DEATH_MESSAGES = {
     "Nil.",
     "Everyone is healthy and alive.",
   ],
+  Guardian: [
+    "You can hear a faint Nyehehehehehee in the distance...",
+    "YOU JUST GOT THEIR BONES... TROUSLED!",
+    "I hear a dance coming on.",
+    "You got sniped to the bone.",
+    "You were expelled from the level by Guardian.",
+    "You are never going to recover from Guardian's outplay.",
+    "You, did you seriously die like that? Guardian will remember that.",
+    "You failed to move out of Guardian's projectiles.",
+    "You are horrible at dodging, said Guardian. Not me though, I think you're fine.",
+    "You are scared of Guardian.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

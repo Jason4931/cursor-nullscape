@@ -59,7 +59,6 @@ export function setup(host) {
 
     const aggroRadius = 1000;
 
-    // MODE SWITCHING
     if (dist <= aggroRadius) {
       state.mode = "target";
     } else {

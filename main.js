@@ -16,6 +16,7 @@ import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { setup as spawnNIL } from "./Enemies/NIL.js";
+import { setup as spawnGuardian } from "./Enemies/Guardian.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -89,6 +90,12 @@ const ENTITY_POOL = [
     start: 500,
     src: "./ASSET/Enemies/NIL.png",
   },
+  {
+    name: "Guardian",
+    spawn: () => spawnGuardian(entityHost),
+    start: 500,
+    src: "./ASSET/Enemies/Guardian.png",
+  },
   // add more later
 ];
 
@@ -108,7 +115,8 @@ let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
-let accurateCursor = JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
+let accurateCursor =
+  JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 

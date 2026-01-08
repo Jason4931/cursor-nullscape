@@ -27,6 +27,7 @@ export function setup(host) {
     idleDuration: 5,
     idleGrowTime: 3,
     ringMaxRadius: 1000,
+    flashAlpha: 0,
 
     exitDuration: 2,
 
@@ -48,7 +49,7 @@ export function setup(host) {
   }
 
   function applyTripmineLeniency(strength01) {
-    const duration = Math.min(1, strength01); // seconds, capped at 1s
+    const duration = Math.min(1, strength01);
 
     toggleTripmineLeniency(true);
 
@@ -120,7 +121,7 @@ export function setup(host) {
         dist <= ringRadius + thickness / 2;
 
       if (insideRing && !state.wasInsideRing) {
-        const power01 = clamp(1 - growT, 0, 1); // stronger earlier
+        const power01 = clamp(1 - growT, 0, 1);
         const strength =
           Math.min(host.canvas.width, host.canvas.height) * 0.03 * power01;
 
@@ -134,6 +135,13 @@ export function setup(host) {
       }
 
       state.wasInsideRing = insideRing;
+
+      if (state.idleDuration - state.timer <= 1) {
+        const t = state.idleDuration - state.timer;
+        state.flashAlpha = t;
+      } else {
+        state.flashAlpha = 0;
+      }
 
       if (state.timer >= state.idleDuration) {
         state.timer = 0;
@@ -227,6 +235,35 @@ export function setup(host) {
       ctx.globalAlpha = clamp(state.spriteAlpha, 0, 1);
 
       const s = state.size * state.spriteScale;
+
+      if (state.flashAlpha > 0 && state.phase === "idle") {
+        ctx.save();
+        ctx.globalAlpha = state.flashAlpha;
+
+        const cx = state.ringCenterX;
+        const cy = state.ringCenterY - state.size / 3;
+
+        const s1 = s * 1.05;
+        ctx.drawImage(
+          enemy,
+          cx - (s1 * 1.035) / 2,
+          cy - (s1 * 0.95) / 2,
+          s1 * 1.025,
+          s1 * 0.95
+        );
+
+        const s2 = s * 1.1;
+        ctx.drawImage(
+          enemy,
+          cx - (s2 * 1.035) / 2,
+          cy - (s2 * 0.95) / 2,
+          s2 * 1.025,
+          s2 * 0.95
+        );
+
+        ctx.restore();
+      }
+
       ctx.drawImage(
         enemy,
         state.ringCenterX - s / 2,
