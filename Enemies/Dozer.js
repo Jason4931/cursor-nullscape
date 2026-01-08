@@ -21,6 +21,11 @@ export function setup(host) {
     lastMouseX: 0,
     lastMouseY: 0,
     stillTimer: 0,
+
+    jitterTimer: 0,
+    jitterX: 0,
+    jitterY: 0,
+    jitterRot: 0,
   };
 
   attachMouseListener(host.canvas);
@@ -53,6 +58,15 @@ export function setup(host) {
       state.x = cam.x + window.innerWidth / 2;
       state.y = cam.y + window.innerHeight / 2;
 
+      state.jitterTimer += dt;
+      if (state.jitterTimer >= 0.25) {
+        state.jitterTimer = 0;
+
+        state.jitterX = (Math.random() - 0.5) * 10;
+        state.jitterY = (Math.random() - 0.5) * 10;
+        state.jitterRot = (Math.random() - 0.5) * 0.3;
+      }
+
       const dx = mouse.x - state.lastMouseX;
       const dy = mouse.y - state.lastMouseY;
 
@@ -83,10 +97,13 @@ export function setup(host) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
+    ctx.translate(state.x, state.y);
+    ctx.rotate(state.jitterRot);
+
     ctx.drawImage(
       enemy,
-      state.x - state.size / 2,
-      state.y - state.size / 2,
+      -state.size / 2 + state.jitterX,
+      -state.size / 2 + state.jitterY,
       state.size,
       state.size
     );
