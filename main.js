@@ -81,31 +81,31 @@ const ENTITY_POOL = [
   {
     name: "VoidboundBaby",
     spawn: () => spawnVoidboundBaby(entityHost),
-    start: 200,
+    start: 100,
     src: "./ASSET/Enemies/VoidboundBaby.png",
   },
   {
     name: "Flesh",
     spawn: () => spawnFlesh(entityHost),
-    start: 500,
+    start: 300,
     src: "./ASSET/Enemies/Flesh.png",
   },
   {
     name: "NIL",
     spawn: () => spawnNIL(entityHost),
-    start: 500,
+    start: 300,
     src: "./ASSET/Enemies/NIL.png",
   },
   {
     name: "Guardian",
     spawn: () => spawnGuardian(entityHost),
-    start: 500,
+    start: 300,
     src: "./ASSET/Enemies/Guardian.png",
   },
   {
     name: "Dozer",
     spawn: () => spawnDozer(entityHost),
-    start: 500,
+    start: 300,
     src: "./ASSET/Enemies/Dozer.png",
     unstackable: true,
   },
@@ -629,14 +629,14 @@ function placeSuper(sx, sy, pattern) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
-      const isTripmineEnabled = collectedCount > 500;
+      const isTripmineEnabled = collectedCount > 300;
 
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const r = Math.random();
         let type = "gift";
         if (isTripmineEnabled) {
           if (r < 0.01) type = "gold"; // 1%
-          else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
+          else if (r < Math.min(0.00009 * collectedCount - 0.017, 0.1))
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
         } else {
