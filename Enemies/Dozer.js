@@ -12,7 +12,7 @@ export function setup(host) {
     timer: 0,
 
     idleDuration: 9 + Math.random(),
-    watchDuration: 3,
+    watchDuration: 6,
 
     x: 0,
     y: 0,
