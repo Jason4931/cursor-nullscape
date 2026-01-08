@@ -180,8 +180,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -215,8 +215,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -227,8 +227,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -239,8 +239,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -300,6 +300,7 @@ const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
 let cameraRadius = 0.4;
 let dynamicHitRadius;
+const randTile = Math.random();
 let cheat = 0;
 const SUPER_TILE = 9;
 let lagDebt = 0;
@@ -372,9 +373,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -830,15 +830,35 @@ function drawGrid() {
       }
     }
 
-    ctx.fillStyle = showFloor
-      ? corrupted
+    if (corrupted) {
+      ctx.fillStyle = showFloor
         ? `rgba(120, 0, 0, ${0.425 + Math.random() * 0.25})`
-        : "#333"
-      : corrupted
-      ? `rgba(120, 0, 0, 0.066)`
-      : "#3331";
+        : `rgba(120, 0, 0, 0.066)`;
+      ctx.fillRect(t.x, t.y, TILE, TILE);
+    } else {
+      if (randTile < 0.5) {
+        ctx.fillStyle = showFloor ? "#333" : "#3331";
+        ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else {
+        const h = TILE / 2;
 
-    ctx.fillRect(t.x, t.y, TILE, TILE);
+        // top-left
+        ctx.fillStyle = showFloor ? "#ccc" : "#ccc1";
+        ctx.fillRect(t.x, t.y, h, h);
+
+        // top-right
+        ctx.fillStyle = showFloor ? "#333" : "#3331";
+        ctx.fillRect(t.x + h, t.y, h, h);
+
+        // bottom-left
+        ctx.fillStyle = showFloor ? "#333" : "#3331";
+        ctx.fillRect(t.x, t.y + h, h, h);
+
+        // bottom-right
+        ctx.fillStyle = showFloor ? "#ccc" : "#ccc1";
+        ctx.fillRect(t.x + h, t.y + h, h, h);
+      }
+    }
   }
   if (cursorOnCorruptedTile) {
     slowness = true;
