@@ -168,6 +168,18 @@ const DEATH_MESSAGES = {
     "You are horrible at dodging, said Guardian. Not me though, I think you're fine.",
     "You are scared of Guardian.",
   ],
+  Dozer: [
+    "You held your head too high.",
+    "You forgot to bow.",
+    "Will you wake up tomorrow?",
+    "Wakey wakey, you!",
+    "Don't bother you, you are having a good rest.",
+    "You aren't waking up.",
+    "You dozed off.",
+    "You somehow can't see the big yellow dude in the middle of their screen.",
+    "You were put to sleep for good.",
+    "It's past your bed time.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

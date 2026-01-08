@@ -17,6 +17,7 @@ import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { setup as spawnNIL } from "./Enemies/NIL.js";
 import { setup as spawnGuardian } from "./Enemies/Guardian.js";
+import { setup as spawnDozer } from "./Enemies/Dozer.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -33,8 +34,13 @@ let tripmineExplosion = null;
 let lastCursorInfectAt = 0;
 let skinwalkerCount = 0;
 let babyCount = 0;
+const spawnedUnstackables = new Set();
 export const fleshPositions = new Set();
 export const cleanseZones = [];
+export function toggleDozer(v) {
+  if (v) cameraRadius = 0.3;
+  else cameraRadius = 0.4;
+}
 const ENTITY_POOL = [
   {
     name: "Bell",
@@ -95,6 +101,13 @@ const ENTITY_POOL = [
     spawn: () => spawnGuardian(entityHost),
     start: 500,
     src: "./ASSET/Enemies/Guardian.png",
+  },
+  {
+    name: "Dozer",
+    spawn: () => spawnDozer(entityHost),
+    start: 500,
+    src: "./ASSET/Enemies/Dozer.png",
+    unstackable: true,
   },
   // add more later
 ];
@@ -289,6 +302,7 @@ const MAX_SPEED = 20;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
+let cameraRadius = 0.4;
 let dynamicHitRadius;
 let cheat = 0;
 const SUPER_TILE = 9;
@@ -434,6 +448,9 @@ else canvas.style.cursor = "auto";
 /* ===== HELPERS ===== */
 export function setSlowness(v) {
   slowness = v;
+}
+export function getCameraPos() {
+  return { x: -camX, y: -camY };
 }
 export function moveCamera(x, y) {
   camVX += x;
@@ -907,20 +924,20 @@ function updateCamera() {
   let edgeFactorX = 0;
   let edgeFactorY = 0;
 
-  if (mouseX < w * 0.4) {
-    vx = MAX_SPEED * (1 - mouseX / (w * 0.4));
-    edgeFactorX = 1 - mouseX / (w * 0.4);
-  } else if (mouseX > w * 0.6) {
-    vx = -MAX_SPEED * ((mouseX - w * 0.6) / (w * 0.4));
-    edgeFactorX = (mouseX - w * 0.6) / (w * 0.4);
+  if (mouseX < w * cameraRadius) {
+    vx = MAX_SPEED * (1 - mouseX / (w * cameraRadius));
+    edgeFactorX = 1 - mouseX / (w * cameraRadius);
+  } else if (mouseX > w * (1 - cameraRadius)) {
+    vx = -MAX_SPEED * ((mouseX - w * (1 - cameraRadius)) / (w * cameraRadius));
+    edgeFactorX = (mouseX - w * (1 - cameraRadius)) / (w * cameraRadius);
   }
 
-  if (mouseY < h * 0.4) {
-    vy = MAX_SPEED * (1 - mouseY / (h * 0.4));
-    edgeFactorY = 1 - mouseY / (h * 0.4);
-  } else if (mouseY > h * 0.6) {
-    vy = -MAX_SPEED * ((mouseY - h * 0.6) / (h * 0.4));
-    edgeFactorY = (mouseY - h * 0.6) / (h * 0.4);
+  if (mouseY < h * cameraRadius) {
+    vy = MAX_SPEED * (1 - mouseY / (h * cameraRadius));
+    edgeFactorY = 1 - mouseY / (h * cameraRadius);
+  } else if (mouseY > h * (1 - cameraRadius)) {
+    vy = -MAX_SPEED * ((mouseY - h * (1 - cameraRadius)) / (h * cameraRadius));
+    edgeFactorY = (mouseY - h * (1 - cameraRadius)) / (h * cameraRadius);
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
@@ -996,7 +1013,11 @@ function updateCamera() {
       ) {
         lastEntitySpawnAt = collectedCount;
 
-        const unlocked = ENTITY_POOL.filter((e) => collectedCount >= e.start);
+        const unlocked = ENTITY_POOL.filter((e) => {
+          if (collectedCount < e.start) return false;
+          if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+          return true;
+        });
 
         if (unlocked.length > 0) {
           let pick;
@@ -1016,6 +1037,9 @@ function updateCamera() {
           }
           pick.spawn();
           registerEntitySpawn(pick.name, pick.src);
+          if (pick.unstackable) {
+            spawnedUnstackables.add(pick.name);
+          }
         }
       }
 
