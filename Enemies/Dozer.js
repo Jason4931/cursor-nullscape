@@ -1,5 +1,5 @@
 import { death, mouse, attachMouseListener } from "../entityHost.js";
-import { getCameraPos, toggleDozer } from "../main.js";
+import { getCameraPos } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Dozer.png";
@@ -12,7 +12,7 @@ export function setup(host) {
     timer: 0,
 
     idleDuration: 9 + Math.random(),
-    watchDuration: 6,
+    watchDuration: 5,
 
     x: 0,
     y: 0,
@@ -49,11 +49,10 @@ export function setup(host) {
         state.timer = 0;
         state.stillTimer = 0;
 
-        state.lastMouseX = mouse.x;
-        state.lastMouseY = mouse.y;
+        state.lastMouseX = mouse._clientX;
+        state.lastMouseY = mouse._clientY;
       }
     } else if (state.phase === "watch") {
-      toggleDozer(true);
       const cam = getCameraPos();
       state.x = cam.x + window.innerWidth / 2;
       state.y = cam.y + window.innerHeight / 2;
@@ -67,20 +66,19 @@ export function setup(host) {
         state.jitterRot = (Math.random() - 0.5) * 0.2;
       }
 
-      const dx = mouse.x - state.lastMouseX;
-      const dy = mouse.y - state.lastMouseY;
+      const dx = mouse._clientX - state.lastMouseX;
+      const dy = mouse._clientY - state.lastMouseY;
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
-        if (state.stillTimer >= 0.1) {
-          toggleDozer(false);
+        if (state.stillTimer >= 0.5) {
           enterIdle();
           return;
         }
       } else {
         state.stillTimer = 0;
-        state.lastMouseX = mouse.x;
-        state.lastMouseY = mouse.y;
+        state.lastMouseX = mouse._clientX;
+        state.lastMouseY = mouse._clientY;
       }
 
       if (state.timer >= state.watchDuration) {

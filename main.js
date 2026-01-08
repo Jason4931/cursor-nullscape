@@ -37,10 +37,6 @@ let babyCount = 0;
 const spawnedUnstackables = new Set();
 export const fleshPositions = new Set();
 export const cleanseZones = [];
-export function toggleDozer(v) {
-  if (v) cameraRadius = 0.3;
-  else cameraRadius = 0.4;
-}
 const ENTITY_POOL = [
   {
     name: "Bell",
