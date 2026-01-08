@@ -128,7 +128,7 @@ export function setup(host) {
       p.x += p.vx * dt;
       p.y += p.vy * dt;
 
-      if (now - p.born > 10000) {
+      if (now - p.born > 7000) {
         state.pellets.splice(i, 1);
         continue;
       }
@@ -153,8 +153,8 @@ export function setup(host) {
       const t = Math.min(state.timer / IDLE_SHOOT_TIME, 1);
       const alpha = (1 - t) * 0.5;
 
-      const rOuter = 18;
-      const rInner = 5;
+      const rOuter = 36;
+      const rInner = 10;
 
       ctx.translate(state.x + 12, state.y - 5);
       ctx.beginPath();

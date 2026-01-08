@@ -62,9 +62,9 @@ export function setup(host) {
       if (state.jitterTimer >= 0.25) {
         state.jitterTimer = 0;
 
-        state.jitterX = (Math.random() - 0.5) * 10;
-        state.jitterY = (Math.random() - 0.5) * 10;
-        state.jitterRot = (Math.random() - 0.5) * 0.3;
+        state.jitterX = (Math.random() - 0.5) * 7.5;
+        state.jitterY = (Math.random() - 0.5) * 7.5;
+        state.jitterRot = (Math.random() - 0.5) * 0.2;
       }
 
       const dx = mouse.x - state.lastMouseX;
