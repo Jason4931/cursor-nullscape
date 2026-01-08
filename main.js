@@ -315,6 +315,9 @@ window.addEventListener("keydown", (e) => {
   if (cheat >= 8 && cheat <= 16) {
     HIT_RADIUS = GIFT_SIZE * 10;
     RENDER_RADIUS = RESPAWN_RADIUS * 10;
+  } else {
+    HIT_RADIUS = GIFT_SIZE;
+    RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
   }
 });
 const topLeftInput = document.getElementById("spawn-input");
