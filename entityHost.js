@@ -180,6 +180,18 @@ const DEATH_MESSAGES = {
     "You were put to sleep for good.",
     "It's past your bed time.",
   ],
+  Telefragger: [
+    "You got completely telefragged.",
+    "You were killed by unforeseen quantum mechanics.",
+    "You dived into Telefragger's loving arms.",
+    "You were killed by unfair game design.",
+    "You tried to escape the nullscape, but Telefragger put a stop to it.",
+    "Man, this telefragger guy is so annoying! Right, you?",
+    "You died to Telefragger.",
+    "Telefragger successfully killed you.",
+    "You failed to remember that Telefragger existed.",
+    "You dived head first into Telefragger.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
