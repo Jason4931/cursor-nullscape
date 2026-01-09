@@ -112,6 +112,11 @@ const ENTITY_POOL = [
     start: 400,
     src: "./ASSET/Enemies/Telefragger.png",
   },
+  {
+    name: "Random",
+    start: 400,
+    src: "./ASSET/Enemies/Random.png",
+  },
   // add more later
 ];
 
@@ -343,8 +348,22 @@ topLeftInput.addEventListener("input", () => {
   if (input === "\\") topLeftInput.value = "";
   const entity = ENTITY_POOL.find((e) => e.name.toLowerCase() === input);
   if (entity) {
-    entity.spawn();
-    registerEntitySpawn(entity.name, entity.src);
+    if (entity.name === "Random") {
+      const randUnlocked = ENTITY_POOL.filter((e) => {
+        if (e.name === "Random") return false;
+        if (collectedCount < e.start) return false;
+        if (e.unstackable) return false;
+        return true;
+      });
+      if (randUnlocked.length !== 0) {
+        let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+        randPick.spawn();
+        registerEntitySpawn(entity.name, entity.src);
+      }
+    } else {
+      entity.spawn();
+      registerEntitySpawn(entity.name, entity.src);
+    }
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -1062,7 +1081,20 @@ function updateCamera() {
               break;
             }
           }
-          pick.spawn();
+          if (pick.name === "Random") {
+            const randUnlocked = ENTITY_POOL.filter((e) => {
+              if (e.name === "Random") return false;
+              if (collectedCount < e.start) return false;
+              if (e.unstackable) return false;
+              return true;
+            });
+            if (randUnlocked.length !== 0) {
+              let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+              randPick.spawn();
+            }
+          } else {
+            pick.spawn();
+          }
           registerEntitySpawn(pick.name, pick.src);
           if (pick.unstackable) {
             spawnedUnstackables.add(pick.name);
