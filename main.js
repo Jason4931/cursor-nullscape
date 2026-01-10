@@ -119,6 +119,11 @@ const ENTITY_POOL = [
     start: 400,
     src: "./ASSET/Enemies/Random.png",
   },
+  {
+    name: "Random",
+    start: 400,
+    src: "./ASSET/Enemies/Random.png",
+  },
   // add more later
 ];
 
