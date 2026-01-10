@@ -1,4 +1,9 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import {
+  death,
+  mouse,
+  attachMouseListener,
+  toggleTripmineLeniency,
+} from "../entityHost.js";
 import { moveCamera } from "../main.js";
 
 const enemy = new Image();
@@ -42,7 +47,7 @@ export function setup(host) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    state.rotation += dt * 0.1;
+    state.rotation += dt * Math.random() * 0.2;
 
     if (state.exploded) {
       state.respawnTimer -= dt;
@@ -58,7 +63,7 @@ export function setup(host) {
     const dy = mouse.y - state.y;
     const dist = Math.hypot(dx, dy);
 
-    if (dist > SPAWN_RADIUS && !state.flashing) {
+    if (dist > SPAWN_RADIUS * 2 && !state.flashing) {
       spawnNearCursor();
       return;
     }
@@ -85,6 +90,10 @@ export function setup(host) {
           const nx = dx / dist;
           const ny = dy / dist;
           moveCamera(-nx * 400, -ny * 400);
+          toggleTripmineLeniency(true);
+          setTimeout(() => {
+            toggleTripmineLeniency(false);
+          }, 1000);
         }
       }
     }
