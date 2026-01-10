@@ -121,12 +121,12 @@ const ENTITY_POOL = [
   },
   {
     name: "Random",
-    start: 1400,
+    start: 900,
     src: "./ASSET/Enemies/Random.png",
   },
   {
     name: "Random",
-    start: 2400,
+    start: 1400,
     src: "./ASSET/Enemies/Random.png",
   },
   // add more later
