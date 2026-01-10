@@ -24,7 +24,7 @@ export function setup(host) {
     rotation: 0,
   };
 
-  const SPAWN_RADIUS = 1000;
+  const SPAWN_RADIUS = 2000;
   const TOUCH_RADIUS = state.size / 2;
   const EXPLODE_RADIUS = state.size * 2;
   const FLASH_TIME = 1;
@@ -63,7 +63,7 @@ export function setup(host) {
     const dy = mouse.y - state.y;
     const dist = Math.hypot(dx, dy);
 
-    if (dist > SPAWN_RADIUS * 2 && !state.flashing) {
+    if (dist > SPAWN_RADIUS && !state.flashing) {
       spawnNearCursor();
       return;
     }
