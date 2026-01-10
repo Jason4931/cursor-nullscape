@@ -19,6 +19,7 @@ import { setup as spawnNIL } from "./Enemies/NIL.js";
 import { setup as spawnGuardian } from "./Enemies/Guardian.js";
 import { setup as spawnDozer } from "./Enemies/Dozer.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
+import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -32,6 +33,7 @@ const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
+let isSeamineEnabled = [false, false, false];
 let lastCursorInfectAt = 0;
 let skinwalkerCount = 0;
 let babyCount = 0;
@@ -1089,13 +1091,24 @@ function updateCamera() {
               return true;
             });
             if (randUnlocked.length !== 0) {
-              let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+              let randPick =
+                randUnlocked[(Math.random() * randUnlocked.length) | 0];
               randPick.spawn();
             }
           } else {
             pick.spawn();
           }
           registerEntitySpawn(pick.name, pick.src);
+          if (collectedCount >= 500 && !isSeamineEnabled[0]) {
+            isSeamineEnabled[0] = true;
+            spawnSeamine(entityHost);
+          } else if (collectedCount >= 1000 && !isSeamineEnabled[1]) {
+            isSeamineEnabled[1] = true;
+            spawnSeamine(entityHost);
+          } else if (collectedCount >= 1500 && !isSeamineEnabled[2]) {
+            isSeamineEnabled[2] = true;
+            spawnSeamine(entityHost);
+          }
           if (pick.unstackable) {
             spawnedUnstackables.add(pick.name);
           }
