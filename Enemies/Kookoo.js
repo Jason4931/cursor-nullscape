@@ -1,0 +1,310 @@
+import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { getCameraPos } from "../main.js";
+
+const enemy = new Image();
+enemy.src = "./ASSET/Enemies/Kookoo.png";
+
+export function setup(host) {
+  const state = {
+    phase: "intro",
+    timer: 0,
+
+    target: 0,
+    count: 0,
+
+    showEntity: false,
+    opacity: 1,
+
+    screenX: 0,
+    screenY: 0,
+    strikeMouseX: 0,
+    strikeMouseY: 0,
+
+    lastSecond: -1,
+    arrowSpinStart: -1,
+    arrowSpinDuration: 0.18,
+  };
+
+  const EYE_TIME = 0.35;
+  const RING_RADIUS = 60;
+  const INTRO_TIME = 3;
+  const STRIKE_TIME = 1;
+  const STRIKE_RADIUS = 210;
+
+  attachMouseListener(host.canvas);
+
+  function resetIntro() {
+    state.phase = "intro";
+    state.timer = INTRO_TIME;
+    state.target = 8 + Math.floor(Math.random() * 5);
+    state.count = state.target;
+    state.showEntity = false;
+    state.screenX = window.innerWidth / 2;
+    state.screenY = window.innerHeight / 2;
+  }
+
+  function randomizePosition() {
+    state.screenX = 100 + Math.random() * (window.innerWidth - 200);
+    state.screenY = 100 + Math.random() * (window.innerHeight - 200);
+  }
+
+  resetIntro();
+
+  function update(dt) {
+    state.timer -= dt;
+    const cam = getCameraPos();
+    state.x = cam.x + state.screenX;
+    state.y = cam.y + state.screenY;
+
+    switch (state.phase) {
+      case "intro":
+        if (state.timer <= 0) {
+          state.phase = "counting";
+          state.timer = state.target;
+          state.count = 0;
+          randomizePosition();
+        }
+        break;
+
+      case "counting": {
+        const elapsed = state.target - state.timer;
+        state.count = Math.min(state.target, Math.floor(elapsed));
+
+        if (Math.floor(elapsed) !== Math.floor(elapsed - dt)) {
+          randomizePosition();
+        }
+
+        if (state.count >= state.target) {
+          randomizePosition();
+          state.phase = "strike";
+          state.timer = STRIKE_TIME;
+          state.showEntity = false;
+
+          state.strikeMouseX = mouse.x;
+          state.strikeMouseY = mouse.y;
+        }
+        break;
+      }
+
+      case "strike":
+        if (state.timer <= 0.25) {
+          state.showEntity = true;
+        }
+
+        if (state.timer <= 0) {
+          const dx = mouse.x - state.strikeMouseX;
+          const dy = mouse.y - state.strikeMouseY;
+
+          if (dx * dx + dy * dy <= STRIKE_RADIUS * STRIKE_RADIUS) {
+            death("Kookoo");
+          }
+
+          state.phase = "idle";
+          state.timer = 9 + Math.random();
+          state.showEntity = false;
+        }
+        break;
+
+      case "idle":
+        if (state.timer <= 0) {
+          resetIntro();
+        }
+        break;
+    }
+  }
+
+  function draw(ctx) {
+    if (state.phase === "idle") return;
+
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    let arrowAngle = 0;
+
+    if (state.phase === "counting" || state.phase === "strike") {
+      const elapsed = state.target - state.timer;
+      const sec = Math.floor(elapsed);
+
+      if (sec !== state.lastSecond) {
+        state.lastSecond = sec;
+        state.arrowSpinStart = elapsed;
+      }
+
+      if (state.arrowSpinStart >= 0) {
+        const t = (elapsed - state.arrowSpinStart) / state.arrowSpinDuration;
+        if (t < 1) {
+          arrowAngle = t * Math.PI * 2;
+        }
+      }
+    }
+
+    ctx.save();
+
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, RING_RADIUS + 2, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, RING_RADIUS, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,0,255,1)";
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, RING_RADIUS - 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, RING_RADIUS - 8, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+
+    const innerR = RING_RADIUS - 10;
+    const grad = ctx.createRadialGradient(
+      state.x,
+      state.y,
+      0,
+      state.x,
+      state.y,
+      innerR
+    );
+    grad.addColorStop(0, "rgba(0,0,128,1)");
+    grad.addColorStop(1, "rgba(0,0,0,1)");
+
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, innerR, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.restore();
+
+    if (state.phase !== "idle") {
+      ctx.save();
+      ctx.translate(state.x, state.y);
+      ctx.rotate(arrowAngle);
+
+      const shaftLen = RING_RADIUS - 26;
+      const shaftW = 6;
+      const headH = 14;
+      const headW = 16;
+
+      ctx.fillStyle = "rgba(0,0,255,1)";
+      ctx.fillRect(-shaftW / 2, -shaftLen, shaftW, shaftLen);
+
+      ctx.beginPath();
+      ctx.moveTo(-0.4, -shaftLen - headH - 1);
+      ctx.lineTo(-headW / 2 - 0.4, -shaftLen + 4);
+      ctx.lineTo(headW / 2 - 0.4, -shaftLen + 4);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(-shaftW / 2 + 2, -shaftLen + 2, shaftW - 4, shaftLen - 4);
+
+      ctx.beginPath();
+      ctx.moveTo(0, -shaftLen - headH + 3);
+      ctx.lineTo(-headW / 2 + 3, -shaftLen + 2);
+      ctx.lineTo(headW / 2 - 3, -shaftLen + 2);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.font = "32px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const text = state.phase === "counting" ? state.count : state.target;
+
+    ctx.fillStyle = "rgba(0,0,255,1)";
+    for (let ox = -1; ox <= 1; ox++) {
+      for (let oy = -1; oy <= 1; oy++) {
+        if (ox || oy) ctx.fillText(text, state.x + ox, state.y + oy);
+      }
+    }
+
+    ctx.fillStyle = "white";
+    ctx.fillText(text, state.x, state.y);
+
+    ctx.restore();
+
+    if (state.phase === "intro") {
+      const blinkOn = Math.floor(state.timer / 0.25) % 2 === 0;
+
+      if (blinkOn) {
+        const text = "remember!!";
+        const tx = state.x - 20;
+        const ty = state.y + RING_RADIUS + 12;
+
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.font = "18px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        ctx.fillStyle = "rgba(0,0,255,1)";
+        for (let ox = -1; ox <= 1; ox++) {
+          for (let oy = -1; oy <= 1; oy++) {
+            if (ox || oy) ctx.fillText(text, tx + ox, ty + oy);
+          }
+        }
+
+        ctx.fillStyle = "white";
+        ctx.fillText(text, tx, ty);
+
+        ctx.restore();
+      }
+    }
+
+    function drawEyeMask(progress, closing) {
+      const p = closing ? progress : 1 - progress;
+
+      const h = RING_RADIUS * 2 * p;
+      const yTop = state.y - RING_RADIUS;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(state.x, state.y, RING_RADIUS, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.fillStyle = "rgba(0,0,255,1)";
+      ctx.fillRect(state.x - RING_RADIUS, yTop, RING_RADIUS * 2, h);
+
+      ctx.restore();
+    }
+    if (state.phase === "intro") {
+      const t = Math.max(0, INTRO_TIME - 0.25 - state.timer);
+      if (t < EYE_TIME) {
+        drawEyeMask(t / EYE_TIME, false);
+      }
+    }
+    if (state.phase === "strike") {
+      const t = Math.max(0, STRIKE_TIME - 0.575 - state.timer);
+      if (t < EYE_TIME * 0.5) {
+        drawEyeMask(t / (EYE_TIME * 0.5), true);
+      }
+    }
+
+    if (
+      (state.phase === "intro" && state.timer >= 2.75) ||
+      (state.phase === "strike" && state.showEntity)
+    ) {
+      ctx.drawImage(
+        enemy,
+        state.x - RING_RADIUS * 1.5,
+        state.y - RING_RADIUS * 1.5,
+        RING_RADIUS * 3,
+        RING_RADIUS * 3
+      );
+    }
+
+    ctx.restore();
+  }
+
+  const unregister = host.register({ update, draw });
+  return unregister;
+}

@@ -6,7 +6,7 @@ enemy.src = "./ASSET/Enemies/Dozer.png";
 
 export function setup(host) {
   const state = {
-    opacity: 0.5,
+    opacity: 1,
 
     phase: "idle",
     timer: 0,

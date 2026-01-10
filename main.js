@@ -20,6 +20,7 @@ import { setup as spawnGuardian } from "./Enemies/Guardian.js";
 import { setup as spawnDozer } from "./Enemies/Dozer.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
+import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -128,6 +129,13 @@ const ENTITY_POOL = [
     name: "Random",
     start: 1400,
     src: "./ASSET/Enemies/Random.png",
+  },
+  {
+    name: "Kookoo",
+    spawn: () => spawnKookoo(entityHost),
+    start: 500,
+    src: "./ASSET/Enemies/Kookoo.png",
+    unstackable: true,
   },
   // add more later
 ];

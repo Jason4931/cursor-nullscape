@@ -85,7 +85,7 @@ export function setup(host) {
         state.blastAlpha = 0.8;
 
         if (dist < EXPLODE_RADIUS) {
-          death("Seamine");
+          death("Seamine", "#FF6A00");
         } else {
           const nx = dx / dist;
           const ny = dy / dist;
