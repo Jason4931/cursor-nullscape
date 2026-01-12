@@ -21,6 +21,7 @@ import { setup as spawnDozer } from "./Enemies/Dozer.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
+import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -34,7 +35,7 @@ const entityHost = createEntityHost(canvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
-let isSeamineEnabled = [false, false, false];
+let isSeamineEnabled = false;
 let lastCursorInfectAt = 0;
 let skinwalkerCount = 0;
 let babyCount = 0;
@@ -135,6 +136,13 @@ const ENTITY_POOL = [
     spawn: () => spawnKookoo(entityHost),
     start: 500,
     src: "./ASSET/Enemies/Kookoo.png",
+    unstackable: true,
+  },
+  {
+    name: "VoidImplosions",
+    spawn: () => spawnVoidImplosions(entityHost),
+    start: 500,
+    src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
   },
   // add more later
@@ -1117,14 +1125,10 @@ function updateCamera() {
             pick.spawn();
           }
           registerEntitySpawn(pick.name, pick.src);
-          if (collectedCount >= 500 && !isSeamineEnabled[0]) {
-            isSeamineEnabled[0] = true;
+          if (collectedCount >= 500 && !isSeamineEnabled) {
+            isSeamineEnabled = true;
             spawnSeamine(entityHost);
-          } else if (collectedCount >= 1000 && !isSeamineEnabled[1]) {
-            isSeamineEnabled[1] = true;
             spawnSeamine(entityHost);
-          } else if (collectedCount >= 1500 && !isSeamineEnabled[2]) {
-            isSeamineEnabled[2] = true;
             spawnSeamine(entityHost);
           }
           if (pick.unstackable) {
