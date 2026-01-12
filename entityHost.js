@@ -214,6 +214,12 @@ const DEATH_MESSAGES = {
     "Forgetting something, you?",
     "Someone else can count better than you.",
   ],
+  VoidImplosions: [
+    "You fizzled out of existence.",
+    "You couldn't stay in their reality.",
+    "You imploded.",
+    "You have become null.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

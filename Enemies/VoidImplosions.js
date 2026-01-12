@@ -33,6 +33,20 @@ export function setup(host) {
     }
   }
 
+  function checkDeathAtStrike() {
+    const r = BASE_RADIUS * state.scale;
+    const r2 = r * r;
+
+    for (const c of state.circles) {
+      const dx = mouse.x - c.x;
+      const dy = mouse.y - c.y;
+      if (dx * dx + dy * dy <= r2) {
+        death("VoidImplosions", "#800080");
+        return;
+      }
+    }
+  }
+
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
@@ -72,6 +86,7 @@ export function setup(host) {
         state.phase = 2;
         state.time = 0;
         state.flashTime = 0; // trigger flash
+        checkDeathAtStrike(); // 💀 strike check
       }
     }
 
