@@ -22,6 +22,7 @@ import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
+import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -37,9 +38,13 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let lastCursorInfectAt = 0;
+let sorrowActive = false;
 let skinwalkerCount = 0;
 let babyCount = 0;
 const spawnedUnstackables = new Set();
+export function setSorrowActive(v) {
+  sorrowActive = v;
+}
 export const fleshPositions = new Set();
 export const cleanseZones = [];
 const ENTITY_POOL = [
@@ -145,6 +150,13 @@ const ENTITY_POOL = [
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
   },
+  {
+    name: "Sorrow",
+    spawn: () => spawnSorrow(entityHost),
+    start: 500,
+    src: "./ASSET/Curses/Sorrow.png",
+    unstackable: true,
+  },
   // add more later
 ];
 
@@ -220,8 +232,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -255,8 +267,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -267,8 +279,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -279,8 +291,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -427,9 +439,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -506,9 +517,27 @@ export function setSlowness(v) {
 export function getCameraPos() {
   return { x: -camX, y: -camY };
 }
-export function moveCamera(x, y) {
-  camVX += x;
-  camVY += y;
+export function moveCamera(x, y, instant = false) {
+  if (instant) {
+    camX += x;
+    camY += y;
+  } else {
+    camVX += x;
+    camVY += y;
+  }
+}
+export function isCursorOnFloor() {
+  for (const t of floorTiles) {
+    if (
+      mouseWorld.x >= t.x &&
+      mouseWorld.x < t.x + TILE &&
+      mouseWorld.y >= t.y &&
+      mouseWorld.y < t.y + TILE
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function rotateMatrix90(m) {
@@ -1306,10 +1335,10 @@ function loop(now) {
   entityHost.draw();
 
   // slowness
-  if (slowness) {
+  if (slowness || sorrowActive) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = "rgba(255, 0, 0, 0.18)";
+    ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   }

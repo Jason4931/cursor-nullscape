@@ -220,6 +220,18 @@ const DEATH_MESSAGES = {
     "You imploded.",
     "You have become null.",
   ],
+  Sorrow: [
+    "You lingered too long where you didn’t belong.",
+    "You stepped away from the floor, and Sorrow noticed.",
+    "You couldn’t endure Sorrow’s presence.",
+    "You drifted from safety and paid the price.",
+    "Sorrow claimed you when you stopped paying attention.",
+    "You were undone by lingering despair.",
+    "You let yourself slip, and Sorrow finished the job.",
+    "You strayed too far from reality.",
+    "You hesitated. Sorrow did not.",
+    "You were consumed by quiet inevitability."
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
