@@ -115,10 +115,12 @@ export function setup(host) {
       const cy = mouse.y - state.ringCenterY;
       const dist = Math.hypot(cx, cy);
 
-      const thickness = 32;
-      const insideRing =
-        dist >= ringRadius - thickness / 2 &&
-        dist <= ringRadius + thickness / 2;
+      const thickness = 200;
+
+      const inner = ringRadius - thickness;
+      const outer = ringRadius;
+
+      const insideRing = dist >= inner && dist <= outer;
 
       if (insideRing && !state.wasInsideRing) {
         const power01 = clamp(1 - growT, 0, 1);
@@ -205,27 +207,30 @@ export function setup(host) {
     if (state.phase === "idle" && state.timer < state.idleGrowTime) {
       const growT = clamp(state.timer / state.idleGrowTime, 0, 1);
       const radius = state.ringMaxRadius * growT;
+      const thickness = 200;
       const alpha = (1 - growT) * 0.6;
-
-      const segments = 100;
-      const segLen = 36;
-      const segWidth = 60;
 
       ctx.save();
       ctx.translate(state.ringCenterX, state.ringCenterY);
-      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
 
-      for (let i = 0; i < segments; i++) {
-        const a = (i / segments) * Math.PI * 2;
-        const x = Math.cos(a) * radius;
-        const y = Math.sin(a) * radius;
+      const grad = ctx.createRadialGradient(
+        0,
+        0,
+        Math.max(0, radius - thickness),
+        0,
+        0,
+        radius
+      );
 
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(a);
-        ctx.fillRect(-segLen / 2, -segWidth / 2, segLen, segWidth);
-        ctx.restore();
-      }
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.7, `rgba(255,255,255,0)`);
+      grad.addColorStop(0.71, `rgba(255,255,255,${alpha})`);
+      grad.addColorStop(1, `rgba(255,255,255,${alpha})`);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.restore();
     }

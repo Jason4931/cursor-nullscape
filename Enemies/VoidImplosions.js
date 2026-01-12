@@ -145,7 +145,8 @@ export function setup(host) {
           c.y,
           outlineR
         );
-        g.addColorStop(0.95, "rgba(255,255,255,0)");
+        g.addColorStop(0.94, "rgba(255,255,255,0)");
+        g.addColorStop(0.95, "rgba(255,255,255,0.5)");
         g.addColorStop(1, "rgba(255,255,255,0.5)");
         ctx.fillStyle = g;
         ctx.beginPath();
