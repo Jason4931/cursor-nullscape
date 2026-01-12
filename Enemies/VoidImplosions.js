@@ -9,7 +9,7 @@ export function setup(host) {
     scale: 0,
     circles: [],
     minRadius: 480,
-    maxRadius: 1200,
+    maxRadius: 1000,
     outlineTime: 0.5,
     outlineScale: 1,
     flashTime: 0,
