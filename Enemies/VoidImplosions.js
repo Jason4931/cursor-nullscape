@@ -8,14 +8,14 @@ export function setup(host) {
     opacity: 0.25,
     scale: 0,
     circles: [],
-    minRadius: 360,
-    maxRadius: 600,
+    minRadius: 480,
+    maxRadius: 1200,
     outlineTime: 0.5,
     outlineScale: 1,
     flashTime: 0,
   };
 
-  const CIRCLE_COUNT = 3;
+  const CIRCLE_COUNT = 4;
   const BASE_RADIUS = 210;
 
   attachMouseListener(host.canvas);
