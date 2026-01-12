@@ -207,9 +207,9 @@ export function setup(host) {
       const radius = state.ringMaxRadius * growT;
       const alpha = (1 - growT) * 0.6;
 
-      const segments = 1000;
+      const segments = 100;
       const segLen = 36;
-      const segWidth = 4;
+      const segWidth = 60;
 
       ctx.save();
       ctx.translate(state.ringCenterX, state.ringCenterY);
@@ -268,11 +268,11 @@ export function setup(host) {
         enemy,
         state.ringCenterX - s / 2,
         state.ringCenterY -
-          s / 2 -
-          state.size / 3 -
-          (state.phase === "landing"
-            ? (3 - state.timer) * 20
-            : state.phase === "exit"
+        s / 2 -
+        state.size / 3 -
+        (state.phase === "landing"
+          ? (3 - state.timer) * 20
+          : state.phase === "exit"
             ? state.timer * 10
             : 0),
         s,
