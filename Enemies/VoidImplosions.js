@@ -52,7 +52,6 @@ export function setup(host) {
 
     state.time += dt;
 
-    // accelerating shrink outline
     state.outlineTime += dt;
     state.outlineScale -= state.outlineTime * 4.545;
     if (state.outlineScale <= 0) {
@@ -66,9 +65,6 @@ export function setup(host) {
       }
     }
 
-    // PHASE 0: grow 0–3s
-    // 0–2s: grow only
-    // 2–3s: grow + opacity up
     if (state.phase === 0) {
       const t = Math.min(state.time / 3, 1);
       const ease = 1 - Math.pow(1 - t, 3);
@@ -89,7 +85,6 @@ export function setup(host) {
       }
     }
 
-    // PHASE 1: instant 100%, then fade out (1s)
     else if (state.phase === 1) {
       const t = Math.min(state.time / 1, 1);
       state.scale = 1;
@@ -101,7 +96,6 @@ export function setup(host) {
       }
     }
 
-    // PHASE 2: wait
     else if (state.phase === 2) {
       state.opacity = 0;
       if (state.time >= state.waitTime) {
