@@ -50,60 +50,59 @@ export function setup(host) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
+    state.time += dt;
+
     // accelerating shrink outline
     state.outlineTime += dt;
     state.outlineScale -= state.outlineTime * 4.545;
     if (state.outlineScale <= 0) {
       state.outlineScale = BASE_RADIUS * state.scale;
     }
-    state.time += dt;
 
     if (state.flashTime >= 0) {
       state.flashTime += dt;
       if (state.flashTime > 0.5) {
-        state.flashTime = -1; // done
+        state.flashTime = -1;
       }
     }
 
-    // PHASE 0: grow (0–3s)
+    // PHASE 0: grow 0–3s
+    // 0–2s: grow only
+    // 2–3s: grow + opacity up
     if (state.phase === 0) {
       const t = Math.min(state.time / 3, 1);
-      const ease = 1 - Math.pow(1 - t, 3); // ease-out
+      const ease = 1 - Math.pow(1 - t, 3);
       state.scale = ease;
-      state.opacity = 0.25;
+
+      if (state.time < 2) {
+        state.opacity = 0.25;
+      } else {
+        const ot = Math.min((state.time - 2) / 1, 1);
+        state.opacity = 0.25 + 0.25 * ot;
+      }
+
       if (t === 1) {
         state.phase = 1;
         state.time = 0;
+        state.flashTime = 0;
+        checkDeathAtStrike();
       }
     }
 
-    // PHASE 1: opacity 25% → 50% (1s)
+    // PHASE 1: instant 100%, then fade out (1s)
     else if (state.phase === 1) {
-      const t = Math.min(state.time / 1, 1);
-      state.scale = 1;
-      state.opacity = 0.25 + 0.25 * t;
-      if (t === 1) {
-        state.phase = 2;
-        state.time = 0;
-        state.flashTime = 0; // trigger flash
-        checkDeathAtStrike(); // 💀 strike check
-      }
-    }
-
-    // PHASE 2: instant 100%, then fade out (1s)
-    else if (state.phase === 2) {
       const t = Math.min(state.time / 1, 1);
       state.scale = 1;
       state.opacity = 1 - t;
       if (t === 1) {
-        state.phase = 3;
+        state.phase = 2;
         state.time = 0;
-        state.waitTime = 4.5 + Math.random(); // 4.5–5.5s
+        state.waitTime = 4.5 + Math.random();
       }
     }
 
-    // PHASE 3: wait
-    else if (state.phase === 3) {
+    // PHASE 2: wait
+    else if (state.phase === 2) {
       state.opacity = 0;
       if (state.time >= state.waitTime) {
         state.phase = 0;
@@ -122,13 +121,11 @@ export function setup(host) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
-    ctx.fillStyle = "rgba(160, 80, 200, 1)";
 
     for (const c of state.circles) {
       const r = BASE_RADIUS * state.scale;
 
       const grad = ctx.createRadialGradient(c.x, c.y, r * 0.1, c.x, c.y, r);
-
       grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
       grad.addColorStop(1, "rgba(128, 0, 128, 1)");
 
@@ -137,7 +134,6 @@ export function setup(host) {
       ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
       ctx.fill();
 
-      // diameter line
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(Math.random() * Math.PI * 2);
@@ -145,10 +141,9 @@ export function setup(host) {
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 
-      // ---- shrinking outline ring (filled, no stroke) ----
       if (state.outlineScale > 0) {
         const outlineR = Math.min(state.outlineScale, r);
-        const grad = ctx.createRadialGradient(
+        const g = ctx.createRadialGradient(
           c.x,
           c.y,
           outlineR * 0.1,
@@ -156,31 +151,24 @@ export function setup(host) {
           c.y,
           outlineR
         );
-        grad.addColorStop(0.95, "rgba(255, 255, 255, 0)");
-        grad.addColorStop(1, "rgba(255, 255, 255, 0.5)");
-        ctx.fillStyle = grad;
+        g.addColorStop(0.95, "rgba(255,255,255,0)");
+        g.addColorStop(1, "rgba(255,255,255,0.5)");
+        ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(c.x, c.y, outlineR, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // ---- phase 2 white flash ----
       if (state.flashTime >= 0) {
-        ctx.save(); // isolate alpha
-
+        ctx.save();
         const t = state.flashTime / 0.5;
-        const ease = 1 - Math.pow(1 - t, 2); // fast ease-out
-
-        const flashR = r * (1 + 0.16 * ease); // slight grow
-        const alpha = (1 - t) * 0.25;
-
-        ctx.globalAlpha = alpha * state.opacity;
+        const flashR = r * (1 + 0.16 * (1 - Math.pow(1 - t, 2)));
+        ctx.globalAlpha = (1 - t) * 0.25 * state.opacity;
         ctx.fillStyle = "white";
         ctx.beginPath();
         ctx.arc(c.x, c.y, flashR, 0, Math.PI * 2);
         ctx.fill();
-
-        ctx.restore(); // restore for next circle
+        ctx.restore();
       }
     }
 
