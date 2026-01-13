@@ -4,13 +4,24 @@ export const mouse = {
   _clientX: window.innerWidth / 2,
   _clientY: window.innerHeight / 2,
 };
+let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+import { TILE } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
-  mouse.x = (mouse._clientX - rect.left) * scaleX;
-  mouse.y = (mouse._clientY - rect.top) * scaleY;
+  const rawX = (mouse._clientX - rect.left) * scaleX;
+  const rawY = (mouse._clientY - rect.top) * scaleY;
+  const dirX = rawX - prevMouse.x;
+  const dirY = rawY - prevMouse.y;
+  const len = Math.hypot(dirX, dirY) || 1;
+
+  mouse.x = rawX + (dirX / len) * TILE;
+  mouse.y = rawY + (dirY / len) * TILE;
+
+  prevMouse.x = rawX;
+  prevMouse.y = rawY;
 }
 export function createEntityHost(canvas, ctx) {
   const entities = new Set();
