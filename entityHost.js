@@ -2,8 +2,8 @@ let mouseListenerAttached = false;
 export const mouse = {
   x: 0,
   y: 0,
-  _clientX: 0,
-  _clientY: 0,
+  _clientX: window.innerWidth / 2,
+  _clientY: window.innerHeight / 2,
 };
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();

@@ -3,6 +3,7 @@ import { registerEntitySpawn } from "./entityPanel.js";
 import {
   createEntityHost,
   updateMouseWorld,
+  mouse,
   death,
   toggleToggleDeath,
   toggleTripmineLeniency,
@@ -264,8 +265,13 @@ toggle("toggle-drunk-camera", (v) => {
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
-  if (accurateCursor) canvas.style.cursor = "none";
-  else canvas.style.cursor = "auto";
+  if (accurateCursor) {
+    canvas.style.cursor = "none";
+    entityCanvas.style.cursor = "none";
+  } else {
+    canvas.style.cursor = "auto";
+    entityCanvas.style.cursor = "auto";
+  }
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = e.target.value / 100;
@@ -357,8 +363,13 @@ document.getElementById("reset-settings").onclick = () => {
   canvas.style.animation = "bg 60s infinite";
   canvas.style.boxShadow =
     "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
-  if (accurateCursor) canvas.style.cursor = "none";
-  else canvas.style.cursor = "auto";
+  if (accurateCursor) {
+    canvas.style.cursor = "none";
+    entityCanvas.style.cursor = "none";
+  } else {
+    canvas.style.cursor = "auto";
+    entityCanvas.style.cursor = "auto";
+  }
 
   RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 };
@@ -488,7 +499,6 @@ const SUPER_H = Math.max(
 
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
 export const TILE = canvas.width / MAP_TILES_X;
-let mouseWorld = { x: 0, y: 0 };
 let prevMouseWorld = { x: 0, y: 0 };
 
 /* radii use TILE (world units) */
@@ -508,8 +518,6 @@ let camX = 0;
 let camY = 0;
 let camVX = 0;
 let camVY = 0;
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
 let slowness = false;
 let slownessTimeout = null;
 
@@ -530,8 +538,13 @@ if (graphicsSlider.value === "0") setGraphicsLow();
 else if (graphicsSlider.value === "1") setGraphicsMedium();
 else if (graphicsSlider.value === "2") setGraphicsHigh();
 else setGraphicsUltra();
-if (accurateCursor) canvas.style.cursor = "none";
-else canvas.style.cursor = "auto";
+if (accurateCursor) {
+  canvas.style.cursor = "none";
+  entityCanvas.style.cursor = "none";
+} else {
+  canvas.style.cursor = "auto";
+  entityCanvas.style.cursor = "auto";
+}
 
 /* ===== HELPERS ===== */
 export function setSlowness(v) {
@@ -552,10 +565,10 @@ export function moveCamera(x, y, instant = false) {
 export function isCursorOnFloor() {
   for (const t of floorTiles) {
     if (
-      mouseWorld.x >= t.x &&
-      mouseWorld.x < t.x + TILE &&
-      mouseWorld.y >= t.y &&
-      mouseWorld.y < t.y + TILE
+      mouse.x >= t.x &&
+      mouse.x < t.x + TILE &&
+      mouse.y >= t.y &&
+      mouse.y < t.y + TILE
     ) {
       return true;
     }
@@ -570,18 +583,6 @@ function rotateMatrix90(m) {
   for (let y = 0; y < h; y++)
     for (let x = 0; x < w; x++) r[x][h - 1 - y] = m[y][x];
   return r;
-}
-
-function screenToWorld(mx, my) {
-  const rect = canvas.getBoundingClientRect();
-
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-
-  return {
-    x: (mx - rect.left) * scaleX,
-    y: (my - rect.top) * scaleY,
-  };
 }
 
 function patternCenter(sx, sy) {
@@ -809,8 +810,8 @@ export function pickRandomPlaced4or5(radius = 1000) {
 
     // check distance to cursor
     const center = patternCenter(p.sx, p.sy);
-    const dx = center.x - mouseWorld.x;
-    const dy = center.y - mouseWorld.y;
+    const dx = center.x - mouse.x;
+    const dy = center.y - mouse.y;
     if (dx * dx + dy * dy <= radius * radius) {
       candidates.push(p);
     }
@@ -847,8 +848,8 @@ export function pickRandomPlaced4or5(radius = 1000) {
 
 /* ===== INITIAL MAP ===== */
 const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
-  mouseWorld.x,
-  mouseWorld.y,
+  mouse.x,
+  mouse.y,
   RESPAWN_RADIUS
 );
 
@@ -895,8 +896,8 @@ function drawGrid() {
     const cx = t.x + TILE / 2;
     const cy = t.y + TILE / 2;
 
-    const dx = cx - mouseWorld.x;
-    const dy = cy - mouseWorld.y;
+    const dx = cx - mouse.x;
+    const dy = cy - mouse.y;
     if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
     let corrupted = false;
@@ -928,10 +929,10 @@ function drawGrid() {
     // cursor inside this tile?
     if (corrupted) {
       if (
-        mouseWorld.x >= t.x &&
-        mouseWorld.x <= t.x + TILE &&
-        mouseWorld.y >= t.y &&
-        mouseWorld.y <= t.y + TILE
+        mouse.x >= t.x &&
+        mouse.x <= t.x + TILE &&
+        mouse.y >= t.y &&
+        mouse.y <= t.y + TILE
       ) {
         cursorOnCorruptedTile = true;
       }
@@ -986,8 +987,8 @@ function drawGrid() {
   // gifts (center inside the tile)
   if (gift.complete) {
     for (const g of giftPositions) {
-      const dx = g.x + TILE / 2 - mouseWorld.x;
-      const dy = g.y + TILE / 2 - mouseWorld.y;
+      const dx = g.x + TILE / 2 - mouse.x;
+      const dy = g.y + TILE / 2 - mouse.y;
       if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
       const img = g.golden ? goldGift : g.type === "tripmine" ? tripmine : gift;
@@ -1035,9 +1036,9 @@ function centerCamera() {
   camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
 }
 
-window.addEventListener("pointermove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
+window.addEventListener("mousemove", (e) => {
+  mouse._clientX = e.clientX;
+  mouse._clientY = e.clientY;
 });
 
 function updateCamera() {
@@ -1050,20 +1051,20 @@ function updateCamera() {
   let edgeFactorX = 0;
   let edgeFactorY = 0;
 
-  if (mouseX < w * cameraRadius) {
-    vx = MAX_SPEED * (1 - mouseX / (w * cameraRadius));
-    edgeFactorX = 1 - mouseX / (w * cameraRadius);
-  } else if (mouseX > w * (1 - cameraRadius)) {
-    vx = -MAX_SPEED * ((mouseX - w * (1 - cameraRadius)) / (w * cameraRadius));
-    edgeFactorX = (mouseX - w * (1 - cameraRadius)) / (w * cameraRadius);
+  if (mouse._clientX < w * cameraRadius) {
+    vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
+    edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
+  } else if (mouse._clientX > w * (1 - cameraRadius)) {
+    vx = -MAX_SPEED * ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
+    edgeFactorX = (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
   }
 
-  if (mouseY < h * cameraRadius) {
-    vy = MAX_SPEED * (1 - mouseY / (h * cameraRadius));
-    edgeFactorY = 1 - mouseY / (h * cameraRadius);
-  } else if (mouseY > h * (1 - cameraRadius)) {
-    vy = -MAX_SPEED * ((mouseY - h * (1 - cameraRadius)) / (h * cameraRadius));
-    edgeFactorY = (mouseY - h * (1 - cameraRadius)) / (h * cameraRadius);
+  if (mouse._clientY < h * cameraRadius) {
+    vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
+    edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
+  } else if (mouse._clientY > h * (1 - cameraRadius)) {
+    vy = -MAX_SPEED * ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
+    edgeFactorY = (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
@@ -1094,7 +1095,7 @@ function updateCamera() {
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
   entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
 
-  mouseWorld = screenToWorld(mouseX, mouseY);
+  // mouseWorld = screenToWorld(mouseX, mouseY);
 
   // cursor spreads infection while slowed
   if (slowness) {
@@ -1102,8 +1103,8 @@ function updateCamera() {
 
     if (now - lastCursorInfectAt > 120) {
       fleshPositions.add({
-        x: mouseWorld.x,
-        y: mouseWorld.y,
+        x: mouse.x,
+        y: mouse.y,
         until: now + 18750,
       });
 
@@ -1114,8 +1115,8 @@ function updateCamera() {
   /* collect gifts */
   for (let i = giftPositions.length - 1; i >= 0; i--) {
     const g = giftPositions[i];
-    const dx = g.x + TILE / 2 - mouseWorld.x;
-    const dy = g.y + TILE / 2 - mouseWorld.y;
+    const dx = g.x + TILE / 2 - mouse.x;
+    const dy = g.y + TILE / 2 - mouse.y;
 
     const radius = g.type === "tripmine" ? GIFT_SIZE * 0.45 : dynamicHitRadius;
 
@@ -1205,13 +1206,13 @@ function updateCamera() {
   for (const p of [...patternsState.values()]) {
     if (!p.cleared) continue;
     const c = patternCenter(p.sx, p.sy);
-    if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > DESPAWN_RADIUS)
+    if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > DESPAWN_RADIUS)
       destroyPattern(p);
   }
 
   const current3x3 = count3x3Patterns();
   if (current3x3 < 5) {
-    forceSpawn3x3(mouseWorld);
+    forceSpawn3x3(mouse);
   }
 
   /* regenerate empty slots (THROTTLED + BUDGETED) */
@@ -1227,8 +1228,8 @@ function updateCamera() {
     let regenLeft = REGEN_BUDGET;
 
     const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
-      mouseWorld.x,
-      mouseWorld.y,
+      mouse.x,
+      mouse.y,
       RESPAWN_RADIUS
     );
 
@@ -1237,7 +1238,7 @@ function updateCamera() {
         if (superOccupied[sy][sx]) continue;
 
         const c = patternCenter(sx, sy);
-        if (Math.hypot(c.x - mouseWorld.x, c.y - mouseWorld.y) > RESPAWN_RADIUS)
+        if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > RESPAWN_RADIUS)
           continue;
 
         const shuffled = pickPatternsBySize(PATTERNS);
@@ -1274,26 +1275,26 @@ function loop(now) {
   // simple cursor
   if (accurateCursor) {
     ctx.beginPath();
-    ctx.arc(mouseWorld.x, mouseWorld.y, 8, 0, Math.PI * 2);
+    ctx.arc(mouse.x, mouse.y, 8, 0, Math.PI * 2);
     ctx.fillStyle = "white";
     ctx.fill();
   }
 
   // hitradius
   const g = ctx.createRadialGradient(
-    mouseWorld.x,
-    mouseWorld.y,
+    mouse.x,
+    mouse.y,
     0,
-    mouseWorld.x,
-    mouseWorld.y,
+    mouse.x,
+    mouse.y,
     dynamicHitRadius
   );
   g.addColorStop(0, "rgba(0, 0, 255, 0)");
   g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
   ctx.beginPath();
   ctx.arc(
-    mouseWorld.x,
-    mouseWorld.y,
+    mouse.x,
+    mouse.y,
     dynamicHitRadius - GIFT_SIZE / 2,
     0,
     Math.PI * 2
@@ -1308,8 +1309,8 @@ function loop(now) {
   camVY *= 0.88;
 
   // lag detection
-  const dx = mouseWorld.x - prevMouseWorld.x;
-  const dy = mouseWorld.y - prevMouseWorld.y;
+  const dx = mouse.x - prevMouseWorld.x;
+  const dy = mouse.y - prevMouseWorld.y;
   const dist = Math.hypot(dx, dy);
   const TELEPORT_THRESHOLD = TILE * 2;
   if (dist > TELEPORT_THRESHOLD) {
@@ -1319,8 +1320,8 @@ function loop(now) {
   }
   lagDebt = Math.max(0, Math.min(lagDebt, 1));
   lagFactor = 1 + lagDebt;
-  prevMouseWorld.x = mouseWorld.x;
-  prevMouseWorld.y = mouseWorld.y;
+  prevMouseWorld.x = mouse.x;
+  prevMouseWorld.y = mouse.y;
 
   // tripmine explosion
   if (tripmineExplosion) {
