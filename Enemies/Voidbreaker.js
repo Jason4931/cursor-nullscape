@@ -139,7 +139,7 @@ export function setup(host, stack) {
 
           const dist = perp;
 
-          if (t > 0.25 && t <= 1 && dist <= KILL_RADIUS) {
+          if (t > 0.25 && t <= 0.5 && dist <= KILL_RADIUS) {
             death("Voidbreaker");
           }
         }
@@ -337,7 +337,7 @@ export function setup(host, stack) {
           const vy = mouse.y - state.sword.lockY;
           const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
 
-          if (t > 0.25 && t <= 1 && perp <= KILL_RADIUS) {
+          if (t > 0.25 && t <= 0.5 && perp <= KILL_RADIUS) {
             death("Voidbreaker");
           }
         }
