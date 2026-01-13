@@ -13,7 +13,7 @@ export function setup(host) {
     pads: [],
   };
 
-  const PAD_COUNT = 10;
+  const PAD_COUNT = 100;
   const PAD_SIZE = TILE * 2.5;
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
@@ -30,7 +30,7 @@ export function setup(host) {
     state.pads.length = 0;
 
     let safety = 0;
-    while (state.pads.length < PAD_COUNT && safety < 500) {
+    while (state.pads.length < PAD_COUNT && safety < 100) {
       safety++;
 
       const a = Math.random() * Math.PI * 2;
