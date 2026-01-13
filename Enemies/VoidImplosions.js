@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 export function setup(host) {
   const state = {
@@ -17,8 +17,6 @@ export function setup(host) {
 
   const CIRCLE_COUNT = 4;
   const BASE_RADIUS = 210;
-
-  attachMouseListener(host.canvas);
 
   function respawnCircles() {
     state.circles.length = 0;

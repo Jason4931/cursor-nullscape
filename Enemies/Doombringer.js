@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import { TILE, moveCamera } from "../main.js";
 
 const jumppad = new Image();
@@ -18,8 +18,6 @@ export function setup(host) {
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
   const WARNING_TIME = 10;
-
-  attachMouseListener(host.canvas);
 
   function resetDelay() {
     state.phase = "idle";

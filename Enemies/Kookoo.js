@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import { getCameraPos } from "../main.js";
 
 const enemy = new Image();
@@ -30,8 +30,6 @@ export function setup(host) {
   const INTRO_TIME = 3;
   const STRIKE_TIME = 1;
   const STRIKE_RADIUS = 210;
-
-  attachMouseListener(host.canvas);
 
   function resetIntro() {
     state.phase = "intro";

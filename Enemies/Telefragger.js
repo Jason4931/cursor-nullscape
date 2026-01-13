@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
@@ -31,8 +31,6 @@ export function setup(host) {
 
     ripplePhase: 0,
   };
-
-  attachMouseListener(host.canvas);
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;

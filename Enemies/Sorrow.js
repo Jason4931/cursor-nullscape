@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import { isCursorOnFloor, setSorrowActive, moveCamera, TILE } from "../main.js";
 
 export function setup(host) {
@@ -15,8 +15,6 @@ export function setup(host) {
 
   const RAIN_COUNT = 40;
   const RAIN_RADIUS = 1000;
-
-  attachMouseListener(host.canvas);
 
   function update(dt) {
     state.time += dt;

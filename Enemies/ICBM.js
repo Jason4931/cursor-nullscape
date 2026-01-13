@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
@@ -26,8 +26,6 @@ export function setup(host) {
 
     initialized: false,
   };
-
-  attachMouseListener(host.canvas);
 
   const easeIn = (t) => t * t;
   const easeOut = (t) => 1 - Math.pow(1 - t, 2);

@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundBaby.png";
@@ -26,8 +26,6 @@ export function setup(host) {
 
     initialized: false,
   };
-
-  attachMouseListener(host.canvas);
 
   function randomSpawn() {
     const cx = host.canvas.width / 2;
@@ -141,8 +139,8 @@ export function setup(host) {
       state.state === "charging"
         ? 0.32
         : state.state === "indicator"
-        ? 0.16
-        : 0.08;
+          ? 0.16
+          : 0.08;
     const drawX = state.x + (Math.random() - 0.5) * jitter * 2;
     const drawY = state.y + (Math.random() - 0.5) * jitter * 2;
     const rot = (Math.random() - 0.5) * rotJitter * 2;

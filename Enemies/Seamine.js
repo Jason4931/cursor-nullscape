@@ -1,7 +1,6 @@
 import {
   death,
   mouse,
-  attachMouseListener,
   toggleTripmineLeniency,
 } from "../entityHost.js";
 import { moveCamera } from "../main.js";
@@ -29,8 +28,6 @@ export function setup(host) {
   const EXPLODE_RADIUS = state.size * 2;
   const FLASH_TIME = 1;
   const RESPAWN_DELAY = 10;
-
-  attachMouseListener(host.canvas);
 
   function spawnNearCursor() {
     const a = Math.random() * Math.PI * 2;

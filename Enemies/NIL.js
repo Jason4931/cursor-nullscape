@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/NIL.png";
@@ -31,8 +31,6 @@ export function setup(host) {
 
     _targetDuration: 9 + Math.random(),
   };
-
-  attachMouseListener(host.canvas);
 
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 3);

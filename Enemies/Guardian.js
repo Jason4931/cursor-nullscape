@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Guardian.png";
@@ -26,8 +26,6 @@ export function setup(host) {
   const DASH_TIME = 3;
   const IDLE_SHOOT_TIME = 1;
   const IDLE_TIME = 1;
-
-  attachMouseListener(host.canvas);
 
   function startMove() {
     state.mode = "move";

@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import {
   voidbreakerActive,
   setVoidbreakerActive,
@@ -54,8 +54,6 @@ export function setup(host, stack) {
       [-1, -1],
       [1, -1],
     ];
-
-    attachMouseListener(host.canvas);
 
     function resetIdle() {
       state.phase = "idle";
@@ -263,8 +261,6 @@ export function setup(host, stack) {
       [-1, -1],
       [1, -1],
     ];
-
-    attachMouseListener(host.canvas);
 
     function tryTrigger() {
       const v = voidbreakerActive;

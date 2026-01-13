@@ -1,7 +1,6 @@
 import {
   death,
   mouse,
-  attachMouseListener,
   toggleTripmineLeniency,
 } from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5 } from "../main.js";
@@ -39,8 +38,6 @@ export function setup(host) {
 
     wasInsideRing: false,
   };
-
-  attachMouseListener(host.canvas);
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 

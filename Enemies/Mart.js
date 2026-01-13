@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Mart.png";
@@ -24,8 +24,6 @@ export function setup(host) {
     wobbleTime: 0,
     _targetDuration: 9 + Math.random(),
   };
-
-  attachMouseListener(host.canvas);
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;

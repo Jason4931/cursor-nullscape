@@ -1,6 +1,5 @@
 import {
   mouse,
-  attachMouseListener,
   toggleBellLeniency,
 } from "../entityHost.js";
 import { cleanseZones, setSlowness, TILE } from "../main.js";
@@ -34,8 +33,6 @@ export function setup(host) {
     hitActive: false,
     wasHovering: false,
   };
-
-  attachMouseListener(host.canvas);
 
   const easeOut = (t) => 1 - (1 - t) * (1 - t);
   const easeIn = (t) => t * t;

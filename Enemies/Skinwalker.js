@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Skinwalker.png";
@@ -21,8 +21,6 @@ export function setup(host, stack) {
     history: [],
     historyLimit: 20 * 60,
   };
-
-  attachMouseListener(host.canvas);
 
   function pickDelay() {
     state.delayTarget = 2 + Math.random() + stack * 2.5;

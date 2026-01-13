@@ -1,5 +1,4 @@
 import { PATTERNS, TILE_SIZE } from "./patterns.js";
-import { registerEntitySpawn } from "./entityPanel.js";
 import {
   createEntityHost,
   updateMouseWorld,
@@ -35,8 +34,12 @@ const counterEl = document.getElementById("counter");
 const settingsBtn = document.getElementById("settings-btn");
 const settingsPanel = document.getElementById("settings-panel");
 const graphicsSlider = document.getElementById("graphics-slider");
+const panel = document.getElementById("entity-panel");
+const content = document.getElementById("entity-panel-content");
+const entityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, ctx);
+let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
@@ -394,6 +397,7 @@ let lagFactor = 1;
 
 /* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
+  if (e.repeat) return;
   if (e.key === "/") cheat++;
   if (cheat >= 8 && cheat <= 16) {
     HIT_RADIUS = GIFT_SIZE * 10;
@@ -402,9 +406,6 @@ window.addEventListener("keydown", (e) => {
     HIT_RADIUS = GIFT_SIZE;
     RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
   }
-});
-const topLeftInput = document.getElementById("spawn-input");
-document.addEventListener("keydown", (e) => {
   if (e.key === "\\") {
     if (topLeftInput.style.display === "none") {
       topLeftInput.value = "";
@@ -416,7 +417,12 @@ document.addEventListener("keydown", (e) => {
       topLeftInput.blur();
     }
   }
+  if (e.key.toLowerCase() === "m") {
+    panelOpen = !panelOpen;
+    panel.classList.toggle("open", panelOpen);
+  }
 });
+const topLeftInput = document.getElementById("spawn-input");
 topLeftInput.addEventListener("input", () => {
   const input = topLeftInput.value.trim().toLowerCase();
   if (input === "\\") topLeftInput.value = "";
@@ -470,6 +476,10 @@ const input = document.getElementById("death-input");
 const img = document.getElementById("death-image");
 let wobbleTimer;
 input.addEventListener("input", () => {
+  if (input.value.toLowerCase() === "shutup") {
+    location.reload();
+  }
+
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
@@ -574,6 +584,40 @@ export function isCursorOnFloor() {
     }
   }
   return false;
+}
+
+function registerEntitySpawn(name, imageSrc) {
+  let data = entityCounts.get(name);
+  if (!data) {
+    data = { count: 0, img: imageSrc };
+    entityCounts.set(name, data);
+  }
+  data.count++;
+  renderPanel();
+}
+
+function renderPanel() {
+  content.innerHTML = "";
+
+  for (const [name, data] of entityCounts) {
+    const slot = document.createElement("div");
+    slot.className = "entity-slot";
+
+    const img = document.createElement("img");
+    img.src = data.img;
+    img.alt = name;
+
+    slot.appendChild(img);
+
+    if (data.count >= 2) {
+      const badge = document.createElement("div");
+      badge.className = "entity-count";
+      badge.textContent = data.count;
+      slot.appendChild(badge);
+    }
+
+    content.appendChild(slot);
+  }
 }
 
 function rotateMatrix90(m) {

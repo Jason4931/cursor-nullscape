@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import { getCameraPos } from "../main.js";
 
 const enemy = new Image();
@@ -27,8 +27,6 @@ export function setup(host) {
     jitterY: 0,
     jitterRot: 0,
   };
-
-  attachMouseListener(host.canvas);
 
   function enterIdle() {
     state.phase = "idle";

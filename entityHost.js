@@ -1,4 +1,3 @@
-let mouseListenerAttached = false;
 export const mouse = {
   x: 0,
   y: 0,
@@ -13,20 +12,6 @@ export function updateMouseWorld(canvas) {
   mouse.x = (mouse._clientX - rect.left) * scaleX;
   mouse.y = (mouse._clientY - rect.top) * scaleY;
 }
-export function attachMouseListener(canvas, onMove) {
-  if (mouseListenerAttached) return;
-  mouseListenerAttached = true;
-
-  canvas.addEventListener("mousemove", (e) => {
-    mouse._clientX = e.clientX;
-    mouse._clientY = e.clientY;
-
-    if (typeof onMove === "function") {
-      onMove(mouse);
-    }
-  });
-}
-
 export function createEntityHost(canvas, ctx) {
   const entities = new Set();
 
@@ -321,11 +306,6 @@ export function death(name = "Unknown", color = "#f70000") {
     screen.style.display = "block";
     input.focus();
     input.select();
-    input.addEventListener("input", () => {
-      if (input.value.toLowerCase() === "shutup") {
-        location.reload();
-      }
-    });
     setTimeout(() => {
       image.style.opacity = "1";
     }, 200);

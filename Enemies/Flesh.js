@@ -1,4 +1,4 @@
-import { death, mouse, attachMouseListener } from "../entityHost.js";
+import { death, mouse } from "../entityHost.js";
 import { fleshPositions } from "../main.js";
 
 const enemy = new Image();
@@ -24,8 +24,6 @@ export function setup(host) {
     randomTimer: 0,
     randomDuration: 9 + Math.random(),
   };
-
-  attachMouseListener(host.canvas);
 
   function pickRandomDir() {
     const a = Math.random() * Math.PI * 2;
