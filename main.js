@@ -24,7 +24,7 @@ import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
-import { setup as spawnVoidbreaker } from "./Enemies/VoidBreaker.js";
+import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
