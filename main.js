@@ -27,6 +27,7 @@ import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 
 const canvas = document.getElementById("screen");
+const entityCanvas = document.getElementById("entities");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
 const counterEl = document.getElementById("counter");
@@ -34,7 +35,7 @@ const settingsBtn = document.getElementById("settings-btn");
 const settingsPanel = document.getElementById("settings-panel");
 const graphicsSlider = document.getElementById("graphics-slider");
 
-const entityHost = createEntityHost(canvas, ctx);
+const entityHost = createEntityHost(entityCanvas, ctx);
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
@@ -252,8 +253,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -287,8 +288,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -299,8 +300,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -311,8 +312,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -365,6 +366,8 @@ document.getElementById("reset-settings").onclick = () => {
 /* ===== CONFIG ===== */
 canvas.width = 10000;
 canvas.height = 10000;
+entityCanvas.width = 10000;
+entityCanvas.height = 10000;
 
 const MAX_SPEED = 20;
 const GRID_DIVS = 10;
@@ -459,9 +462,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1090,6 +1092,7 @@ function updateCamera() {
     camY += Math.cos(t * 1.7) * 2;
   }
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
+  entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
 
   mouseWorld = screenToWorld(mouseX, mouseY);
 
@@ -1265,7 +1268,7 @@ function loop(now) {
   lastTime = now;
 
   updateCamera();
-  updateMouseWorld(canvas, camX, camY);
+  updateMouseWorld(entityCanvas, camX, camY);
   drawGrid();
 
   // simple cursor

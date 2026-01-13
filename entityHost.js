@@ -307,6 +307,7 @@ export function death(name = "Unknown", color = "#f70000") {
   setTimeout(() => {
     document.body.classList.remove("player-dead");
     const canvas = document.getElementById("screen");
+    const entityCanvas = document.getElementById("entities");
     const image = document.getElementById("death-image");
     const screen = document.getElementById("death-screen");
     const text = document.getElementById("death-text");
@@ -314,6 +315,7 @@ export function death(name = "Unknown", color = "#f70000") {
     const retry = document.getElementById("retry-btn");
 
     canvas.style.display = "none";
+    entityCanvas.style.display = "none";
     text.textContent = getDeathMessage(name);
     text.style.color = color;
     screen.style.display = "block";
