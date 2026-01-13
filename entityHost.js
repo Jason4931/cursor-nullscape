@@ -11,17 +11,17 @@ export function updateMouseWorld(canvas) {
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
 
+  const dirX = mouse._clientX - prevMouse.x;
+  const dirY = mouse._clientY - prevMouse.y;
+  const len = Math.hypot(dirX, dirY) || 1;
   const rawX = (mouse._clientX - rect.left) * scaleX;
   const rawY = (mouse._clientY - rect.top) * scaleY;
-  const dirX = rawX - prevMouse.x;
-  const dirY = rawY - prevMouse.y;
-  const len = Math.hypot(dirX, dirY) || 1;
 
   mouse.x = rawX + (dirX / len) * TILE;
   mouse.y = rawY + (dirY / len) * TILE;
 
-  prevMouse.x = rawX;
-  prevMouse.y = rawY;
+  prevMouse.x = mouse._clientX;
+  prevMouse.y = mouse._clientY;
 }
 export function createEntityHost(canvas, ctx) {
   const entities = new Set();
