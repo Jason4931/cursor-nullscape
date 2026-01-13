@@ -145,7 +145,13 @@ export function setup(host) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    ctx.drawImage(enemy, state.x - 50, state.y - 50, 100, 100);
+    ctx.drawImage(
+      enemy,
+      Math.round(state.x - 50),
+      Math.round(state.y - 50),
+      100,
+      100
+    );
 
     if (state.mode === "idleShoot") {
       const t = Math.min(state.timer / IDLE_SHOOT_TIME, 1);
@@ -154,22 +160,18 @@ export function setup(host) {
       const rOuter = 36;
       const rInner = 10;
 
-      ctx.translate(state.x + 12, state.y - 5);
-      ctx.beginPath();
+      ctx.translate(Math.round(state.x + 12), Math.round(state.y - 5));
 
+      ctx.beginPath();
       ctx.moveTo(0, -rOuter);
       ctx.lineTo(rInner, -rInner);
       ctx.lineTo(rOuter, 0);
-
       ctx.lineTo(rInner, rInner);
       ctx.lineTo(0, rOuter);
-
       ctx.lineTo(-rInner, rInner);
       ctx.lineTo(-rOuter, 0);
-
       ctx.lineTo(-rInner, -rInner);
       ctx.closePath();
-
       ctx.fillStyle = `rgba(255,130,220,${alpha})`;
       ctx.fill();
 
@@ -179,19 +181,16 @@ export function setup(host) {
       ctx.lineTo(0, rInner);
       ctx.lineTo(-rInner, 0);
       ctx.closePath();
-
       ctx.fillStyle = `rgba(210,140,255,${alpha})`;
       ctx.fill();
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
-    ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(
-      Math.random() * 5
-    )}`;
+    ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
     for (const p of state.pellets) {
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+      ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
       ctx.fill();
     }
 

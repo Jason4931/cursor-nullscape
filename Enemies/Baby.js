@@ -117,14 +117,19 @@ export function setup(host) {
 
       let dist = 0;
       while (dist < state.lineLength) {
-        const cx = state.x + state.dirX * dist;
-        const cy = state.y + state.dirY * dist;
+        const cx = Math.round(state.x + state.dirX * dist);
+        const cy = Math.round(state.y + state.dirY * dist);
 
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(angle);
 
-        ctx.fillRect(0, -thickness / 2, dashLength, thickness);
+        ctx.fillRect(
+          0,
+          Math.round(-thickness / 2),
+          Math.round(dashLength),
+          Math.round(thickness)
+        );
 
         ctx.restore();
 
@@ -140,18 +145,20 @@ export function setup(host) {
         : state.state === "indicator"
           ? 0.08
           : 0.04;
-    const drawX = state.x + (Math.random() - 0.5) * jitter * 2;
-    const drawY = state.y + (Math.random() - 0.5) * jitter * 2;
+
+    const drawX = Math.round(state.x + (Math.random() - 0.5) * jitter * 2);
+    const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
     const rot = (Math.random() - 0.5) * rotJitter * 2;
+
     ctx.save();
     ctx.translate(drawX, drawY);
     ctx.rotate(rot);
     ctx.drawImage(
       enemy,
-      -state.size / 2,
-      -state.size / 2,
-      state.size,
-      state.size
+      Math.round(-state.size / 2),
+      Math.round(-state.size / 2),
+      Math.round(state.size),
+      Math.round(state.size)
     );
 
     ctx.restore();

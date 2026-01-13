@@ -169,48 +169,51 @@ export function setup(host, stack) {
 
       if (state.phase !== "idle") {
         ctx.globalAlpha = state.opacity;
-        ctx.drawImage(enemy, mouse.x - 50, mouse.y + HOVER_Y - 50, 100, 100);
+        ctx.drawImage(
+          enemy,
+          Math.round(mouse.x - 50),
+          Math.round(mouse.y + HOVER_Y - 50),
+          100,
+          100
+        );
       }
 
       if (state.sword.active) {
         ctx.globalAlpha = state.sword.opacity;
 
         ctx.save();
-        ctx.translate(state.sword.x, state.sword.y);
+        ctx.translate(Math.round(state.sword.x), Math.round(state.sword.y));
         ctx.rotate(state.sword.angle + 0.25 * Math.PI);
+        const swordSize = Math.round(SWORD_SIZE);
         ctx.drawImage(
           sword,
-          -SWORD_SIZE / 2,
-          -SWORD_SIZE / 2,
-          SWORD_SIZE,
-          SWORD_SIZE
+          Math.round(-swordSize / 2),
+          Math.round(-swordSize / 2),
+          swordSize,
+          swordSize
         );
         ctx.restore();
 
         if (state.sword.flash > 0) {
           ctx.save();
-          ctx.translate(state.flashX, state.flashY);
+          ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
           ctx.rotate(state.sword.angle + 0.25 * Math.PI);
 
           const a = 0.5 * state.sword.flash;
-
           ctx.globalAlpha = a;
           ctx.fillStyle = "#b300ff";
 
-          const rOuter = FLASH_OUTER;
-          const rInner = FLASH_INNER;
+          const rOuter = Math.round(FLASH_OUTER);
+          const rInner = Math.round(FLASH_INNER);
 
           ctx.beginPath();
           ctx.moveTo(0, -rOuter);
           ctx.lineTo(rInner, -rInner);
           ctx.lineTo(rOuter, 0);
-
           ctx.lineTo(rInner, rInner);
           ctx.lineTo(0, rOuter);
-
           ctx.lineTo(-rInner, rInner);
           ctx.lineTo(-rOuter, 0);
-
           ctx.lineTo(-rInner, -rInner);
           ctx.closePath();
           ctx.fill();
@@ -353,41 +356,38 @@ export function setup(host, stack) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
       ctx.globalAlpha = state.sword.opacity;
-      ctx.translate(state.sword.x, state.sword.y);
+      ctx.translate(Math.round(state.sword.x), Math.round(state.sword.y));
       ctx.rotate(state.sword.angle + 0.25 * Math.PI);
+      const swordSize = Math.round(SWORD_SIZE);
       ctx.drawImage(
         sword,
-        -SWORD_SIZE / 2,
-        -SWORD_SIZE / 2,
-        SWORD_SIZE,
-        SWORD_SIZE
+        Math.round(-swordSize / 2),
+        Math.round(-swordSize / 2),
+        swordSize,
+        swordSize
       );
       ctx.restore();
 
       if (state.flash > 0) {
         ctx.save();
-        ctx.translate(state.flashX, state.flashY);
+        ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
         ctx.rotate(state.sword.angle + 0.25 * Math.PI);
 
         const a = 0.5 * state.flash;
-
         ctx.globalAlpha = a;
         ctx.fillStyle = "#b300ff";
 
-        const rOuter = 27;
-        const rInner = 6;
+        const rOuter = Math.round(27);
+        const rInner = Math.round(6);
 
         ctx.beginPath();
         ctx.moveTo(0, -rOuter);
         ctx.lineTo(rInner, -rInner);
         ctx.lineTo(rOuter, 0);
-
         ctx.lineTo(rInner, rInner);
         ctx.lineTo(0, rOuter);
-
         ctx.lineTo(-rInner, rInner);
         ctx.lineTo(-rOuter, 0);
-
         ctx.lineTo(-rInner, -rInner);
         ctx.closePath();
         ctx.fill();

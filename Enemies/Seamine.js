@@ -105,7 +105,13 @@ export function setup(host) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalAlpha = Math.max(0, state.blastAlpha);
         ctx.beginPath();
-        ctx.arc(state.x, state.y, state.blastRadius, 0, Math.PI * 2);
+        ctx.arc(
+          Math.round(state.x),
+          Math.round(state.y),
+          Math.round(state.blastRadius),
+          0,
+          Math.PI * 2
+        );
         ctx.fillStyle = "orange";
         ctx.fill();
         ctx.restore();
@@ -118,14 +124,14 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     ctx.save();
-    ctx.translate(state.x, state.y);
+    ctx.translate(Math.round(state.x), Math.round(state.y));
     ctx.rotate(state.rotation);
     ctx.drawImage(
       enemy,
-      -state.size / 2,
-      -state.size / 2,
-      state.size,
-      state.size
+      Math.round(-state.size / 2),
+      Math.round(-state.size / 2),
+      Math.round(state.size),
+      Math.round(state.size)
     );
     ctx.restore();
 
@@ -135,9 +141,9 @@ export function setup(host) {
       ctx.globalAlpha = 0.25;
       ctx.beginPath();
       ctx.arc(
-        state.x - 3,
-        state.y - 3,
-        (state.size / 2) * pulse,
+        Math.round(state.x - 3),
+        Math.round(state.y - 3),
+        Math.round((state.size / 2) * pulse),
         0,
         Math.PI * 2
       );

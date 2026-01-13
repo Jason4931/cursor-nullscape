@@ -171,15 +171,8 @@ export function setup(host) {
 
       ctx.fillStyle = "rgba(255,40,40,0.9)";
       ctx.beginPath();
-      ctx.arc(state.ringCenterX, state.ringCenterY, outerR + 5, 0, Math.PI * 2);
-      ctx.arc(
-        state.ringCenterX,
-        state.ringCenterY,
-        innerR + 5,
-        0,
-        Math.PI * 2,
-        true
-      );
+      ctx.arc(Math.round(state.ringCenterX), Math.round(state.ringCenterY), Math.round(outerR + 5), 0, Math.PI * 2);
+      ctx.arc(Math.round(state.ringCenterX), Math.round(state.ringCenterY), Math.round(innerR + 5), 0, Math.PI * 2, true);
       ctx.fill("evenodd");
 
       const markW = 8;
@@ -187,14 +180,14 @@ export function setup(host) {
       const rot = state.timer * 1.5;
 
       ctx.save();
-      ctx.translate(state.ringCenterX, state.ringCenterY);
+      ctx.translate(Math.round(state.ringCenterX), Math.round(state.ringCenterY));
       ctx.rotate(rot);
       ctx.fillStyle = "rgba(255,40,40,0.9)";
 
       for (let i = 0; i < 4; i++) {
         ctx.save();
         ctx.rotate((Math.PI / 2) * i);
-        ctx.fillRect(-markW / 2, -outerR - markH / 2, markW, markH);
+        ctx.fillRect(Math.round(-markW / 2), Math.round(-outerR - markH / 2), markW, markH);
         ctx.restore();
       }
 
@@ -208,15 +201,15 @@ export function setup(host) {
       const alpha = (1 - growT) * 0.6;
 
       ctx.save();
-      ctx.translate(state.ringCenterX, state.ringCenterY);
+      ctx.translate(Math.round(state.ringCenterX), Math.round(state.ringCenterY));
 
       const grad = ctx.createRadialGradient(
         0,
         0,
-        Math.max(0, radius - thickness),
+        Math.round(Math.max(0, radius - thickness)),
         0,
         0,
-        radius
+        Math.round(radius)
       );
 
       grad.addColorStop(0, `rgba(255,255,255,0)`);
@@ -226,7 +219,7 @@ export function setup(host) {
 
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.arc(0, 0, Math.round(radius), 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -236,47 +229,47 @@ export function setup(host) {
       ctx.save();
       ctx.globalAlpha = clamp(state.spriteAlpha, 0, 1);
 
-      const s = state.size * state.spriteScale;
+      const s = Math.round(state.size * state.spriteScale);
 
       if (state.flashAlpha > 0 && state.phase === "idle") {
         ctx.save();
         ctx.globalAlpha = state.flashAlpha;
 
-        const cx = state.ringCenterX;
-        const cy = state.ringCenterY - state.size / 3;
+        const cx = Math.round(state.ringCenterX);
+        const cy = Math.round(state.ringCenterY - state.size / 3);
 
-        const s1 = s * 1.05;
+        const s1 = Math.round(s * 1.05);
         ctx.drawImage(
           enemy,
-          cx - (s1 * 1.035) / 2,
-          cy - (s1 * 0.95) / 2,
-          s1 * 1.025,
-          s1 * 0.95
+          Math.round(cx - (s1 * 1.035) / 2),
+          Math.round(cy - (s1 * 0.95) / 2),
+          Math.round(s1 * 1.025),
+          Math.round(s1 * 0.95)
         );
 
-        const s2 = s * 1.1;
+        const s2 = Math.round(s * 1.1);
         ctx.drawImage(
           enemy,
-          cx - (s2 * 1.035) / 2,
-          cy - (s2 * 0.95) / 2,
-          s2 * 1.025,
-          s2 * 0.95
+          Math.round(cx - (s2 * 1.035) / 2),
+          Math.round(cy - (s2 * 0.95) / 2),
+          Math.round(s2 * 1.025),
+          Math.round(s2 * 0.95)
         );
 
         ctx.restore();
       }
 
+      const spriteY = state.ringCenterY - s / 2 - state.size / 3 -
+        (state.phase === "landing"
+          ? Math.round((3 - state.timer) * 20)
+          : state.phase === "exit"
+            ? Math.round(state.timer * 10)
+            : 0);
+
       ctx.drawImage(
         enemy,
-        state.ringCenterX - s / 2,
-        state.ringCenterY -
-        s / 2 -
-        state.size / 3 -
-        (state.phase === "landing"
-          ? (3 - state.timer) * 20
-          : state.phase === "exit"
-            ? state.timer * 10
-            : 0),
+        Math.round(state.ringCenterX - s / 2),
+        Math.round(spriteY),
         s,
         s
       );

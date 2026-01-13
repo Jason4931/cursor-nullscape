@@ -84,14 +84,11 @@ export function setup(host) {
       const a = Math.random() * Math.PI * 2;
       const r = TILE + Math.random() * (RAIN_RADIUS - TILE);
 
-      const x = mouse.x + Math.cos(a) * r;
-      const y =
-        mouse.y +
-        Math.sin(a) * r +
-        ((t + i * 17) % 40);
+      const x = Math.round(mouse.x + Math.cos(a) * r);
+      const y = Math.round(mouse.y + Math.sin(a) * r + ((t + i * 17) % 40));
+      const h = Math.round(6 + Math.random() * 6);
 
-      const h = 6 + Math.random() * 6;
-      ctx.fillRect(x, y, 1.2, h);
+      ctx.fillRect(x, y, 1, h);
     }
 
     ctx.restore();

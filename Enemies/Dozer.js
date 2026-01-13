@@ -93,15 +93,15 @@ export function setup(host) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
-    ctx.translate(state.x, state.y);
+    ctx.translate(Math.round(state.x), Math.round(state.y));
     ctx.rotate(state.jitterRot);
 
     ctx.drawImage(
       enemy,
-      -state.size / 2 + state.jitterX,
-      -state.size / 2 + state.jitterY,
-      state.size,
-      state.size
+      Math.round(-state.size / 2 + state.jitterX),
+      Math.round(-state.size / 2 + state.jitterY),
+      Math.round(state.size),
+      Math.round(state.size)
     );
 
     ctx.restore();

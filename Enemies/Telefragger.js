@@ -98,18 +98,18 @@ export function setup(host) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    const trailRadius = state.size * 0.6 + Math.sin(state.ripplePhase) * 6;
+    const trailRadius = Math.round(state.size * 0.6 + Math.sin(state.ripplePhase) * 6);
     ctx.globalAlpha = 0.15;
     ctx.fillStyle = "#9fdfff";
     ctx.beginPath();
-    ctx.arc(state.x, state.y, trailRadius, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), trailRadius, 0, Math.PI * 2);
     ctx.fill();
 
     if (state.flashTime > 0) {
       const t = state.flashTime / state.flashDuration;
       const alpha = t * t;
 
-      ctx.translate(state.x, state.y);
+      ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(state.flashAngle);
 
       ctx.globalAlpha = alpha;
@@ -122,25 +122,26 @@ export function setup(host) {
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-      const rippleRadius = (1 - t) * 80 + 20;
+      const rippleRadius = Math.round((1 - t) * 80 + 20);
       ctx.globalAlpha = alpha * 0.35;
       ctx.fillStyle = "#9fdfff";
       ctx.beginPath();
-      ctx.arc(state.x, state.y, rippleRadius, 0, Math.PI * 2);
+      ctx.arc(Math.round(state.x), Math.round(state.y), rippleRadius, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.globalAlpha = state.opacity;
-    ctx.translate(state.x, state.y);
+    ctx.translate(Math.round(state.x), Math.round(state.y));
     ctx.rotate(state.facingAngle);
     ctx.scale(state.flipX, -1);
 
+    const size = Math.round(state.size);
     ctx.drawImage(
       enemy,
-      -state.size / 2,
-      -state.size / 2,
-      state.size,
-      state.size
+      Math.round(-size / 2),
+      Math.round(-size / 2),
+      size,
+      size
     );
 
     ctx.restore();

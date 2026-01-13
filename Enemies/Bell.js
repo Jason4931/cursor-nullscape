@@ -147,17 +147,23 @@ export function setup(host) {
 
     if (state.circleScale > 0) {
       ctx.beginPath();
-      ctx.arc(state.x, state.y, 40 * state.circleScale, 0, Math.PI * 2);
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        Math.round(40 * state.circleScale),
+        0,
+        Math.PI * 2
+      );
       ctx.fillStyle = Math.random() < 0.6 ? "gray" : "white";
       ctx.fill();
     }
 
     if (state.bellScale > 0) {
-      const s = state.size * state.bellScale;
+      const s = Math.round(state.size * state.bellScale);
       ctx.save();
-      ctx.translate(state.x, state.y);
+      ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(state.rotation);
-      ctx.drawImage(enemy, -s / 2, -s / 2, s, s);
+      ctx.drawImage(enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
       ctx.restore();
     }
 
@@ -170,11 +176,11 @@ export function setup(host) {
       state._wobbleTime = (state._wobbleTime || 0) + 0.08;
 
       const offsets = [
-        [Math.sin(state._wobbleTime) * strength, 0],
-        [0, Math.cos(state._wobbleTime * 1.3) * strength],
+        [Math.round(Math.sin(state._wobbleTime) * strength), 0],
+        [0, Math.round(Math.cos(state._wobbleTime * 1.3) * strength)],
         [
-          Math.sin(state._wobbleTime * 0.7) * strength,
-          Math.cos(state._wobbleTime * 0.9) * strength,
+          Math.round(Math.sin(state._wobbleTime * 0.7) * strength),
+          Math.round(Math.cos(state._wobbleTime * 0.9) * strength),
         ],
       ];
 

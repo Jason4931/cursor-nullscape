@@ -130,49 +130,47 @@ export function setup(host) {
 
       if (state.arrowSpinStart >= 0) {
         const t = (elapsed - state.arrowSpinStart) / state.arrowSpinDuration;
-        if (t < 1) {
-          arrowAngle = t * Math.PI * 2;
-        }
+        if (t < 1) arrowAngle = t * Math.PI * 2;
       }
     }
 
     ctx.save();
 
     ctx.beginPath();
-    ctx.arc(state.x, state.y, RING_RADIUS + 2, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS + 2, 0, Math.PI * 2);
     ctx.fillStyle = "white";
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(state.x, state.y, RING_RADIUS, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(0,0,255,1)";
     ctx.fill();
 
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(state.x, state.y, RING_RADIUS - 8, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS - 8, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.globalCompositeOperation = "source-over";
     ctx.beginPath();
-    ctx.arc(state.x, state.y, RING_RADIUS - 8, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS - 8, 0, Math.PI * 2);
     ctx.fillStyle = "white";
     ctx.fill();
 
     const innerR = RING_RADIUS - 10;
     const grad = ctx.createRadialGradient(
-      state.x,
-      state.y,
+      Math.round(state.x),
+      Math.round(state.y),
       0,
-      state.x,
-      state.y,
+      Math.round(state.x),
+      Math.round(state.y),
       innerR
     );
     grad.addColorStop(0, "rgba(0,0,128,1)");
     grad.addColorStop(1, "rgba(0,0,0,1)");
 
     ctx.beginPath();
-    ctx.arc(state.x, state.y, innerR, 0, Math.PI * 2);
+    ctx.arc(Math.round(state.x), Math.round(state.y), innerR, 0, Math.PI * 2);
     ctx.fillStyle = grad;
     ctx.fill();
 
@@ -180,7 +178,7 @@ export function setup(host) {
 
     if (state.phase !== "idle") {
       ctx.save();
-      ctx.translate(state.x, state.y);
+      ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(arrowAngle);
 
       const shaftLen = RING_RADIUS - 26;
@@ -189,22 +187,22 @@ export function setup(host) {
       const headW = 16;
 
       ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(-shaftW / 2, -shaftLen, shaftW, shaftLen);
+      ctx.fillRect(Math.round(-shaftW / 2), Math.round(-shaftLen), shaftW, shaftLen);
 
       ctx.beginPath();
-      ctx.moveTo(-0.4, -shaftLen - headH - 1);
-      ctx.lineTo(-headW / 2 - 0.4, -shaftLen + 4);
-      ctx.lineTo(headW / 2 - 0.4, -shaftLen + 4);
+      ctx.moveTo(Math.round(-0.4), Math.round(-shaftLen - headH - 1));
+      ctx.lineTo(Math.round(-headW / 2 - 0.4), Math.round(-shaftLen + 4));
+      ctx.lineTo(Math.round(headW / 2 - 0.4), Math.round(-shaftLen + 4));
       ctx.closePath();
       ctx.fill();
 
       ctx.fillStyle = "white";
-      ctx.fillRect(-shaftW / 2 + 2, -shaftLen + 2, shaftW - 4, shaftLen - 4);
+      ctx.fillRect(Math.round(-shaftW / 2 + 2), Math.round(-shaftLen + 2), shaftW - 4, shaftLen - 4);
 
       ctx.beginPath();
-      ctx.moveTo(0, -shaftLen - headH + 3);
-      ctx.lineTo(-headW / 2 + 3, -shaftLen + 2);
-      ctx.lineTo(headW / 2 - 3, -shaftLen + 2);
+      ctx.moveTo(0, Math.round(-shaftLen - headH + 3));
+      ctx.lineTo(Math.round(-headW / 2 + 3), Math.round(-shaftLen + 2));
+      ctx.lineTo(Math.round(headW / 2 - 3), Math.round(-shaftLen + 2));
       ctx.closePath();
       ctx.fill();
 
@@ -221,12 +219,12 @@ export function setup(host) {
     ctx.fillStyle = "rgba(0,0,255,1)";
     for (let ox = -1; ox <= 1; ox++) {
       for (let oy = -1; oy <= 1; oy++) {
-        if (ox || oy) ctx.fillText(text, state.x + ox, state.y + oy);
+        if (ox || oy) ctx.fillText(text, Math.round(state.x + ox), Math.round(state.y + oy));
       }
     }
 
     ctx.fillStyle = "white";
-    ctx.fillText(text, state.x, state.y);
+    ctx.fillText(text, Math.round(state.x), Math.round(state.y));
 
     ctx.restore();
 
@@ -235,8 +233,8 @@ export function setup(host) {
 
       if (blinkOn) {
         const text = "remember!!";
-        const tx = state.x - 20;
-        const ty = state.y + RING_RADIUS + 12;
+        const tx = Math.round(state.x - 20);
+        const ty = Math.round(state.y + RING_RADIUS + 12);
 
         ctx.save();
         ctx.globalAlpha = 1;
@@ -260,43 +258,36 @@ export function setup(host) {
 
     function drawEyeMask(progress, closing) {
       const p = closing ? progress : 1 - progress;
-
       const h = RING_RADIUS * 2 * p;
       const yTop = state.y - RING_RADIUS;
 
       ctx.save();
       ctx.beginPath();
-      ctx.arc(state.x, state.y, RING_RADIUS, 0, Math.PI * 2);
+      ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS, 0, Math.PI * 2);
       ctx.clip();
 
       ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(state.x - RING_RADIUS, yTop, RING_RADIUS * 2, h);
+      ctx.fillRect(Math.round(state.x - RING_RADIUS), Math.round(yTop), Math.round(RING_RADIUS * 2), Math.round(h));
 
       ctx.restore();
     }
+
     if (state.phase === "intro") {
       const t = Math.max(0, INTRO_TIME - 0.25 - state.timer);
-      if (t < EYE_TIME) {
-        drawEyeMask(t / EYE_TIME, false);
-      }
+      if (t < EYE_TIME) drawEyeMask(t / EYE_TIME, false);
     }
     if (state.phase === "strike") {
       const t = Math.max(0, STRIKE_TIME - 0.575 - state.timer);
-      if (t < EYE_TIME * 0.5) {
-        drawEyeMask(t / (EYE_TIME * 0.5), true);
-      }
+      if (t < EYE_TIME * 0.5) drawEyeMask(t / (EYE_TIME * 0.5), true);
     }
 
-    if (
-      (state.phase === "intro" && state.timer >= 2.75) ||
-      (state.phase === "strike" && state.showEntity)
-    ) {
+    if ((state.phase === "intro" && state.timer >= 2.75) || (state.phase === "strike" && state.showEntity)) {
       ctx.drawImage(
         enemy,
-        state.x - RING_RADIUS * 1.5,
-        state.y - RING_RADIUS * 1.5,
-        RING_RADIUS * 3,
-        RING_RADIUS * 3
+        Math.round(state.x - RING_RADIUS * 1.5),
+        Math.round(state.y - RING_RADIUS * 1.5),
+        Math.round(RING_RADIUS * 3),
+        Math.round(RING_RADIUS * 3)
       );
     }
 

@@ -120,12 +120,12 @@ export function setup(host) {
       state.circleOpacity >= 0
     ) {
       const grad = ctx.createRadialGradient(
-        state.lockPosX,
-        state.lockPosY,
+        Math.round(state.lockPosX),
+        Math.round(state.lockPosY),
         0,
-        state.lockPosX,
-        state.lockPosY,
-        state.circleRadius
+        Math.round(state.lockPosX),
+        Math.round(state.lockPosY),
+        Math.round(state.circleRadius)
       );
       grad.addColorStop(
         0,
@@ -138,9 +138,9 @@ export function setup(host) {
 
       ctx.beginPath();
       ctx.arc(
-        state.lockPosX,
-        state.lockPosY,
-        state.circleRadius,
+        Math.round(state.lockPosX),
+        Math.round(state.lockPosY),
+        Math.round(state.circleRadius),
         0,
         Math.PI * 2
       );
@@ -150,10 +150,10 @@ export function setup(host) {
     if (state.phase === "deploy" || state.phase === "idle") {
       ctx.save();
       ctx.globalAlpha = state.opacity;
-      ctx.translate(state.x, state.y);
+      ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate((state.rotation * Math.PI) / 180);
-      const s = state.currentSize;
-      ctx.drawImage(missile, -s / 2, -s / 2, s, s);
+      const s = Math.round(state.currentSize);
+      ctx.drawImage(missile, -Math.round(s / 2), -Math.round(s / 2), s, s);
       ctx.restore();
     }
 

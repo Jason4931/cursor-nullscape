@@ -107,10 +107,10 @@ export function setup(host, stack) {
 
     ctx.drawImage(
       enemy,
-      state.x - state.size / 2,
-      state.y - state.size / 2,
-      state.size,
-      state.size
+      Math.round(state.x - state.size / 2),
+      Math.round(state.y - state.size / 2),
+      Math.round(state.size),
+      Math.round(state.size)
     );
 
     ctx.restore();

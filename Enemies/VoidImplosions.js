@@ -115,32 +115,39 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     for (const c of state.circles) {
-      const r = BASE_RADIUS * state.scale;
+      const r = Math.round(BASE_RADIUS * state.scale);
 
-      const grad = ctx.createRadialGradient(c.x, c.y, r * 0.1, c.x, c.y, r);
+      const grad = ctx.createRadialGradient(
+        Math.round(c.x),
+        Math.round(c.y),
+        Math.round(r * 0.1),
+        Math.round(c.x),
+        Math.round(c.y),
+        r
+      );
       grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
       grad.addColorStop(1, "rgba(128, 0, 128, 1)");
 
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+      ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.save();
-      ctx.translate(c.x, c.y);
+      ctx.translate(Math.round(c.x), Math.round(c.y));
       ctx.rotate(Math.random() * Math.PI * 2);
       ctx.fillStyle = "rgba(128, 0, 128, 1)";
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 
       if (state.outlineScale > 0) {
-        const outlineR = Math.min(state.outlineScale, r);
+        const outlineR = Math.round(Math.min(state.outlineScale, r));
         const g = ctx.createRadialGradient(
-          c.x,
-          c.y,
-          outlineR * 0.1,
-          c.x,
-          c.y,
+          Math.round(c.x),
+          Math.round(c.y),
+          Math.round(outlineR * 0.1),
+          Math.round(c.x),
+          Math.round(c.y),
           outlineR
         );
         g.addColorStop(0.94, "rgba(255,255,255,0)");
@@ -148,18 +155,18 @@ export function setup(host) {
         g.addColorStop(1, "rgba(255,255,255,0.5)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(c.x, c.y, outlineR, 0, Math.PI * 2);
+        ctx.arc(Math.round(c.x), Math.round(c.y), outlineR, 0, Math.PI * 2);
         ctx.fill();
       }
 
       if (state.flashTime >= 0) {
         ctx.save();
         const t = state.flashTime / 0.5;
-        const flashR = r * (1 + 0.16 * (1 - Math.pow(1 - t, 2)));
+        const flashR = Math.round(r * (1 + 0.16 * (1 - Math.pow(1 - t, 2))));
         ctx.globalAlpha = (1 - t) * 0.25 * state.opacity;
         ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.arc(c.x, c.y, flashR, 0, Math.PI * 2);
+        ctx.arc(Math.round(c.x), Math.round(c.y), flashR, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }

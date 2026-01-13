@@ -1075,11 +1075,6 @@ function getLimits() {
   };
 }
 
-function centerCamera() {
-  camX = (viewport.clientWidth - canvas.offsetWidth) / 2;
-  camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
-}
-
 window.addEventListener("mousemove", (e) => {
   mouse._clientX = e.clientX;
   mouse._clientY = e.clientY;

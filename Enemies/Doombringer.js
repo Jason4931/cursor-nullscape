@@ -142,11 +142,11 @@ export function setup(host) {
       const color = blink ? "255,255,255" : "255,0,0";
 
       const g = ctx.createRadialGradient(
-        mouse.x,
-        mouse.y,
+        Math.round(mouse.x),
+        Math.round(mouse.y),
         0,
-        mouse.x,
-        mouse.y,
+        Math.round(mouse.x),
+        Math.round(mouse.y),
         140
       );
 
@@ -156,7 +156,7 @@ export function setup(host) {
       ctx.globalAlpha = state.opacity;
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, 140, 0, Math.PI * 2);
+      ctx.arc(Math.round(mouse.x), Math.round(mouse.y), 140, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -164,17 +164,23 @@ export function setup(host) {
       if (p.opacity <= 0) continue;
 
       ctx.globalAlpha = p.opacity;
-      const jpSize = PAD_SIZE * 1.25;
-      const offset = (jpSize - PAD_SIZE) * 0.5;
+      const jpSize = Math.round(PAD_SIZE * 1.25);
+      const offset = Math.round((jpSize - PAD_SIZE) * 0.5);
 
-      ctx.drawImage(jumppad, p.x - offset, p.y - offset, jpSize, jpSize);
+      ctx.drawImage(
+        jumppad,
+        Math.round(p.x - offset),
+        Math.round(p.y - offset),
+        jpSize,
+        jpSize
+      );
 
       ctx.save();
       ctx.globalAlpha = p.opacity * 0.5;
       const angle = (Math.random() - 0.5) * 0.2;
-      ctx.translate(p.x + PAD_SIZE / 2, p.y + PAD_SIZE / 2);
+      ctx.translate(Math.round(p.x + PAD_SIZE / 2), Math.round(p.y + PAD_SIZE / 2));
       ctx.rotate(angle);
-      ctx.translate(-PAD_SIZE / 2, -PAD_SIZE / 2);
+      ctx.translate(-Math.round(PAD_SIZE / 2), -Math.round(PAD_SIZE / 2));
       ctx.fillStyle = Math.random() > 0.5 ? "#00f" : "#3aa9ff";
       ctx.fillRect(0, 0, PAD_SIZE, PAD_SIZE);
       ctx.restore();
