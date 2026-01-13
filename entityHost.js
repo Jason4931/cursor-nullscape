@@ -244,6 +244,18 @@ const DEATH_MESSAGES = {
     "They're gonna have to glue you back together... IN HELL!",
     "You brought the doom to yourself.",
   ],
+  Voidbreaker: [
+    "You were dismantled.",
+    "You got bisected.",
+    "You were broken by the Voidbreaker.",
+    "You were cut down.",
+    "You were sliced and diced by Voidbreaker.",
+    "You have been seperated courtesy of Voidbreaker.",
+    "You were disassembled by Voidbreaker.",
+    "You were annihilated by Voidbreaker.",
+    "You got killed by Voidbreaker.",
+    "You failed to parry Voidbreaker.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

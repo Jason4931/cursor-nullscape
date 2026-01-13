@@ -24,6 +24,7 @@ import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
+import { setup as spawnVoidbreaker } from "./Enemies/VoidBreaker.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -43,6 +44,11 @@ let sorrowActive = false;
 let skinwalkerCount = 0;
 let babyCount = 0;
 const spawnedUnstackables = new Set();
+export let voidbreakerCount = 0;
+export let voidbreakerActive;
+export function setVoidbreakerActive(v) {
+  voidbreakerActive = v;
+}
 export function setSorrowActive(v) {
   sorrowActive = v;
 }
@@ -164,6 +170,12 @@ const ENTITY_POOL = [
     start: 500,
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
+  },
+  {
+    name: "Voidbreaker",
+    spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++),
+    start: 800,
+    src: "./ASSET/Enemies/Voidbreaker.png",
   },
   // add more later
 ];
