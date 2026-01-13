@@ -23,6 +23,7 @@ import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
+import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
 
 const canvas = document.getElementById("screen");
 const viewport = document.getElementById("viewport");
@@ -157,6 +158,13 @@ const ENTITY_POOL = [
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
   },
+  {
+    name: "Doombringer",
+    spawn: () => spawnDoombringer(entityHost),
+    start: 500,
+    src: "./ASSET/Curses/Doombringer.png",
+    unstackable: true,
+  },
   // add more later
 ];
 
@@ -232,8 +240,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -267,8 +275,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -279,8 +287,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -291,8 +299,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -439,8 +447,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
