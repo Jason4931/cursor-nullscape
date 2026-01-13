@@ -1306,11 +1306,19 @@ function updateCamera() {
 }
 
 /* ===== LOOP ===== */
-let lastTime = performance.now();
-
 function loop(now) {
-  const dt = (now - lastTime) / 1000;
-  lastTime = now;
+  // limit FPS to ~30
+  if (!loop.lastTime) loop.lastTime = now;
+  const dt = (now - loop.lastTime) / 1000;
+
+  // only update ~30fps
+  const FRAME_TIME = 33.333;
+  if (now - loop.lastTime < FRAME_TIME) {
+    requestAnimationFrame(loop);
+    return;
+  }
+
+  loop.lastTime = now;
 
   updateCamera();
   updateMouseWorld(entityCanvas, camX, camY);
@@ -1418,5 +1426,8 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-requestAnimationFrame(centerCamera);
+// center camera
+camX = (viewport.clientWidth - canvas.offsetWidth) / 2;
+camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
+
 loop();
