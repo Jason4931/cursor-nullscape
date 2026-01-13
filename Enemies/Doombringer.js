@@ -13,7 +13,7 @@ export function setup(host) {
     pads: [],
   };
 
-  const PAD_COUNT = 100;
+  const PAD_COUNT = 20;
   const PAD_SIZE = TILE * 2.5;
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
