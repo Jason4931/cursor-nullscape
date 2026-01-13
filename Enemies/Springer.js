@@ -1,7 +1,7 @@
 import {
   death,
   mouse,
-  toggleTripmineLeniency,
+  toggleImmortality,
 } from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5 } from "../main.js";
 
@@ -48,14 +48,14 @@ export function setup(host) {
   function applyTripmineLeniency(strength01) {
     const duration = Math.min(1, strength01);
 
-    toggleTripmineLeniency(true);
+    toggleImmortality(true);
 
     if (state.leniencyTimer) {
       clearTimeout(state.leniencyTimer);
     }
 
     state.leniencyTimer = setTimeout(() => {
-      toggleTripmineLeniency(false);
+      toggleImmortality(false);
       state.leniencyTimer = null;
     }, duration * 1000);
   }
