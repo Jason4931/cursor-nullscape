@@ -136,41 +136,31 @@ export function setup(host) {
 
     ctx.save();
 
-    ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS + 2, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(0,0,255,1)";
-    ctx.fill();
-
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS - 8, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS - 8, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
-    ctx.fill();
-
-    const innerR = RING_RADIUS - 10;
     const grad = ctx.createRadialGradient(
       Math.round(state.x),
       Math.round(state.y),
       0,
       Math.round(state.x),
       Math.round(state.y),
-      innerR
+      RING_RADIUS + 2
     );
     grad.addColorStop(0, "rgba(0,0,128,1)");
-    grad.addColorStop(1, "rgba(0,0,0,1)");
+    grad.addColorStop(0.8, "rgba(0,0,0,1)");
+    grad.addColorStop(0.81, "rgba(255,255,255,1)");
+    grad.addColorStop(0.85, "rgba(255,255,255,1)");
+    grad.addColorStop(0.86, "rgba(0,0,255,1)");
+    grad.addColorStop(0.95, "rgba(0,0,255,1)");
+    grad.addColorStop(0.96, "rgba(255,255,255,1)");
+    grad.addColorStop(1, "rgba(255,255,255,1)");
 
     ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), innerR, 0, Math.PI * 2);
+    ctx.arc(
+      Math.round(state.x),
+      Math.round(state.y),
+      RING_RADIUS + 2,
+      0,
+      Math.PI * 2
+    );
     ctx.fillStyle = grad;
     ctx.fill();
 
@@ -187,7 +177,12 @@ export function setup(host) {
       const headW = 16;
 
       ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(Math.round(-shaftW / 2), Math.round(-shaftLen), shaftW, shaftLen);
+      ctx.fillRect(
+        Math.round(-shaftW / 2),
+        Math.round(-shaftLen),
+        shaftW,
+        shaftLen
+      );
 
       ctx.beginPath();
       ctx.moveTo(Math.round(-0.4), Math.round(-shaftLen - headH - 1));
@@ -197,7 +192,12 @@ export function setup(host) {
       ctx.fill();
 
       ctx.fillStyle = "white";
-      ctx.fillRect(Math.round(-shaftW / 2 + 2), Math.round(-shaftLen + 2), shaftW - 4, shaftLen - 4);
+      ctx.fillRect(
+        Math.round(-shaftW / 2 + 2),
+        Math.round(-shaftLen + 2),
+        shaftW - 4,
+        shaftLen - 4
+      );
 
       ctx.beginPath();
       ctx.moveTo(0, Math.round(-shaftLen - headH + 3));
@@ -210,21 +210,17 @@ export function setup(host) {
     }
 
     ctx.save();
-    ctx.font = "32px monospace";
+    ctx.font = "36px monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     const text = state.phase === "counting" ? state.count : state.target;
 
-    ctx.fillStyle = "rgba(0,0,255,1)";
-    for (let ox = -1; ox <= 1; ox++) {
-      for (let oy = -1; oy <= 1; oy++) {
-        if (ox || oy) ctx.fillText(text, Math.round(state.x + ox), Math.round(state.y + oy));
-      }
-    }
-
     ctx.fillStyle = "white";
     ctx.fillText(text, Math.round(state.x), Math.round(state.y));
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(0,0,255,1)";
+    ctx.strokeText(text, Math.round(state.x), Math.round(state.y));
 
     ctx.restore();
 
@@ -233,24 +229,20 @@ export function setup(host) {
 
       if (blinkOn) {
         const text = "remember!!";
-        const tx = Math.round(state.x - 20);
+        const tx = Math.round(state.x - 25);
         const ty = Math.round(state.y + RING_RADIUS + 12);
 
         ctx.save();
         ctx.globalAlpha = 1;
-        ctx.font = "18px monospace";
+        ctx.font = "bold 22px monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
 
-        ctx.fillStyle = "rgba(0,0,255,1)";
-        for (let ox = -1; ox <= 1; ox++) {
-          for (let oy = -1; oy <= 1; oy++) {
-            if (ox || oy) ctx.fillText(text, tx + ox, ty + oy);
-          }
-        }
-
         ctx.fillStyle = "white";
         ctx.fillText(text, tx, ty);
+        ctx.lineWidth = 0.75;
+        ctx.strokeStyle = "rgba(0,0,255,1)";
+        ctx.strokeText(text, tx, ty);
 
         ctx.restore();
       }
@@ -263,25 +255,42 @@ export function setup(host) {
 
       ctx.save();
       ctx.beginPath();
-      ctx.arc(Math.round(state.x), Math.round(state.y), RING_RADIUS, 0, Math.PI * 2);
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        RING_RADIUS,
+        0,
+        Math.PI * 2
+      );
       ctx.clip();
 
       ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(Math.round(state.x - RING_RADIUS), Math.round(yTop), Math.round(RING_RADIUS * 2), Math.round(h));
+      ctx.fillRect(
+        Math.round(state.x - RING_RADIUS),
+        Math.round(yTop),
+        Math.round(RING_RADIUS * 2),
+        Math.round(h)
+      );
 
       ctx.restore();
     }
 
     if (state.phase === "intro") {
       const t = Math.max(0, INTRO_TIME - 0.25 - state.timer);
-      if (t < EYE_TIME) drawEyeMask(t / EYE_TIME, false);
+      const p = Math.floor((t / EYE_TIME) * 10) / 10;
+      if (p > 0) drawEyeMask(p, false);
     }
     if (state.phase === "strike") {
       const t = Math.max(0, STRIKE_TIME - 0.575 - state.timer);
-      if (t < EYE_TIME * 0.5) drawEyeMask(t / (EYE_TIME * 0.5), true);
+      const dur = EYE_TIME * 0.5;
+      const p = Math.floor((t / dur) * 10) / 10;
+      if (p > 0 && p <= 1) drawEyeMask(p, true);
     }
 
-    if ((state.phase === "intro" && state.timer >= 2.75) || (state.phase === "strike" && state.showEntity)) {
+    if (
+      (state.phase === "intro" && state.timer >= 2.75) ||
+      (state.phase === "strike" && state.showEntity)
+    ) {
       ctx.drawImage(
         enemy,
         Math.round(state.x - RING_RADIUS * 1.5),
