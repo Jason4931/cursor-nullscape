@@ -15,7 +15,7 @@ export function setup(host) {
     flashTime: 0,
   };
 
-  const CIRCLE_COUNT = 4;
+  const CIRCLE_COUNT = 6;
   const BASE_RADIUS = 210;
 
   function respawnCircles() {
@@ -51,7 +51,7 @@ export function setup(host) {
     state.time += dt;
 
     state.outlineTime += dt;
-    state.outlineScale -= state.outlineTime * 4.545;
+    state.outlineScale -= state.outlineTime * 5;
     if (state.outlineScale <= 0) {
       state.outlineScale = BASE_RADIUS * state.scale;
     }
@@ -81,9 +81,7 @@ export function setup(host) {
         state.flashTime = 0;
         checkDeathAtStrike();
       }
-    }
-
-    else if (state.phase === 1) {
+    } else if (state.phase === 1) {
       const t = Math.min(state.time / 1, 1);
       state.scale = 1;
       state.opacity = 1 - t;
@@ -92,9 +90,7 @@ export function setup(host) {
         state.time = 0;
         state.waitTime = 4.5 + Math.random();
       }
-    }
-
-    else if (state.phase === 2) {
+    } else if (state.phase === 2) {
       state.opacity = 0;
       if (state.time >= state.waitTime) {
         state.phase = 0;
