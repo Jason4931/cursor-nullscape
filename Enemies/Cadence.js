@@ -23,8 +23,8 @@ export function setup(host) {
     instruments: [],
   };
 
-  const SPAWN_MIN = 9;
-  const SPAWN_MAX = 10;
+  const SPAWN_MIN = 14;
+  const SPAWN_MAX = 15;
   const AGRO_SPEED = 900;
   const PICKUP_RADIUS = 28;
 
