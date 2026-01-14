@@ -3,6 +3,8 @@ import { getCameraPos } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Kookoo.png";
+const arrow = new Image();
+arrow.src = "./ASSET/Misc/Arrow.png";
 
 export function setup(host) {
   const state = {
@@ -167,44 +169,20 @@ export function setup(host) {
     ctx.restore();
 
     if (state.phase !== "idle") {
+      const size = RING_RADIUS;
+      const yOffset = Math.round(size * 0.12);
+
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(arrowAngle);
 
-      const shaftLen = RING_RADIUS - 26;
-      const shaftW = 6;
-      const headH = 14;
-      const headW = 16;
-
-      ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(
-        Math.round(-shaftW / 2),
-        Math.round(-shaftLen),
-        shaftW,
-        shaftLen
+      ctx.drawImage(
+        arrow,
+        Math.round(-size * 0.25),
+        Math.round(-size + yOffset),
+        Math.round(size * 0.5),
+        Math.round(size)
       );
-
-      ctx.beginPath();
-      ctx.moveTo(Math.round(-0.4), Math.round(-shaftLen - headH - 1));
-      ctx.lineTo(Math.round(-headW / 2 - 0.4), Math.round(-shaftLen + 4));
-      ctx.lineTo(Math.round(headW / 2 - 0.4), Math.round(-shaftLen + 4));
-      ctx.closePath();
-      ctx.fill();
-
-      ctx.fillStyle = "white";
-      ctx.fillRect(
-        Math.round(-shaftW / 2 + 2),
-        Math.round(-shaftLen + 2),
-        shaftW - 4,
-        shaftLen - 4
-      );
-
-      ctx.beginPath();
-      ctx.moveTo(0, Math.round(-shaftLen - headH + 3));
-      ctx.lineTo(Math.round(-headW / 2 + 3), Math.round(-shaftLen + 2));
-      ctx.lineTo(Math.round(headW / 2 - 3), Math.round(-shaftLen + 2));
-      ctx.closePath();
-      ctx.fill();
 
       ctx.restore();
     }
