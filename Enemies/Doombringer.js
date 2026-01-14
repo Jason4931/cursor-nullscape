@@ -18,6 +18,7 @@ export function setup(host) {
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
   const WARNING_TIME = 10;
+  const MAX_CURSOR_DISTANCE = PAD_DISTANCE;
 
   function resetDelay() {
     state.phase = "idle";
@@ -26,7 +27,7 @@ export function setup(host) {
     state.pads.length = 0;
   }
 
-  function spawnPads(cursorX, cursorY) {
+  function spawnPads(cursorX, cursorY, opacity = 0) {
     state.pads.length = 0;
 
     let safety = 0;
@@ -53,7 +54,7 @@ export function setup(host) {
         state.pads.push({
           x,
           y,
-          opacity: 0,
+          opacity: opacity,
         });
       }
     }
@@ -65,6 +66,21 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
+
+    if (state.phase === "warning") {
+      let far = true;
+      for (const p of state.pads) {
+        const dx = mouse.x - (p.x + PAD_SIZE / 2);
+        const dy = mouse.y - (p.y + PAD_SIZE / 2);
+        if (Math.hypot(dx, dy) <= MAX_CURSOR_DISTANCE) {
+          far = false;
+          break;
+        }
+      }
+      if (far) {
+        spawnPads(mouse.x, mouse.y, 1);
+      }
+    }
 
     if (state.phase === "idle") {
       if (state.timer >= state.delay) {
@@ -178,7 +194,10 @@ export function setup(host) {
       ctx.save();
       ctx.globalAlpha = p.opacity * 0.5;
       const angle = (Math.random() - 0.5) * 0.2;
-      ctx.translate(Math.round(p.x + PAD_SIZE / 2), Math.round(p.y + PAD_SIZE / 2));
+      ctx.translate(
+        Math.round(p.x + PAD_SIZE / 2),
+        Math.round(p.y + PAD_SIZE / 2)
+      );
       ctx.rotate(angle);
       ctx.translate(-Math.round(PAD_SIZE / 2), -Math.round(PAD_SIZE / 2));
       ctx.fillStyle = Math.random() > 0.5 ? "#00f" : "#3aa9ff";
