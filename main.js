@@ -25,7 +25,7 @@ import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
-// cadence
+import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 
 const canvas = document.getElementById("screen");
@@ -184,7 +184,13 @@ const ENTITY_POOL = [
     start: 800,
     src: "./ASSET/Enemies/Voidbreaker.png",
   },
-  // cadence
+  {
+    name: "Cadence",
+    spawn: () => spawnCadence(entityHost),
+    start: 800,
+    src: "./ASSET/Enemies/Cadence.png",
+    unstackable: true,
+  },
   {
     name: "VoidboundGuardian",
     spawn: () => spawnVoidboundGuardian(entityHost),
@@ -843,7 +849,7 @@ function destroyPattern(p) {
   patternsState.delete(`${p.sx},${p.sy}`);
 }
 
-export function pickRandomPlaced4or5(radius = 1000) {
+export function pickRandomPlaced4or5(minRadius = 0) {
   // build list of placed patterns that actually contain a 4 or 5 AND are near the cursor
   const candidates = [];
   for (const p of patternsState.values()) {
@@ -866,7 +872,9 @@ export function pickRandomPlaced4or5(radius = 1000) {
     const center = patternCenter(p.sx, p.sy);
     const dx = center.x - mouse.x;
     const dy = center.y - mouse.y;
-    if (dx * dx + dy * dy <= radius * radius) {
+    const d2 = dx * dx + dy * dy;
+
+    if (d2 >= minRadius * minRadius && d2 <= 1000 * 1000) {
       candidates.push(p);
     }
   }
