@@ -252,6 +252,18 @@ const DEATH_MESSAGES = {
     "You got killed by Voidbreaker.",
     "You failed to parry Voidbreaker.",
   ],
+  Cadence: [
+    "You didn't keep watch.",
+    "You ran out of time.",
+    "You forgot to look.",
+    "You didn't watch Cadence.",
+    "You didn't pay Cadence enough attention.",
+    "You were.. what? did anyone else hear that?",
+    "You were sealed away.",
+    "You were snatched into the darkness.",
+    "Your soul now screams with the rest.",
+    "You were imprisoned.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
