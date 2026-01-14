@@ -25,6 +25,8 @@ import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
+// cadence
+import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -182,6 +184,13 @@ const ENTITY_POOL = [
     start: 800,
     src: "./ASSET/Enemies/Voidbreaker.png",
   },
+  // cadence
+  {
+    name: "VoidboundGuardian",
+    spawn: () => spawnVoidboundGuardian(entityHost),
+    start: 1000,
+    src: "./ASSET/Enemies/VoidboundGuardian.png",
+  },
   // add more later
 ];
 
@@ -257,8 +266,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -297,8 +306,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -309,8 +318,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -321,8 +330,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -483,8 +492,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1094,16 +1104,22 @@ function updateCamera() {
     vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
     edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
   } else if (mouse._clientX > w * (1 - cameraRadius)) {
-    vx = -MAX_SPEED * ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
-    edgeFactorX = (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
+    vx =
+      -MAX_SPEED *
+      ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
+    edgeFactorX =
+      (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
   }
 
   if (mouse._clientY < h * cameraRadius) {
     vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
     edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
   } else if (mouse._clientY > h * (1 - cameraRadius)) {
-    vy = -MAX_SPEED * ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
-    edgeFactorY = (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
+    vy =
+      -MAX_SPEED *
+      ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
+    edgeFactorY =
+      (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
@@ -1277,8 +1293,7 @@ function updateCamera() {
         if (superOccupied[sy][sx]) continue;
 
         const c = patternCenter(sx, sy);
-        if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > RESPAWN_RADIUS)
-          continue;
+        if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > RESPAWN_RADIUS) continue;
 
         const shuffled = pickPatternsBySize(PATTERNS);
         for (let i = 0; i < shuffled.length; i++) {
@@ -1339,13 +1354,7 @@ function loop(now) {
   g.addColorStop(0, "rgba(0, 0, 255, 0)");
   g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
   ctx.beginPath();
-  ctx.arc(
-    mouse.x,
-    mouse.y,
-    dynamicHitRadius - GIFT_SIZE / 2,
-    0,
-    Math.PI * 2
-  );
+  ctx.arc(mouse.x, mouse.y, dynamicHitRadius - GIFT_SIZE / 2, 0, Math.PI * 2);
   ctx.fillStyle = g;
   ctx.fill();
 
