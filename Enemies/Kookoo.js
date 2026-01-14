@@ -147,10 +147,10 @@ export function setup(host) {
       RING_RADIUS + 2
     );
     grad.addColorStop(0, "rgba(0,0,128,1)");
-    grad.addColorStop(0.8, "rgba(0,0,0,1)");
-    grad.addColorStop(0.81, "rgba(255,255,255,1)");
-    grad.addColorStop(0.85, "rgba(255,255,255,1)");
-    grad.addColorStop(0.86, "rgba(0,0,255,1)");
+    grad.addColorStop(0.77, "rgba(0,0,0,1)");
+    grad.addColorStop(0.78, "rgba(255,255,255,1)");
+    grad.addColorStop(0.82, "rgba(255,255,255,1)");
+    grad.addColorStop(0.83, "rgba(0,0,255,1)");
     grad.addColorStop(0.95, "rgba(0,0,255,1)");
     grad.addColorStop(0.96, "rgba(255,255,255,1)");
     grad.addColorStop(1, "rgba(255,255,255,1)");
