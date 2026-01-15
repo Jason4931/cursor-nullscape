@@ -240,6 +240,18 @@ const DEATH_MESSAGES = {
     "They're gonna have to glue you back together... IN HELL!",
     "You brought the doom to yourself.",
   ],
+  Ponderer: [
+    "You stopped paying attention.",
+    "You wandered too far, and Ponderer noticed.",
+    "You let the timer run out.",
+    "You thought distance meant safety.",
+    "You failed to keep Ponderer calm.",
+    "You gave it too much time to think.",
+    "You broke eye contact for too long.",
+    "You ignored the quiet warning.",
+    "You drifted away, and paid for it.",
+    "You let Ponderer make up its mind.",
+  ],
   Voidbreaker: [
     "You were dismantled.",
     "You got bisected.",

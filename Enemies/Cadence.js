@@ -128,6 +128,11 @@ export function setup(host) {
   const STEP = 14;
 
   function drawChain(ctx, x1, y1, x2, y2) {
+    x1 = Math.round(x1);
+    y1 = Math.round(y1);
+    x2 = Math.round(x2);
+    y2 = Math.round(y2);
+
     const dx = x2 - x1;
     const dy = y2 - y1;
     const dist = Math.hypot(dx, dy) || 1;
@@ -136,12 +141,12 @@ export function setup(host) {
     const uy = dy / dist;
 
     for (let d = 0; d < dist; d += STEP) {
-      const cx = x1 + ux * d;
-      const cy = y1 + uy * d;
+      const cx = Math.round(x1 + ux * d);
+      const cy = Math.round(y1 + uy * d);
 
       const grad = ctx.createRadialGradient(
-        cx - LINK_R * 0.4,
-        cy - LINK_R * 0.4,
+        cx - Math.round(LINK_R * 0.4),
+        cy - Math.round(LINK_R * 0.4),
         1,
         cx,
         cy,
@@ -151,19 +156,25 @@ export function setup(host) {
       grad.addColorStop(0.6, "#fff0");
       grad.addColorStop(0.61, "#8a8a8a");
       grad.addColorStop(1, "#8a8a8a");
+
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc((cx + 0.5) | 0, (cy + 0.5) | 0, LINK_R, 0, Math.PI * 2);
+      ctx.arc(cx, cy, LINK_R, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#8a8a8a";
-      const dx2 = cx + ux * (LINK_R + DASH_W / 2);
-      const dy2 = cy + uy * (LINK_R + DASH_W / 2);
+      const dx2 = Math.round(cx + ux * (LINK_R + DASH_W / 2));
+      const dy2 = Math.round(cy + uy * (LINK_R + DASH_W / 2));
 
       ctx.save();
-      ctx.translate((dx2 + 0.5) | 0, (dy2 + 0.5) | 0);
+      ctx.translate(dx2, dy2);
       ctx.rotate(Math.atan2(uy, ux));
-      ctx.fillRect(-DASH_W / 2, -DASH_H / 2, DASH_W, DASH_H);
+      ctx.fillStyle = "#8a8a8a";
+      ctx.fillRect(
+        -Math.round(DASH_W / 2),
+        -Math.round(DASH_H / 2),
+        DASH_W,
+        DASH_H
+      );
       ctx.restore();
     }
   }
@@ -183,70 +194,50 @@ export function setup(host) {
   function draw(ctx) {
     ctx.save();
 
+    const sx = Math.round(state.x);
+    const sy = Math.round(state.y);
+
     for (const it of state.instruments) {
-      drawChain(ctx, state.x, state.y, it.x, it.y);
+      drawChain(ctx, sx, sy, it.x, it.y);
     }
-    const grad = ctx.createRadialGradient(
-      state.x,
-      state.y,
-      0,
-      state.x,
-      state.y,
-      150
-    );
+
+    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 150);
     grad.addColorStop(0, "rgba(0,0,0,1)");
     grad.addColorStop(0.6, "rgba(0,0,0,1)");
     grad.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(state.x, state.y, 150, 0, Math.PI * 2);
+    ctx.arc(sx, sy, 150, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.drawImage(
-      enemy,
-      Math.round(state.x - 100),
-      Math.round(state.y - 100),
-      200,
-      200
-    );
+    ctx.drawImage(enemy, sx - 100, sy - 100, 200, 200);
 
     for (const it of state.instruments) {
+      const ix = Math.round(it.x);
+      const iy = Math.round(it.y - 10);
+
       if (it.pickedUp) {
-        const t = it.pickTimer / 1;
-        const rOuter = 40 - 10 * t;
-        const rInner = 15 - 10 * t;
+        const t = it.pickTimer;
+        const rOuter = Math.round(40 - 10 * t);
+        const rInner = Math.round(15 - 10 * t);
         const alpha = 1 - t;
 
         ctx.save();
         ctx.globalAlpha = alpha;
-
-        const grad = ctx.createRadialGradient(
-          it.x,
-          it.y - 10,
-          0,
-          it.x,
-          it.y - 10,
-          50
-        );
-        grad.addColorStop(0, "rgba(0,0,0,1)");
-        grad.addColorStop(0.4, "rgba(0,0,0,1)");
-        grad.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = grad;
+        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+        g.addColorStop(0, "rgba(0,0,0,1)");
+        g.addColorStop(0.4, "rgba(0,0,0,1)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(it.x, it.y - 10, 50, 0, Math.PI * 2);
+        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
         ctx.fill();
-
-        ctx.drawImage(
-          it.img,
-          Math.round(it.x - 50),
-          Math.round(it.y - 75),
-          100,
-          100
-        );
+        ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
         ctx.restore();
 
         ctx.save();
-        ctx.translate(it.x, it.y - 10);
+        ctx.globalAlpha = alpha * 0.5;
+        ctx.translate(ix, iy);
         ctx.beginPath();
         ctx.moveTo(0, -rOuter);
         ctx.lineTo(rInner, -rInner);
@@ -257,49 +248,31 @@ export function setup(host) {
         ctx.lineTo(-rOuter, 0);
         ctx.lineTo(-rInner, -rInner);
         ctx.closePath();
-        ctx.fillStyle = `rgba(255,255,255,${alpha * 0.5})`;
+        ctx.fillStyle = "white";
         ctx.fill();
         ctx.restore();
       } else {
-        const grad = ctx.createRadialGradient(
-          it.x,
-          it.y - 10,
-          0,
-          it.x,
-          it.y - 10,
-          50
-        );
-        grad.addColorStop(0, "rgba(0,0,0,1)");
-        grad.addColorStop(0.4, "rgba(0,0,0,1)");
-        grad.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = grad;
+        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+        g.addColorStop(0, "rgba(0,0,0,1)");
+        g.addColorStop(0.4, "rgba(0,0,0,1)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(it.x, it.y - 10, 50, 0, Math.PI * 2);
+        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
         ctx.fill();
-
-        ctx.drawImage(
-          it.img,
-          Math.round(it.x - 50),
-          Math.round(it.y - 75),
-          100,
-          100
-        );
+        ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
       }
     }
 
     if (state.instruments.length >= 2) {
       ctx.save();
-      const ARROW_OFFSET = 24;
-      ctx.translate(
-        mouse.x + Math.cos(state.arrowAngle) * ARROW_OFFSET,
-        mouse.y + Math.sin(state.arrowAngle) * ARROW_OFFSET
-      );
+      const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 24);
+      const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 24);
+      ctx.translate(ox, oy);
       ctx.rotate(state.arrowAngle);
-
       ctx.fillStyle = "rgba(255,255,255,0.9)";
       drawArrow(ctx);
       ctx.fill();
-
       ctx.restore();
     }
 

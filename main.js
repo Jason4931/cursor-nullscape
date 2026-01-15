@@ -24,6 +24,7 @@ import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
 import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
+import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
@@ -101,103 +102,110 @@ const ENTITY_POOL = [
   {
     name: "VoidboundBaby",
     spawn: () => spawnVoidboundBaby(entityHost),
-    start: 100,
+    start: 200,
     src: "./ASSET/Enemies/VoidboundBaby.png",
   },
   {
     name: "Flesh",
     spawn: () => spawnFlesh(entityHost),
-    start: 300,
+    start: 500,
     src: "./ASSET/Enemies/Flesh.png",
   },
   {
     name: "NIL",
     spawn: () => spawnNIL(entityHost),
-    start: 300,
+    start: 500,
     src: "./ASSET/Enemies/NIL.png",
   },
   {
     name: "Guardian",
     spawn: () => spawnGuardian(entityHost),
-    start: 300,
+    start: 500,
     src: "./ASSET/Enemies/Guardian.png",
   },
   {
     name: "Dozer",
     spawn: () => spawnDozer(entityHost),
-    start: 300,
+    start: 500,
     src: "./ASSET/Enemies/Dozer.png",
     unstackable: true,
   },
   {
     name: "Telefragger",
     spawn: () => spawnTelefragger(entityHost),
-    start: 400,
+    start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
   },
   {
     name: "Random",
-    start: 400,
+    start: 800,
     src: "./ASSET/Enemies/Random.png",
   },
   {
     name: "Random",
-    start: 900,
+    start: 1300,
     src: "./ASSET/Enemies/Random.png",
   },
   {
     name: "Random",
-    start: 1400,
+    start: 1800,
     src: "./ASSET/Enemies/Random.png",
   },
   {
     name: "Kookoo",
     spawn: () => spawnKookoo(entityHost),
-    start: 500,
+    start: 1000,
     src: "./ASSET/Enemies/Kookoo.png",
     unstackable: true,
   },
   {
     name: "VoidImplosions",
     spawn: () => spawnVoidImplosions(entityHost),
-    start: 500,
+    start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
   },
   {
     name: "Sorrow",
     spawn: () => spawnSorrow(entityHost),
-    start: 500,
+    start: 1000,
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
   },
   {
     name: "Doombringer",
     spawn: () => spawnDoombringer(entityHost),
-    start: 500,
+    start: 1000,
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
   },
   {
+    name: "Ponderer",
+    spawn: () => spawnPonderer(entityHost),
+    start: 1200,
+    src: "./ASSET/Enemies/Ponderer.png",
+    rare: true,
+  },
+  {
     name: "Voidbreaker",
     spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++),
-    start: 800,
+    start: 1500,
     src: "./ASSET/Enemies/Voidbreaker.png",
   },
   {
     name: "Cadence",
     spawn: () => spawnCadence(entityHost),
-    start: 800,
+    start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
     unstackable: true,
   },
   {
     name: "VoidboundGuardian",
     spawn: () => spawnVoidboundGuardian(entityHost),
-    start: 1000,
+    start: 2000,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
-  // add more later
+  // catalyst
 ];
 
 const gift = new Image();
@@ -796,14 +804,14 @@ function placeSuper(sx, sy, pattern) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
-      const isTripmineEnabled = collectedCount > 300;
+      const isTripmineEnabled = collectedCount > 500;
 
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const r = Math.random();
         let type = "gift";
         if (isTripmineEnabled) {
           if (r < 0.01) type = "gold"; // 1%
-          else if (r < Math.min(0.00009 * collectedCount - 0.017, 0.1))
+          else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
         } else {
@@ -1222,6 +1230,11 @@ function updateCamera() {
                   continue;
                 }
               }
+              if (pick.rare) {
+                if (Math.random() < 0.5) {
+                  continue;
+                }
+              }
               lastEntityPicked = pick.name;
               break;
             }
@@ -1242,7 +1255,7 @@ function updateCamera() {
             pick.spawn();
           }
           registerEntitySpawn(pick.name, pick.src);
-          if (collectedCount >= 500 && !isSeamineEnabled) {
+          if (collectedCount >= 1000 && !isSeamineEnabled) {
             isSeamineEnabled = true;
             spawnSeamine(entityHost);
             spawnSeamine(entityHost);
