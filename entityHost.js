@@ -326,6 +326,7 @@ export function death(name = "Unknown", color = "#f70000") {
     if (tripmineCustomLeniency && Math.random() < tripmineCustomLeniency)
       return;
   }
+  if (Math.random() < 0.1) return;
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {
