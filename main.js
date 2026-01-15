@@ -51,6 +51,7 @@ let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
 let babyCount = 0;
+const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let voidbreakerCount = 0;
 export let voidbreakerActive;
@@ -1221,7 +1222,12 @@ function updateCamera() {
         if (unlocked.length > 0) {
           let pick;
           while (true) {
-            pick = unlocked[(Math.random() * unlocked.length) | 0];
+            const weighted = [];
+            for (const e of unlocked) {
+              const weight = pickedOnce.has(e.name) ? 1 : 3;
+              for (let i = 0; i < weight; i++) weighted.push(e);
+            }
+            pick = weighted[(Math.random() * weighted.length) | 0];
             if (lastEntityPicked !== pick.name) {
               if (pick.name === "Baby") {
                 babyCount++;
@@ -1236,6 +1242,7 @@ function updateCamera() {
                 }
               }
               lastEntityPicked = pick.name;
+              pickedOnce.add(pick.name);
               break;
             }
           }
