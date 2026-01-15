@@ -7,6 +7,7 @@ import {
   toggleToggleDeath,
   toggleTripmineLeniency,
 } from "./entityHost.js";
+import { setup as spawnAltar } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -47,6 +48,8 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
+let spawnedAltar = false;
+let disablespawn = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
@@ -281,8 +284,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -321,8 +324,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -333,8 +336,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -345,8 +348,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -478,6 +481,12 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "disablespawn") {
+    disablespawn = !disablespawn;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
 });
 let reducedMotionHoldActive = false;
 let reducedMotionBeforeHold = reducedMotion;
@@ -507,9 +516,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -609,6 +617,72 @@ export function isCursorOnFloor() {
     }
   }
   return false;
+}
+export function activatePurgatory() {
+  collectedCount += 500;
+  counterEl.textContent = `Collected: ${collectedCount}`;
+  lastEntitySpawnAt = collectedCount;
+  for (let i = 0; i < 5; i++) {
+    const unlocked = ENTITY_POOL.filter((e) => {
+      if (collectedCount < e.start) return false;
+      if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+      return true;
+    });
+
+    if (unlocked.length > 0) {
+      let pick;
+      while (true) {
+        const weighted = [];
+        for (const e of unlocked) {
+          const weight = pickedOnce.has(e.name) ? 1 : 3;
+          for (let i = 0; i < weight; i++) weighted.push(e);
+        }
+        pick = weighted[(Math.random() * weighted.length) | 0];
+        if (lastEntityPicked !== pick.name) {
+          if (pick.name === "Baby") {
+            babyCount++;
+          } else if (pick.name === "VoidboundBaby") {
+            if (babyCount < 2) {
+              continue;
+            }
+          }
+          if (pick.rare) {
+            if (Math.random() < 0.5) {
+              continue;
+            }
+          }
+          lastEntityPicked = pick.name;
+          pickedOnce.add(pick.name);
+          break;
+        }
+      }
+      if (pick.name === "Random") {
+        const randUnlocked = ENTITY_POOL.filter((e) => {
+          if (e.name === "Random") return false;
+          if (collectedCount < e.start) return false;
+          if (e.unstackable) return false;
+          return true;
+        });
+        if (randUnlocked.length !== 0) {
+          let randPick =
+            randUnlocked[(Math.random() * randUnlocked.length) | 0];
+          randPick.spawn();
+        }
+      } else {
+        pick.spawn();
+      }
+      registerEntitySpawn(pick.name, pick.src);
+      if (collectedCount >= 1000 && !isSeamineEnabled) {
+        isSeamineEnabled = true;
+        spawnSeamine(entityHost);
+        spawnSeamine(entityHost);
+        spawnSeamine(entityHost);
+      }
+      if (pick.unstackable) {
+        spawnedUnstackables.add(pick.name);
+      }
+    }
+  }
 }
 
 function registerEntitySpawn(name, imageSrc) {
@@ -1219,7 +1293,12 @@ function updateCamera() {
           return true;
         });
 
-        if (unlocked.length > 0) {
+        if (collectedCount >= 600 && !spawnedAltar) {
+          spawnedAltar = true;
+          spawnAltar(entityHost);
+        }
+
+        if (unlocked.length > 0 && !disablespawn) {
           let pick;
           while (true) {
             const weighted = [];

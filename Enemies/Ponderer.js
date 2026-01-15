@@ -87,17 +87,21 @@ export function setup(host) {
     const wobbleX = Math.sin(state.wobbleTime * 8) * 6 * wobbleAmp;
     const wobbleY = Math.cos(state.wobbleTime * 7) * 6 * wobbleAmp;
 
-    ctx.translate(state.x + wobbleX, state.y + wobbleY);
+    ctx.translate(
+      Math.round(state.x + wobbleX),
+      Math.round(state.y + wobbleY)
+    );
     ctx.rotate(wobbleRot);
 
     ctx.globalAlpha = state.opacity * (darken ? 0.7 : 1);
 
+    const size = Math.round(state.size);
     ctx.drawImage(
       enemy,
-      -state.size * 0.5,
-      -state.size * 0.5,
-      state.size,
-      state.size
+      Math.round(-size * 0.5),
+      Math.round(-size * 0.5),
+      size,
+      size
     );
 
     ctx.restore();
@@ -108,7 +112,13 @@ export function setup(host) {
     ctx.font = "20px monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(state.timer.toFixed(2), state.x - 5, state.y);
+
+    ctx.fillText(
+      state.timer.toFixed(2),
+      Math.round(state.x - 5),
+      Math.round(state.y)
+    );
+
     ctx.restore();
   }
 
