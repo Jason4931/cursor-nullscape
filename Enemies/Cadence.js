@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5 } from "../main.js";
+import { pickRandomPlaced4or5, moveCamera } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Cadence.png";
@@ -194,6 +194,13 @@ export function setup(host) {
   function draw(ctx) {
     ctx.save();
 
+    if (state.mode === "agro") {
+      const strength = 6;
+      const sx = (Math.random() * 2 - 1) * strength;
+      const sy = (Math.random() * 2 - 1) * strength;
+      moveCamera(sx, sy, true);
+    }
+
     const sx = Math.round(state.x);
     const sy = Math.round(state.y);
 
@@ -266,11 +273,12 @@ export function setup(host) {
 
     if (state.instruments.length >= 2) {
       ctx.save();
-      const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 24);
-      const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 24);
+      const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 48);
+      const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 48);
+      const redness = Math.floor(Math.random() * 256);
       ctx.translate(ox, oy);
       ctx.rotate(state.arrowAngle);
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.fillStyle = `rgba(255,${redness},${redness},0.9)`;
       drawArrow(ctx);
       ctx.fill();
       ctx.restore();
