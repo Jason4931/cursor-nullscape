@@ -21,6 +21,7 @@ export function setup(host) {
     nextDelay: 0,
 
     instruments: [],
+    arrowAngle: 0,
   };
 
   const SPAWN_MIN = 14;
@@ -48,8 +49,33 @@ export function setup(host) {
     rollDelay();
   }
 
+  function getNearestInstrument() {
+    let best = null;
+    let bestD2 = Infinity;
+
+    for (const it of state.instruments) {
+      if (it.pickedUp) continue;
+      const dx = it.x - mouse.x;
+      const dy = it.y - mouse.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < bestD2) {
+        bestD2 = d2;
+        best = it;
+      }
+    }
+    return best;
+  }
+
   function update(dt) {
     state.timer += dt;
+    if (state.instruments.length >= 2) {
+      const target = getNearestInstrument();
+      if (target) {
+        const dx = target.x - mouse.x;
+        const dy = target.y - mouse.y;
+        state.arrowAngle = Math.atan2(dy, dx);
+      }
+    }
 
     for (let i = state.instruments.length - 1; i >= 0; i--) {
       const it = state.instruments[i];
@@ -140,6 +166,18 @@ export function setup(host) {
       ctx.fillRect(-DASH_W / 2, -DASH_H / 2, DASH_W, DASH_H);
       ctx.restore();
     }
+  }
+
+  function drawArrow(ctx) {
+    const len = 20;
+    const wing = 20;
+
+    ctx.beginPath();
+    ctx.moveTo(0, -len);
+    ctx.lineTo(wing, 0);
+    ctx.lineTo(0, len);
+    ctx.lineTo(wing / 2, 0);
+    ctx.closePath();
   }
 
   function draw(ctx) {
@@ -247,6 +285,22 @@ export function setup(host) {
           100
         );
       }
+    }
+
+    if (state.instruments.length >= 2) {
+      ctx.save();
+      const ARROW_OFFSET = 24;
+      ctx.translate(
+        mouse.x + Math.cos(state.arrowAngle) * ARROW_OFFSET,
+        mouse.y + Math.sin(state.arrowAngle) * ARROW_OFFSET
+      );
+      ctx.rotate(state.arrowAngle);
+
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      drawArrow(ctx);
+      ctx.fill();
+
+      ctx.restore();
     }
 
     ctx.restore();
