@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { pondererPositions } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Ponderer.png";
@@ -65,12 +66,37 @@ export function setup(host) {
       const nx = dx / dist;
       const ny = dy / dist;
 
-      state.x += nx * state.speed * dt;
-      state.y += ny * state.speed * dt;
+      let moveX = nx * state.speed * dt;
+      let moveY = ny * state.speed * dt;
+
+      const REPULSION_RADIUS = 60;
+      const REPULSION_STRENGTH = 120;
+
+      for (const pos of pondererPositions) {
+        if (pos === state.posRef) continue;
+        const dx2 = state.x - pos.x;
+        const dy2 = state.y - pos.y;
+        const dist2 = Math.hypot(dx2, dy2);
+        if (dist2 < REPULSION_RADIUS && dist2 > 0.0001) {
+          moveX += (dx2 / dist2) * REPULSION_STRENGTH * dt;
+          moveY += (dy2 / dist2) * REPULSION_STRENGTH * dt;
+        }
+      }
+
+      state.x += moveX;
+      state.y += moveY;
 
       if (dist < state.size * 0.5) {
         death("Ponderer");
       }
+    }
+
+    if (!state.posRef) {
+      state.posRef = { x: state.x, y: state.y };
+      pondererPositions.add(state.posRef);
+    } else {
+      state.posRef.x = state.x;
+      state.posRef.y = state.y;
     }
   }
 
@@ -87,10 +113,7 @@ export function setup(host) {
     const wobbleX = Math.sin(state.wobbleTime * 8) * 6 * wobbleAmp;
     const wobbleY = Math.cos(state.wobbleTime * 7) * 6 * wobbleAmp;
 
-    ctx.translate(
-      Math.round(state.x + wobbleX),
-      Math.round(state.y + wobbleY)
-    );
+    ctx.translate(Math.round(state.x + wobbleX), Math.round(state.y + wobbleY));
     ctx.rotate(wobbleRot);
 
     ctx.globalAlpha = state.opacity * (darken ? 0.7 : 1);
