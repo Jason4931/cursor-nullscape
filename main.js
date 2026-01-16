@@ -191,7 +191,7 @@ const ENTITY_POOL = [
     spawn: () => spawnPonderer(entityHost),
     start: 1200,
     src: "./ASSET/Enemies/Ponderer.png",
-    rare: true,
+    rare: false,
   },
   {
     name: "Voidbreaker",
@@ -286,8 +286,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -326,8 +326,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -338,8 +338,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -350,8 +350,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -525,9 +525,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
