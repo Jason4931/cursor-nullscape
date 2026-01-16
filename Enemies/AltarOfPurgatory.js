@@ -5,68 +5,78 @@ const altar = new Image();
 altar.src = "./ASSET/Misc/AltarOfPurgatory.png";
 
 export function setup(host) {
-    const state = {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        size: 200,
-    };
+  const state = {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    size: 200,
+    timer: 0,
+    nextDelay: 14 + Math.random() * 1,
+  };
 
-    const pos = pickRandomPlaced4or5(500);
-    state.x = pos.x;
-    state.y = pos.y;
+  const pos = pickRandomPlaced4or5(500);
+  state.x = pos.x;
+  state.y = pos.y;
 
-    function teleport() {
-        const p = pickRandomPlaced4or5(500);
-        state.x = p.x;
-        state.y = p.y;
+  function teleport() {
+    const p = pickRandomPlaced4or5(500);
+    state.x = p.x;
+    state.y = p.y;
+    state.timer = 0;
+    state.nextDelay = 14 + Math.random() * 1;
+  }
+
+  function onClick(e) {
+    const rect = host.canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    const dx = mx - state.x;
+    const dy = my - state.y;
+    const r = state.size * 0.5;
+
+    if (dx * dx + dy * dy <= r * r) {
+      activatePurgatory();
+      teleport();
     }
+  }
 
-    function onClick(e) {
-        const rect = host.canvas.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
+  host.canvas.addEventListener("click", onClick);
 
-        const dx = mx - state.x;
-        const dy = my - state.y;
-        const r = state.size * 0.5;
+  function update(dt) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-        if (dx * dx + dy * dy <= r * r) {
-            activatePurgatory();
-            teleport();
-        }
+    state.timer += dt;
+
+    if (state.timer >= state.nextDelay) {
+      teleport();
     }
+  }
 
-    host.canvas.addEventListener("click", onClick);
+  function draw(ctx) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    function update(dt) {
-        if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    }
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = state.opacity;
 
-    function draw(ctx) {
-        if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    const size = Math.round(state.size);
+    const drawY = state.y - size * 0.3;
+    ctx.drawImage(
+      altar,
+      Math.round(state.x - size * 0.5),
+      Math.round(drawY - size * 0.5),
+      size,
+      size
+    );
 
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.globalAlpha = state.opacity;
+    ctx.restore();
+  }
 
-        const size = Math.round(state.size);
-        const drawY = state.y - size * 0.3;
-        ctx.drawImage(
-            altar,
-            Math.round(state.x - size * 0.5),
-            Math.round(drawY - size * 0.5),
-            size,
-            size
-        );
+  const unregister = host.register({ update, draw });
 
-        ctx.restore();
-    }
-
-    const unregister = host.register({ update, draw });
-
-    return () => {
-        host.canvas.removeEventListener("click", onClick);
-        unregister();
-    };
+  return () => {
+    host.canvas.removeEventListener("click", onClick);
+    unregister();
+  };
 }
