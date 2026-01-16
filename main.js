@@ -29,6 +29,7 @@ import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
+import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -49,6 +50,7 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedAltar = false;
+let spawnedCatalyst = false;
 let disablespawn = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
@@ -210,7 +212,6 @@ const ENTITY_POOL = [
     start: 2000,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
-  // catalyst
 ];
 
 const gift = new Image();
@@ -488,6 +489,13 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "catalyst") {
+    spawnCatalyst(entityHost);
+    registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
 });
 let reducedMotionHoldActive = false;
 let reducedMotionBeforeHold = reducedMotion;
@@ -633,29 +641,39 @@ export function activatePurgatory() {
 
     if (unlocked.length > 0) {
       let pick;
-      while (true) {
-        const weighted = [];
-        for (const e of unlocked) {
-          const weight = pickedOnce.has(e.name) ? 1 : 3;
-          for (let i = 0; i < weight; i++) weighted.push(e);
-        }
-        pick = weighted[(Math.random() * weighted.length) | 0];
-        if (lastEntityPicked !== pick.name) {
-          if (pick.name === "Baby") {
-            babyCount++;
-          } else if (pick.name === "VoidboundBaby") {
-            if (babyCount < 2) {
-              continue;
-            }
+      if (collectedCount >= 5000 && !spawnedCatalyst) {
+        spawnedCatalyst = true;
+        pick = {
+          name: "Catalyst",
+          spawn: () => spawnCatalyst(entityHost),
+          start: 5000,
+          src: "./ASSET/Enemies/CatalystIcon.png",
+        };
+      } else {
+        while (true) {
+          const weighted = [];
+          for (const e of unlocked) {
+            const weight = pickedOnce.has(e.name) ? 1 : 3;
+            for (let i = 0; i < weight; i++) weighted.push(e);
           }
-          if (pick.rare) {
-            if (Math.random() < 0.5) {
-              continue;
+          pick = weighted[(Math.random() * weighted.length) | 0];
+          if (lastEntityPicked !== pick.name) {
+            if (pick.name === "Baby") {
+              babyCount++;
+            } else if (pick.name === "VoidboundBaby") {
+              if (babyCount < 2) {
+                continue;
+              }
             }
+            if (pick.rare) {
+              if (Math.random() < 0.5) {
+                continue;
+              }
+            }
+            lastEntityPicked = pick.name;
+            pickedOnce.add(pick.name);
+            break;
           }
-          lastEntityPicked = pick.name;
-          pickedOnce.add(pick.name);
-          break;
         }
       }
       if (pick.name === "Random") {
@@ -670,6 +688,10 @@ export function activatePurgatory() {
             randUnlocked[(Math.random() * randUnlocked.length) | 0];
           randPick.spawn();
         }
+      } else if (pick.name === "Catalyst") {
+        pick.spawn();
+        // catalyst minion
+        // catalyst hand
       } else {
         pick.spawn();
       }
@@ -1302,29 +1324,39 @@ function updateCamera() {
 
         if (unlocked.length > 0 && !disablespawn) {
           let pick;
-          while (true) {
-            const weighted = [];
-            for (const e of unlocked) {
-              const weight = pickedOnce.has(e.name) ? 1 : 3;
-              for (let i = 0; i < weight; i++) weighted.push(e);
-            }
-            pick = weighted[(Math.random() * weighted.length) | 0];
-            if (lastEntityPicked !== pick.name) {
-              if (pick.name === "Baby") {
-                babyCount++;
-              } else if (pick.name === "VoidboundBaby") {
-                if (babyCount < 2) {
-                  continue;
-                }
+          if (collectedCount >= 5000 && !spawnedCatalyst) {
+            spawnedCatalyst = true;
+            pick = {
+              name: "Catalyst",
+              spawn: () => spawnCatalyst(entityHost),
+              start: 5000,
+              src: "./ASSET/Enemies/CatalystIcon.png",
+            };
+          } else {
+            while (true) {
+              const weighted = [];
+              for (const e of unlocked) {
+                const weight = pickedOnce.has(e.name) ? 1 : 3;
+                for (let i = 0; i < weight; i++) weighted.push(e);
               }
-              if (pick.rare) {
-                if (Math.random() < 0.5) {
-                  continue;
+              pick = weighted[(Math.random() * weighted.length) | 0];
+              if (lastEntityPicked !== pick.name) {
+                if (pick.name === "Baby") {
+                  babyCount++;
+                } else if (pick.name === "VoidboundBaby") {
+                  if (babyCount < 2) {
+                    continue;
+                  }
                 }
+                if (pick.rare) {
+                  if (Math.random() < 0.5) {
+                    continue;
+                  }
+                }
+                lastEntityPicked = pick.name;
+                pickedOnce.add(pick.name);
+                break;
               }
-              lastEntityPicked = pick.name;
-              pickedOnce.add(pick.name);
-              break;
             }
           }
           if (pick.name === "Random") {
@@ -1339,6 +1371,10 @@ function updateCamera() {
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
               randPick.spawn();
             }
+          } else if (pick.name === "Catalyst") {
+            pick.spawn();
+            // catalyst minion
+            // catalyst hand
           } else {
             pick.spawn();
           }

@@ -276,6 +276,18 @@ const DEATH_MESSAGES = {
     "Your soul now screams with the rest.",
     "You were imprisoned.",
   ],
+  Catalyst: [
+    "YOU ENTERED PARADISE.",
+    "YOU HAVE ASCENDED.",
+    "YOU ARE FREE.",
+    "YOU ARE PART OF SOMETHING BIGGER.",
+    "YOU MET AN ANGEL.",
+    "YOU SAW A HOLY FIGURE.",
+    "YOU WERE ACCEPTED.",
+    "YOU WERE RAPTURED.",
+    "YOU WERE SAVED.",
+    "YOU WERE VISITED BY A HOLY SPIRIT.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
