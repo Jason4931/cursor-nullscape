@@ -16,8 +16,8 @@ export function setup(host) {
     timer: 8,
     maxTimer: 8,
 
-    decayRate: 0.8,
-    recoverRate: 1.2,
+    decayRate: 1,
+    recoverRate: 1,
 
     agro: false,
 
