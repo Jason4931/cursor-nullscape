@@ -82,7 +82,7 @@ export function setup(host) {
 
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
-        if (Math.hypot(dx0, dy0) <= state.size * 0.5) {
+        if (Math.hypot(dx0, dy0) <= state.size * 0.25) {
           death("NIL");
           return;
         }
