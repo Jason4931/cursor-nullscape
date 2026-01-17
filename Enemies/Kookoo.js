@@ -100,7 +100,7 @@ export function setup(host) {
           }
 
           state.phase = "idle";
-          state.timer = 14 + Math.random();
+          state.timer = 19 + Math.random();
           state.showEntity = false;
         }
         break;
