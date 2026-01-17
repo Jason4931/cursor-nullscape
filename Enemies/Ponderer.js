@@ -21,7 +21,7 @@ export function setup(host) {
 
     agro: false,
 
-    speed: 840,
+    speed: 630,
     size: 150,
 
     wobbleTime: 0,
