@@ -37,7 +37,7 @@ export function setup(host) {
 
   /* ---------------- HELPERS ---------------- */
 
-  function randNearCursor(r = 500) {
+  function randNearCursor(r = 750) {
     const a = Math.random() * Math.PI * 2;
     const d = r * 0.75 + Math.random() * r * 0.25;
     return {
