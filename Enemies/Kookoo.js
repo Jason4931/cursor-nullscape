@@ -31,7 +31,7 @@ export function setup(host) {
   const RING_RADIUS = 60;
   const INTRO_TIME = 3;
   const STRIKE_TIME = 1;
-  const STRIKE_RADIUS = 210;
+  const STRIKE_RADIUS = 157;
 
   function resetIntro() {
     state.phase = "intro";
