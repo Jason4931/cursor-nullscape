@@ -538,6 +538,7 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "ponderer") {
     spawnPonderer(entityHost);
+    registerEntitySpawn("Ponderer", "./ASSET/Enemies/Ponderer.png");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
