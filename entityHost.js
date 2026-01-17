@@ -17,8 +17,8 @@ export function updateMouseWorld(canvas) {
   const rawX = (mouse._clientX - rect.left) * scaleX;
   const rawY = (mouse._clientY - rect.top) * scaleY;
 
-  mouse.x = rawX + (dirX / len) * TILE;
-  mouse.y = rawY + (dirY / len) * TILE;
+  mouse.x = rawX + (dirX / len) * TILE * 0.5;
+  mouse.y = rawY + (dirY / len) * TILE * 0.5;
 
   prevMouse.x = mouse._clientX;
   prevMouse.y = mouse._clientY;
