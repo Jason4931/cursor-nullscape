@@ -69,7 +69,7 @@ export function setup(host) {
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
-        if (state.stillTimer >= 0.5) {
+        if (state.stillTimer >= 0.25) {
           enterIdle();
           return;
         }
