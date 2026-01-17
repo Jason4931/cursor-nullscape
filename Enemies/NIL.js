@@ -61,13 +61,6 @@ export function setup(host) {
       state.initialized = true;
     }
 
-    const dx0 = mouse.x - state.x;
-    const dy0 = mouse.y - state.y;
-    if (Math.hypot(dx0, dy0) <= state.size * 0.5) {
-      death("NIL");
-      return;
-    }
-
     if (state.attacking) {
       state.attackTimer += dt;
 
@@ -86,6 +79,13 @@ export function setup(host) {
           state.dashStartX + state.dashDirX * state.dashDistance * easedT;
         state.y =
           state.dashStartY + state.dashDirY * state.dashDistance * easedT;
+
+        const dx0 = mouse.x - state.x;
+        const dy0 = mouse.y - state.y;
+        if (Math.hypot(dx0, dy0) <= state.size * 0.5) {
+          death("NIL");
+          return;
+        }
 
         return;
       }
