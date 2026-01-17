@@ -215,6 +215,17 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
 ];
+const subCatalyst = [
+  {
+    spawn: spawnCatalystMinion(entityHost, 0.92),
+    spawned: false,
+  },
+  {
+    spawn: spawnCatalystMinion(entityHost, 1.02),
+    spawned: false,
+  },
+  // catalyst hand
+];
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
@@ -494,10 +505,32 @@ topLeftInput.addEventListener("input", () => {
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
     setTimeout(() => {
-      spawnCatalystMinion(entityHost, 0.92);
-      spawnCatalystMinion(entityHost, 1.02);
-      // catalyst hand
-    }, 10000);
+      const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+      if (filteredSubCatalyst.length > 0) {
+        const randPick =
+          filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+        randPick.spawn();
+        randPick.spawned = true;
+      }
+      setTimeout(() => {
+        const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+        if (filteredSubCatalyst.length > 0) {
+          const randPick =
+            filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+          randPick.spawn();
+          randPick.spawned = true;
+        }
+        setTimeout(() => {
+          const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+          if (filteredSubCatalyst.length > 0) {
+            const randPick =
+              filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+            randPick.spawn();
+            randPick.spawned = true;
+          }
+        }, 10000);
+      }, 10000);
+    }, 20000);
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
@@ -698,10 +731,32 @@ export function activatePurgatory() {
       } else if (pick.name === "Catalyst") {
         pick.spawn();
         setTimeout(() => {
-          spawnCatalystMinion(entityHost, 0.92);
-          spawnCatalystMinion(entityHost, 1.02);
-          // catalyst hand
-        }, 10000);
+          const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+          if (filteredSubCatalyst.length > 0) {
+            const randPick =
+              filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+            randPick.spawn();
+            randPick.spawned = true;
+          }
+          setTimeout(() => {
+            const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+            if (filteredSubCatalyst.length > 0) {
+              const randPick =
+                filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+              randPick.spawn();
+              randPick.spawned = true;
+            }
+            setTimeout(() => {
+              const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+              if (filteredSubCatalyst.length > 0) {
+                const randPick =
+                  filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                randPick.spawn();
+                randPick.spawned = true;
+              }
+            }, 10000);
+          }, 10000);
+        }, 20000);
       } else {
         pick.spawn();
       }
@@ -1391,10 +1446,32 @@ function updateCamera() {
           } else if (pick.name === "Catalyst") {
             pick.spawn();
             setTimeout(() => {
-              spawnCatalystMinion(entityHost, 0.92);
-              spawnCatalystMinion(entityHost, 1.02);
-              // catalyst hand
-            }, 10000);
+              const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+              if (filteredSubCatalyst.length > 0) {
+                const randPick =
+                  filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                randPick.spawn();
+                randPick.spawned = true;
+              }
+              setTimeout(() => {
+                const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+                if (filteredSubCatalyst.length > 0) {
+                  const randPick =
+                    filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                  randPick.spawn();
+                  randPick.spawned = true;
+                }
+                setTimeout(() => {
+                  const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+                  if (filteredSubCatalyst.length > 0) {
+                    const randPick =
+                      filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                    randPick.spawn();
+                    randPick.spawned = true;
+                  }
+                }, 10000);
+              }, 10000);
+            }, 20000);
           } else {
             pick.spawn();
           }
