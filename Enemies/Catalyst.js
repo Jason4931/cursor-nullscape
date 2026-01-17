@@ -39,7 +39,7 @@ export function setup(host) {
 
   function randNearCursor(r = 500) {
     const a = Math.random() * Math.PI * 2;
-    const d = r * 0.5 + Math.random() * r * 0.5;
+    const d = r * 0.75 + Math.random() * r * 0.25;
     return {
       x: mouse.x + Math.cos(a) * d,
       y: mouse.y + Math.sin(a) * d,
