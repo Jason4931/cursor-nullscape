@@ -217,11 +217,11 @@ const ENTITY_POOL = [
 ];
 const subCatalyst = [
   {
-    spawn: spawnCatalystMinion(entityHost, 0.92),
+    spawn: () => spawnCatalystMinion(entityHost, 0.92),
     spawned: false,
   },
   {
-    spawn: spawnCatalystMinion(entityHost, 1.02),
+    spawn: () => spawnCatalystMinion(entityHost, 1.02),
     spawned: false,
   },
   // catalyst hand
