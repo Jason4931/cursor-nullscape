@@ -92,7 +92,7 @@ export function setup(host, stack) {
     const cy = mouse.y - state.y;
     const cdist = Math.hypot(cx, cy);
 
-    if (cdist <= state.size * 0.45) {
+    if (cdist <= state.size * 0.25) {
       death("Skinwalker");
       return;
     }
