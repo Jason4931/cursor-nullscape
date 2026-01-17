@@ -23,13 +23,13 @@ export function updateMouseWorld(canvas) {
   prevMouse.x = mouse._clientX;
   prevMouse.y = mouse._clientY;
 }
-export function createEntityHost(canvas, ctx) {
+export function createEntityHost(canvas, ctx, backctx) {
   const entities = new Set();
 
-  function register({ update, draw }) {
+  function register({ update, draw, name }) {
     const entity = { update, draw };
+    if (name) entity.name = name;
     entities.add(entity);
-
     return () => {
       entities.delete(entity);
     };
@@ -43,7 +43,11 @@ export function createEntityHost(canvas, ctx) {
 
   function draw() {
     for (const e of entities) {
-      e.draw?.(ctx);
+      if (e.name === "Bell") {
+        e.draw?.(backctx);
+      } else {
+        e.draw?.(ctx);
+      }
     }
   }
 

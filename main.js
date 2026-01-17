@@ -44,7 +44,7 @@ const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 
-const entityHost = createEntityHost(entityCanvas, entityCtx);
+const entityHost = createEntityHost(entityCanvas, entityCtx, ctx);
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
