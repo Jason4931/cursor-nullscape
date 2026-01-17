@@ -188,13 +188,13 @@ const ENTITY_POOL = [
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
   },
-  {
-    name: "Ponderer",
-    spawn: () => spawnPonderer(entityHost),
-    start: 1200,
-    src: "./ASSET/Enemies/Ponderer.png",
-    rare: true,
-  },
+  // {
+  //   name: "Ponderer",
+  //   spawn: () => spawnPonderer(entityHost),
+  //   start: 1200,
+  //   src: "./ASSET/Enemies/Ponderer.png",
+  //   rare: true,
+  // },
   {
     name: "Voidbreaker",
     spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++),
@@ -532,6 +532,12 @@ topLeftInput.addEventListener("input", () => {
       }, 10000);
     }, 20000);
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "ponderer") {
+    spawnPonderer(entityHost);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
