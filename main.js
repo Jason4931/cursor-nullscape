@@ -1220,7 +1220,7 @@ function drawGrid() {
       slownessTimeout = setTimeout(() => {
         slowness = false;
         slownessTimeout = null;
-      }, 3000);
+      }, 2000);
     }
   }
 
