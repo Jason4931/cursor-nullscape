@@ -35,6 +35,7 @@ const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
+const entityCtx = entityCanvas.getContext("2d");
 const counterEl = document.getElementById("counter");
 const settingsBtn = document.getElementById("settings-btn");
 const settingsPanel = document.getElementById("settings-panel");
@@ -43,7 +44,7 @@ const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 
-const entityHost = createEntityHost(entityCanvas, ctx);
+const entityHost = createEntityHost(entityCanvas, entityCtx);
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
@@ -1053,6 +1054,12 @@ function drawGrid() {
   const visibleW = viewport.clientWidth + margin;
   const visibleH = viewport.clientHeight + margin;
   ctx.clearRect(
+    visibleX - margin,
+    visibleY - margin,
+    visibleW + 2 * margin,
+    visibleH + 2 * margin
+  );
+  entityCtx.clearRect(
     visibleX - margin,
     visibleY - margin,
     visibleW + 2 * margin,
