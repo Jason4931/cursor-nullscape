@@ -655,6 +655,7 @@ export function activatePurgatory() {
           for (const e of unlocked) {
             const weight = pickedOnce.has(e.name) ? 1 : 3;
             for (let i = 0; i < weight; i++) weighted.push(e);
+            if (e.name === "baby" && babyCount < 2) weighted.push(e);
           }
           pick = weighted[(Math.random() * weighted.length) | 0];
           if (lastEntityPicked !== pick.name) {
@@ -1344,6 +1345,7 @@ function updateCamera() {
               for (const e of unlocked) {
                 const weight = pickedOnce.has(e.name) ? 1 : 3;
                 for (let i = 0; i < weight; i++) weighted.push(e);
+                if (e.name === "baby" && babyCount < 2) weighted.push(e);
               }
               pick = weighted[(Math.random() * weighted.length) | 0];
               if (lastEntityPicked !== pick.name) {
