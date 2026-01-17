@@ -306,10 +306,15 @@ const DEATH_MESSAGES = {
   ],
 };
 function getDeathMessage(name) {
-  const list =
-    Math.random() < 0.9
-      ? DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown
-      : DEATH_MESSAGES.Unknown;
+  let list;
+  if (name === "Catalyst") {
+    list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
+  } else {
+    list =
+      Math.random() < 0.9
+        ? DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown
+        : DEATH_MESSAGES.Unknown;
+  }
   return list[(Math.random() * list.length) | 0];
 }
 
