@@ -30,6 +30,7 @@ import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
+import { setup as spawnCatalystMinion } from "./Enemies/CatalystMinion.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -492,6 +493,11 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
+    setTimeout(() => {
+      spawnCatalystMinion(entityHost, 0.92);
+      spawnCatalystMinion(entityHost, 1.02);
+      // catalyst hand
+    }, 10000);
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
@@ -691,8 +697,11 @@ export function activatePurgatory() {
         }
       } else if (pick.name === "Catalyst") {
         pick.spawn();
-        // catalyst minion
-        // catalyst hand
+        setTimeout(() => {
+          spawnCatalystMinion(entityHost, 0.92);
+          spawnCatalystMinion(entityHost, 1.02);
+          // catalyst hand
+        }, 10000);
       } else {
         pick.spawn();
       }
@@ -1381,8 +1390,11 @@ function updateCamera() {
             }
           } else if (pick.name === "Catalyst") {
             pick.spawn();
-            // catalyst minion
-            // catalyst hand
+            setTimeout(() => {
+              spawnCatalystMinion(entityHost, 0.92);
+              spawnCatalystMinion(entityHost, 1.02);
+              // catalyst hand
+            }, 10000);
           } else {
             pick.spawn();
           }
