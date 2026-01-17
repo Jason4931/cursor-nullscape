@@ -46,7 +46,7 @@ export function setup(host) {
   }
 
   function applyTripmineLeniency(strength01) {
-    const duration = Math.min(1, strength01);
+    const duration = strength01;
 
     toggleImmortality(true);
 
