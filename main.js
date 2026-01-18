@@ -47,6 +47,7 @@ const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, ctx);
+let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
@@ -171,21 +172,21 @@ const ENTITY_POOL = [
   {
     name: "VoidImplosions",
     spawn: () => spawnVoidImplosions(entityHost),
-    start: 1000,
+    start: casualMode ? 1500 : 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
   },
   {
     name: "Sorrow",
     spawn: () => spawnSorrow(entityHost),
-    start: 1000,
+    start: casualMode ? 1500 : 1000,
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
   },
   {
     name: "Doombringer",
     spawn: () => spawnDoombringer(entityHost),
-    start: 1000,
+    start: casualMode ? 1500 : 1000,
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
   },
@@ -235,7 +236,6 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
-let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
@@ -1423,7 +1423,10 @@ function updateCamera() {
             pick.spawn();
           }
           registerEntitySpawn(pick.name, pick.src);
-          if (collectedCount >= 1000 && !isSeamineEnabled) {
+          if (
+            collectedCount >= (casualMode ? 1500 : 1000) &&
+            !isSeamineEnabled
+          ) {
             isSeamineEnabled = true;
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
