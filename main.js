@@ -194,7 +194,6 @@ const ENTITY_POOL = [
     spawn: () => spawnPonderer(entityHost),
     start: 1200,
     src: "./ASSET/Enemies/Ponderer.png",
-    unstackable: true,
     rare: true,
   },
   {
