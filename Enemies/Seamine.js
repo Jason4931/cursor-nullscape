@@ -1,14 +1,10 @@
-import {
-  death,
-  mouse,
-  toggleTripmineLeniency,
-} from "../entityHost.js";
+import { death, mouse, toggleTripmineLeniency } from "../entityHost.js";
 import { moveCamera } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Curses/Seamine.png";
 
-export function setup(host) {
+export function setup(host, casualMode) {
   const state = {
     x: 0,
     y: 0,
@@ -25,7 +21,7 @@ export function setup(host) {
 
   const SPAWN_RADIUS = 2000;
   const TOUCH_RADIUS = state.size / 2;
-  const EXPLODE_RADIUS = state.size * 2;
+  const EXPLODE_RADIUS = casualMode ? state.size : state.size * 2;
   const FLASH_TIME = 1;
   const RESPAWN_DELAY = 10;
 
@@ -110,7 +106,7 @@ export function setup(host) {
           Math.round(state.y),
           Math.round(state.blastRadius),
           0,
-          Math.PI * 2
+          Math.PI * 2,
         );
         ctx.fillStyle = "orange";
         ctx.fill();
@@ -131,7 +127,7 @@ export function setup(host) {
       Math.round(-state.size / 2),
       Math.round(-state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
     ctx.restore();
 
@@ -145,7 +141,7 @@ export function setup(host) {
         Math.round(state.y - 3),
         Math.round((state.size / 2) * pulse),
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fillStyle = "orange";
       ctx.fill();

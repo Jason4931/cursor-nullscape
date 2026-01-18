@@ -235,6 +235,7 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
+let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
@@ -246,6 +247,7 @@ document.getElementById("toggle-blindness").checked = blindnessMode;
 document.getElementById("toggle-reduced-motion").checked = reducedMotion;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
+document.getElementById("toggle-casual-mode").checked = casualMode;
 document.getElementById("sfx-volume").value = sfxVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
 
@@ -307,6 +309,9 @@ toggle("toggle-accurate-cursor", (v) => {
     canvas.style.cursor = "auto";
     entityCanvas.style.cursor = "auto";
   }
+});
+toggle("toggle-casual-mode", (v) => {
+  casualMode = v;
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = e.target.value / 100;
@@ -681,6 +686,11 @@ export function activatePurgatory() {
                 continue;
               }
             }
+            if (
+              casualMode &&
+              (pick.name === "Kookoo" || pick.name === "Cadence")
+            )
+              continue;
             lastEntityPicked = pick.name;
             pickedOnce.add(pick.name);
             break;
@@ -919,7 +929,7 @@ function placeSuper(sx, sy, pattern) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
-      const isTripmineEnabled = collectedCount > 500;
+      const isTripmineEnabled = !casualMode && collectedCount > 500;
 
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const r = Math.random();
@@ -1377,6 +1387,11 @@ function updateCamera() {
                     continue;
                   }
                 }
+                if (
+                  casualMode &&
+                  (pick.name === "Kookoo" || pick.name === "Cadence")
+                )
+                  continue;
                 lastEntityPicked = pick.name;
                 pickedOnce.add(pick.name);
                 break;
@@ -1410,9 +1425,9 @@ function updateCamera() {
           registerEntitySpawn(pick.name, pick.src);
           if (collectedCount >= 1000 && !isSeamineEnabled) {
             isSeamineEnabled = true;
-            spawnSeamine(entityHost);
-            spawnSeamine(entityHost);
-            spawnSeamine(entityHost);
+            spawnSeamine(entityHost, casualMode);
+            spawnSeamine(entityHost, casualMode);
+            spawnSeamine(entityHost, casualMode);
           }
           if (pick.unstackable) {
             spawnedUnstackables.add(pick.name);
