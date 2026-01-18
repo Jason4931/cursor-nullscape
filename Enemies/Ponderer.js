@@ -11,17 +11,17 @@ export function setup(host) {
     x: 0,
     y: 0,
 
-    radius: 1200,
+    radius: 1000,
 
     timer: 8,
     maxTimer: 8,
 
     decayRate: 1,
-    recoverRate: 1,
+    recoverRate: 0.9,
 
     agro: false,
 
-    speed: 630,
+    speed: 840,
     size: 150,
 
     wobbleTime: 0,
