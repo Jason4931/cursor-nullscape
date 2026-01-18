@@ -4,6 +4,7 @@ import { moveCamera } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Catalyst/Layer 1.png";
 
+export let catalystPos = { x: 0, y: 0 };
 export function setup(host) {
   const state = {
     phase: "initDarken",
@@ -71,7 +72,7 @@ export function setup(host) {
       state.x,
       state.y,
       (dx / d - 0.1 + Math.random() * 0.2) * 220,
-      (dy / d - 0.1 + Math.random() * 0.2) * 220
+      (dy / d - 0.1 + Math.random() * 0.2) * 220,
     );
   }
 
@@ -84,6 +85,7 @@ export function setup(host) {
   function update(dt) {
     if (!Number.isFinite(mouse.x)) return;
 
+    catalystPos = { x: state.x, y: state.y };
     state.layer++;
     if (state.layer > 8) state.layer = 1;
     enemy.src = `./ASSET/Enemies/Catalyst/Layer ${state.layer}.png`;
@@ -265,14 +267,14 @@ export function setup(host) {
       Math.round(state.x - 100),
       Math.round(state.y - 100),
       200,
-      200
+      200,
     );
 
     for (const p of state.pellets) {
       ctx.save();
       ctx.translate(
         Math.round(p.x + (-5 + Math.random() * 10)),
-        Math.round(p.y + (-5 + Math.random() * 10))
+        Math.round(p.y + (-5 + Math.random() * 10)),
       );
       ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
       ctx.beginPath();

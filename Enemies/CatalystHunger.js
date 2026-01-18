@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { moveCamera } from "../main.js";
+import { catalystPos } from "./Catalyst.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/CatalystMinion.png";
@@ -8,8 +9,8 @@ export function setup(host, overshootBrake) {
   const canvas = host.ctx.canvas;
 
   const state = {
-    x: canvas.width * 0.5,
-    y: canvas.height * 0.5,
+    x: catalystPos.x,
+    y: catalystPos.y,
 
     vx: 0,
     vy: 0,
@@ -125,7 +126,7 @@ export function setup(host, overshootBrake) {
         Math.round(t.y),
         Math.round(50 * a),
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
     }
@@ -140,7 +141,7 @@ export function setup(host, overshootBrake) {
           0,
           Math.round(state.x),
           Math.round(state.y),
-          Math.round(r)
+          Math.round(r),
         );
 
         g.addColorStop(0, "rgba(0,0,0,0.35)");
@@ -160,7 +161,7 @@ export function setup(host, overshootBrake) {
           0,
           Math.round(state.x),
           Math.round(state.y),
-          Math.round(r)
+          Math.round(r),
         );
 
         g.addColorStop(0.0, "rgba(0,0,0,0)");
@@ -181,7 +182,7 @@ export function setup(host, overshootBrake) {
       Math.round(state.x - 50),
       Math.round(state.y - 50),
       Math.round(100),
-      Math.round(100)
+      Math.round(100),
     );
 
     ctx.restore();

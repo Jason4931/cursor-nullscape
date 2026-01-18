@@ -104,7 +104,7 @@ export function setup(host) {
     }
 
     if (state.phase === "idle") {
-      if (state.timer >= 3) {
+      if (state.timer >= state.idleTime) {
         state.timer = 0;
         state.phase = "circleGrow";
       }
@@ -124,7 +124,7 @@ export function setup(host) {
         0,
         Math.round(state.lx),
         Math.round(state.ly),
-        Math.round(Math.max(0, state.radius))
+        Math.round(Math.max(0, state.radius)),
       );
 
       g.addColorStop(0, "rgba(0,0,0,0)");
@@ -137,7 +137,7 @@ export function setup(host) {
         Math.round(state.ly),
         Math.round(Math.max(0, state.radius)),
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
     }
@@ -149,7 +149,7 @@ export function setup(host) {
         Math.round(state.x - 50),
         Math.round(state.y - 100),
         Math.round(100),
-        Math.round(200)
+        Math.round(200),
       );
     }
 

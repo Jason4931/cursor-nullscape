@@ -290,8 +290,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -330,8 +330,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -342,8 +342,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -354,8 +354,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-      ? 200
-      : RESPAWN_RADIUS * 1.3;
+        ? 200
+        : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -554,11 +554,11 @@ let lastRegenTime = 0;
 /* ===== GRID / SUPERGRID CALC ===== */
 const SUPER_W = Math.max(
   1,
-  Math.floor(canvas.width / (TILE_SIZE * SUPER_TILE))
+  Math.floor(canvas.width / (TILE_SIZE * SUPER_TILE)),
 );
 const SUPER_H = Math.max(
   1,
-  Math.floor(canvas.height / (TILE_SIZE * SUPER_TILE))
+  Math.floor(canvas.height / (TILE_SIZE * SUPER_TILE)),
 );
 
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
@@ -574,7 +574,7 @@ let collectedCount = 0;
 
 /* ===== MAP OCCUPANCY ===== */
 const superOccupied = Array.from({ length: SUPER_H }, () =>
-  Array(SUPER_W).fill(false)
+  Array(SUPER_W).fill(false),
 );
 
 /* ===== STATE ===== */
@@ -829,7 +829,7 @@ function findReplacementSlot(mouseWorld) {
 
 function forceSpawn3x3(mouseWorld) {
   const base3x3 = PATTERNS.filter(
-    (p) => p.length / SUPER_TILE === 3 && p[0].length / SUPER_TILE === 3
+    (p) => p.length / SUPER_TILE === 3 && p[0].length / SUPER_TILE === 3,
   );
 
   if (!base3x3.length) return;
@@ -856,12 +856,12 @@ function superRangeFromRadius(x, y, r) {
   const minSX = Math.max(0, Math.floor((x - r) / (SUPER_TILE * TILE)));
   const maxSX = Math.min(
     SUPER_W - 1,
-    Math.floor((x + r) / (SUPER_TILE * TILE))
+    Math.floor((x + r) / (SUPER_TILE * TILE)),
   );
   const minSY = Math.max(0, Math.floor((y - r) / (SUPER_TILE * TILE)));
   const maxSY = Math.min(
     SUPER_H - 1,
-    Math.floor((y + r) / (SUPER_TILE * TILE))
+    Math.floor((y + r) / (SUPER_TILE * TILE)),
   );
   return { minSX, maxSX, minSY, maxSY };
 }
@@ -926,7 +926,8 @@ function placeSuper(sx, sy, pattern) {
         const r = Math.random();
         let type = "gift";
         if (isTripmineEnabled) {
-          if (r < 0.01) type = "gold"; // 1%
+          if (r < 0.01)
+            type = "gold"; // 1%
           else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
@@ -1036,7 +1037,7 @@ export function pickRandomPlaced4or5(minRadius = 0) {
 const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
   mouse.x,
   mouse.y,
-  RESPAWN_RADIUS
+  RESPAWN_RADIUS,
 );
 
 for (let sy = minSY; sy <= maxSY; sy++) {
@@ -1074,13 +1075,13 @@ function drawGrid() {
     visibleX - margin,
     visibleY - margin,
     visibleW + 2 * margin,
-    visibleH + 2 * margin
+    visibleH + 2 * margin,
   );
   entityCtx.clearRect(
     visibleX - margin,
     visibleY - margin,
     visibleW + 2 * margin,
-    visibleH + 2 * margin
+    visibleH + 2 * margin,
   );
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
@@ -1190,7 +1191,7 @@ function drawGrid() {
         g.x + (TILE - GIFT_SIZE) / 2,
         g.y + (TILE - GIFT_SIZE) / 2,
         GIFT_SIZE,
-        GIFT_SIZE
+        GIFT_SIZE,
       );
     }
   }
@@ -1269,7 +1270,7 @@ function updateCamera() {
   }
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
   toggleTripmineLeniency(
-    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5
+    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5,
   );
 
   const motionScale = reducedMotion ? 0.5 : 1;
@@ -1459,7 +1460,7 @@ function updateCamera() {
     const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
       mouse.x,
       mouse.y,
-      RESPAWN_RADIUS
+      RESPAWN_RADIUS,
     );
 
     for (let sy = minSY; sy <= maxSY && regenLeft > 0; sy++) {
@@ -1523,7 +1524,7 @@ function loop(now) {
     0,
     mouse.x,
     mouse.y,
-    dynamicHitRadius
+    dynamicHitRadius,
   );
   g.addColorStop(0, "rgba(0, 0, 255, 0)");
   g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
@@ -1567,7 +1568,7 @@ function loop(now) {
       0,
       tripmineExplosion.x,
       tripmineExplosion.y,
-      r
+      r,
     );
 
     g.addColorStop(0, "rgba(255, 0, 255, 0.5)");
