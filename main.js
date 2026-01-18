@@ -30,7 +30,8 @@ import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
-import { setup as spawnCatalystMinion } from "./Enemies/CatalystMinion.js";
+import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
+import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -214,17 +215,6 @@ const ENTITY_POOL = [
     start: 2000,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
-];
-const subCatalyst = [
-  {
-    spawn: () => spawnCatalystMinion(entityHost, 0.92),
-    spawned: false,
-  },
-  {
-    spawn: () => spawnCatalystMinion(entityHost, 1.02),
-    spawned: false,
-  },
-  // catalyst hand
 ];
 
 const gift = new Image();
@@ -504,36 +494,12 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
-    setTimeout(() => {
-      const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-      if (filteredSubCatalyst.length > 0) {
-        const randPick =
-          filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
-        randPick.spawn();
-        randPick.spawned = true;
+    setInterval(() => {
+      if (Math.random() < 0.5) {
+        spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
+      } else {
+        spawnCatalystHand(entityHost);
       }
-      setTimeout(() => {
-        const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-        if (filteredSubCatalyst.length > 0) {
-          const randPick =
-            filteredSubCatalyst[
-              (Math.random() * filteredSubCatalyst.length) | 0
-            ];
-          randPick.spawn();
-          randPick.spawned = true;
-        }
-        setTimeout(() => {
-          const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-          if (filteredSubCatalyst.length > 0) {
-            const randPick =
-              filteredSubCatalyst[
-                (Math.random() * filteredSubCatalyst.length) | 0
-              ];
-            randPick.spawn();
-            randPick.spawned = true;
-          }
-        }, 10000);
-      }, 10000);
     }, 20000);
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     topLeftInput.value = "";
@@ -735,38 +701,12 @@ export function activatePurgatory() {
         }
       } else if (pick.name === "Catalyst") {
         pick.spawn();
-        setTimeout(() => {
-          const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-          if (filteredSubCatalyst.length > 0) {
-            const randPick =
-              filteredSubCatalyst[
-                (Math.random() * filteredSubCatalyst.length) | 0
-              ];
-            randPick.spawn();
-            randPick.spawned = true;
+        setInterval(() => {
+          if (Math.random() < 0.5) {
+            spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
+          } else {
+            spawnCatalystHand(entityHost);
           }
-          setTimeout(() => {
-            const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-            if (filteredSubCatalyst.length > 0) {
-              const randPick =
-                filteredSubCatalyst[
-                  (Math.random() * filteredSubCatalyst.length) | 0
-                ];
-              randPick.spawn();
-              randPick.spawned = true;
-            }
-            setTimeout(() => {
-              const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-              if (filteredSubCatalyst.length > 0) {
-                const randPick =
-                  filteredSubCatalyst[
-                    (Math.random() * filteredSubCatalyst.length) | 0
-                  ];
-                randPick.spawn();
-                randPick.spawned = true;
-              }
-            }, 10000);
-          }, 10000);
         }, 20000);
       } else {
         pick.spawn();
@@ -1456,42 +1396,12 @@ function updateCamera() {
             }
           } else if (pick.name === "Catalyst") {
             pick.spawn();
-            setTimeout(() => {
-              const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
-              if (filteredSubCatalyst.length > 0) {
-                const randPick =
-                  filteredSubCatalyst[
-                    (Math.random() * filteredSubCatalyst.length) | 0
-                  ];
-                randPick.spawn();
-                randPick.spawned = true;
+            setInterval(() => {
+              if (Math.random() < 0.5) {
+                spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
+              } else {
+                spawnCatalystHand(entityHost);
               }
-              setTimeout(() => {
-                const filteredSubCatalyst = subCatalyst.filter(
-                  (e) => !e.spawned
-                );
-                if (filteredSubCatalyst.length > 0) {
-                  const randPick =
-                    filteredSubCatalyst[
-                      (Math.random() * filteredSubCatalyst.length) | 0
-                    ];
-                  randPick.spawn();
-                  randPick.spawned = true;
-                }
-                setTimeout(() => {
-                  const filteredSubCatalyst = subCatalyst.filter(
-                    (e) => !e.spawned
-                  );
-                  if (filteredSubCatalyst.length > 0) {
-                    const randPick =
-                      filteredSubCatalyst[
-                        (Math.random() * filteredSubCatalyst.length) | 0
-                      ];
-                    randPick.spawn();
-                    randPick.spawned = true;
-                  }
-                }, 10000);
-              }, 10000);
             }, 20000);
           } else {
             pick.spawn();

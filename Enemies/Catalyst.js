@@ -14,6 +14,7 @@ export function setup(host) {
     layer: 1,
     timer: 0,
     totalTimer: 0,
+    nextScream: 14 + Math.random(),
 
     cycleTime: 0,
     cycleDuration: 1,
@@ -34,8 +35,6 @@ export function setup(host) {
 
   const BODY_RADIUS = 80;
   const PELLET_RADIUS = 8;
-
-  /* ---------------- HELPERS ---------------- */
 
   function randNearCursor(r = 600) {
     const a = Math.random() * Math.PI * 2;
@@ -82,8 +81,6 @@ export function setup(host) {
     if (dx * dx + dy * dy <= r * r) death("Catalyst", "#660000");
   }
 
-  /* ---------------- UPDATE ---------------- */
-
   function update(dt) {
     if (!Number.isFinite(mouse.x)) return;
 
@@ -113,8 +110,6 @@ export function setup(host) {
     state.timer += dt;
     if (state.phase === "chase") state.totalTimer += dt;
 
-    /* ---------- INIT DARKEN ---------- */
-
     if (state.phase === "initDarken") {
       if (state.timer >= 3) {
         state.timer = 0;
@@ -135,21 +130,16 @@ export function setup(host) {
       return;
     }
 
-    /* ---------- SCREAM ---------- */
-
     if (state.phase === "scream") {
       state.auraTimer += dt * 6;
 
       const nx = -20 + Math.random() * 40;
       const ny = -20 + Math.random() * 40;
 
-      // remove previous shake
       moveCamera(-state.camShakeX, -state.camShakeY, true);
 
-      // apply new shake
       moveCamera(nx, ny, true);
 
-      // store applied offset
       state.camShakeX = nx;
       state.camShakeY = ny;
 
@@ -163,8 +153,6 @@ export function setup(host) {
       return;
     }
 
-    /* ---------- CHASE ---------- */
-
     state.cycleTime += dt;
 
     const t0 = 0.25 * state.cycleDuration;
@@ -173,7 +161,6 @@ export function setup(host) {
     const t3 = t2 + 0.125 * state.cycleDuration;
     const t4 = t3 + 0.25 * state.cycleDuration;
 
-    // DASH
     if (state.cycleTime < t0) {
       if (!state.dashStarted) {
         const p = randNearCursor();
@@ -185,76 +172,54 @@ export function setup(host) {
       }
 
       const k = state.cycleTime / t0;
-      const e = k * (2 - k); // easeOut
+      const e = k * (2 - k);
 
       state.x = state.dashFromX + (state.dashToX - state.dashFromX) * e;
       state.y = state.dashFromY + (state.dashToY - state.dashFromY) * e;
-    }
-
-    // 1 pellet → cursor
-    else if (state.cycleTime < t1 && !state.fired1) {
+    } else if (state.cycleTime < t1 && !state.fired1) {
       pelletToCursor(false);
       state.fired1 = true;
-    }
-
-    // random pellet 1
-    else if (state.cycleTime < t2 && !state.fired2) {
+    } else if (state.cycleTime < t2 && !state.fired2) {
       pelletToCursor(true);
       state.fired2 = true;
-    }
-
-    // random pellet 2
-    else if (state.cycleTime < t3 && !state.fired3) {
+    } else if (state.cycleTime < t3 && !state.fired3) {
       pelletToCursor(true);
       state.fired3 = true;
-    }
-
-    // final pellet → cursor
-    else if (state.cycleTime < t4 && !state.fired4) {
+    } else if (state.cycleTime < t4 && !state.fired4) {
       pelletToCursor(false);
       state.fired4 = true;
     }
 
-    // RESET CYCLE
     if (state.cycleTime >= state.cycleDuration) {
       state.cycleTime = 0;
       state.dashStarted = false;
       state.fired1 = state.fired2 = state.fired3 = state.fired4 = false;
     }
 
-    // ESCALATING SCREAM
-    if (state.totalTimer >= 15) {
+    if (state.totalTimer >= state.nextScream) {
       state.totalTimer = 0;
       state.phase = "scream";
+      state.nextScream = 14 + Math.random();
       state.timer = 0;
       state.screaming = true;
       state.cycleDuration *= 0.9;
     }
 
-    /* ---------- DEATH ---------- */
-
     checkDeath(state.x, state.y, BODY_RADIUS);
   }
-
-  /* ---------------- DRAW ---------------- */
 
   function draw(ctx) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    // INIT DARKEN
     if (state.phase === "initDarken") {
       const t = state.timer;
-      let a = t < 1 ? t : t > 2 ? 3 - t : 1;
+      const a = t < 1 ? t : t > 2 ? 3 - t : 1;
 
-      const g = ctx.createRadialGradient(
-        mouse.x,
-        mouse.y,
-        0,
-        mouse.x,
-        mouse.y,
-        800
-      );
+      const mx = Math.round(mouse.x);
+      const my = Math.round(mouse.y);
+
+      const g = ctx.createRadialGradient(mx, my, 0, mx, my, 800);
       g.addColorStop(0, "rgba(0,0,0,0)");
       g.addColorStop(1, `rgba(0,0,0,${a})`);
 
@@ -262,39 +227,25 @@ export function setup(host) {
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
-    // AURA
     if (state.screaming) {
+      const sx = Math.round(state.x);
+      const sy = Math.round(state.y);
+
       for (let i = 0; i < 4; i++) {
-        const r = (state.auraTimer * 250 + i * 200) % 2200;
-        const g = ctx.createRadialGradient(
-          state.x,
-          state.y,
-          0,
-          state.x,
-          state.y,
-          r
-        );
+        const r = Math.round((state.auraTimer * 250 + i * 200) % 2200);
+        const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
         g.addColorStop(0, "rgba(0,0,0,0.35)");
         g.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
-      // AURORA PULSE (0 -> max -> 0)
-      const speed = 0.25; // grow speed
+      const speed = 0.25;
       const maxR = 2600;
-
-      const r = (state.auraTimer * speed * maxR) % maxR; // hard reset to 0
+      const r = Math.round((state.auraTimer * speed * maxR) % maxR);
 
       if (r > 1) {
-        const g = ctx.createRadialGradient(
-          state.x,
-          state.y,
-          0,
-          state.x,
-          state.y,
-          r
-        );
+        const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
 
         g.addColorStop(0.0, "rgba(0,0,0,0)");
         g.addColorStop(0.49, "rgba(0,0,0,0)");
@@ -309,15 +260,19 @@ export function setup(host) {
       }
     }
 
-    // ENTITY
-    ctx.drawImage(enemy, state.x - 100, state.y - 100, 200, 200);
+    ctx.drawImage(
+      enemy,
+      Math.round(state.x - 100),
+      Math.round(state.y - 100),
+      200,
+      200
+    );
 
-    // PELLETS
     for (const p of state.pellets) {
       ctx.save();
       ctx.translate(
-        p.x + (-5 + Math.random() * 10),
-        p.y + (-5 + Math.random() * 10)
+        Math.round(p.x + (-5 + Math.random() * 10)),
+        Math.round(p.y + (-5 + Math.random() * 10))
       );
       ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
       ctx.beginPath();
