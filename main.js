@@ -299,8 +299,8 @@ toggle("toggle-blindness", (v) => {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -339,8 +339,8 @@ function setGraphicsLow() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
@@ -351,8 +351,8 @@ function setGraphicsMedium() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
@@ -363,8 +363,8 @@ function setGraphicsHigh() {
     cheat >= 8 && cheat <= 16
       ? RESPAWN_RADIUS * 10
       : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+      ? 200
+      : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -516,7 +516,9 @@ topLeftInput.addEventListener("input", () => {
         const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
         if (filteredSubCatalyst.length > 0) {
           const randPick =
-            filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+            filteredSubCatalyst[
+              (Math.random() * filteredSubCatalyst.length) | 0
+            ];
           randPick.spawn();
           randPick.spawned = true;
         }
@@ -524,7 +526,9 @@ topLeftInput.addEventListener("input", () => {
           const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
           if (filteredSubCatalyst.length > 0) {
             const randPick =
-              filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+              filteredSubCatalyst[
+                (Math.random() * filteredSubCatalyst.length) | 0
+              ];
             randPick.spawn();
             randPick.spawned = true;
           }
@@ -565,8 +569,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -706,7 +711,7 @@ export function activatePurgatory() {
               }
             }
             if (pick.rare) {
-              if (Math.random() < 0.5) {
+              if (Math.random() < 0.25) {
                 continue;
               }
             }
@@ -734,7 +739,9 @@ export function activatePurgatory() {
           const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
           if (filteredSubCatalyst.length > 0) {
             const randPick =
-              filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+              filteredSubCatalyst[
+                (Math.random() * filteredSubCatalyst.length) | 0
+              ];
             randPick.spawn();
             randPick.spawned = true;
           }
@@ -742,7 +749,9 @@ export function activatePurgatory() {
             const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
             if (filteredSubCatalyst.length > 0) {
               const randPick =
-                filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                filteredSubCatalyst[
+                  (Math.random() * filteredSubCatalyst.length) | 0
+                ];
               randPick.spawn();
               randPick.spawned = true;
             }
@@ -750,7 +759,9 @@ export function activatePurgatory() {
               const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
               if (filteredSubCatalyst.length > 0) {
                 const randPick =
-                  filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                  filteredSubCatalyst[
+                    (Math.random() * filteredSubCatalyst.length) | 0
+                  ];
                 randPick.spawn();
                 randPick.spawned = true;
               }
@@ -1421,7 +1432,7 @@ function updateCamera() {
                   }
                 }
                 if (pick.rare) {
-                  if (Math.random() < 0.5) {
+                  if (Math.random() < 0.25) {
                     continue;
                   }
                 }
@@ -1449,23 +1460,33 @@ function updateCamera() {
               const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
               if (filteredSubCatalyst.length > 0) {
                 const randPick =
-                  filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                  filteredSubCatalyst[
+                    (Math.random() * filteredSubCatalyst.length) | 0
+                  ];
                 randPick.spawn();
                 randPick.spawned = true;
               }
               setTimeout(() => {
-                const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+                const filteredSubCatalyst = subCatalyst.filter(
+                  (e) => !e.spawned
+                );
                 if (filteredSubCatalyst.length > 0) {
                   const randPick =
-                    filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                    filteredSubCatalyst[
+                      (Math.random() * filteredSubCatalyst.length) | 0
+                    ];
                   randPick.spawn();
                   randPick.spawned = true;
                 }
                 setTimeout(() => {
-                  const filteredSubCatalyst = subCatalyst.filter((e) => !e.spawned);
+                  const filteredSubCatalyst = subCatalyst.filter(
+                    (e) => !e.spawned
+                  );
                   if (filteredSubCatalyst.length > 0) {
                     const randPick =
-                      filteredSubCatalyst[(Math.random() * filteredSubCatalyst.length) | 0];
+                      filteredSubCatalyst[
+                        (Math.random() * filteredSubCatalyst.length) | 0
+                      ];
                     randPick.spawn();
                     randPick.spawned = true;
                   }
