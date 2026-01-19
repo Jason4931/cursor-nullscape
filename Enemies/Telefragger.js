@@ -14,7 +14,7 @@ export function setup(host) {
     speed: 40,
 
     teleportTimer: 9 + Math.random(),
-    teleportDistance: 500,
+    teleportDistance: 600,
 
     prevMouseX: NaN,
     prevMouseY: NaN,
