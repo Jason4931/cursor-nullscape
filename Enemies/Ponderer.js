@@ -11,7 +11,7 @@ export function setup(host) {
     x: 0,
     y: 0,
 
-    radius: 1000,
+    radius: 1200,
 
     timer: 8,
     maxTimer: 8,
