@@ -86,7 +86,7 @@ export function setup(host) {
       state.x += moveX;
       state.y += moveY;
 
-      if (dist < state.size * 0.25) {
+      if (dist < state.size * 0.2) {
         death("Ponderer");
       }
     }
