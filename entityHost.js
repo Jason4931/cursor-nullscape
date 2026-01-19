@@ -323,7 +323,7 @@ function getDeathMessage(name) {
     list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
   } else {
     list =
-      Math.random() < 0.9
+      Math.random() < 0.95
         ? DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown
         : DEATH_MESSAGES.Unknown;
   }
