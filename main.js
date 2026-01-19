@@ -430,7 +430,8 @@ entityCanvas.height = 10000;
 entityCanvas2.width = 10000;
 entityCanvas2.height = 10000;
 
-const MAX_SPEED = 20;
+let collectedCount = 0;
+let MAX_SPEED = 20;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
@@ -582,8 +583,6 @@ let prevMouseWorld = { x: 0, y: 0 };
 let DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
 let RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
 let RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
-
-let collectedCount = 0;
 
 /* ===== MAP OCCUPANCY ===== */
 const superOccupied = Array.from({ length: SUPER_H }, () =>
@@ -1258,6 +1257,8 @@ function updateCamera() {
 
   let edgeFactorX = 0;
   let edgeFactorY = 0;
+
+  MAX_SPEED = 20 + collectedCount / 250;
 
   if (mouse._clientX < w * cameraRadius) {
     vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
