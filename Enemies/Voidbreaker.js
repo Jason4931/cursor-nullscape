@@ -40,7 +40,7 @@ export function setup(host, stack) {
     const DASH_DIST = 500;
 
     const SWORD_SIZE = 50;
-    const KILL_RADIUS = 22;
+    const KILL_RADIUS = 17;
 
     const FLASH_OUTER = 27;
     const FLASH_INNER = 6;
@@ -253,7 +253,7 @@ export function setup(host, stack) {
 
     const DASH_DIST = 500;
     const SWORD_SIZE = 50;
-    const KILL_RADIUS = 22;
+    const KILL_RADIUS = 17;
 
     const DIRECTIONS = [
       [1, 0],
