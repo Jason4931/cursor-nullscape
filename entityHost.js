@@ -292,6 +292,18 @@ const DEATH_MESSAGES = {
     "YOU WERE SAVED.",
     "YOU WERE VISITED BY A HOLY SPIRIT.",
   ],
+  Void: [
+    "You are null.",
+    "You fell off.",
+    "You fell off (in both ways).",
+    "You can no longer be found.",
+    "Somebody fell into the void. Not gonna say who though.",
+    "You voided.",
+    "You voided, but forgot this isn't bedwars.",
+    "You have been enlightened by the void.",
+    "You were deleted.",
+    "You fell into the void.",
+  ],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",

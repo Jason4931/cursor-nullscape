@@ -32,6 +32,7 @@ import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js"
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
+import { setup as spawnVoid } from "./Enemies/Void.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -55,6 +56,7 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
+let spawnedVoid = false;
 let spawnedAltar = false;
 let spawnedCatalyst = false;
 let disablespawn = false;
@@ -548,9 +550,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1361,6 +1362,10 @@ function updateCamera() {
           return true;
         });
 
+        if (collectedCount >= 100 && !spawnedVoid) {
+          spawnedVoid = true;
+          spawnVoid(entityHost);
+        }
         if (collectedCount >= 600 && !spawnedAltar) {
           spawnedAltar = true;
           spawnAltar(entityHost);
