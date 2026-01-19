@@ -31,7 +31,7 @@ export function setup(host) {
   const RING_RADIUS = 60;
   const INTRO_TIME = 3;
   const STRIKE_TIME = 1;
-  const STRIKE_RADIUS = 157;
+  const STRIKE_RADIUS = 210;
 
   function resetIntro() {
     state.phase = "intro";
@@ -144,7 +144,7 @@ export function setup(host) {
       0,
       Math.round(state.x),
       Math.round(state.y),
-      RING_RADIUS + 2
+      RING_RADIUS + 2,
     );
     grad.addColorStop(0, "rgba(0,0,128,1)");
     grad.addColorStop(0.77, "rgba(0,0,0,1)");
@@ -161,7 +161,7 @@ export function setup(host) {
       Math.round(state.y),
       RING_RADIUS + 2,
       0,
-      Math.PI * 2
+      Math.PI * 2,
     );
     ctx.fillStyle = grad;
     ctx.fill();
@@ -181,7 +181,7 @@ export function setup(host) {
         Math.round(-size * 0.25),
         Math.round(-size + yOffset),
         Math.round(size * 0.5),
-        Math.round(size)
+        Math.round(size),
       );
 
       ctx.restore();
@@ -238,7 +238,7 @@ export function setup(host) {
         Math.round(state.y),
         RING_RADIUS,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.clip();
 
@@ -247,7 +247,7 @@ export function setup(host) {
         Math.round(state.x - RING_RADIUS),
         Math.round(yTop),
         Math.round(RING_RADIUS * 2),
-        Math.round(h)
+        Math.round(h),
       );
 
       ctx.restore();
@@ -274,7 +274,7 @@ export function setup(host) {
         Math.round(state.x - RING_RADIUS * 1.5),
         Math.round(state.y - RING_RADIUS * 1.5),
         Math.round(RING_RADIUS * 3),
-        Math.round(RING_RADIUS * 3)
+        Math.round(RING_RADIUS * 3),
       );
     }
 
