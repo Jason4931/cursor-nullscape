@@ -56,7 +56,16 @@
         left: 0;
         top: 0;
         z-index: 1000;
-        background: #111;
+        box-shadow:
+          0 0 240px rgba(255, 255, 0, 0.5),
+          0 0 240px rgba(255, 255, 0, 0.5),
+          inset 0 0 240px rgba(255, 255, 0, 0.5);
+      }
+      canvas .entities-2 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
         box-shadow:
           0 0 240px rgba(255, 255, 0, 0.5),
           0 0 240px rgba(255, 255, 0, 0.5),
@@ -471,6 +480,7 @@
       </div>
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
+      <canvas id="entities-2" width="1920" height="1200"></canvas>
       <p id="counter">Collected: 0</p>
       <div id="settings-btn">⚙</div>
       <div id="settings-panel">

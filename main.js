@@ -35,9 +35,11 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
+const entityCanvas2 = document.getElementById("entities-2");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
 const entityCtx = entityCanvas.getContext("2d");
+const entityCtx2 = entityCanvas.getContext("2d");
 const counterEl = document.getElementById("counter");
 const settingsBtn = document.getElementById("settings-btn");
 const settingsPanel = document.getElementById("settings-panel");
@@ -46,7 +48,7 @@ const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 
-const entityHost = createEntityHost(entityCanvas, entityCtx, ctx);
+const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
@@ -305,9 +307,11 @@ toggle("toggle-accurate-cursor", (v) => {
   if (accurateCursor) {
     canvas.style.cursor = "none";
     entityCanvas.style.cursor = "none";
+    entityCanvas2.style.cursor = "none";
   } else {
     canvas.style.cursor = "auto";
     entityCanvas.style.cursor = "auto";
+    entityCanvas2.style.cursor = "auto";
   }
 });
 toggle("toggle-casual-mode", (v) => {
@@ -406,9 +410,11 @@ document.getElementById("reset-settings").onclick = () => {
   if (accurateCursor) {
     canvas.style.cursor = "none";
     entityCanvas.style.cursor = "none";
+    entityCanvas2.style.cursor = "none";
   } else {
     canvas.style.cursor = "auto";
     entityCanvas.style.cursor = "auto";
+    entityCanvas2.style.cursor = "auto";
   }
 
   RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
@@ -419,6 +425,8 @@ canvas.width = 10000;
 canvas.height = 10000;
 entityCanvas.width = 10000;
 entityCanvas.height = 10000;
+entityCanvas2.width = 10000;
+entityCanvas2.height = 10000;
 
 const MAX_SPEED = 20;
 const GRID_DIVS = 10;
@@ -609,9 +617,11 @@ else setGraphicsUltra();
 if (accurateCursor) {
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";
+  entityCanvas2.style.cursor = "none";
 } else {
   canvas.style.cursor = "auto";
   entityCanvas.style.cursor = "auto";
+  entityCanvas2.style.cursor = "auto";
 }
 
 /* ===== HELPERS ===== */
@@ -1297,6 +1307,7 @@ function updateCamera() {
   }
   canvas.style.transform = `translate(${camX}px, ${camY}px)`;
   entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
+  entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
 
   // mouseWorld = screenToWorld(mouseX, mouseY);
 

@@ -23,7 +23,7 @@ export function updateMouseWorld(canvas) {
   prevMouse.x = mouse._clientX;
   prevMouse.y = mouse._clientY;
 }
-export function createEntityHost(canvas, ctx, backctx) {
+export function createEntityHost(canvas, ctx, ctx2, backctx) {
   const entities = new Set();
 
   function register({ update, draw, name }) {
@@ -46,7 +46,7 @@ export function createEntityHost(canvas, ctx, backctx) {
       if (e.name === "Bell") {
         e.draw?.(backctx);
       } else {
-        e.draw?.(ctx);
+        Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
       }
     }
   }
