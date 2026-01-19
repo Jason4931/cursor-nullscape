@@ -35,7 +35,7 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
-const entityCanvas2 = document.getElementById("entities-2");
+export const entityCanvas2 = document.getElementById("entities-2");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
 const entityCtx = entityCanvas.getContext("2d");

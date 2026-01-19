@@ -1,5 +1,9 @@
 import { mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, activatePurgatory } from "../main.js";
+import {
+  pickRandomPlaced4or5,
+  activatePurgatory,
+  entityCanvas2,
+} from "../main.js";
 
 const altar = new Image();
 altar.src = "./ASSET/Misc/AltarOfPurgatory.png";
@@ -27,7 +31,7 @@ export function setup(host) {
   }
 
   function onClick(e) {
-    const rect = host.canvas.getBoundingClientRect();
+    const rect = entityCanvas2.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
@@ -41,7 +45,7 @@ export function setup(host) {
     }
   }
 
-  host.canvas.addEventListener("click", onClick);
+  entityCanvas2.addEventListener("click", onClick);
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
@@ -67,7 +71,7 @@ export function setup(host) {
       Math.round(state.x - size * 0.5),
       Math.round(drawY - size * 0.5),
       size,
-      size
+      size,
     );
 
     ctx.restore();
@@ -76,7 +80,7 @@ export function setup(host) {
   const unregister = host.register({ update, draw });
 
   return () => {
-    host.canvas.removeEventListener("click", onClick);
+    entityCanvas2.removeEventListener("click", onClick);
     unregister();
   };
 }
