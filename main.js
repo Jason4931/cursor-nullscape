@@ -431,7 +431,7 @@ entityCanvas2.width = 10000;
 entityCanvas2.height = 10000;
 
 let collectedCount = 0;
-let MAX_SPEED = 20;
+let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
 let HIT_RADIUS = GIFT_SIZE;
@@ -1258,7 +1258,7 @@ function updateCamera() {
   let edgeFactorX = 0;
   let edgeFactorY = 0;
 
-  MAX_SPEED = 20 + collectedCount / 250;
+  MAX_SPEED = 25 + collectedCount / 200;
 
   if (mouse._clientX < w * cameraRadius) {
     vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
