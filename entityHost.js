@@ -360,7 +360,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (Math.random() < 0.333) return;
+  if (name != "Catalyst" && Math.random() < 0.333) return;
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {
