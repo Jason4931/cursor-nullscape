@@ -722,11 +722,11 @@ export function activatePurgatory() {
         pick.spawn();
       }
       registerEntitySpawn(pick.name, pick.src);
-      if (collectedCount >= 1000 && !isSeamineEnabled) {
+      if (collectedCount >= (casualMode ? 1500 : 1000) && !isSeamineEnabled) {
         isSeamineEnabled = true;
-        spawnSeamine(entityHost);
-        spawnSeamine(entityHost);
-        spawnSeamine(entityHost);
+        spawnSeamine(entityHost, casualMode);
+        spawnSeamine(entityHost, casualMode);
+        spawnSeamine(entityHost, casualMode);
       }
       if (pick.unstackable) {
         spawnedUnstackables.add(pick.name);
