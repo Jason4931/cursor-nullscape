@@ -166,10 +166,24 @@ export function setup(host) {
     if (state.cycleTime < t0) {
       if (!state.dashStarted) {
         const p = randNearCursor();
+
         state.dashFromX = state.x;
         state.dashFromY = state.y;
-        state.dashToX = p.x;
-        state.dashToY = p.y;
+
+        let dx = p.x - state.dashFromX;
+        let dy = p.y - state.dashFromY;
+
+        const MAX_DASH_DIST = 840;
+        const d = Math.hypot(dx, dy) || 1;
+
+        if (d > MAX_DASH_DIST) {
+          dx = (dx / d) * MAX_DASH_DIST;
+          dy = (dy / d) * MAX_DASH_DIST;
+        }
+
+        state.dashToX = state.dashFromX + dx;
+        state.dashToY = state.dashFromY + dy;
+
         state.dashStarted = true;
       }
 
