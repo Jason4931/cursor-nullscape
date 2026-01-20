@@ -86,7 +86,7 @@ export function setup(host) {
       const dx = mouse.x - state.x;
       const dy = mouse.y - state.y;
 
-      if (Math.hypot(dx, dy) <= state.size * 0.5) {
+      if (Math.hypot(dx, dy) <= state.size * 0.4) {
         death("Baby");
         return;
       }
@@ -128,7 +128,7 @@ export function setup(host) {
           0,
           Math.round(-thickness / 2),
           Math.round(dashLength),
-          Math.round(thickness)
+          Math.round(thickness),
         );
 
         ctx.restore();
@@ -158,7 +158,7 @@ export function setup(host) {
       Math.round(-state.size / 2),
       Math.round(-state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();

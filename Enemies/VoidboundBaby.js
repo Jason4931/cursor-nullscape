@@ -87,7 +87,7 @@ export function setup(host) {
       const dx = mouse.x - state.x;
       const dy = mouse.y - state.y;
 
-      if (Math.hypot(dx, dy) <= state.size * 0.5) {
+      if (Math.hypot(dx, dy) <= state.size * 0.4) {
         death("Baby");
         return;
       }
@@ -125,7 +125,12 @@ export function setup(host) {
         ctx.translate(cx, cy);
         ctx.rotate(angle);
 
-        ctx.fillRect(0, Math.round(-thickness / 2), Math.round(dashLength), Math.round(thickness));
+        ctx.fillRect(
+          0,
+          Math.round(-thickness / 2),
+          Math.round(dashLength),
+          Math.round(thickness),
+        );
 
         ctx.restore();
 
@@ -133,8 +138,14 @@ export function setup(host) {
       }
     }
 
-    const jitter = state.state === "charging" ? 4 : state.state === "indicator" ? 2 : 1;
-    const rotJitter = state.state === "charging" ? 0.32 : state.state === "indicator" ? 0.16 : 0.08;
+    const jitter =
+      state.state === "charging" ? 4 : state.state === "indicator" ? 2 : 1;
+    const rotJitter =
+      state.state === "charging"
+        ? 0.32
+        : state.state === "indicator"
+          ? 0.16
+          : 0.08;
 
     const drawX = Math.round(state.x + (Math.random() - 0.5) * jitter * 2);
     const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
@@ -144,7 +155,13 @@ export function setup(host) {
     ctx.translate(drawX, drawY);
     ctx.rotate(rot);
     const size = Math.round(state.size);
-    ctx.drawImage(enemy, Math.round(-size / 2), Math.round(-size / 2), size, size);
+    ctx.drawImage(
+      enemy,
+      Math.round(-size / 2),
+      Math.round(-size / 2),
+      size,
+      size,
+    );
 
     ctx.restore();
   }
