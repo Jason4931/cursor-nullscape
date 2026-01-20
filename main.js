@@ -1356,7 +1356,7 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
-    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.2 : dynamicHitRadius;
+    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.15 : dynamicHitRadius;
 
     if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
