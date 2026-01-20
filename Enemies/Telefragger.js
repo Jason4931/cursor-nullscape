@@ -19,8 +19,8 @@ export function setup(host) {
     prevMouseX: NaN,
     prevMouseY: NaN,
 
-    dirX: 1,
-    dirY: 0,
+    predDirX: 1,
+    predDirY: 0,
 
     facingAngle: 0,
     flipX: 1,
@@ -30,6 +30,7 @@ export function setup(host) {
     flashAngle: 0,
 
     ripplePhase: 0,
+    teleportWarnTime: 1,
   };
 
   function update(dt) {
@@ -41,8 +42,16 @@ export function setup(host) {
       const len = Math.hypot(dxm, dym);
 
       if (len > 0.001) {
-        state.dirX = dxm / len;
-        state.dirY = dym / len;
+        const tx = dxm / len;
+        const ty = dym / len;
+
+        const turnSpeed = 4;
+        state.predDirX += (tx - state.predDirX) * Math.min(1, dt * turnSpeed);
+        state.predDirY += (ty - state.predDirY) * Math.min(1, dt * turnSpeed);
+
+        const d = Math.hypot(state.predDirX, state.predDirY) || 1;
+        state.predDirX /= d;
+        state.predDirY /= d;
       }
     }
 
@@ -65,8 +74,8 @@ export function setup(host) {
 
     state.teleportTimer -= dt;
     if (state.teleportTimer <= 0) {
-      state.x = mouse.x + state.dirX * state.teleportDistance;
-      state.y = mouse.y + state.dirY * state.teleportDistance;
+      state.x = mouse.x + state.predDirX * state.teleportDistance;
+      state.y = mouse.y + state.predDirY * state.teleportDistance;
 
       state.teleportTimer = 9 + Math.random();
 
@@ -97,6 +106,40 @@ export function setup(host) {
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    if (state.teleportTimer > 0 && state.teleportTimer <= 1) {
+      const t = 1 - state.teleportTimer;
+
+      const cx = Math.round(mouse.x);
+      const cy = Math.round(mouse.y);
+
+      const angle = Math.atan2(-state.predDirY, -state.predDirX) + Math.PI;
+
+      const outerR = Math.round(40 + t * 12);
+      const thickness = 6;
+      const innerR = outerR - thickness;
+
+      const a0 = -Math.PI * 0.175;
+      const a1 = Math.PI * 0.175;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      ctx.globalAlpha = 0.3 + t * 0.5;
+      const redness = Math.floor(Math.random() * 128) + 128;
+      ctx.fillStyle = `rgb(255,${redness},${redness})`;
+
+      ctx.beginPath();
+
+      ctx.arc(0, 0, outerR, a0, a1, false);
+      ctx.arc(0, 0, innerR, a1, a0, true);
+
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
 
     const trailRadius = Math.round(
       state.size * 0.6 + Math.sin(state.ripplePhase) * 6,

@@ -40,7 +40,7 @@ export function setup(host, stack) {
     const DASH_DIST = 500;
 
     const SWORD_SIZE = 50;
-    const KILL_RADIUS = 17;
+    const KILL_RADIUS = 11;
 
     const FLASH_OUTER = 27;
     const FLASH_INNER = 6;
@@ -174,7 +174,7 @@ export function setup(host, stack) {
           Math.round(mouse.x - 50),
           Math.round(mouse.y + HOVER_Y - 50),
           100,
-          100
+          100,
         );
       }
 
@@ -190,7 +190,7 @@ export function setup(host, stack) {
           Math.round(-swordSize / 2),
           Math.round(-swordSize / 2),
           swordSize,
-          swordSize
+          swordSize,
         );
         ctx.restore();
 
@@ -364,7 +364,7 @@ export function setup(host, stack) {
         Math.round(-swordSize / 2),
         Math.round(-swordSize / 2),
         swordSize,
-        swordSize
+        swordSize,
       );
       ctx.restore();
 

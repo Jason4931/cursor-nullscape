@@ -12,7 +12,7 @@ export function setup(host) {
     timer: 0,
 
     idleDuration: 9 + Math.random(),
-    watchDuration: 5,
+    watchDuration: 6,
 
     x: 0,
     y: 0,
@@ -101,7 +101,7 @@ export function setup(host) {
       Math.round(-state.size / 2 + state.jitterX),
       Math.round(-state.size / 2 + state.jitterY),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();
