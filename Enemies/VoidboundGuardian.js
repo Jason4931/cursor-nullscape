@@ -144,7 +144,7 @@ export function setup(host) {
 
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
-      if (dx * dx + dy * dy < 16 * 16) {
+      if (dx * dx + dy * dy < 12 * 12) {
         death("Guardian");
       }
     }
@@ -161,7 +161,7 @@ export function setup(host) {
       Math.round(state.x - 50),
       Math.round(state.y - 50),
       100,
-      100
+      100,
     );
 
     if (state.mode === "idleShoot") {
