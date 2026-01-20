@@ -52,6 +52,14 @@ export function setup(host) {
 
     state.timer += dt;
 
+    if (state.timer <= 1) {
+      state.opacity = 0;
+    } else if (state.timer <= state.nextDelay - 1) {
+      state.opacity = Math.min(1, state.timer - 1);
+    } else {
+      state.opacity = Math.max(0, state.nextDelay - state.timer);
+    }
+
     if (state.timer >= state.nextDelay) {
       teleport();
     }
