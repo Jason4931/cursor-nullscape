@@ -13,6 +13,7 @@ export function setup(host) {
     y: 0,
 
     layer: 1,
+    trueLayer: 1,
     timer: 0,
     totalTimer: 0,
     nextScream: 14 + Math.random(),
@@ -87,8 +88,9 @@ export function setup(host) {
 
     catalystPos = { x: state.x, y: state.y };
     state.layer++;
-    if (state.layer > 8) state.layer = 1;
-    enemy.src = `./ASSET/Enemies/Catalyst/Layer ${state.layer}.png`;
+    if (state.layer > 23) state.layer = 0;
+    state.trueLayer = Math.floor(state.layer / 3) + 1;
+    enemy.src = `./ASSET/Enemies/Catalyst/Layer ${state.trueLayer}.png`;
 
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
