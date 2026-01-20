@@ -70,12 +70,12 @@ export function setup(host) {
     }
 
     if (state.phase === "spawn") {
-      const t = Math.min(state.timer / 0.5, 1);
+      const t = Math.min(state.timer / 0.4, 1);
 
       state.opacity = t;
       state.y = state.startY + 80 * t;
 
-      if (state.timer >= 0.5) {
+      if (state.timer >= 0.4) {
         if (!state.didKillCheck) {
           const dx = mouse.x - state.lx;
           const dy = mouse.y - state.ly;
