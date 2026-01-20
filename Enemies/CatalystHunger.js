@@ -124,7 +124,7 @@ export function setup(host, overshootBrake) {
       ctx.arc(
         Math.round(t.x),
         Math.round(t.y),
-        Math.round(50 * a),
+        Math.round((40 + Math.random() * 10) * a),
         0,
         Math.PI * 2,
       );

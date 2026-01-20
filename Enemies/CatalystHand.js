@@ -147,9 +147,9 @@ export function setup(host) {
       ctx.drawImage(
         enemy,
         Math.round(state.x - 50),
-        Math.round(state.y - 100),
+        Math.round(state.y - 175),
         Math.round(100),
-        Math.round(200),
+        Math.round(300),
       );
     }
 
