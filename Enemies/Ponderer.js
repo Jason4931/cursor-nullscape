@@ -86,7 +86,7 @@ export function setup(host) {
       state.x += moveX;
       state.y += moveY;
 
-      if (dist < state.size * 0.2) {
+      if (dist < state.size * 0.15) {
         death("Ponderer");
       }
     }
@@ -124,7 +124,7 @@ export function setup(host) {
       Math.round(-size * 0.5),
       Math.round(-size * 0.5),
       size,
-      size
+      size,
     );
 
     ctx.restore();
@@ -139,7 +139,7 @@ export function setup(host) {
     ctx.fillText(
       state.timer.toFixed(2),
       Math.round(state.x - 5),
-      Math.round(state.y)
+      Math.round(state.y),
     );
 
     ctx.restore();

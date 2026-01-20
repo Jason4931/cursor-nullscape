@@ -27,7 +27,7 @@ export function setup(host) {
   const SPAWN_MIN = 14;
   const SPAWN_MAX = 15;
   const AGRO_SPEED = 900;
-  const PICKUP_RADIUS = 28;
+  const PICKUP_RADIUS = 56;
 
   function rollDelay() {
     state.nextDelay = SPAWN_MIN + Math.random() * (SPAWN_MAX - SPAWN_MIN);
@@ -150,7 +150,7 @@ export function setup(host) {
         1,
         cx,
         cy,
-        LINK_R
+        LINK_R,
       );
       grad.addColorStop(0, "#fff0");
       grad.addColorStop(0.6, "#fff0");
@@ -173,7 +173,7 @@ export function setup(host) {
         -Math.round(DASH_W / 2),
         -Math.round(DASH_H / 2),
         DASH_W,
-        DASH_H
+        DASH_H,
       );
       ctx.restore();
     }

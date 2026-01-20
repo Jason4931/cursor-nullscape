@@ -87,7 +87,7 @@ export function setup(host) {
 
     state.ripplePhase += dt * 3;
 
-    if (dist < state.size * 0.2) {
+    if (dist < state.size * 0.15) {
       death("Telefragger");
     }
   }
@@ -98,11 +98,19 @@ export function setup(host) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    const trailRadius = Math.round(state.size * 0.6 + Math.sin(state.ripplePhase) * 6);
+    const trailRadius = Math.round(
+      state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
+    );
     ctx.globalAlpha = 0.15;
     ctx.fillStyle = "#9fdfff";
     ctx.beginPath();
-    ctx.arc(Math.round(state.x), Math.round(state.y), trailRadius, 0, Math.PI * 2);
+    ctx.arc(
+      Math.round(state.x),
+      Math.round(state.y),
+      trailRadius,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
 
     if (state.flashTime > 0) {
@@ -126,7 +134,13 @@ export function setup(host) {
       ctx.globalAlpha = alpha * 0.35;
       ctx.fillStyle = "#9fdfff";
       ctx.beginPath();
-      ctx.arc(Math.round(state.x), Math.round(state.y), rippleRadius, 0, Math.PI * 2);
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        rippleRadius,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     }
 
@@ -141,7 +155,7 @@ export function setup(host) {
       Math.round(-size / 2),
       Math.round(-size / 2),
       size,
-      size
+      size,
     );
 
     ctx.restore();

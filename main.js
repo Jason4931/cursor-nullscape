@@ -241,6 +241,7 @@ let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
+let musicVolume = Number(localStorage.getItem("musicVolume")) * 100 || 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
@@ -253,6 +254,7 @@ document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("toggle-casual-mode").checked = casualMode;
 document.getElementById("sfx-volume").value = sfxVolume;
+document.getElementById("music-volume").value = musicVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
 
 settingsBtn.addEventListener("click", () => {
@@ -324,6 +326,10 @@ document.getElementById("sfx-volume").oninput = (e) => {
   localStorage.setItem("sfxVolume", sfxVolume);
   // TODO: add sfx on gift
 };
+document.getElementById("music-volume").oninput = (e) => {
+  musicVolume = e.target.value / 100;
+  localStorage.setItem("musicVolume", musicVolume);
+};
 function toggle(id, fn) {
   const el = document.getElementById(id);
   el.onchange = () => {
@@ -386,6 +392,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.removeItem("sfxVolume");
+  localStorage.removeItem("musicVolume");
   showBorder = true;
   showFloor = true;
   showGrids = false;
@@ -395,6 +402,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   accurateCursor = false;
   sfxVolume = 0.5;
+  musicVolume = 0.5;
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
@@ -404,6 +412,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
+  document.getElementById("music-volume").value = 50;
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
@@ -551,8 +560,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -622,6 +632,18 @@ if (accurateCursor) {
   canvas.style.cursor = "auto";
   entityCanvas.style.cursor = "auto";
   entityCanvas2.style.cursor = "auto";
+}
+
+/* ===== SOUND ===== */
+function playSound(src) {
+  const audio = new Audio(src);
+  audio.play();
+
+  // Return a function that stops the sound
+  return function stopSound() {
+    audio.pause();
+    audio.currentTime = 0; // Reset to start
+  };
 }
 
 /* ===== HELPERS ===== */
@@ -1334,7 +1356,7 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
-    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.45 : dynamicHitRadius;
+    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.25 : dynamicHitRadius;
 
     if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
