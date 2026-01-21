@@ -1708,10 +1708,7 @@ function loop(now) {
     );
   }
   if (collectedCount >= 100 && !stopMusic) {
-    if (lobbyMusic) {
-      lobbyMusic();
-      lobbyMusic = null;
-    }
+    lobbyMusic();
     playNextMusic();
   }
 
