@@ -559,9 +559,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -644,13 +643,17 @@ export function playSound(
 ) {
   const audio = new Audio(soundPath);
   audio.playbackRate = rate;
-  audio.volume = Math.max(
-    0,
-    Math.min(
-      1,
-      important ? sfxVolume / 100 : (music ? musicVolume : sfxVolume) / 200,
-    ),
-  );
+  if (typeof important === "string") {
+    audio.volume = Math.max(0, Math.min(1, sfxVolume / 400));
+  } else {
+    audio.volume = Math.max(
+      0,
+      Math.min(
+        1,
+        important ? sfxVolume / 100 : (music ? musicVolume : sfxVolume) / 200,
+      ),
+    );
+  }
 
   let stopped = false;
   let endedNaturally = false;
@@ -753,10 +756,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
