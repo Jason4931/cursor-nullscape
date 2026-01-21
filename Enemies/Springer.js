@@ -32,6 +32,7 @@ export function setup(host) {
     wasInsideRing: false,
 
     flashSound: false,
+    deathSound: false,
   };
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -93,9 +94,12 @@ export function setup(host) {
 
         if (dist <= state.size / 2) {
           death("Springer");
-          playSound(
-            "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
-          );
+          if (!deathSound) {
+            playSound(
+              "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
+            );
+            deathSound = true;
+          }
           return;
         }
 

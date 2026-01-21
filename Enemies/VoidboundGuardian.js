@@ -106,9 +106,9 @@ export function setup(host) {
         startShoot();
       }
     } else if (state.mode === "shoot") {
-      const interval = state.shootDuration / 4;
+      const interval = state.shootDuration / 3;
 
-      if (state.shotsFired < 4 && state.timer >= interval * state.shotsFired) {
+      if (state.shotsFired < 3 && state.timer >= interval * state.shotsFired) {
         firePellet();
         playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
         state.shotsFired++;
