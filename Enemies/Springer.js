@@ -94,11 +94,11 @@ export function setup(host) {
 
         if (dist <= state.size / 2) {
           death("Springer");
-          if (!deathSound) {
+          if (!state.deathSound) {
             playSound(
               "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
             );
-            deathSound = true;
+            state.deathSound = true;
           }
           return;
         }
