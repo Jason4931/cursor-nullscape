@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/NIL.png";
@@ -30,6 +31,9 @@ export function setup(host) {
     dashDistance: 600,
 
     _targetDuration: 9 + Math.random(),
+
+    sound: null,
+    soundState: 0,
   };
 
   function easeOut(t) {
@@ -83,6 +87,7 @@ export function setup(host) {
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
         if (Math.hypot(dx0, dy0) <= state.size * 0.25) {
+          playSound("./ASSET/Sound/Enemies/NIL/Nil-kill.mp3");
           death("NIL");
           return;
         }
@@ -138,7 +143,48 @@ export function setup(host) {
     const dist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
 
     if (dist <= 220) {
+      if (state.soundState == 1) {
+        state.sound();
+        state.sound = null;
+      }
+      state.soundState = 2;
+      if (!state.sound)
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/NIL/Nil_-_loop_v3.ogg",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+        );
+    } else if (dist <= 500) {
+      if (state.soundState == 2) {
+        state.sound();
+        state.sound = null;
+      }
+      state.soundState = 1;
+      if (!state.sound)
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/NIL/Nil-actual_loop.mp3",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+        );
+    } else {
+      state.soundState = 0;
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
+
+    if (dist <= 220) {
       state.attacking = true;
+      playSound("./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3");
       state.attackTimer = 0;
 
       const adx = mouse.x - state.x;
@@ -176,7 +222,7 @@ export function setup(host) {
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();

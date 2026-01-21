@@ -3,6 +3,7 @@ import {
   voidbreakerActive,
   setVoidbreakerActive,
   voidbreakerCount,
+  playSound,
 } from "../main.js";
 
 const enemy = new Image();
@@ -73,6 +74,7 @@ export function setup(host, stack) {
       if (state.phase === "idle") {
         if (state.timer >= state.delay) {
           state.phase = "warning";
+          playSound("./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_Warn.ogg");
           state.timer = 0;
           state.opacity = 0;
         }
@@ -98,17 +100,20 @@ export function setup(host, stack) {
           });
 
           state.phase = "attack";
+          playSound(
+            "./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_SwordReadyV2.ogg",
+          );
           state.timer = 0;
         }
         return;
       }
 
       if (state.phase === "attack") {
-        if (state.timer <= 1) {
+        if (state.timer <= 1.5) {
           state.sword.x = mouse.x + state.sword.dx * 120;
           state.sword.y = mouse.y + state.sword.dy * 120;
         } else {
-          if (state.timer - dt <= 1) {
+          if (state.timer - dt <= 1.5) {
             state.sword.lockX = state.sword.x;
             state.sword.lockY = state.sword.y;
             state.sword.flash = 1;
@@ -118,7 +123,7 @@ export function setup(host, stack) {
 
           state.sword.flash = Math.max(0, state.sword.flash - dt);
 
-          const t = state.timer - 1;
+          const t = state.timer - 1.5;
           const k = Math.min(1, t);
 
           state.sword.x = state.sword.lockX - state.sword.dx * DASH_DIST * k;
@@ -142,7 +147,7 @@ export function setup(host, stack) {
           }
         }
 
-        if (state.timer >= 2 * voidbreakerCount) {
+        if (state.timer >= 2.5 * voidbreakerCount) {
           state.sword.active = false;
           state.phase = "ending";
           state.timer = 0;
@@ -292,6 +297,9 @@ export function setup(host, stack) {
       state.sword.opacity = 1;
 
       state.phase = "attack";
+      playSound(
+        "./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_SwordReadyV2.ogg",
+      );
       state.timer = 0;
     }
 
@@ -305,11 +313,11 @@ export function setup(host, stack) {
       state.timer += dt;
 
       if (state.phase === "attack") {
-        if (state.timer <= 1) {
+        if (state.timer <= 1.5) {
           state.sword.x = mouse.x + state.sword.dx * 120;
           state.sword.y = mouse.y + state.sword.dy * 120;
         } else {
-          if (state.timer - dt <= 1) {
+          if (state.timer - dt <= 1.5) {
             state.sword.lockX = state.sword.x;
             state.sword.lockY = state.sword.y;
 
@@ -320,7 +328,7 @@ export function setup(host, stack) {
 
           state.flash = Math.max(0, state.flash - dt);
 
-          const t = state.timer - 1;
+          const t = state.timer - 1.5;
           const k = Math.min(1, t);
 
           state.sword.x = state.sword.lockX - state.sword.dx * DASH_DIST * k;
@@ -341,7 +349,7 @@ export function setup(host, stack) {
           }
         }
 
-        if (state.timer >= 2) {
+        if (state.timer >= 2.5) {
           state.phase = "idle";
           state.timer = 0;
           state.triggered = false;

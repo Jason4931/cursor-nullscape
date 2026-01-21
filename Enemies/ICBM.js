@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
@@ -18,13 +19,15 @@ export function setup(host) {
     phase: "lock",
     timer: 0,
     lockDuration: 3,
-    deployDuration: 0,
-    idleDuration: 10,
+    deployDuration: 1.5,
+    idleDuration: 9 + Math.random(),
 
     lockPosX: 0,
     lockPosY: 0,
 
     initialized: false,
+
+    icbmstrikeSound: false,
   };
 
   const easeIn = (t) => t * t;
@@ -51,10 +54,15 @@ export function setup(host) {
       state.opacity = 0;
       state.currentSize = state.size * 2;
 
+      if (state.timer >= 0.2 && state.timer <= 0.3 && !state.icbmstrikeSound) {
+        playSound("./ASSET/Sound/Enemies/ICBM/ICBMStrike.mp3");
+        state.icbmstrikeSound = true;
+      }
+
       if (state.timer >= state.lockDuration) {
         state.timer = 0;
-        state.deployDuration = 2 + Math.random();
         state.phase = "deploy";
+        state.icbmstrikeSound = false;
         state.startY = state.lockPosY - 100;
         state.y = state.startY;
       }
@@ -71,7 +79,7 @@ export function setup(host) {
 
       state.circleOpacity = 0.75;
 
-      const delay = 1;
+      const delay = 0.5;
       const missileTime = Math.max(state.timer - delay, 0);
       const effectiveDuration = state.deployDuration - delay;
       const missileT = Math.min(missileTime / effectiveDuration, 1);
@@ -91,6 +99,7 @@ export function setup(host) {
         }
         state.timer = 0;
         state.phase = "idle";
+        state.idleDuration = 9 + Math.random();
       }
     } else if (state.phase === "idle") {
       const fadeT = Math.min(state.timer * 4, 1);
@@ -125,13 +134,13 @@ export function setup(host) {
         0,
         Math.round(state.lockPosX),
         Math.round(state.lockPosY),
-        Math.round(state.circleRadius)
+        Math.round(state.circleRadius),
       );
       grad.addColorStop(
         0,
         state.phase === "idle"
           ? `rgba(255,0,0,${state.circleOpacity})`
-          : `rgba(255,0,0,0)`
+          : `rgba(255,0,0,0)`,
       );
       grad.addColorStop(1, `rgba(255,0,0,${state.circleOpacity})`);
       ctx.fillStyle = grad;
@@ -142,7 +151,7 @@ export function setup(host) {
         Math.round(state.lockPosY),
         Math.round(state.circleRadius),
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
     }

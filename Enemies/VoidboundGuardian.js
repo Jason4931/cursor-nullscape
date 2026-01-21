@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
@@ -40,6 +41,12 @@ export function setup(host) {
 
     state.dashTargetX = mouse.x + Math.cos(a) * r;
     state.dashTargetY = mouse.y + Math.sin(a) * r;
+    let moveSound = [
+      "./ASSET/Sound/Enemies/Guardian/GuardianMove1.ogg",
+      "./ASSET/Sound/Enemies/Guardian/GuardianMove2.ogg",
+      "./ASSET/Sound/Enemies/Guardian/GuardianMove3.ogg",
+    ];
+    playSound(moveSound[Math.floor(Math.random() * 3)]);
   }
 
   function startIdleShoot() {
@@ -103,6 +110,7 @@ export function setup(host) {
 
       if (state.shotsFired < 4 && state.timer >= interval * state.shotsFired) {
         firePellet();
+        playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
         state.shotsFired++;
       }
 

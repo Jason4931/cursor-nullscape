@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, moveCamera } from "../main.js";
+import { pickRandomPlaced4or5, moveCamera, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Cadence.png";
@@ -22,10 +22,14 @@ export function setup(host) {
 
     instruments: [],
     arrowAngle: 0,
+
+    soundState: 1,
+    sound: null,
+    instrumentSounds: [null, null, null],
   };
 
-  const SPAWN_MIN = 14;
-  const SPAWN_MAX = 15;
+  const SPAWN_MIN = 9;
+  const SPAWN_MAX = 10;
   const AGRO_SPEED = 900;
   const PICKUP_RADIUS = 56;
 
@@ -35,6 +39,7 @@ export function setup(host) {
   }
 
   function spawnInstrument() {
+    playSound("./ASSET/Sound/Enemies/Cadence/Cad_Instrument.wav");
     const pos = pickRandomPlaced4or5(500);
     state.instruments.push({
       x: pos.x,
@@ -44,6 +49,15 @@ export function setup(host) {
   }
 
   function resetToIdle() {
+    if (state.mode === "agro")
+      playSound(
+        "./ASSET/Sound/Enemies/Cadence/Cadence_ChaseStop.ogg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
     state.mode = "idle";
     enemy.src = "./ASSET/Enemies/Cadence.png";
     rollDelay();
@@ -68,7 +82,7 @@ export function setup(host) {
 
   function update(dt) {
     state.timer += dt;
-    if (state.instruments.length >= 2) {
+    if (state.instruments.length >= 3) {
       const target = getNearestInstrument();
       if (target) {
         const dx = target.x - mouse.x;
@@ -87,22 +101,47 @@ export function setup(host) {
           const idx = state.instruments.indexOf(it);
           if (idx !== -1) state.instruments.splice(idx, 1);
         }
+        if (state.instrumentSounds[i]) {
+          state.instrumentSounds[i]();
+          state.instrumentSounds[i] = null;
+        }
       } else {
         if (dx * dx + dy * dy < PICKUP_RADIUS * PICKUP_RADIUS) {
           it.pickedUp = true;
           it.pickTimer = 0;
+          if (it.img === harp)
+            playSound("./ASSET/Sound/Enemies/Cadence/CollectHarp.wav");
+          else playSound("./ASSET/Sound/Enemies/Cadence/CollectViolin.wav");
           resetToIdle();
         }
+        if (!state.instrumentSounds[i])
+          state.instrumentSounds[i] = playSound(
+            `./ASSET/Sound/Enemies/Cadence/${it.img === harp ? "Harp" : "Violin"}Ambience.wav`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.instrumentSounds[i] = null;
+            },
+          );
       }
     }
 
     if (state.mode === "idle") {
       if (state.timer >= state.nextDelay) {
-        if (state.instruments.length < 2) {
+        if (state.instruments.length < 3) {
           spawnInstrument();
           rollDelay();
         } else {
           state.mode = "agro";
+          playSound(
+            "./ASSET/Sound/Enemies/Cadence/Cadence_ChaseImpact.ogg",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            true,
+          );
           enemy.src = "./ASSET/Enemies/CadenceAgro.png";
         }
       }
@@ -119,6 +158,42 @@ export function setup(host) {
       if (len < 24) {
         death("Cadence");
       }
+    }
+
+    if (state.mode === "idle") {
+      if (state.soundState != state.instruments.length && state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+      state.soundState = state.instruments.length;
+      if (!state.sound)
+        state.sound = playSound(
+          `./ASSET/Sound/Enemies/Cadence/Cad_lv${state.instruments.length + 1}.wav`,
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+          true,
+        );
+    } else {
+      if (state.soundState != 4 && state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+      state.soundState = 4;
+      if (!state.sound)
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/Cadence/CadenceChase.ogg",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+          true,
+        );
     }
   }
 
@@ -271,7 +346,7 @@ export function setup(host) {
       }
     }
 
-    if (state.instruments.length >= 2) {
+    if (state.instruments.length >= 3) {
       ctx.save();
       const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 48);
       const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 48);

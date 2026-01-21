@@ -1,8 +1,5 @@
-import {
-  mouse,
-  toggleBellLeniency,
-} from "../entityHost.js";
-import { cleanseZones, setSlowness, TILE } from "../main.js";
+import { mouse, toggleBellLeniency } from "../entityHost.js";
+import { playSound, cleanseZones, setSlowness, TILE } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
@@ -32,6 +29,9 @@ export function setup(host) {
     hitCooldown: 2,
     hitActive: false,
     wasHovering: false,
+
+    bellteleportstartsoundSound: false,
+    bellteleportendsoundSound: false,
   };
 
   const easeOut = (t) => 1 - (1 - t) * (1 - t);
@@ -60,6 +60,7 @@ export function setup(host) {
 
     if (hovering && !state.wasHovering && !state.hitActive) {
       state.hitActive = true;
+      playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
       toggleBellLeniency(true);
       state.hitTimer = 0;
       cleanseZones.push({
@@ -88,6 +89,7 @@ export function setup(host) {
         teleport();
       }, 100);
       state.initialized = true;
+      playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
     }
 
     state.timer += dt;
@@ -129,11 +131,29 @@ export function setup(host) {
 
       state.bellScale = 1 - easeIn(Math.min(state.timer / 1, 1));
 
+      if (
+        state.timer >= 0.2 &&
+        state.timer <= 0.3 &&
+        !state.bellteleportstartsoundSound
+      ) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
+        state.bellteleportstartsoundSound = true;
+      }
+      if (
+        state.timer >= 0.4 &&
+        state.timer <= 0.5 &&
+        !state.bellteleportendsoundSound
+      ) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav");
+        state.bellteleportendsoundSound = true;
+      }
       if (state.timer >= 1) {
         state.timer = 0;
         state.circleScale = 0;
         teleport();
         state.phase = "appear";
+        state.bellteleportstartsoundSound = false;
+        state.bellteleportendsoundSound = false;
       }
     }
   }
@@ -152,7 +172,7 @@ export function setup(host) {
         Math.round(state.y),
         Math.round(40 * state.circleScale),
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fillStyle = Math.random() < 0.6 ? "gray" : "white";
       ctx.fill();

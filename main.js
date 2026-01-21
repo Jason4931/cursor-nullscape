@@ -240,8 +240,8 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
-let sfxVolume = Number(localStorage.getItem("sfxVolume")) * 100 || 50;
-let musicVolume = Number(localStorage.getItem("musicVolume")) * 100 || 50;
+let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
+let musicVolume = Number(localStorage.getItem("musicVolume")) ?? 50;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
@@ -322,12 +322,11 @@ toggle("toggle-casual-mode", (v) => {
   casualMode = v;
 });
 document.getElementById("sfx-volume").oninput = (e) => {
-  sfxVolume = e.target.value / 100;
+  sfxVolume = Number(e.target.value);
   localStorage.setItem("sfxVolume", sfxVolume);
-  // TODO: add sfx on gift
 };
 document.getElementById("music-volume").oninput = (e) => {
-  musicVolume = e.target.value / 100;
+  musicVolume = Number(e.target.value);
   localStorage.setItem("musicVolume", musicVolume);
 };
 function toggle(id, fn) {
@@ -391,8 +390,8 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
-  localStorage.removeItem("sfxVolume");
-  localStorage.removeItem("musicVolume");
+  localStorage.setItem("sfxVolume", "50");
+  localStorage.setItem("musicVolume", "50");
   showBorder = true;
   showFloor = true;
   showGrids = false;
@@ -401,8 +400,8 @@ document.getElementById("reset-settings").onclick = () => {
   blindnessMode = false;
   drunkCamera = false;
   accurateCursor = false;
-  sfxVolume = 0.5;
-  musicVolume = 0.5;
+  sfxVolume = 50;
+  musicVolume = 50;
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
@@ -635,15 +634,145 @@ if (accurateCursor) {
 }
 
 /* ===== SOUND ===== */
-function playSound(src) {
-  const audio = new Audio(src);
-  audio.play();
+export function playSound(
+  soundPath,
+  rate = 1,
+  clip = { start: 0, end: 1 },
+  music = false,
+  onEnd = null,
+  important = false,
+) {
+  const audio = new Audio(soundPath);
+  audio.playbackRate = rate;
+  audio.volume = Math.max(
+    0,
+    Math.min(
+      1,
+      important ? sfxVolume / 100 : (music ? musicVolume : sfxVolume) / 200,
+    ),
+  );
 
-  // Return a function that stops the sound
-  return function stopSound() {
+  let stopped = false;
+  let endedNaturally = false;
+
+  audio.addEventListener("loadedmetadata", () => {
+    const startTime = clip.start * audio.duration;
+    const endTime = clip.end * audio.duration;
+
+    audio.currentTime = startTime;
+    audio.play();
+
+    const stopAt = () => {
+      if (stopped) return;
+
+      if (audio.currentTime >= endTime) {
+        endedNaturally = true;
+        stop();
+        if (onEnd) onEnd();
+      } else {
+        requestAnimationFrame(stopAt);
+      }
+    };
+
+    requestAnimationFrame(stopAt);
+  });
+
+  function stop() {
+    if (stopped) return;
+    stopped = true;
     audio.pause();
-    audio.currentTime = 0; // Reset to start
-  };
+    audio.currentTime = clip.start * audio.duration;
+  }
+
+  return stop;
+}
+const musicList = [
+  {
+    start: 100,
+    end: 599,
+    src: "./ASSET/Sound/Music/Kenophobia.mp3",
+  },
+  {
+    start: 500,
+    end: 999,
+    src: "./ASSET/Sound/Music/Dimension.mp3",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/A-Delightful-New-Death.mp3",
+  },
+  {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Conga-Line.mp3",
+  },
+  {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Former-Gardens.mp3",
+  },
+  {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Death-Defiance.mp3",
+  },
+  {
+    start: 2000,
+    end: 0,
+    src: "./ASSET/Sound/Music/Void-Breaker.mp3",
+  },
+  {
+    start: 2000,
+    end: 0,
+    src: "./ASSET/Sound/Music/IMPERIAL-ENIGMA.mp3",
+  },
+  {
+    start: 4000,
+    end: 0,
+    src: "./ASSET/Sound/Music/Temporal-Tenacity.mp3",
+  },
+  {
+    start: 4000,
+    end: 0,
+    src: "./ASSET/Sound/Music/DECAY-TRUE.mp3",
+  },
+];
+let lobbyMusic = null;
+let stopMusic = null;
+let lastMusicSrc = null;
+function playNextMusic() {
+  const candidates = musicList.filter((m) => {
+    if (collectedCount < m.start) return false;
+    if (m.end !== 0 && collectedCount > m.end) return false;
+    if (m.src === lastMusicSrc) return false; // prevent repeat
+    return true;
+  });
+
+  // fallback: if only one valid song exists, allow repeat
+  const pool = candidates.length
+    ? candidates
+    : musicList.filter((m) => {
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
+
+  if (pool.length === 0) return;
+
+  const pick = pool[Math.floor(Math.random() * pool.length) | 0];
+  lastMusicSrc = pick.src;
+
+  stopMusic = playSound(
+    pick.src,
+    1,
+    { start: 0, end: 1 },
+    true,
+    () => {
+      playNextMusic();
+    },
+    false,
+  );
 }
 
 /* ===== HELPERS ===== */
@@ -1565,6 +1694,27 @@ function loop(now) {
   updateMouseWorld(entityCanvas, camX, camY);
   drawGrid();
 
+  // music
+  if (!lobbyMusic) {
+    lobbyMusic = playSound(
+      "./ASSET/Sound/Music/Your_New_Prision.mp3",
+      1,
+      { start: 0, end: 1 },
+      true,
+      () => {
+        lobbyMusic = null;
+      },
+      false,
+    );
+  }
+  if (collectedCount >= 100 && !stopMusic) {
+    if (lobbyMusic) {
+      lobbyMusic();
+      lobbyMusic = null;
+    }
+    playNextMusic();
+  }
+
   // simple cursor
   if (accurateCursor) {
     ctx.beginPath();
@@ -1665,4 +1815,11 @@ function loop(now) {
 camX = (viewport.clientWidth - canvas.offsetWidth) / 2;
 camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
 
-loop();
+let windowClicked = false;
+const unlock = () => {
+  if (windowClicked) return;
+  windowClicked = true;
+  document.getElementById("intro-screen").style.display = "none";
+  loop();
+};
+window.addEventListener("pointerdown", unlock, { once: true });

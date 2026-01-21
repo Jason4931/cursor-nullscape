@@ -1,9 +1,5 @@
-import {
-  death,
-  mouse,
-  toggleImmortality,
-} from "../entityHost.js";
-import { moveCamera, pickRandomPlaced4or5 } from "../main.js";
+import { death, mouse, toggleImmortality } from "../entityHost.js";
+import { moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Springer.png";
@@ -12,23 +8,20 @@ export function setup(host) {
   const state = {
     opacity: 1,
 
-    x: 0,
-    y: 0,
-
     size: 100,
 
     phase: "landing",
     timer: 0,
     leniencyTimer: null,
 
-    landingDuration: 3,
+    landingDuration: 2.3,
 
     idleDuration: 5,
     idleGrowTime: 3,
     ringMaxRadius: 1000,
     flashAlpha: 0,
 
-    exitDuration: 2,
+    exitDuration: 2.4,
 
     ringCenterX: 0,
     ringCenterY: 0,
@@ -37,6 +30,8 @@ export function setup(host) {
     spriteAlpha: 0,
 
     wasInsideRing: false,
+
+    flashSound: false,
   };
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -70,6 +65,8 @@ export function setup(host) {
     state.spriteAlpha = 0;
     state.phase = "landing";
     state.wasInsideRing = false;
+
+    playSound("./ASSET/Sound/Enemies/Springer/Springer_-_LockOn.ogg");
   }
 
   enterLanding();
@@ -80,11 +77,11 @@ export function setup(host) {
     state.timer += dt;
 
     if (state.phase === "landing") {
-      if (state.timer < 2) {
+      const fadeStart = state.landingDuration - 1;
+      if (state.timer < fadeStart) {
         state.spriteAlpha = 0;
       } else {
-        const t = clamp((state.timer - 2) / 1, 0, 1);
-
+        const t = clamp((state.timer - fadeStart) / 1, 0, 1);
         state.spriteAlpha = t;
         state.spriteScale = 1.6 - 0.6 * t;
       }
@@ -96,12 +93,16 @@ export function setup(host) {
 
         if (dist <= state.size / 2) {
           death("Springer");
+          playSound(
+            "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
+          );
           return;
         }
 
         pickIdleDuration();
         state.timer = 0;
         state.phase = "idle";
+        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_JumpLand1.ogg");
         state.wasInsideRing = false;
       }
     } else if (state.phase === "idle") {
@@ -135,6 +136,14 @@ export function setup(host) {
 
       state.wasInsideRing = insideRing;
 
+      if (
+        state.idleDuration - state.timer >= 0.9 &&
+        state.idleDuration - state.timer <= 1 &&
+        !state.flashSound
+      ) {
+        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_Flash.ogg");
+        state.flashSound = true;
+      }
       if (state.idleDuration - state.timer <= 1) {
         const t = state.idleDuration - state.timer;
         state.flashAlpha = t;
@@ -145,6 +154,8 @@ export function setup(host) {
       if (state.timer >= state.idleDuration) {
         state.timer = 0;
         state.phase = "exit";
+        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_Move.ogg");
+        state.flashSound = false;
       }
     } else if (state.phase === "exit") {
       const t = clamp(state.timer / state.exitDuration, 0, 1);
@@ -171,8 +182,21 @@ export function setup(host) {
 
       ctx.fillStyle = "rgba(255,40,40,0.9)";
       ctx.beginPath();
-      ctx.arc(Math.round(state.ringCenterX), Math.round(state.ringCenterY), Math.round(outerR + 5), 0, Math.PI * 2);
-      ctx.arc(Math.round(state.ringCenterX), Math.round(state.ringCenterY), Math.round(innerR + 5), 0, Math.PI * 2, true);
+      ctx.arc(
+        Math.round(state.ringCenterX),
+        Math.round(state.ringCenterY),
+        Math.round(outerR + 5),
+        0,
+        Math.PI * 2,
+      );
+      ctx.arc(
+        Math.round(state.ringCenterX),
+        Math.round(state.ringCenterY),
+        Math.round(innerR + 5),
+        0,
+        Math.PI * 2,
+        true,
+      );
       ctx.fill("evenodd");
 
       const markW = 8;
@@ -180,14 +204,22 @@ export function setup(host) {
       const rot = state.timer * 1.5;
 
       ctx.save();
-      ctx.translate(Math.round(state.ringCenterX), Math.round(state.ringCenterY));
+      ctx.translate(
+        Math.round(state.ringCenterX),
+        Math.round(state.ringCenterY),
+      );
       ctx.rotate(rot);
       ctx.fillStyle = "rgba(255,40,40,0.9)";
 
       for (let i = 0; i < 4; i++) {
         ctx.save();
         ctx.rotate((Math.PI / 2) * i);
-        ctx.fillRect(Math.round(-markW / 2), Math.round(-outerR - markH / 2), markW, markH);
+        ctx.fillRect(
+          Math.round(-markW / 2),
+          Math.round(-outerR - markH / 2),
+          markW,
+          markH,
+        );
         ctx.restore();
       }
 
@@ -201,7 +233,10 @@ export function setup(host) {
       const alpha = (1 - growT) * 0.6;
 
       ctx.save();
-      ctx.translate(Math.round(state.ringCenterX), Math.round(state.ringCenterY));
+      ctx.translate(
+        Math.round(state.ringCenterX),
+        Math.round(state.ringCenterY),
+      );
 
       const grad = ctx.createRadialGradient(
         0,
@@ -209,7 +244,7 @@ export function setup(host) {
         Math.round(Math.max(0, radius - thickness)),
         0,
         0,
-        Math.round(radius)
+        Math.round(radius),
       );
 
       grad.addColorStop(0, `rgba(255,255,255,0)`);
@@ -244,7 +279,7 @@ export function setup(host) {
           Math.round(cx - (s1 * 1.035) / 2),
           Math.round(cy - (s1 * 0.95) / 2),
           Math.round(s1 * 1.025),
-          Math.round(s1 * 0.95)
+          Math.round(s1 * 0.95),
         );
 
         const s2 = Math.round(s * 1.1);
@@ -253,15 +288,18 @@ export function setup(host) {
           Math.round(cx - (s2 * 1.035) / 2),
           Math.round(cy - (s2 * 0.95) / 2),
           Math.round(s2 * 1.025),
-          Math.round(s2 * 0.95)
+          Math.round(s2 * 0.95),
         );
 
         ctx.restore();
       }
 
-      const spriteY = state.ringCenterY - s / 2 - state.size / 3 -
+      const spriteY =
+        state.ringCenterY -
+        s / 2 -
+        state.size / 3 -
         (state.phase === "landing"
-          ? Math.round((3 - state.timer) * 20)
+          ? Math.round((state.landingDuration - state.timer) * 20)
           : state.phase === "exit"
             ? Math.round(state.timer * 10)
             : 0);
@@ -271,7 +309,7 @@ export function setup(host) {
         Math.round(state.ringCenterX - s / 2),
         Math.round(spriteY),
         s,
-        s
+        s,
       );
 
       ctx.restore();

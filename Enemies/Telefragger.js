@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
@@ -30,7 +31,8 @@ export function setup(host) {
     flashAngle: 0,
 
     ripplePhase: 0,
-    teleportWarnTime: 1,
+
+    teleportSound: false,
   };
 
   function update(dt) {
@@ -81,8 +83,23 @@ export function setup(host) {
 
       state.flashTime = state.flashDuration;
       state.flashAngle = Math.random() * Math.PI * 2;
+      state.teleportSound = false;
     }
-
+    if (
+      state.teleportTimer >= 0.9 &&
+      state.teleportTimer <= 1 &&
+      !state.teleportSound
+    ) {
+      playSound(
+        "./ASSET/Sound/Enemies/Telefragger/Teleport.mp3",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
+      state.teleportSound = true;
+    }
     const dist = Math.hypot(dx, dy);
     if (dist > 1) {
       state.x += (dx / dist) * state.speed * dt;

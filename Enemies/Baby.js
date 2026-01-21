@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Baby.png";
@@ -53,6 +54,7 @@ export function setup(host) {
       if (state.timer >= 1) {
         state.timer = 0;
         state.state = "indicator";
+        playSound("./ASSET/Sound/Enemies/Baby/Baby_Alarm.ogg");
 
         const dx = mouse.x - state.x;
         const dy = mouse.y - state.y;
@@ -65,6 +67,7 @@ export function setup(host) {
       if (state.timer >= 1) {
         state.timer = 0;
         state.state = "charging";
+        playSound("./ASSET/Sound/Enemies/Baby/Baby_Scream.ogg");
 
         state.startX = state.x;
         state.startY = state.y;

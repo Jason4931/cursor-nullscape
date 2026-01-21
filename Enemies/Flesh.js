@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { fleshPositions } from "../main.js";
+import { fleshPositions, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Flesh.png";
@@ -23,6 +23,9 @@ export function setup(host) {
 
     randomTimer: 0,
     randomDuration: 9 + Math.random(),
+
+    sound: null,
+    soundTimer: 0,
   };
 
   function pickRandomDir() {
@@ -59,11 +62,25 @@ export function setup(host) {
 
     if (dist <= aggroRadius) {
       state.mode = "target";
+      if (!state.sound)
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/Flesh/Flesh_-_terror3.ogg",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+        );
     } else {
       if (state.mode !== "random") {
         pickRandomDir();
       }
       state.mode = "random";
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
     }
 
     let dx = 0;
@@ -78,6 +95,17 @@ export function setup(host) {
       if (dist > 0.001) {
         dx = mx / dist;
         dy = my / dist;
+      }
+
+      state.soundTimer += dt;
+      if (state.soundTimer >= 1) {
+        state.soundTimer = 0;
+        let infectSound = [
+          "./ASSET/Sound/Enemies/Flesh/Flesh_-_ice1.ogg",
+          "./ASSET/Sound/Enemies/Flesh/Flesh_-_ice2.ogg",
+          "./ASSET/Sound/Enemies/Flesh/Flesh_-_ice3.ogg",
+        ];
+        playSound(infectSound[Math.floor(Math.random() * 3)]);
       }
     } else {
       state.randomTimer += dt;
@@ -112,7 +140,7 @@ export function setup(host) {
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();

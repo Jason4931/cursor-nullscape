@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Skinwalker.png";
@@ -35,6 +36,9 @@ export function setup(host, stack) {
       pickDelay();
       state.delay = state.delayTarget;
       state.initialized = true;
+      playSound(
+        "./ASSET/Sound/Enemies/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
+      );
     }
 
     state.history.push({
@@ -110,7 +114,7 @@ export function setup(host, stack) {
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();
