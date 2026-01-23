@@ -58,8 +58,10 @@ export function setup(host) {
 
   function enterLanding() {
     const p = pickRandomPlaced4or5();
-    state.ringCenterX = p.x;
-    state.ringCenterY = p.y;
+    if (p.x && p.y) {
+      state.ringCenterX = p.x;
+      state.ringCenterY = p.y;
+    }
 
     state.timer = 0;
     state.spriteScale = 1.6;

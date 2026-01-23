@@ -686,7 +686,11 @@ export function playSound(
     if (stopped) return;
     stopped = true;
     audio.pause();
-    audio.currentTime = clip.start * audio.duration;
+    if (Number.isFinite(audio.duration)) {
+      audio.currentTime = clip.start * audio.duration;
+    } else {
+      audio.currentTime = 0;
+    }
     activeStops.delete(stop);
   }
   activeStops.add(stop);
