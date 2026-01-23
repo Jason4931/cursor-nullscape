@@ -5,7 +5,7 @@ export const mouse = {
   _clientY: window.innerHeight / 2,
 };
 let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-import { TILE } from "./main.js";
+import { stopAllSounds, TILE } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -383,6 +383,9 @@ export function death(name = "Unknown", color = "#f70000") {
     setTimeout(() => {
       image.style.opacity = "1";
     }, 200);
+    setTimeout(() => {
+      stopAllSounds();
+    }, 1000);
     setTimeout(() => {
       retry.style.opacity = "1";
       retry.style.pointerEvents = "auto";

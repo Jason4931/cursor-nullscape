@@ -559,8 +559,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -633,6 +634,7 @@ if (accurateCursor) {
 }
 
 /* ===== SOUND ===== */
+const activeStops = new Set();
 export function playSound(
   soundPath,
   rate = 1,
@@ -685,9 +687,17 @@ export function playSound(
     stopped = true;
     audio.pause();
     audio.currentTime = clip.start * audio.duration;
+    activeStops.delete(stop);
   }
+  activeStops.add(stop);
 
   return stop;
+}
+export function stopAllSounds() {
+  for (const stop of activeStops) {
+    stop();
+  }
+  activeStops.clear();
 }
 const musicList = [
   {
@@ -756,10 +766,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
