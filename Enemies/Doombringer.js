@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, moveCamera } from "../main.js";
+import { TILE, moveCamera, playSound } from "../main.js";
 
 const jumppad = new Image();
 jumppad.src = "./ASSET/Misc/Jumppad.png";
@@ -11,13 +11,15 @@ export function setup(host) {
     delay: 0,
     opacity: 0,
     pads: [],
+    sound: null,
+    deathsound: false,
   };
 
   const PAD_COUNT = 20;
   const PAD_SIZE = TILE * 2.5;
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
-  const WARNING_TIME = 10;
+  const WARNING_TIME = 6;
   const MAX_CURSOR_DISTANCE = PAD_DISTANCE;
 
   function resetDelay() {
@@ -85,6 +87,9 @@ export function setup(host) {
     if (state.phase === "idle") {
       if (state.timer >= state.delay) {
         state.phase = "warning";
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/Doombringer/Joey's_scream.ogg",
+        );
         state.timer = 0;
         state.opacity = 0;
         spawnPads(mouse.x, mouse.y);
@@ -121,6 +126,7 @@ export function setup(host) {
           moveCamera(dx * TILE * 0.75, dy * TILE * 0.75);
 
           state.phase = "success";
+          if (state.sound) state.sound();
           state.timer = 0;
           state.opacity = 0;
           return;
@@ -129,6 +135,12 @@ export function setup(host) {
 
       if (state.timer >= WARNING_TIME) {
         death("Doombringer");
+        if (!state.deathsound) {
+          playSound(
+            "./ASSET/Sound/Enemies/Doombringer/DoombringerExplosion.ogg",
+          );
+          state.deathsound = true;
+        }
       }
       return;
     }
@@ -163,7 +175,7 @@ export function setup(host) {
         0,
         Math.round(mouse.x),
         Math.round(mouse.y),
-        140
+        140,
       );
 
       g.addColorStop(0, `rgba(${color},${state.opacity})`);
@@ -188,7 +200,7 @@ export function setup(host) {
         Math.round(p.x - offset),
         Math.round(p.y - offset),
         jpSize,
-        jpSize
+        jpSize,
       );
 
       ctx.save();
@@ -196,7 +208,7 @@ export function setup(host) {
       const angle = (Math.random() - 0.5) * 0.2;
       ctx.translate(
         Math.round(p.x + PAD_SIZE / 2),
-        Math.round(p.y + PAD_SIZE / 2)
+        Math.round(p.y + PAD_SIZE / 2),
       );
       ctx.rotate(angle);
       ctx.translate(-Math.round(PAD_SIZE / 2), -Math.round(PAD_SIZE / 2));

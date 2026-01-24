@@ -5,7 +5,7 @@ export const mouse = {
   _clientY: window.innerHeight / 2,
 };
 let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-import { stopAllSounds, TILE } from "./main.js";
+import { collectedCount, stopAllSounds, TILE } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -360,7 +360,11 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (name != "Catalyst" && Math.random() < 0.333) return;
+  if (
+    name != "Catalyst" &&
+    Math.random() < Math.min(0.333, collectedCount / 15000)
+  )
+    return;
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {

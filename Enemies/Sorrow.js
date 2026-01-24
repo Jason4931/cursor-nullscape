@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { isCursorOnFloor, setSorrowActive, moveCamera, TILE } from "../main.js";
+import {
+  isCursorOnFloor,
+  setSorrowActive,
+  moveCamera,
+  TILE,
+  playSound,
+} from "../main.js";
 
 export function setup(host) {
   const state = {
@@ -11,6 +17,9 @@ export function setup(host) {
     offFloorTime: 0,
     shakeX: 0,
     shakeY: 0,
+    sound: null,
+    soundTime: 0,
+    deathsound: false,
   };
 
   const RAIN_COUNT = 40;
@@ -25,13 +34,30 @@ export function setup(host) {
     }
 
     if (state.phase === 0) {
+      state.soundTime += dt;
+      if (!state.sound)
+        state.sound = playSound(
+          "./ASSET/Sound/Enemies/Sorrow/SorrowNewSound.wav",
+          2.6,
+        );
       if (!isCursorOnFloor()) {
         state.offFloorTime += dt;
         if (state.offFloorTime >= 3) {
           death("Sorrow");
+          if (!state.deathsound) {
+            state.deathsound = true;
+            playSound(
+              "./ASSET/Sound/Enemies/Sorrow/SorrowDeathEffect.mp3.mpeg",
+            );
+          }
         }
       } else {
         state.offFloorTime = 0;
+        if (state.sound && state.soundTime >= 1) {
+          state.sound();
+          state.sound = null;
+          state.soundTime = 0;
+        }
       }
     } else {
       state.offFloorTime = 0;
@@ -40,15 +66,19 @@ export function setup(host) {
     if (state.phase === 0) {
       if (state.time >= state.duration) {
         setSorrowActive(false);
+        playSound("./ASSET/Sound/Enemies/Sorrow/SorrowGone.mp3.mpeg");
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
         state.phase = 1;
         state.time = 0;
       }
-    }
-
-    else if (state.phase === 1) {
+    } else if (state.phase === 1) {
       if (state.time >= 10) {
         setSorrowActive(true);
         state.phase = 0;
+        state.soundTime = 0;
         state.time = 0;
         state.duration = 9 + Math.random();
       }

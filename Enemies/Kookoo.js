@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos } from "../main.js";
+import { getCameraPos, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Kookoo.png";
@@ -25,11 +25,15 @@ export function setup(host) {
     lastSecond: -1,
     arrowSpinStart: -1,
     arrowSpinDuration: 0.18,
+
+    tickingsound: null,
+    strikesound: false,
+    deathsound: false,
   };
 
   const EYE_TIME = 0.35;
   const RING_RADIUS = 60;
-  const INTRO_TIME = 3;
+  const INTRO_TIME = 2;
   const STRIKE_TIME = 1;
   const STRIKE_RADIUS = 210;
 
@@ -41,6 +45,8 @@ export function setup(host) {
     state.showEntity = false;
     state.screenX = window.innerWidth / 2;
     state.screenY = window.innerHeight / 2;
+    state.strikesound = false;
+    playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Startup.wav");
   }
 
   function randomizePosition() {
@@ -63,11 +69,14 @@ export function setup(host) {
           state.timer = state.target;
           state.count = 0;
           randomizePosition();
+          state.tickingsound = playSound(
+            "./ASSET/Sound/Enemies/Kookoo/Kookoo_Ticking_(0-12).wav",
+          );
         }
         break;
 
       case "counting": {
-        const elapsed = state.target - state.timer;
+        const elapsed = (state.target - state.timer) * 1.15;
         state.count = Math.min(state.target, Math.floor(elapsed));
 
         if (Math.floor(elapsed) !== Math.floor(elapsed - dt)) {
@@ -87,8 +96,13 @@ export function setup(host) {
       }
 
       case "strike":
+        if (state.timer <= 0.5 && state.tickingsound) state.tickingsound();
         if (state.timer <= 0.25) {
           state.showEntity = true;
+          if (!state.strikesound) {
+            playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Survived.wav");
+            state.strikesound = true;
+          }
         }
 
         if (state.timer <= 0) {
@@ -97,6 +111,10 @@ export function setup(host) {
 
           if (dx * dx + dy * dy <= STRIKE_RADIUS * STRIKE_RADIUS) {
             death("Kookoo");
+            if (!state.deathsound) {
+              playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Died.wav");
+              state.deathsound = true;
+            }
           }
 
           state.phase = "idle";
@@ -122,7 +140,7 @@ export function setup(host) {
     let arrowAngle = 0;
 
     if (state.phase === "counting" || state.phase === "strike") {
-      const elapsed = state.target - state.timer;
+      const elapsed = (state.target - state.timer) * 1.15;
       const sec = Math.floor(elapsed);
 
       if (sec !== state.lastSecond) {
@@ -259,14 +277,14 @@ export function setup(host) {
       if (p > 0) drawEyeMask(p, false);
     }
     if (state.phase === "strike") {
-      const t = Math.max(0, STRIKE_TIME - 0.575 - state.timer);
+      const t = Math.max(0, STRIKE_TIME - 0.525 - state.timer);
       const dur = EYE_TIME * 0.5;
       const p = Math.floor((t / dur) * 10) / 10;
       if (p > 0 && p <= 1) drawEyeMask(p, true);
     }
 
     if (
-      (state.phase === "intro" && state.timer >= 2.75) ||
+      (state.phase === "intro" && state.timer >= INTRO_TIME - 0.3) ||
       (state.phase === "strike" && state.showEntity)
     ) {
       ctx.drawImage(

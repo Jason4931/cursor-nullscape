@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos } from "../main.js";
+import { getCameraPos, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Dozer.png";
@@ -58,6 +58,7 @@ export function setup(host) {
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25) {
         state.jitterTimer = 0;
+        playSound("./ASSET/Sound/Enemies/Dozer/DozerTick.wav");
 
         state.jitterX = (Math.random() - 0.5) * 7.5;
         state.jitterY = (Math.random() - 0.5) * 7.5;
@@ -81,6 +82,8 @@ export function setup(host) {
 
       if (state.timer >= state.watchDuration) {
         death("Dozer");
+        playSound("./ASSET/Sound/Enemies/Dozer/DozerJumpTextFull.wav");
+        playSound("./ASSET/Sound/Enemies/Dozer/DozerDeathEffect.wav");
       }
     }
   }

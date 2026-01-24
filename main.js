@@ -438,7 +438,7 @@ entityCanvas.height = 10000;
 entityCanvas2.width = 10000;
 entityCanvas2.height = 10000;
 
-let collectedCount = 0;
+export let collectedCount = 0;
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
@@ -634,7 +634,7 @@ if (accurateCursor) {
 }
 
 /* ===== SOUND ===== */
-const activeStops = new Set();
+const activeSounds = new Set();
 export function playSound(
   soundPath,
   rate = 1,
@@ -691,17 +691,36 @@ export function playSound(
     } else {
       audio.currentTime = 0;
     }
-    activeStops.delete(stop);
+    activeSounds.delete(entry);
   }
-  activeStops.add(stop);
+  const entry = { stop, audio };
+  activeSounds.add(entry);
 
   return stop;
 }
 export function stopAllSounds() {
-  for (const stop of activeStops) {
-    stop();
+  const fadeDuration = 1000;
+  const start = performance.now();
+
+  for (const { audio, stop } of activeSounds) {
+    const startVolume = audio.volume;
+
+    const fade = (now) => {
+      const t = Math.min(1, (now - start) / fadeDuration);
+      audio.volume = startVolume * (1 - t);
+
+      if (t < 1) {
+        requestAnimationFrame(fade);
+      } else {
+        audio.volume = 0;
+        stop();
+      }
+    };
+
+    requestAnimationFrame(fade);
   }
-  activeStops.clear();
+
+  activeSounds.clear();
 }
 const musicList = [
   {
