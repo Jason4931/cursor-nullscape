@@ -753,12 +753,12 @@ const musicList = [
   },
   {
     start: 2000,
-    end: 0,
+    end: 3999,
     src: "./ASSET/Sound/Music/Void-Breaker.mp3",
   },
   {
     start: 2000,
-    end: 0,
+    end: 3999,
     src: "./ASSET/Sound/Music/IMPERIAL-ENIGMA.mp3",
   },
   {
@@ -771,10 +771,16 @@ const musicList = [
     end: 0,
     src: "./ASSET/Sound/Music/DECAY-TRUE.mp3",
   },
+  {
+    start: 1000,
+    end: 0,
+    src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
+  },
 ];
 let lobbyMusic = null;
 let stopMusic = null;
 let lastMusicSrc = null;
+let currentMusic = null;
 function playNextMusic() {
   const candidates = musicList.filter((m) => {
     if (collectedCount < m.start) return false;
@@ -794,8 +800,14 @@ function playNextMusic() {
 
   if (pool.length === 0) return;
 
+  if (stopMusic) {
+    stopMusic();
+    stopMusic = null;
+  }
+
   const pick = pool[Math.floor(Math.random() * pool.length) | 0];
   lastMusicSrc = pick.src;
+  currentMusic = pick;
 
   stopMusic = playSound(
     pick.src,
@@ -1744,6 +1756,13 @@ function loop(now) {
   }
   if (collectedCount >= 100 && !stopMusic) {
     lobbyMusic();
+    playNextMusic();
+  }
+  if (
+    currentMusic &&
+    currentMusic.end !== 0 &&
+    collectedCount > currentMusic.end
+  ) {
     playNextMusic();
   }
 
