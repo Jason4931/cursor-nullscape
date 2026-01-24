@@ -658,7 +658,6 @@ export function playSound(
   }
 
   let stopped = false;
-  let endedNaturally = false;
 
   audio.addEventListener("loadedmetadata", () => {
     const startTime = clip.start * audio.duration;
@@ -671,7 +670,6 @@ export function playSound(
       if (stopped) return;
 
       if (audio.currentTime >= endTime) {
-        endedNaturally = true;
         stop();
         if (onEnd) onEnd();
       } else {
