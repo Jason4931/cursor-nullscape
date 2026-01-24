@@ -19,7 +19,7 @@ export function setup(host) {
   const PAD_SIZE = TILE * 2.5;
   const PAD_DISTANCE = 1000;
   const PAD_MIN_SEP = PAD_SIZE * 5;
-  const WARNING_TIME = 6;
+  const WARNING_TIME = 10;
   const MAX_CURSOR_DISTANCE = PAD_DISTANCE;
 
   function resetDelay() {
@@ -89,6 +89,7 @@ export function setup(host) {
         state.phase = "warning";
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Doombringer/Joey's_scream.ogg",
+          0.625,
         );
         state.timer = 0;
         state.opacity = 0;
