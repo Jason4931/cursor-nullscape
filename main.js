@@ -1521,7 +1521,7 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
-    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.15 : dynamicHitRadius;
+    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.2 : dynamicHitRadius;
 
     if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
@@ -1532,6 +1532,7 @@ function updateCamera() {
           y: g.y + TILE / 2,
           t: performance.now(),
         };
+        playSound("./ASSET/Sound/Enemies/Tripmine/subspace-tripmine.mp3");
         continue;
       }
 
