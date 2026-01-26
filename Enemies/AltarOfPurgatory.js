@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activatePurgatory,
   entityCanvas2,
+  collectedCount,
 } from "../main.js";
 
 const altar = new Image();
@@ -18,12 +19,12 @@ export function setup(host) {
     nextDelay: 19 + Math.random(),
   };
 
-  const pos = pickRandomPlaced4or5(500);
+  const pos = pickRandomPlaced4or5(1000);
   state.x = pos.x;
   state.y = pos.y;
 
   function teleport() {
-    const p = pickRandomPlaced4or5(500);
+    const p = pickRandomPlaced4or5(1000);
     state.x = p.x;
     state.y = p.y;
     state.timer = 0;
@@ -49,6 +50,7 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (collectedCount >= 5000) return;
 
     state.timer += dt;
 
@@ -67,6 +69,7 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (collectedCount >= 5000) return;
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);

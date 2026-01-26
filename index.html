@@ -147,6 +147,7 @@
       pointer-events: none;
       user-select: none;
       z-index: 1000;
+      transition: color 1.5s ease;
     }
 
     #settings-btn {
@@ -393,6 +394,11 @@
       transition: filter 0.2s ease;
     }
 
+    body.player-dead.fade-out {
+      filter: grayscale(0) brightness(1);
+      transition: filter 0.5s ease;
+    }
+
     @keyframes spin {
       from {
         transform: rotate(0deg);
@@ -562,8 +568,7 @@
         </button>
       </div>
     </div>
-    <div id="intro-screen">
-    </div>
+    <div id="intro-screen"></div>
     <div id="death-screen">
       <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
       <div id="death-text">You died</div>

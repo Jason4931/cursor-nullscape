@@ -6,6 +6,7 @@ import {
   death,
   toggleToggleDeath,
   toggleTripmineLeniency,
+  toggleImmortality,
 } from "./entityHost.js";
 import { setup as spawnAltar } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
@@ -33,6 +34,7 @@ import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
+import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -59,6 +61,10 @@ let isSeamineEnabled = false;
 let spawnedVoid = false;
 let spawnedAltar = false;
 let spawnedCatalyst = false;
+let spawnedBeacon = false;
+let transformAllGift = false;
+let allGold = false;
+let disableCollect = false;
 let disablespawn = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
@@ -439,6 +445,7 @@ entityCanvas2.width = 10000;
 entityCanvas2.height = 10000;
 
 export let collectedCount = 0;
+export let actualCollectedCount = 0;
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
@@ -559,9 +566,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -773,6 +779,16 @@ const musicList = [
   },
   {
     start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
+  },
+  {
+    start: 2000,
+    end: 3999,
+    src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
+  },
+  {
+    start: 4000,
     end: 0,
     src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
   },
@@ -793,10 +809,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -829,6 +845,7 @@ export function getCameraPos() {
   return { x: -camX, y: -camY };
 }
 export function moveCamera(x, y, instant = false) {
+  if (disableCollect) return;
   if (instant) {
     camX += x;
     camY += y;
@@ -851,8 +868,9 @@ export function isCursorOnFloor() {
   return false;
 }
 export function activatePurgatory() {
-  collectedCount += 500;
-  counterEl.textContent = `Collected: ${collectedCount}`;
+  if (!disableCollect) actualCollectedCount += 1000;
+  collectedCount = Math.floor(actualCollectedCount / 2);
+  counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? (-11000 + Math.floor(Math.random() * 22000)) : actualCollectedCount}`;
   lastEntitySpawnAt = collectedCount;
   for (let i = 0; i < 5; i++) {
     const unlocked = ENTITY_POOL.filter((e) => {
@@ -870,6 +888,13 @@ export function activatePurgatory() {
           spawn: () => spawnCatalyst(entityHost),
           start: 5000,
           src: "./ASSET/Enemies/CatalystIcon.png",
+        };
+      } else if (collectedCount >= 5500 && !spawnedBeacon) {
+        spawnedBeacon = true;
+        pick = {
+          name: "Beacon",
+          spawn: () => spawnBeacon(entityHost),
+          start: 5500,
         };
       } else {
         while (true) {
@@ -928,8 +953,12 @@ export function activatePurgatory() {
       } else {
         pick.spawn();
       }
-      registerEntitySpawn(pick.name, pick.src);
-      if (collectedCount >= (casualMode ? 1500 : 1000) && !isSeamineEnabled) {
+      if (pick.src) registerEntitySpawn(pick.name, pick.src);
+      if (
+        collectedCount >= (casualMode ? 1500 : 1000) &&
+        !isSeamineEnabled &&
+        !disablespawn
+      ) {
         isSeamineEnabled = true;
         spawnSeamine(entityHost, casualMode);
         spawnSeamine(entityHost, casualMode);
@@ -1141,7 +1170,9 @@ function placeSuper(sx, sy, pattern) {
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const r = Math.random();
         let type = "gift";
-        if (isTripmineEnabled) {
+        if (allGold) {
+          type = r < 0.9 ? "gold" : "tripmine";
+        } else if (isTripmineEnabled) {
           if (r < 0.01)
             type = "gold"; // 1%
           else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
@@ -1215,12 +1246,13 @@ export function pickRandomPlaced4or5(minRadius = 0) {
     const dy = center.y - mouse.y;
     const d2 = dx * dx + dy * dy;
 
-    if (d2 >= minRadius * minRadius && d2 <= 1000 * 1000) {
+    const maxRadius = minRadius + 1000;
+    if (d2 >= minRadius * minRadius && d2 <= maxRadius * maxRadius) {
       candidates.push(p);
     }
   }
 
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) return { x: 0, y: 0 };
 
   // pick random pattern
   const pickedPattern = candidates[(Math.random() * candidates.length) | 0];
@@ -1235,7 +1267,7 @@ export function pickRandomPlaced4or5(minRadius = 0) {
     }
   }
 
-  if (coords.length === 0) return null; // should not happen because we filtered, but safe
+  if (coords.length === 0) return { x: 0, y: 0 }; // should not happen because we filtered, but safe
 
   const c = coords[(Math.random() * coords.length) | 0];
 
@@ -1491,22 +1523,24 @@ function updateCamera() {
     Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5,
   );
 
-  const motionScale = reducedMotion ? 0.5 : 1;
-  const slowScale = slowness ? 0.25 : 1;
-  camX += vx * motionScale * slowScale;
-  camY += vy * motionScale * slowScale;
+  if (!disableCollect) {
+    const motionScale = reducedMotion ? 0.5 : 1;
+    const slowScale = slowness ? 0.25 : 1;
+    camX += vx * motionScale * slowScale;
+    camY += vy * motionScale * slowScale;
 
-  const lim = getLimits();
-  camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
-  camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
-  if (drunkCamera) {
-    const t = performance.now() * 0.002;
-    camX += Math.sin(t * 1.3) * 2;
-    camY += Math.cos(t * 1.7) * 2;
+    const lim = getLimits();
+    camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
+    camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
+    if (drunkCamera) {
+      const t = performance.now() * 0.002;
+      camX += Math.sin(t * 1.3) * 2;
+      camY += Math.cos(t * 1.7) * 2;
+    }
+    canvas.style.transform = `translate(${camX}px, ${camY}px)`;
+    entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
+    entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
   }
-  canvas.style.transform = `translate(${camX}px, ${camY}px)`;
-  entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
-  entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
 
   // mouseWorld = screenToWorld(mouseX, mouseY);
 
@@ -1547,8 +1581,9 @@ function updateCamera() {
       }
 
       const value = g.golden ? 5 : 1;
-      collectedCount += value;
-      counterEl.textContent = `Collected: ${collectedCount}`;
+      if (!disableCollect) actualCollectedCount += value;
+      collectedCount = Math.floor(actualCollectedCount / 2);
+      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? (-11000 + Math.floor(Math.random() * 22000)) : actualCollectedCount}`;
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
@@ -1570,15 +1605,25 @@ function updateCamera() {
           spawnAltar(entityHost);
         }
 
-        if (unlocked.length > 0 && !disablespawn) {
+        if (
+          unlocked.length > 0 &&
+          (!disablespawn || (collectedCount >= 5500 && collectedCount <= 5599))
+        ) {
           let pick;
-          if (collectedCount >= 5000 && !spawnedCatalyst) {
+          if (collectedCount >= 5000 && !spawnedCatalyst && !disablespawn) {
             spawnedCatalyst = true;
             pick = {
               name: "Catalyst",
               spawn: () => spawnCatalyst(entityHost),
               start: 5000,
               src: "./ASSET/Enemies/CatalystIcon.png",
+            };
+          } else if (collectedCount >= 5500 && !spawnedBeacon) {
+            spawnedBeacon = true;
+            pick = {
+              name: "Beacon",
+              spawn: () => spawnBeacon(entityHost),
+              start: 5500,
             };
           } else {
             while (true) {
@@ -1637,10 +1682,11 @@ function updateCamera() {
           } else {
             pick.spawn();
           }
-          registerEntitySpawn(pick.name, pick.src);
+          if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (
             collectedCount >= (casualMode ? 1500 : 1000) &&
-            !isSeamineEnabled
+            !isSeamineEnabled &&
+            !disablespawn
           ) {
             isSeamineEnabled = true;
             spawnSeamine(entityHost, casualMode);
@@ -1859,6 +1905,17 @@ function loop(now) {
     if (f.until <= now) fleshPositions.delete(f);
   }
 
+  //holy beacon
+  if (collectedCount >= 5500 && !transformAllGift) {
+    transformAllGift = true;
+    allGold = true;
+    giftPositions.forEach((gift) => {
+      if (gift.type === "gift") {
+        gift.golden = true;
+      }
+    });
+  }
+
   requestAnimationFrame(loop);
 }
 
@@ -1874,3 +1931,30 @@ const unlock = () => {
   loop();
 };
 window.addEventListener("pointerdown", unlock, { once: true });
+
+let originalVolume = [0, 0]
+export function onFinalContact() {
+  originalVolume = [musicVolume, sfxVolume];
+  stopAllSounds();
+  musicVolume = 0;
+  sfxVolume = 0;
+  disableCollect = true;
+  setTimeout(() => {
+    for (const [key, p] of patternsState) {
+      destroyPattern(p);
+      patternsState.delete(key);
+    }
+    musicVolume = originalVolume[0];
+    sfxVolume = originalVolume[1];
+    allGold = false;
+    document.body.classList.add("player-dead");
+    setTimeout(() => {
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        document.body.classList.remove("player-dead", "fade-out");
+        disableCollect = false;
+        toggleImmortality(false);
+      }, 500);
+    }, 6667);
+  }, 28667);
+}

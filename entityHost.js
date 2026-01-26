@@ -5,7 +5,7 @@ export const mouse = {
   _clientY: window.innerHeight / 2,
 };
 let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-import { collectedCount, stopAllSounds, TILE } from "./main.js";
+import { actualCollectedCount, collectedCount, stopAllSounds, TILE } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -43,10 +43,16 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 
   function draw() {
     for (const e of entities) {
+      if (e.name === "Beacon") continue;
       if (e.name === "Bell") {
         e.draw?.(backctx);
       } else {
         Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
+      }
+    }
+    for (const e of entities) {
+      if (e.name === "Beacon") {
+        e.draw?.(ctx2);
       }
     }
   }
@@ -376,7 +382,9 @@ export function death(name = "Unknown", color = "#f70000") {
     const text = document.getElementById("death-text");
     const input = document.getElementById("death-input");
     const retry = document.getElementById("retry-btn");
+    const counterEl = document.getElementById("counter");
 
+    counterEl.textContent = `Collected: ${actualCollectedCount}`;
     canvas.style.display = "none";
     entityCanvas.style.display = "none";
     text.textContent = getDeathMessage(name);
