@@ -339,6 +339,7 @@ function getDeathMessage(name) {
 let dies = false;
 let toggleDeath = true;
 let immortality = false;
+let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
@@ -348,6 +349,9 @@ export function toggleToggleDeath() {
 export function toggleImmortality(state) {
   immortality = state;
 }
+export function toggleSpringerImmortality(state) {
+  springerImmortality = state;
+}
 export function toggleBellLeniency(state) {
   bellLeniency = state;
 }
@@ -356,7 +360,7 @@ export function toggleTripmineLeniency(state) {
   else if (typeof state === "boolean") tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
-  if (dies || !toggleDeath || immortality) return;
+  if (dies || !toggleDeath || immortality || springerImmortality) return;
   if (bellLeniency) {
     if (Math.random() < 0.667) return;
   }

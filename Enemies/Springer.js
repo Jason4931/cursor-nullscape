@@ -1,4 +1,4 @@
-import { death, mouse, toggleImmortality } from "../entityHost.js";
+import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 
 const enemy = new Image();
@@ -44,14 +44,14 @@ export function setup(host) {
   function applyTripmineLeniency(strength01) {
     const duration = strength01;
 
-    toggleImmortality(true);
+    toggleSpringerImmortality(true);
 
     if (state.leniencyTimer) {
       clearTimeout(state.leniencyTimer);
     }
 
     state.leniencyTimer = setTimeout(() => {
-      toggleImmortality(false);
+      toggleSpringerImmortality(false);
       state.leniencyTimer = null;
     }, duration * 1000);
   }
