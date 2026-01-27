@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { despawnCatalyst } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/CatalystHand.png";
@@ -27,6 +28,7 @@ export function setup(host) {
   const KILL_RADIUS = 120;
 
   function update(dt) {
+    if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
 
     state.timer += dt;
@@ -112,6 +114,7 @@ export function setup(host) {
   }
 
   function draw(ctx) {
+    if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
 
     ctx.save();

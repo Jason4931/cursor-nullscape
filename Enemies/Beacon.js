@@ -29,7 +29,7 @@ export function setup(host) {
 
     touched: false,
 
-    phase: "initHold", // initHold → initGrow → active → finalBurst
+    phase: "initHold",
     timer: 0,
     scale: START_SCALE,
   };
@@ -100,11 +100,10 @@ export function setup(host) {
     const dy = state.y - mouse.y;
     const ang = Math.atan2(dy, dx);
 
-    const OFFSET = 28; // distance in front of cursor
+    const OFFSET = 28;
 
     ctx.save();
 
-    // move to cursor, then push forward
     ctx.translate(
       Math.round(mouse.x + Math.cos(ang) * OFFSET),
       Math.round(mouse.y + Math.sin(ang) * OFFSET),
@@ -114,8 +113,8 @@ export function setup(host) {
 
     ctx.fillStyle = "#ffff00";
     ctx.beginPath();
-    ctx.moveTo(10, 0); // TIP (forward)
-    ctx.lineTo(-10, -6); // tail
+    ctx.moveTo(10, 0);
+    ctx.lineTo(-10, -6);
     ctx.lineTo(-5, 0);
     ctx.lineTo(-10, 6);
     ctx.closePath();
@@ -136,7 +135,7 @@ export function setup(host) {
 
     const chars = msg.split("");
     const spacing = 20;
-    const startX = cx - ((chars.length - 1) * spacing) / 2;
+    const startX = Math.round(cx - ((chars.length - 1) * spacing) / 2);
 
     for (let i = 0; i < chars.length; i++) {
       const wave = Math.sin(time * 2 + i * 0.6) * 9;
@@ -151,26 +150,23 @@ export function setup(host) {
 
   function drawFinalBurst(ctx) {
     const t = Math.min(1, state.timer / BURST_TIME);
-    const r = easeOut(t) * Math.hypot(host.canvas.width, host.canvas.height);
-
-    const g = ctx.createRadialGradient(
-      state.x,
-      state.y,
-      0,
-      state.x,
-      state.y,
-      r,
+    const r = Math.round(
+      easeOut(t) * Math.hypot(host.canvas.width, host.canvas.height),
     );
+
+    const cx = Math.round(state.x);
+    const cy = Math.round(state.y);
+
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
 
     g.addColorStop(0, "rgba(255,255,255,1)");
     g.addColorStop(1, `rgba(255,255,255,${state.timer})`);
 
     ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(state.x, state.y, r, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fill();
 
-    // === TIMED TEXT ===
     const globalFadeOutStart = TEXT_DELAY * messages.length + HOLD_AFTER_LAST;
 
     for (let i = 0; i < messages.length; i++) {
@@ -179,10 +175,8 @@ export function setup(host) {
 
       if (localTime < 0) continue;
 
-      // --- FADE IN ---
       let alpha = Math.min(1, localTime / FADE_IN);
 
-      // --- GLOBAL FADE OUT ---
       if (state.timer >= globalFadeOutStart) {
         const outT = state.timer - globalFadeOutStart;
         alpha *= Math.max(0, 1 - outT / FADE_OUT);
@@ -204,18 +198,16 @@ export function setup(host) {
     const size = Math.round(SIZE * state.scale);
     const half = Math.round(size / 2);
 
-    const cx = state.x;
-    const cy = state.y;
+    const cx = Math.round(state.x);
+    const cy = Math.round(state.y);
 
-    // === FINAL WHITE BURST ===
     if (state.phase === "finalBurst") {
       drawFinalBurst(ctx);
       ctx.restore();
       return;
     }
 
-    // === YELLOW GLOW ===
-    const glowR = size * TILE * 0.667;
+    const glowR = Math.round(size * TILE * 0.667);
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
     g.addColorStop(0, "rgba(255,255,0,0.5)");
     g.addColorStop(1, "rgba(255,255,0,0)");
@@ -224,11 +216,9 @@ export function setup(host) {
     ctx.arc(cx, cy, glowR, 0, Math.PI * 2);
     ctx.fill();
 
-    // === WHITE BEACON ===
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(Math.round(cx - half), Math.round(cy - half), size, size);
+    ctx.fillRect(cx - half, cy - half, size, size);
 
-    // === CURSOR ARROW ===
     if (state.phase === "active") {
       drawArrow(ctx);
     }

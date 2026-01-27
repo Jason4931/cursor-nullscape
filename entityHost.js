@@ -5,7 +5,12 @@ export const mouse = {
   _clientY: window.innerHeight / 2,
 };
 let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-import { actualCollectedCount, collectedCount, stopAllSounds, TILE } from "./main.js";
+import {
+  actualCollectedCount,
+  collectedCount,
+  stopAllSounds,
+  TILE,
+} from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
   const scaleX = canvas.width / rect.width;
@@ -343,6 +348,11 @@ let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
+export let shieldActive = false;
+export let shieldBroken = false;
+export function activateShield() {
+  shieldActive = true;
+}
 export function toggleToggleDeath() {
   toggleDeath = !toggleDeath;
 }
@@ -375,6 +385,14 @@ export function death(name = "Unknown", color = "#f70000") {
     Math.random() < Math.min(0.333, collectedCount / 15000)
   )
     return;
+  if (shieldActive) {
+    shieldBroken = true;
+    setTimeout(() => {
+      shieldBroken = false;
+      shieldActive = false;
+    }, 1000);
+    return;
+  }
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { moveCamera } from "../main.js";
+import { despawnCatalyst, moveCamera } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Catalyst/Layer 1.png";
@@ -84,6 +84,7 @@ export function setup(host) {
   }
 
   function update(dt) {
+    if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
 
     catalystPos = { x: state.x, y: state.y };
@@ -227,6 +228,7 @@ export function setup(host) {
   }
 
   function draw(ctx) {
+    if (despawnCatalyst) return;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 

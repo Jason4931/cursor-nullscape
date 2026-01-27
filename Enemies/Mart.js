@@ -65,17 +65,17 @@ export function setup(host) {
     let dx = 0;
     let dy = 0;
 
+    dx = mouse.x - state.x;
+    dy = mouse.y - state.y;
+
+    const dist = Math.hypot(dx, dy);
+
+    if (dist <= state.size * 0.5) {
+      death("Mart", "#43aeff");
+      return;
+    }
+
     if (state.mode === "target") {
-      dx = mouse.x - state.x;
-      dy = mouse.y - state.y;
-
-      const dist = Math.hypot(dx, dy);
-
-      if (dist <= state.size * 0.5) {
-        death("Mart", "#43aeff");
-        return;
-      }
-
       if (dist > 0.001) {
         dx /= dist;
         dy /= dist;
@@ -107,7 +107,7 @@ export function setup(host) {
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),
-      Math.round(state.size)
+      Math.round(state.size),
     );
 
     ctx.restore();

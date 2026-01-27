@@ -102,7 +102,6 @@ export function setup(host) {
             );
             state.deathSound = true;
           }
-          return;
         }
 
         pickIdleDuration();

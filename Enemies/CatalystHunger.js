@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { moveCamera } from "../main.js";
+import { despawnCatalyst, moveCamera } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const enemy = new Image();
@@ -36,6 +36,7 @@ export function setup(host, overshootBrake) {
   const BODY_RADIUS = 50;
 
   function update(dt) {
+    if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
 
     state.screamTimer += dt;
@@ -113,6 +114,7 @@ export function setup(host, overshootBrake) {
   }
 
   function draw(ctx) {
+    if (despawnCatalyst) return;
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;

@@ -1,13 +1,14 @@
 import { mouse } from "../entityHost.js";
 import {
   pickRandomPlaced4or5,
-  activatePurgatory,
+  activateChance,
   entityCanvas2,
+  getCameraPos,
   collectedCount,
 } from "../main.js";
 
 const altar = new Image();
-altar.src = "./ASSET/Misc/AltarOfPurgatory.png";
+altar.src = "./ASSET/Misc/AltarOfChance.png";
 
 export function setup(host) {
   const state = {
@@ -17,6 +18,15 @@ export function setup(host) {
     size: 200,
     timer: 0,
     nextDelay: 19 + Math.random(),
+    result: null,
+    resultTimer: 0,
+  };
+
+  const RESULT_TEXT = {
+    0: "Payment 1000",
+    1: "Random Enemy 4",
+    2: "Gift Multiplier x2",
+    3: "No Tripmines",
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -41,7 +51,8 @@ export function setup(host) {
     const r = state.size * 0.5;
 
     if (dx * dx + dy * dy <= r * r) {
-      activatePurgatory();
+      state.result = activateChance();
+      state.resultTimer = 0;
       teleport();
     }
   }
@@ -53,6 +64,13 @@ export function setup(host) {
     if (collectedCount >= 5000) return;
 
     state.timer += dt;
+    if (state.result !== null) {
+      state.resultTimer += dt;
+      if (state.resultTimer >= 4) {
+        state.result = null;
+        state.resultTimer = 0;
+      }
+    }
 
     if (state.timer <= 1) {
       state.opacity = 0;
@@ -76,14 +94,58 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawY = state.y - size * 0.35;
+    const drawY = state.y - size * 0.3;
     ctx.drawImage(
       altar,
       Math.round(state.x - size * 0.5),
-      Math.round(drawY - size * 0.5),
+      Math.round(drawY - size * 0.6),
       size,
-      size,
+      size * 1.2,
     );
+
+    if (state.result !== null && state.resultTimer > 0) {
+      const cam = getCameraPos();
+
+      const boxHeight = 70;
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      const boxX = cam.x + screenW * 0.25;
+      const boxY = cam.y + screenH - boxHeight * 1.5;
+
+      let alpha = 1;
+      if (state.resultTimer < 0.5) {
+        alpha = state.resultTimer / 0.5;
+      } else if (state.resultTimer > 3.5) {
+        alpha = (4 - state.resultTimer) / 0.5;
+      }
+      ctx.globalAlpha = alpha;
+
+      ctx.fillStyle = "#0a3cff80";
+      ctx.fillRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.strokeStyle = "#0a3cff";
+      ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
+
+      ctx.fillStyle = state.result <= 1 ? "#ff3b3b" : "#3bff6a";
+      ctx.strokeStyle = "#0a3cff";
+      ctx.lineWidth = 2;
+
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      ctx.strokeText(
+        RESULT_TEXT[state.result],
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2,
+      );
+      ctx.fillText(
+        RESULT_TEXT[state.result],
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2,
+      );
+    }
 
     ctx.restore();
   }

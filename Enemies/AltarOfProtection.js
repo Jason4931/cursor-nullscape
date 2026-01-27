@@ -1,13 +1,13 @@
 import { mouse } from "../entityHost.js";
 import {
   pickRandomPlaced4or5,
-  activatePurgatory,
+  activateProtection,
   entityCanvas2,
   collectedCount,
 } from "../main.js";
 
 const altar = new Image();
-altar.src = "./ASSET/Misc/AltarOfPurgatory.png";
+altar.src = "./ASSET/Misc/AltarOfProtection.png";
 
 export function setup(host) {
   const state = {
@@ -41,7 +41,7 @@ export function setup(host) {
     const r = state.size * 0.5;
 
     if (dx * dx + dy * dy <= r * r) {
-      activatePurgatory();
+      activateProtection();
       teleport();
     }
   }
@@ -76,10 +76,11 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawY = state.y - size * 0.35;
+    const drawX = state.x - size * 0.02;
+    const drawY = state.y - size * 0.37;
     ctx.drawImage(
       altar,
-      Math.round(state.x - size * 0.5),
+      Math.round(drawX - size * 0.5),
       Math.round(drawY - size * 0.5),
       size,
       size,

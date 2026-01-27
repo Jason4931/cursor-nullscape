@@ -7,8 +7,13 @@ import {
   toggleToggleDeath,
   toggleTripmineLeniency,
   toggleImmortality,
+  shieldActive,
+  activateShield,
+  shieldBroken,
 } from "./entityHost.js";
-import { setup as spawnAltar } from "./Enemies/AltarOfPurgatory.js";
+import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
+import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
+import { setup as spawnAltarProtection } from "./Enemies/AltarOfProtection.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -59,11 +64,12 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedVoid = false;
-let spawnedAltar = false;
+let spawnedAltar = [false, false];
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
 let transformAllGift = false;
 let allGold = false;
+let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
 let lastCursorInfectAt = 0;
@@ -72,6 +78,7 @@ let skinwalkerCount = 0;
 let babyCount = 0;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
 export let voidbreakerActive;
 export function setVoidbreakerActive(v) {
@@ -446,6 +453,7 @@ entityCanvas2.height = 10000;
 
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
+let giftMultiplier = 1;
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
@@ -537,6 +545,12 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "shield") {
+    activateShield();
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
 });
 let reducedMotionHoldActive = false;
 let reducedMotionBeforeHold = reducedMotion;
@@ -566,8 +580,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -809,10 +824,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -866,109 +881,6 @@ export function isCursorOnFloor() {
     }
   }
   return false;
-}
-export function activatePurgatory() {
-  if (!disableCollect) actualCollectedCount += 1000;
-  collectedCount = Math.floor(actualCollectedCount / 2);
-  counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? (-11000 + Math.floor(Math.random() * 22000)) : actualCollectedCount}`;
-  lastEntitySpawnAt = collectedCount;
-  for (let i = 0; i < 5; i++) {
-    const unlocked = ENTITY_POOL.filter((e) => {
-      if (collectedCount < e.start) return false;
-      if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
-      return true;
-    });
-
-    if (unlocked.length > 0) {
-      let pick;
-      if (collectedCount >= 5000 && !spawnedCatalyst) {
-        spawnedCatalyst = true;
-        pick = {
-          name: "Catalyst",
-          spawn: () => spawnCatalyst(entityHost),
-          start: 5000,
-          src: "./ASSET/Enemies/CatalystIcon.png",
-        };
-      } else if (collectedCount >= 5500 && !spawnedBeacon) {
-        spawnedBeacon = true;
-        pick = {
-          name: "Beacon",
-          spawn: () => spawnBeacon(entityHost),
-          start: 5500,
-        };
-      } else {
-        while (true) {
-          const weighted = [];
-          for (const e of unlocked) {
-            const weight = pickedOnce.has(e.name) ? 1 : 3;
-            for (let i = 0; i < weight; i++) weighted.push(e);
-            if (e.name === "baby" && babyCount < 2) weighted.push(e);
-          }
-          pick = weighted[(Math.random() * weighted.length) | 0];
-          if (lastEntityPicked !== pick.name) {
-            if (pick.name === "Baby") {
-              babyCount++;
-            } else if (pick.name === "VoidboundBaby") {
-              if (babyCount < 2) {
-                continue;
-              }
-            }
-            if (pick.rare) {
-              if (Math.random() < 0.25) {
-                continue;
-              }
-            }
-            if (
-              casualMode &&
-              (pick.name === "Kookoo" || pick.name === "Cadence")
-            )
-              continue;
-            lastEntityPicked = pick.name;
-            pickedOnce.add(pick.name);
-            break;
-          }
-        }
-      }
-      if (pick.name === "Random") {
-        const randUnlocked = ENTITY_POOL.filter((e) => {
-          if (e.name === "Random") return false;
-          if (collectedCount < e.start) return false;
-          if (e.unstackable) return false;
-          return true;
-        });
-        if (randUnlocked.length !== 0) {
-          let randPick =
-            randUnlocked[(Math.random() * randUnlocked.length) | 0];
-          randPick.spawn();
-        }
-      } else if (pick.name === "Catalyst") {
-        pick.spawn();
-        setInterval(() => {
-          if (Math.random() < 0.5) {
-            spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
-          } else {
-            spawnCatalystHand(entityHost);
-          }
-        }, 20000);
-      } else {
-        pick.spawn();
-      }
-      if (pick.src) registerEntitySpawn(pick.name, pick.src);
-      if (
-        collectedCount >= (casualMode ? 1500 : 1000) &&
-        !isSeamineEnabled &&
-        !disablespawn
-      ) {
-        isSeamineEnabled = true;
-        spawnSeamine(entityHost, casualMode);
-        spawnSeamine(entityHost, casualMode);
-        spawnSeamine(entityHost, casualMode);
-      }
-      if (pick.unstackable) {
-        spawnedUnstackables.add(pick.name);
-      }
-    }
-  }
 }
 
 function registerEntitySpawn(name, imageSrc) {
@@ -1116,6 +1028,156 @@ function pickRotatedPattern(index) {
   return variants[(Math.random() * 4) | 0];
 }
 
+/* ===== ALTARS ===== */
+function ENTITY_SPAWN() {
+  const unlocked = ENTITY_POOL.filter((e) => {
+    if (collectedCount < e.start) return false;
+    if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+    return true;
+  });
+
+  if (unlocked.length > 0) {
+    let pick;
+    if (collectedCount >= 5000 && !spawnedCatalyst) {
+      spawnedCatalyst = true;
+      pick = {
+        name: "Catalyst",
+        spawn: () => spawnCatalyst(entityHost),
+        start: 5000,
+        src: "./ASSET/Enemies/CatalystIcon.png",
+      };
+    } else if (collectedCount >= 5500 && !spawnedBeacon) {
+      spawnedBeacon = true;
+      pick = {
+        name: "Beacon",
+        spawn: () => spawnBeacon(entityHost),
+        start: 5500,
+      };
+    } else {
+      while (true) {
+        const weighted = [];
+        for (const e of unlocked) {
+          const weight = pickedOnce.has(e.name) ? 1 : 3;
+          for (let i = 0; i < weight; i++) weighted.push(e);
+          if (e.name === "baby" && babyCount < 2) weighted.push(e);
+        }
+        pick = weighted[(Math.random() * weighted.length) | 0];
+        if (lastEntityPicked !== pick.name) {
+          if (pick.name === "Baby") {
+            babyCount++;
+          } else if (pick.name === "VoidboundBaby") {
+            if (babyCount < 2) {
+              continue;
+            }
+          }
+          if (pick.rare) {
+            if (Math.random() < 0.25) {
+              continue;
+            }
+          }
+          if (casualMode && (pick.name === "Kookoo" || pick.name === "Cadence"))
+            continue;
+          lastEntityPicked = pick.name;
+          pickedOnce.add(pick.name);
+          break;
+        }
+      }
+    }
+    if (pick.name === "Random") {
+      const randUnlocked = ENTITY_POOL.filter((e) => {
+        if (e.name === "Random") return false;
+        if (collectedCount < e.start) return false;
+        if (e.unstackable) return false;
+        return true;
+      });
+      if (randUnlocked.length !== 0) {
+        let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+        randPick.spawn();
+      }
+    } else if (pick.name === "Catalyst") {
+      pick.spawn();
+      setInterval(() => {
+        if (Math.random() < 0.5) {
+          spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
+        } else {
+          spawnCatalystHand(entityHost);
+        }
+      }, 20000);
+    } else {
+      pick.spawn();
+    }
+    if (pick.src) registerEntitySpawn(pick.name, pick.src);
+    if (
+      collectedCount >= (casualMode ? 1500 : 1000) &&
+      !isSeamineEnabled &&
+      !disablespawn
+    ) {
+      isSeamineEnabled = true;
+      spawnSeamine(entityHost, casualMode);
+      spawnSeamine(entityHost, casualMode);
+      spawnSeamine(entityHost, casualMode);
+    }
+    if (pick.unstackable) {
+      spawnedUnstackables.add(pick.name);
+    }
+  }
+}
+export function activatePurgatory() {
+  if (!disableCollect) actualCollectedCount += 1000;
+  if (actualCollectedCount > 10000) actualCollectedCount = 10000;
+  collectedCount = Math.floor(actualCollectedCount / 2);
+  counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+  lastEntitySpawnAt = collectedCount;
+  for (let i = 0; i < 5; i++) ENTITY_SPAWN();
+}
+let alreadyBenefitChanced = [false, false];
+export function activateChance() {
+  let chance;
+  while (true) {
+    chance = Math.floor(Math.random() * 4);
+    if (chance === 0 || chance === 1) break;
+    if (chance === 2 && !alreadyBenefitChanced[0]) break;
+    if (chance === 3 && !alreadyBenefitChanced[1] && !casualMode) break;
+  }
+  switch (chance) {
+    case 0:
+      // - payment 1000
+      actualCollectedCount -= 1000;
+      // if (actualCollectedCount < 0) actualCollectedCount = 0;
+      collectedCount = Math.floor(actualCollectedCount / 2);
+      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+      break;
+    case 1:
+      // - random enemy 4
+      for (let i = 0; i < 4; i++) ENTITY_SPAWN();
+      break;
+    case 2:
+      // + gift multiplier x2
+      giftMultiplier = 2;
+      alreadyBenefitChanced[0] = true;
+      break;
+    case 3:
+      // + no tripmines
+      disableTripmine = true;
+      giftPositions.forEach((gift) => {
+        if (gift.type === "tripmine") {
+          gift.type = "gift";
+        }
+      });
+      alreadyBenefitChanced[1] = true;
+      break;
+  }
+  return chance;
+}
+export function activateProtection() {
+  if (actualCollectedCount >= 1000) {
+    actualCollectedCount -= 1000;
+    collectedCount = Math.floor(actualCollectedCount / 2);
+    counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+    activateShield();
+  }
+}
+
 /* ===== PRECOMPUTE ROTATED PATTERNS ===== */
 const ROTATED_PATTERNS = PATTERNS.map((base) => {
   const r0 = base;
@@ -1165,7 +1227,8 @@ function placeSuper(sx, sy, pattern) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
 
-      const isTripmineEnabled = !casualMode && collectedCount > 500;
+      const isTripmineEnabled =
+        !disableTripmine && !casualMode && collectedCount > 500;
 
       if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
         const r = Math.random();
@@ -1580,10 +1643,10 @@ function updateCamera() {
         continue;
       }
 
-      const value = g.golden ? 5 : 1;
+      const value = (g.golden ? 5 : 1) * giftMultiplier;
       if (!disableCollect) actualCollectedCount += value;
       collectedCount = Math.floor(actualCollectedCount / 2);
-      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? (-11000 + Math.floor(Math.random() * 22000)) : actualCollectedCount}`;
+      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
@@ -1600,9 +1663,14 @@ function updateCamera() {
           spawnedVoid = true;
           spawnVoid(entityHost);
         }
-        if (collectedCount >= 600 && !spawnedAltar) {
-          spawnedAltar = true;
-          spawnAltar(entityHost);
+        if (collectedCount >= 300 && !spawnedAltar[0]) {
+          spawnedAltar[0] = true;
+          spawnAltarChance(entityHost);
+          spawnAltarProtection(entityHost);
+        }
+        if (collectedCount >= 600 && !spawnedAltar[1]) {
+          spawnedAltar[1] = true;
+          spawnAltarPurgatory(entityHost);
         }
 
         if (
@@ -1836,6 +1904,42 @@ function loop(now) {
   ctx.fillStyle = g;
   ctx.fill();
 
+  if (shieldBroken) {
+    const size = TILE * (1 + Math.random());
+    const shieldg = ctx.createRadialGradient(
+      mouse.x,
+      mouse.y,
+      0,
+      mouse.x,
+      mouse.y,
+      size,
+    );
+    shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
+    shieldg.addColorStop(
+      1,
+      `rgba(${Math.floor(Math.random() * 256)}, 0, 255, ${Math.random() * 0.5})`,
+    );
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, size - GIFT_SIZE / 2, 0, Math.PI * 2);
+    ctx.fillStyle = shieldg;
+    ctx.fill();
+  } else if (shieldActive) {
+    const shieldg = ctx.createRadialGradient(
+      mouse.x,
+      mouse.y,
+      0,
+      mouse.x,
+      mouse.y,
+      TILE,
+    );
+    shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
+    shieldg.addColorStop(1, `rgba(0, 0, 255, 1)`);
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
+    ctx.fillStyle = shieldg;
+    ctx.fill();
+  }
+
   // camera smoothing
   camX += camVX;
   camY += camVY;
@@ -1932,7 +2036,7 @@ const unlock = () => {
 };
 window.addEventListener("pointerdown", unlock, { once: true });
 
-let originalVolume = [0, 0]
+let originalVolume = [0, 0];
 export function onFinalContact() {
   originalVolume = [musicVolume, sfxVolume];
   stopAllSounds();
@@ -1940,6 +2044,7 @@ export function onFinalContact() {
   sfxVolume = 0;
   disableCollect = true;
   setTimeout(() => {
+    despawnCatalyst = true;
     for (const [key, p] of patternsState) {
       destroyPattern(p);
       patternsState.delete(key);
