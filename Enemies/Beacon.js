@@ -79,6 +79,7 @@ export function setup(host) {
         state.phase = "finalBurst";
         state.timer = 0;
         document.getElementById("counter").style.color = "#000";
+        document.getElementById("lvl").style.color = "#000";
         toggleImmortality(true);
         onFinalContact();
       }
@@ -90,6 +91,7 @@ export function setup(host) {
       state.opacity > 0
     ) {
       document.getElementById("counter").style.color = "#fff";
+      document.getElementById("lvl").style.color = "#fff";
       state.opacity -= dt;
       if (state.opacity <= 0) state.opacity = 0;
     }
