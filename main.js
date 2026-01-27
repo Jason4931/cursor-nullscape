@@ -625,7 +625,7 @@ let camX = 0;
 let camY = 0;
 let camVX = 0;
 let camVY = 0;
-let slowness = false;
+export let slowness = false;
 let slownessTimeout = null;
 
 /* ===== TILE DATA ===== */

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound } from "../main.js";
+import { getCameraPos, playSound, slowness } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Kookoo.png";
@@ -25,6 +25,7 @@ export function setup(host) {
     lastSecond: -1,
     arrowSpinStart: -1,
     arrowSpinDuration: 0.18,
+    tickProgress: 0,
 
     tickingsound: null,
     strikesound: false,
@@ -57,7 +58,18 @@ export function setup(host) {
   resetIntro();
 
   function update(dt) {
-    state.timer -= dt;
+    if (!slowness) state.timer -= dt;
+    if (slowness && state.tickingsound) {
+      state.tickingsound();
+      state.tickingsound = null;
+    }
+    if (!slowness && state.phase === "counting" && !state.tickingsound) {
+      state.tickingsound = playSound(
+        "./ASSET/Sound/Enemies/Kookoo/Kookoo_Ticking_(0-12).wav",
+        1,
+        { start: state.tickProgress, end: 1 },
+      );
+    }
     const cam = getCameraPos();
     state.x = cam.x + state.screenX;
     state.y = cam.y + state.screenY;
@@ -77,6 +89,7 @@ export function setup(host) {
 
       case "counting": {
         const elapsed = (state.target - state.timer) * 1.15;
+        state.tickProgress = Math.min(1, elapsed / state.target);
         state.count = Math.min(state.target, Math.floor(elapsed));
 
         if (Math.floor(elapsed) !== Math.floor(elapsed - dt)) {
@@ -156,33 +169,65 @@ export function setup(host) {
 
     ctx.save();
 
-    const grad = ctx.createRadialGradient(
-      Math.round(state.x),
-      Math.round(state.y),
-      0,
-      Math.round(state.x),
-      Math.round(state.y),
-      RING_RADIUS + 2,
-    );
-    grad.addColorStop(0, "rgba(0,0,128,1)");
-    grad.addColorStop(0.77, "rgba(0,0,0,1)");
-    grad.addColorStop(0.78, "rgba(255,255,255,1)");
-    grad.addColorStop(0.82, "rgba(255,255,255,1)");
-    grad.addColorStop(0.83, "rgba(0,0,255,1)");
-    grad.addColorStop(0.95, "rgba(0,0,255,1)");
-    grad.addColorStop(0.96, "rgba(255,255,255,1)");
-    grad.addColorStop(1, "rgba(255,255,255,1)");
+    if (!slowness) {
+      const grad = ctx.createRadialGradient(
+        Math.round(state.x),
+        Math.round(state.y),
+        0,
+        Math.round(state.x),
+        Math.round(state.y),
+        RING_RADIUS + 2,
+      );
+      grad.addColorStop(0, "rgba(0,0,128,1)");
+      grad.addColorStop(0.77, "rgba(0,0,0,1)");
+      grad.addColorStop(0.78, "rgba(255,255,255,1)");
+      grad.addColorStop(0.82, "rgba(255,255,255,1)");
+      grad.addColorStop(0.83, "rgba(0,0,255,1)");
+      grad.addColorStop(0.95, "rgba(0,0,255,1)");
+      grad.addColorStop(0.96, "rgba(255,255,255,1)");
+      grad.addColorStop(1, "rgba(255,255,255,1)");
 
-    ctx.beginPath();
-    ctx.arc(
-      Math.round(state.x),
-      Math.round(state.y),
-      RING_RADIUS + 2,
-      0,
-      Math.PI * 2,
-    );
-    ctx.fillStyle = grad;
-    ctx.fill();
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        RING_RADIUS + 2,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = grad;
+      ctx.fill();
+    } else {
+      const grad = ctx.createRadialGradient(
+        Math.round(state.x),
+        Math.round(state.y),
+        0,
+        Math.round(state.x),
+        Math.round(state.y),
+        RING_RADIUS + 52,
+      );
+      grad.addColorStop(0, "rgba(128,0,128,1)");
+      grad.addColorStop(0.42, "rgba(128,0,0,1)");
+      grad.addColorStop(0.43, "rgba(255,255,255,1)");
+      grad.addColorStop(0.45, "rgba(255,255,255,1)");
+      grad.addColorStop(0.46, "rgba(128,0,255,1)");
+      grad.addColorStop(0.52, "rgba(128,0,255,1)");
+      grad.addColorStop(0.53, "rgba(255,255,255,1)");
+      grad.addColorStop(0.55, "rgba(255,255,255,1)");
+      grad.addColorStop(0.56, "rgba(255,0,0,1)");
+      grad.addColorStop(1, "rgba(255,0,0,0)");
+
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        RING_RADIUS + 52,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
 
     ctx.restore();
 
