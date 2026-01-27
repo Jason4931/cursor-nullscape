@@ -380,11 +380,6 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (
-    name != "Catalyst" &&
-    Math.random() < Math.min(0.333, collectedCount / 15000)
-  )
-    return;
   if (shieldActive) {
     shieldBroken = true;
     setTimeout(() => {
@@ -393,6 +388,11 @@ export function death(name = "Unknown", color = "#f70000") {
     }, 1000);
     return;
   }
+  if (
+    name != "Catalyst" &&
+    Math.random() < Math.min(0.333, collectedCount / 15000)
+  )
+    return;
   dies = true;
   document.body.classList.add("player-dead");
   setTimeout(() => {
