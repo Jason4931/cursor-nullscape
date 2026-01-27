@@ -452,6 +452,7 @@ entityCanvas.height = 10000;
 entityCanvas2.width = 10000;
 entityCanvas2.height = 10000;
 
+export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let giftMultiplier = 1;
@@ -1128,9 +1129,9 @@ export function activatePurgatory() {
   collectedCount = Math.floor(actualCollectedCount / 2);
   counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
-    collectedCount >= 5000 && collectedCount <= 5500
+    latestCollectedCount >= 5000 && latestCollectedCount <= 5500
       ? `lvl 100`
-      : `Lvl ${Math.floor(collectedCount / 50)}`;
+      : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
   lastEntitySpawnAt = collectedCount;
   for (let i = 0; i < 5; i++) ENTITY_SPAWN();
 }
@@ -1151,9 +1152,9 @@ export function activateChance() {
       collectedCount = Math.floor(actualCollectedCount / 2);
       counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
-        collectedCount >= 5000 && collectedCount <= 5500
+        latestCollectedCount >= 5000 && latestCollectedCount <= 5500
           ? `lvl 100`
-          : `Lvl ${Math.floor(collectedCount / 50)}`;
+          : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
       break;
     case 1:
       // - random enemy 4
@@ -1183,9 +1184,9 @@ export function activateProtection() {
     collectedCount = Math.floor(actualCollectedCount / 2);
     counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
-      collectedCount >= 5000 && collectedCount <= 5500
+      latestCollectedCount >= 5000 && latestCollectedCount <= 5500
         ? `lvl 100`
-        : `Lvl ${Math.floor(collectedCount / 50)}`;
+        : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
     activateShield();
     return true;
   }
@@ -1662,9 +1663,9 @@ function updateCamera() {
       collectedCount = Math.floor(actualCollectedCount / 2);
       counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
-        collectedCount >= 5000 && collectedCount <= 5500
+        latestCollectedCount >= 5000 && latestCollectedCount <= 5500
           ? `lvl 100`
-          : `Lvl ${Math.floor(collectedCount / 50)}`;
+          : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
@@ -1872,6 +1873,8 @@ function loop(now) {
   updateCamera();
   updateMouseWorld(entityCanvas, camX, camY);
   drawGrid();
+
+  if (collectedCount > latestCollectedCount) latestCollectedCount = collectedCount;
 
   // music
   if (!lobbyMusic) {

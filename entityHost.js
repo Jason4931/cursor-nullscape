@@ -8,6 +8,7 @@ let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 import {
   actualCollectedCount,
   collectedCount,
+  latestCollectedCount,
   stopAllSounds,
   TILE,
 } from "./main.js";
@@ -408,7 +409,7 @@ export function death(name = "Unknown", color = "#f70000") {
     const lvlEl = document.getElementById("lvl");
 
     counterEl.textContent = `Collected: ${actualCollectedCount}`;
-    lvlEl.textContent = `Lvl ${Math.floor(collectedCount / 50)}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / 50)}`;
     canvas.style.display = "none";
     entityCanvas.style.display = "none";
     text.textContent = getDeathMessage(name);
