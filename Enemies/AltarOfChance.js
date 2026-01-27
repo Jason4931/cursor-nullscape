@@ -17,7 +17,7 @@ export function setup(host) {
     y: 0,
     size: 200,
     timer: 0,
-    nextDelay: 19 + Math.random(),
+    nextDelay: 59 + Math.random(),
     result: null,
     resultTimer: 0,
   };
@@ -38,7 +38,7 @@ export function setup(host) {
     state.x = p.x;
     state.y = p.y;
     state.timer = 0;
-    state.nextDelay = 19 + Math.random();
+    state.nextDelay = 59 + Math.random();
   }
 
   function onClick(e) {
