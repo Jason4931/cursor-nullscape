@@ -28,8 +28,8 @@ export function setup(host) {
     instrumentSounds: [null, null, null],
   };
 
-  const SPAWN_MIN = 9;
-  const SPAWN_MAX = 10;
+  const SPAWN_MIN = 10;
+  const SPAWN_MAX = 11;
   const AGRO_SPEED = 900;
   const PICKUP_RADIUS = 56;
 
