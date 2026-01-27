@@ -581,9 +581,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -825,10 +824,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1130,8 +1129,8 @@ export function activatePurgatory() {
   counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
     collectedCount >= 5000 && collectedCount <= 5500
-      ? `lvl 50`
-      : `Lvl ${Math.floor(collectedCount / 100)}`;
+      ? `lvl 100`
+      : `Lvl ${Math.floor(collectedCount / 50)}`;
   lastEntitySpawnAt = collectedCount;
   for (let i = 0; i < 5; i++) ENTITY_SPAWN();
 }
@@ -1153,8 +1152,8 @@ export function activateChance() {
       counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         collectedCount >= 5000 && collectedCount <= 5500
-          ? `lvl 50`
-          : `Lvl ${Math.floor(collectedCount / 100)}`;
+          ? `lvl 100`
+          : `Lvl ${Math.floor(collectedCount / 50)}`;
       break;
     case 1:
       // - random enemy 4
@@ -1185,8 +1184,8 @@ export function activateProtection() {
     counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
       collectedCount >= 5000 && collectedCount <= 5500
-        ? `lvl 50`
-        : `Lvl ${Math.floor(collectedCount / 100)}`;
+        ? `lvl 100`
+        : `Lvl ${Math.floor(collectedCount / 50)}`;
     activateShield();
     return true;
   }
@@ -1664,8 +1663,8 @@ function updateCamera() {
       counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         collectedCount >= 5000 && collectedCount <= 5500
-          ? `lvl 50`
-          : `Lvl ${Math.floor(collectedCount / 100)}`;
+          ? `lvl 100`
+          : `Lvl ${Math.floor(collectedCount / 50)}`;
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
