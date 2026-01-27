@@ -16,7 +16,7 @@ export function setup(host) {
     y: 0,
     size: 200,
     timer: 0,
-    nextDelay: 59 + Math.random(),
+    nextDelay: 19 + Math.random(),
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -28,7 +28,7 @@ export function setup(host) {
     state.x = p.x;
     state.y = p.y;
     state.timer = 0;
-    state.nextDelay = 59 + Math.random();
+    state.nextDelay = 19 + Math.random();
   }
 
   function onClick(e) {
