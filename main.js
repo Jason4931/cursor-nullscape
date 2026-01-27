@@ -1170,7 +1170,7 @@ export function activateChance() {
   return chance;
 }
 export function activateProtection() {
-  if (actualCollectedCount >= 1000) {
+  if (actualCollectedCount >= 1000 && shieldActive === false) {
     actualCollectedCount -= 1000;
     collectedCount = Math.floor(actualCollectedCount / 2);
     counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
