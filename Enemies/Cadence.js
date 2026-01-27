@@ -123,7 +123,7 @@ export function setup(host) {
             () => {
               state.instrumentSounds[i] = null;
             },
-            "lessimportant",
+            "1000",
           );
       }
     }

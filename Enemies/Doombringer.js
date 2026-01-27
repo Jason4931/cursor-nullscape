@@ -90,6 +90,10 @@ export function setup(host) {
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Doombringer/Joey's_scream.ogg",
           0.625,
+          undefined,
+          undefined,
+          undefined,
+          "400",
         );
         state.timer = 0;
         state.opacity = 0;

@@ -667,7 +667,7 @@ export function playSound(
   const audio = new Audio(soundPath);
   audio.playbackRate = rate;
   if (typeof important === "string") {
-    audio.volume = Math.max(0, Math.min(1, sfxVolume / 1000));
+    audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
   } else {
     audio.volume = Math.max(
       0,
