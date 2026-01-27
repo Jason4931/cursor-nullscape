@@ -1175,7 +1175,9 @@ export function activateProtection() {
     collectedCount = Math.floor(actualCollectedCount / 2);
     counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     activateShield();
+    return true;
   }
+  return false;
 }
 
 /* ===== PRECOMPUTE ROTATED PATTERNS ===== */

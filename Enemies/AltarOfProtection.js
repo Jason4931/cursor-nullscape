@@ -41,8 +41,8 @@ export function setup(host) {
     const r = state.size * 0.5;
 
     if (dx * dx + dy * dy <= r * r) {
-      activateProtection();
-      teleport();
+      const result = activateProtection();
+      if (result) teleport();
     }
   }
 
