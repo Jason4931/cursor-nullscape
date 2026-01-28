@@ -437,6 +437,7 @@
         background: #0a3cff80;
         border: 0.1vw solid #0a3cff;
         border-top: none;
+        color: #fff;
         transform: translateY(-100%);
         transition: transform 0.35s ease;
         z-index: 1000;
@@ -477,6 +478,18 @@
         padding: 0.1vw 0.3vw;
         border-radius: 0.3vw;
       }
+
+      #entity-panel-count {
+        position: absolute;
+        top: 1vw;
+        right: -8.25vw;
+        transform: translateY(-50%);
+        margin: 0;
+        white-space: nowrap;
+        font-size: 1vw;
+        font-family: monospace;
+        opacity: 50%;
+      }
     </style>
     <meta
       name="google-site-verification"
@@ -505,12 +518,45 @@
       />
       <div id="entity-panel">
         <div id="entity-panel-content"></div>
+        <p id="entity-panel-count">EntityCount: 0</p>
       </div>
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
       <canvas id="entities-2" width="1920" height="1200"></canvas>
       <p id="counter">Collected: 0</p>
       <p id="lvl">Lvl 0</p>
+      <!-- <div id="credit">
+        <p>Made by <span style="color: #880">Jason4931</span> (solo project)</p>
+        <p>Ideas by <span style="color: #800">Astronull3542</span></p>
+        <p>
+          Playtester & Verified by
+          <span style="color: #800">Astronull3542</span>
+        </p>
+
+        <p>
+          All images credited to <span style="color: #808">Nullscape Wiki</span>
+        </p>
+        <p>
+          All sounds also credited to
+          <span style="color: #808">Nullscape Wiki</span>
+        </p>
+
+        <p>Thank you Nullscape Developers for the awesome game!</p>
+        <p>...and all the ost bangers</p>
+
+        <p>And <b>you</b> for playing this game.</p>
+
+        <p style="color: #600">
+          You saw through the illusion built from all your burdens.
+        </p>
+        <p style="color: #600">
+          You chose to remain. Despite everything that chased you.
+        </p>
+        <p style="color: #600">
+          You were not deceived. You refused the false paradise.
+        </p>
+        <p style="color: #600">You endured. And you can endure again.</p>
+      </div> -->
       <div id="settings-btn">⚙</div>
       <div id="settings-panel">
         <div class="setting-row">

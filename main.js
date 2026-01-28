@@ -582,8 +582,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -825,10 +826,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -891,6 +892,15 @@ function registerEntitySpawn(name, imageSrc) {
     entityCounts.set(name, data);
   }
   data.count++;
+  let total = 0;
+  for (const data of entityCounts.values()) {
+    total += data.count;
+  }
+  document.getElementById("entity-panel-count").textContent =
+    `EntityCount: ${total}`;
+  if (total >= 10) {
+    document.getElementById("entity-panel-count").style.right = "-8.8vw";
+  }
   renderPanel();
 }
 
@@ -1874,7 +1884,8 @@ function loop(now) {
   updateMouseWorld(entityCanvas, camX, camY);
   drawGrid();
 
-  if (collectedCount > latestCollectedCount) latestCollectedCount = collectedCount;
+  if (collectedCount > latestCollectedCount)
+    latestCollectedCount = collectedCount;
 
   // music
   if (!lobbyMusic) {
