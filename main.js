@@ -2075,6 +2075,7 @@ export function onFinalContact() {
   musicVolume = 0;
   sfxVolume = 0;
   disableCollect = true;
+  localStorage.setItem("GameBeaten", `${new Date()}`);
   setTimeout(() => {
     despawnCatalyst = true;
     for (const [key, p] of patternsState) {

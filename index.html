@@ -329,15 +329,36 @@
           transform 0.1s ease,
           border-color 0.2s;
       }
-
       #reset-settings:hover {
         background: #200;
         border-color: #800;
       }
-
       #reset-settings:active {
         transform: scale(0.97);
         background: #400;
+      }
+
+      #credit {
+        background: #111;
+        color: #fff;
+        border: 0.1vw solid #444;
+        padding: 0.6vw 3.7vw;
+        font-family: monospace;
+        font-size: 0.9vw;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease,
+          border-color 0.2s;
+      }
+      #credit:hover {
+        background: #220;
+        border-color: #880;
+      }
+      #credit:active {
+        transform: scale(0.97);
+        background: #440;
       }
 
       #death-screen {
@@ -525,38 +546,6 @@
       <canvas id="entities-2" width="1920" height="1200"></canvas>
       <p id="counter">Collected: 0</p>
       <p id="lvl">Lvl 0</p>
-      <!-- <div id="credit">
-        <p>Made by <span style="color: #880">Jason4931</span> (solo project)</p>
-        <p>Ideas by <span style="color: #800">Astronull3542</span></p>
-        <p>
-          Playtester & Verified by
-          <span style="color: #800">Astronull3542</span>
-        </p>
-
-        <p>
-          All images credited to <span style="color: #808">Nullscape Wiki</span>
-        </p>
-        <p>
-          All sounds also credited to
-          <span style="color: #808">Nullscape Wiki</span>
-        </p>
-
-        <p>Thank you Nullscape Developers for the awesome game!</p>
-        <p>...and all the ost bangers</p>
-
-        <p>And <b>you</b> for playing this game.</p>
-
-        <p style="color: #600">
-          You saw through the illusion built from all your burdens.
-        </p>
-        <p style="color: #600">
-          You chose to remain. Despite everything that chased you.
-        </p>
-        <p style="color: #600">
-          You were not deceived. You refused the false paradise.
-        </p>
-        <p style="color: #600">You endured. And you can endure again.</p>
-      </div> -->
       <div id="settings-btn">⚙</div>
       <div id="settings-panel">
         <div class="setting-row">
@@ -659,13 +648,22 @@
           </label>
         </div>
         <hr />
-        <div class="setting-row" style="margin: 0">
+        <div class="setting-row">
           <button
             id="reset-settings"
             style="width: 100%; font-family: monospace"
           >
             Reset
           </button>
+        </div>
+        <div class="setting-row" style="margin: 0">
+          <a
+            href="./credit.html"
+            id="credit"
+            style="width: 100%; font-family: monospace"
+          >
+            Credits
+          </a>
         </div>
       </div>
       <div id="intro-screen"></div>
