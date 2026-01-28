@@ -1,252 +1,244 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cursor Nullscape — Credits</title>
 
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        color: #ccc;
-        filter: brightness(1.1);
-        font-family: "Segoe UI", system-ui, sans-serif;
-        overflow: hidden;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cursor Nullscape — Credits</title>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: #ccc;
+      filter: brightness(1.1);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, #0a0a0a 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #050505 0%, transparent 45%);
+      animation: drift 18s linear infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translateY(0);
       }
 
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      to {
+        transform: translateY(-3.125vw);
+      }
+    }
+
+    #credit {
+      max-width: 70.3125vw;
+      padding: 4vw;
+      text-align: center;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(3.125vw);
       }
 
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background:
-          radial-gradient(circle at 20% 30%, #0a0a0a 0%, transparent 40%),
-          radial-gradient(circle at 80% 70%, #050505 0%, transparent 45%);
-        animation: drift 18s linear infinite alternate;
-        pointer-events: none;
-      }
-
-      @keyframes drift {
-        from {
-          transform: translateY(0);
-        }
-        to {
-          transform: translateY(-3.125vw);
-        }
-      }
-
-      #credit {
-        max-width: 70.3125vw;
-        padding: 4vw;
-        text-align: center;
-        animation: fadeIn 2s ease forwards;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(3.125vw);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      #credit p {
-        margin: 0.6em 0;
-        font-size: 1.3125vw;
-        line-height: 1.6;
-        opacity: 0.85;
-      }
-
-      #credit p.section {
-        margin-top: 2.2em;
-      }
-
-      .gold {
-        color: #aa8800;
-      }
-      .red {
-        color: #aa3333;
-      }
-      .purple {
-        color: #aa55aa;
-      }
-
-      .final {
-        margin-top: 2.5em;
-        color: #aa333350;
-        font-style: italic;
-        letter-spacing: 0.03em;
-        animation: glow 4s ease-in-out infinite alternate;
-      }
-
-      @keyframes glow {
-        from {
-          text-shadow: 0 0 0 rgba(170, 51, 51, 0.4);
-        }
-        to {
-          text-shadow: 0 0 1.09375vw rgba(170, 51, 51, 1);
-        }
-      }
-
-      .divider {
-        width: 60%;
-        height: 0.078125vw;
-        margin: 2.5vw auto;
-        background: linear-gradient(to right, transparent, #333, transparent);
-      }
-
-      .thanks {
-        margin-top: 3em;
-        font-size: 1.25vw;
-        opacity: 0.9;
-      }
-
-      @media (max-width: 600px) {
-        #credit p {
-          font-size: 1.1875vw;
-        }
-      }
-
-      #return-btn {
-        position: fixed;
-        right: 1.25vw;
-        bottom: 1.5vw;
-
-        width: 3.2vw;
-        height: 3.2vw;
-        min-width: 3.28125vw;
-        min-height: 3.28125vw;
-
-        padding-bottom: 0.15625vw;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #0a0a0a;
-        border: 0.078125vw solid #333;
-        border-radius: 50%;
-
-        color: #888;
-        font-size: 1.75vw;
-        text-decoration: none;
-
-        opacity: 0.75;
-        transition:
-          opacity 0.2s ease,
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
-
-        z-index: 2000;
-      }
-
-      #return-btn:hover {
+      to {
         opacity: 1;
-        transform: scale(1.1);
-        box-shadow: 0 0 1.25vw rgba(100, 100, 255, 0.25);
-        color: #bbb;
+        transform: translateY(0);
+      }
+    }
+
+    #credit p {
+      margin: 0.6em 0;
+      font-size: 1.3125vw;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+
+    #credit p.section {
+      margin-top: 2.2em;
+    }
+
+    .gold {
+      color: #aa8800;
+    }
+
+    .red {
+      color: #aa3333;
+    }
+
+    .purple {
+      color: #aa55aa;
+    }
+
+    .final {
+      margin-top: 2.5em;
+      color: #aa333350;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      animation: glow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 0 rgba(170, 51, 51, 0.4);
       }
 
-      #return-btn:active {
-        transform: scale(0.95);
+      to {
+        text-shadow: 0 0 1.09375vw rgba(170, 51, 51, 1);
       }
-    </style>
-  </head>
+    }
 
-  <body>
-    <div id="credit">
-      <p class="section">
-        Made by <span class="gold">Jason4931</span> (solo project)
-      </p>
+    .divider {
+      width: 60%;
+      height: 0.078125vw;
+      margin: 2.5vw auto;
+      background: linear-gradient(to right, transparent, #333, transparent);
+    }
 
-      <p>Ideas by <span class="red">Astronull3542</span></p>
+    .thanks {
+      margin-top: 3em;
+      font-size: 1.25vw;
+      opacity: 0.9;
+    }
 
-      <p>
-        Playtested & Verified by
-        <span class="red">Astronull3542</span>
-      </p>
-
-      <div class="divider"></div>
-
-      <p>
-        All images credited to
-        <span class="purple"
-          ><a
-            href="https://nullscape.wiki/wiki/Main_Page"
-            style="text-decoration: none; color: #aa55aa"
-            >Nullscape Wiki</a
-          ></span
-        >
-      </p>
-
-      <p>
-        All sounds also credited to
-        <span class="purple"
-          ><a
-            href="https://nullscape.wiki/wiki/Main_Page"
-            style="text-decoration: none; color: #aa55aa"
-            >Nullscape Wiki</a
-          ></span
-        >
-      </p>
-
-      <div class="divider"></div>
-
-      <p>Thank you Nullscape Developers for the awesome game.</p>
-      <p>…and all the OST bangers.</p>
-
-      <p class="thanks" style="margin-bottom: 4em">
-        And <b>you</b>, for playing this game.
-      </p>
-
-      <p class="final">
-        You saw through the illusion built from all your burdens.
-      </p>
-      <p class="final">
-        You chose to remain, despite everything that chased you.
-      </p>
-      <p class="final">
-        You were not deceived. You refused the false paradise.
-      </p>
-      <p class="final">You endured. And you can endure again.</p>
-    </div>
-    <a href="./" id="return-btn">⮌</a>
-    <script>
-      const beatenRaw = localStorage.getItem("GameBeaten");
-      let showFinal = false;
-
-      if (beatenRaw) {
-        const beatenDate = new Date(beatenRaw);
-        const now = new Date();
-
-        const diffMs = now - beatenDate;
-        const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-
-        if (diffMs <= sevenDaysMs) {
-          showFinal = true;
-        } else {
-          localStorage.removeItem("GameBeaten");
-        }
+    @media (max-width: 600px) {
+      #credit p {
+        font-size: 1.1875vw;
       }
+    }
 
-      if (!showFinal) {
-        document.querySelectorAll(".final").forEach((el) => {
-          el.style.display = "none";
-        });
+    #return-btn {
+      position: fixed;
+      right: 1.25vw;
+      bottom: 1.5vw;
+
+      width: 3.2vw;
+      height: 3.2vw;
+      min-width: 3.28125vw;
+      min-height: 3.28125vw;
+
+      padding-bottom: 0.15625vw;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #0a0a0a;
+      border: 0.078125vw solid #333;
+      border-radius: 50%;
+
+      color: #888;
+      font-size: 1.75vw;
+      text-decoration: none;
+
+      opacity: 0.75;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+      z-index: 2000;
+    }
+
+    #return-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      box-shadow: 0 0 1.25vw rgba(100, 100, 255, 0.25);
+      color: #bbb;
+    }
+
+    #return-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="credit">
+    <p class="section">
+      Made by <span class="gold">Jason4931</span> (solo project)
+    </p>
+
+    <p>Ideas & Playtested by <span class="red">Astronull3542</span></p>
+
+    <div class="divider"></div>
+
+    <p>
+      All images credited to
+      <span class="purple"><a href="https://nullscape.wiki/wiki/Main_Page"
+          style="text-decoration: none; color: #aa55aa">Nullscape Wiki</a></span>
+    </p>
+
+    <p>
+      All sounds also credited to
+      <span class="purple"><a href="https://nullscape.wiki/wiki/Main_Page"
+          style="text-decoration: none; color: #aa55aa">Nullscape Wiki</a></span>
+    </p>
+
+    <div class="divider"></div>
+
+    <p>Thank you Nullscape Developers for the awesome game.</p>
+    <p>…and all the OST bangers.</p>
+
+    <p class="thanks" style="margin-bottom: 4em">
+      And <b>you</b>, for playing this game.
+    </p>
+
+    <p class="final">
+      You saw through the illusion built from all your burdens.
+    </p>
+    <p class="final">
+      You chose to remain, despite everything that chased you.
+    </p>
+    <p class="final">
+      You were not deceived. You refused the false paradise.
+    </p>
+    <p class="final">You endured. And you can endure again.</p>
+  </div>
+  <a href="./" id="return-btn">⮌</a>
+  <script>
+    const beatenRaw = localStorage.getItem("GameBeaten");
+    let showFinal = false;
+
+    if (beatenRaw) {
+      const beatenDate = new Date(beatenRaw);
+      const now = new Date();
+
+      const diffMs = now - beatenDate;
+      const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+      if (diffMs <= sevenDaysMs) {
+        showFinal = true;
+      } else {
+        localStorage.removeItem("GameBeaten");
       }
-    </script>
-  </body>
+    }
+
+    if (!showFinal) {
+      document.querySelectorAll(".final").forEach((el) => {
+        el.style.display = "none";
+      });
+    }
+  </script>
+</body>
+
 </html>
