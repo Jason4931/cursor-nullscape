@@ -405,7 +405,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
-  localStorage.setItem("musicVolume", "50");
+  localStorage.setItem("musicVolume", "10");
   showBorder = true;
   showFloor = true;
   showGrids = false;
