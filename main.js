@@ -255,7 +255,7 @@ let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
-let musicVolume = Number(localStorage.getItem("musicVolume")) ?? 50;
+let musicVolume = Number(localStorage.getItem("musicVolume")) ?? 10;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
@@ -415,7 +415,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   accurateCursor = false;
   sfxVolume = 50;
-  musicVolume = 50;
+  musicVolume = 10;
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
@@ -425,7 +425,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
-  document.getElementById("music-volume").value = 50;
+  document.getElementById("music-volume").value = 10;
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
