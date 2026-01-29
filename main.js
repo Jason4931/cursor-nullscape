@@ -1011,7 +1011,16 @@ function forceSpawn3x3(mouseWorld) {
   for (let i = 0; i < shuffled.length; i++) {
     const base = shuffled[i];
     const baseIndex = PATTERNS.indexOf(base);
-    const pat = pickRotatedPattern(baseIndex);
+    let pat = pickBiasedRotatedPattern(
+      baseIndex,
+      target.sx,
+      target.sy,
+      patternsState,
+    );
+    // fallback for initial / no-neighbor / no-9 cases
+    if (!pat) {
+      pat = pickRotatedPattern(baseIndex);
+    }
 
     if (canPlaceSuper(target.sx, target.sy, pat)) {
       placeSuper(target.sx, target.sy, pat);
@@ -1037,6 +1046,73 @@ function superRangeFromRadius(x, y, r) {
 function pickRotatedPattern(index) {
   const variants = ROTATED_PATTERNS[index];
   return variants[(Math.random() * 4) | 0];
+}
+function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
+  const variants = ROTATED_PATTERNS[baseIndex];
+  const scores = [];
+
+  const left = patternsState.get(`${sx - 1},${sy}`);
+  const right = patternsState.get(`${sx + 1},${sy}`);
+  const top = patternsState.get(`${sx},${sy - 1}`);
+  const bot = patternsState.get(`${sx},${sy + 1}`);
+
+  const hasNeighbor = left || right || top || bot;
+
+  // bootstrap: no constraints yet
+  if (!hasNeighbor) {
+    return pickRotatedPattern(baseIndex);
+  }
+
+  for (let i = 0; i < 4; i++) {
+    const pat = variants[i];
+    let score = 0;
+
+    const h = pat.length;
+    const w = pat[0].length;
+
+    if (left) {
+      const p = left.pattern;
+      const pw = p[0].length;
+      for (let y = 0; y < h; y++) {
+        if (p[y]?.[pw - 1] === 9 && pat[y][0] === 9) score++;
+      }
+    }
+
+    if (right) {
+      const p = right.pattern;
+      for (let y = 0; y < h; y++) {
+        if (p[y]?.[0] === 9 && pat[y][w - 1] === 9) score++;
+      }
+    }
+
+    if (top) {
+      const p = top.pattern;
+      const ph = p.length;
+      for (let x = 0; x < w; x++) {
+        if (p[ph - 1]?.[x] === 9 && pat[0][x] === 9) score++;
+      }
+    }
+
+    if (bot) {
+      const p = bot.pattern;
+      for (let x = 0; x < w; x++) {
+        if (p[0]?.[x] === 9 && pat[h - 1][x] === 9) score++;
+      }
+    }
+
+    scores[i] = score;
+  }
+
+  let best = -1;
+  let bestScore = 0;
+  for (let i = 0; i < 4; i++) {
+    if (scores[i] > bestScore) {
+      bestScore = scores[i];
+      best = i;
+    }
+  }
+
+  return bestScore > 0 ? variants[best] : null;
 }
 
 /* ===== ALTARS ===== */
@@ -1247,7 +1323,8 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 1 ||
         pattern[y][x] === 2 ||
         pattern[y][x] === 4 ||
-        pattern[y][x] === 5
+        pattern[y][x] === 5 ||
+        pattern[y][x] === 9
       ) {
         floorTiles.push({ x: wx, y: wy, sx, sy });
       }
@@ -1255,7 +1332,12 @@ function placeSuper(sx, sy, pattern) {
       const isTripmineEnabled =
         !disableTripmine && !casualMode && collectedCount > 500;
 
-      if (pattern[y][x] === 2 || pattern[y][x] === 3 || pattern[y][x] === 5) {
+      if (
+        pattern[y][x] === 2 ||
+        pattern[y][x] === 3 ||
+        pattern[y][x] === 5 ||
+        pattern[y][x] === 9
+      ) {
         const r = Math.random();
         let type = "gift";
         if (allGold) {
@@ -1384,7 +1466,8 @@ for (let sy = minSY; sy <= maxSY; sy++) {
     for (let i = 0; i < shuffled.length; i++) {
       const base = shuffled[i];
       const baseIndex = PATTERNS.indexOf(base);
-      const pat = pickRotatedPattern(baseIndex);
+      const pat = pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState);
+      if (!pat) continue;
 
       if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
         continue;
@@ -1849,7 +1932,13 @@ function updateCamera() {
         for (let i = 0; i < shuffled.length; i++) {
           const base = shuffled[i];
           const baseIndex = PATTERNS.indexOf(base);
-          const pat = pickRotatedPattern(baseIndex);
+          const pat = pickBiasedRotatedPattern(
+            baseIndex,
+            sx,
+            sy,
+            patternsState,
+          );
+          if (!pat) continue;
 
           if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
             continue;
