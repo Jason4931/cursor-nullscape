@@ -1556,7 +1556,7 @@ function drawGrid() {
         : `rgba(120, 0, 0, 0.066)`;
       ctx.fillRect(t.x, t.y, TILE, TILE);
     } else {
-      if (randTile < 0.5) {
+      if (randTile < 0.6) {
         ctx.fillStyle = showFloor ? "#333" : "#3331";
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else {
