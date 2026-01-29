@@ -1103,16 +1103,20 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
     scores[i] = score;
   }
 
-  let best = -1;
   let bestScore = 0;
+  let bestList = [];
+
   for (let i = 0; i < 4; i++) {
     if (scores[i] > bestScore) {
       bestScore = scores[i];
-      best = i;
+      bestList = [i];
+    } else if (scores[i] === bestScore && bestScore > 0) {
+      bestList.push(i);
     }
   }
 
-  return bestScore > 0 ? variants[best] : null;
+  if (bestScore === 0) return null;
+  return variants[bestList[(Math.random() * bestList.length) | 0]];
 }
 
 /* ===== ALTARS ===== */
