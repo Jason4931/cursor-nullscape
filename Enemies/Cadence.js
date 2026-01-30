@@ -183,7 +183,7 @@ export function setup(host, hardMode) {
         state.sound();
         state.sound = null;
       }
-      state.soundState = 4;
+      state.soundState = hardMode ? 3 : 4;
       if (!state.sound)
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Cadence/CadenceChase.ogg",
