@@ -4,7 +4,7 @@ import { playSound, cleanseZones, setSlowness, TILE } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -89,23 +89,29 @@ export function setup(host) {
         teleport();
       }, 100);
       state.initialized = true;
-      playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
+      playSound(
+        "./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav",
+        hardMode ? 2 : 1,
+      );
     }
 
     state.timer += dt;
 
     if (state.phase === "appear") {
-      if (state.timer <= 0.5) {
-        const t = state.timer / 0.5;
+      if (state.timer <= (hardMode ? 0.25 : 0.5)) {
+        const t = state.timer / (hardMode ? 0.25 : 0.5);
         state.circleScale = easeOut(t);
       } else {
-        const t = (state.timer - 0.5) / 0.5;
-        state.circleScale = 1 - easeIn(t);
+        const t =
+          (state.timer - (hardMode ? 0.25 : 0.5)) / (hardMode ? 0.25 : 0.5);
+        state.circleScale = (hardMode ? 0.5 : 1) * (1 - easeIn(t));
       }
 
-      state.bellScale = easeOut(Math.min(state.timer / 1, 1));
+      state.bellScale = easeOut(
+        Math.min(state.timer / (hardMode ? 0.5 : 1), 1),
+      );
 
-      if (state.timer >= 1) {
+      if (state.timer >= (hardMode ? 0.5 : 1)) {
         state.timer = 0;
         state.circleScale = 0;
         state.phase = "wait";
@@ -121,33 +127,41 @@ export function setup(host) {
         state.phase = "disappear";
       }
     } else if (state.phase === "disappear") {
-      if (state.timer <= 0.5) {
-        const t = state.timer / 0.5;
+      if (state.timer <= (hardMode ? 0.25 : 0.5)) {
+        const t = state.timer / (hardMode ? 0.25 : 0.5);
         state.circleScale = easeOut(t);
       } else {
-        const t = (state.timer - 0.5) / 0.5;
-        state.circleScale = 1 - easeIn(t);
+        const t =
+          (state.timer - (hardMode ? 0.25 : 0.5)) / (hardMode ? 0.25 : 0.5);
+        state.circleScale = (hardMode ? 0.5 : 1) * (1 - easeIn(t));
       }
 
-      state.bellScale = 1 - easeIn(Math.min(state.timer / 1, 1));
+      state.bellScale =
+        1 - easeIn(Math.min(state.timer / (hardMode ? 0.5 : 1), 1));
 
       if (
-        state.timer >= 0.2 &&
-        state.timer <= 0.3 &&
+        state.timer >= (hardMode ? 0.1 : 0.2) &&
+        state.timer <= (hardMode ? 0.2 : 0.3) &&
         !state.bellteleportstartsoundSound
       ) {
-        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
+        playSound(
+          "./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav",
+          hardMode ? 2 : 1,
+        );
         state.bellteleportstartsoundSound = true;
       }
       if (
-        state.timer >= 0.4 &&
-        state.timer <= 0.5 &&
+        state.timer >= (hardMode ? 0.2 : 0.4) &&
+        state.timer <= (hardMode ? 0.3 : 0.5) &&
         !state.bellteleportendsoundSound
       ) {
-        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav");
+        playSound(
+          "./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav",
+          hardMode ? 2 : 1,
+        );
         state.bellteleportendsoundSound = true;
       }
-      if (state.timer >= 1) {
+      if (state.timer >= (hardMode ? 0.5 : 1)) {
         state.timer = 0;
         state.circleScale = 0;
         teleport();

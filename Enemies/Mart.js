@@ -3,7 +3,7 @@ import { death, mouse } from "../entityHost.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Mart.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -11,7 +11,7 @@ export function setup(host) {
     y: 0,
 
     size: 75,
-    speed: 40,
+    speed: hardMode ? 80 : 40,
 
     initialized: false,
 

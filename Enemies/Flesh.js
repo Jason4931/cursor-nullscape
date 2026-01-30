@@ -4,7 +4,7 @@ import { fleshPositions, playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Flesh.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -26,6 +26,15 @@ export function setup(host) {
 
     sound: null,
     soundTimer: 0,
+
+    pelletActive: false,
+    pelletX: 0,
+    pelletY: 0,
+    pelletDirX: 0,
+    pelletDirY: 0,
+    pelletTimer: 0,
+    pelletDuration: 0,
+    pelletSpeed: 200,
   };
 
   function pickRandomDir() {
@@ -34,6 +43,17 @@ export function setup(host) {
     state.randomDirY = Math.sin(a);
     state.randomTimer = 0;
     state.randomDuration = 9 + Math.random();
+  }
+
+  function spawnPellet() {
+    const angle = Math.random() * Math.PI * 2;
+    state.pelletX = state.x;
+    state.pelletY = state.y;
+    state.pelletDirX = Math.cos(angle);
+    state.pelletDirY = Math.sin(angle);
+    state.pelletTimer = 0;
+    state.pelletDuration = 9 + Math.random();
+    state.pelletActive = true;
   }
 
   function update(dt) {
@@ -126,6 +146,28 @@ export function setup(host) {
       y: state.y,
       until: now + 25000,
     });
+
+    if (hardMode) {
+      if (!state.pelletActive) {
+        spawnPellet();
+      }
+
+      if (state.pelletActive) {
+        state.pelletTimer += dt;
+        state.pelletX += state.pelletDirX * state.pelletSpeed * dt;
+        state.pelletY += state.pelletDirY * state.pelletSpeed * dt;
+
+        fleshPositions.add({
+          x: state.pelletX,
+          y: state.pelletY,
+          until: now + 25000,
+        });
+
+        if (state.pelletTimer >= state.pelletDuration) {
+          state.pelletActive = false;
+        }
+      }
+    }
   }
 
   function draw(ctx) {
@@ -142,6 +184,19 @@ export function setup(host) {
       Math.round(state.size),
       Math.round(state.size),
     );
+
+    if (state.pelletActive) {
+      ctx.fillStyle = `rgba(${128 + Math.floor(Math.random() * 128)}, 0, 0, 1)`;
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.pelletX),
+        Math.round(state.pelletY),
+        8,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+    }
 
     ctx.restore();
   }

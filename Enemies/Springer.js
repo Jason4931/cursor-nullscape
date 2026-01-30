@@ -4,7 +4,7 @@ import { moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Springer.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -18,7 +18,7 @@ export function setup(host) {
 
     idleDuration: 5,
     idleGrowTime: 3,
-    ringMaxRadius: 1000,
+    ringMaxRadius: hardMode ? 1500 : 1000,
     flashAlpha: 0,
 
     exitDuration: 2.4,
@@ -128,7 +128,10 @@ export function setup(host) {
       if (insideRing && !state.wasInsideRing) {
         const power01 = clamp(1 - growT, 0, 1);
         const strength =
-          Math.min(host.canvas.width, host.canvas.height) * 0.03 * power01;
+          Math.min(host.canvas.width, host.canvas.height) *
+          0.03 *
+          power01 *
+          (hardMode ? 2 : 1);
 
         const nx = dist ? cx / dist : 0;
         const ny = dist ? cy / dist : 0;

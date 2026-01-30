@@ -4,7 +4,7 @@ import { getCameraPos, playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Dozer.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -12,7 +12,7 @@ export function setup(host) {
     timer: 0,
 
     idleDuration: 9 + Math.random(),
-    watchDuration: 6,
+    watchDuration: hardMode ? 3 : 6,
 
     x: 0,
     y: 0,
@@ -70,7 +70,7 @@ export function setup(host) {
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
-        if (state.stillTimer >= 0.25) {
+        if (state.stillTimer >= (hardMode ? 0.5 : 0.25)) {
           enterIdle();
           return;
         }

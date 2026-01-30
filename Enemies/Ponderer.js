@@ -4,7 +4,7 @@ import { pondererPositions } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Ponderer.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -17,11 +17,11 @@ export function setup(host) {
     maxTimer: 8,
 
     decayRate: 1,
-    recoverRate: 0.9,
+    recoverRate: hardMode ? 0.5 : 0.9,
 
     agro: false,
 
-    speed: 840,
+    speed: hardMode ? 1260 : 840,
     size: 150,
 
     wobbleTime: 0,

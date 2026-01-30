@@ -59,6 +59,7 @@ const entityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
+let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
@@ -94,25 +95,25 @@ export const cleanseZones = [];
 const ENTITY_POOL = [
   {
     name: "Bell",
-    spawn: () => spawnBell(entityHost),
+    spawn: () => spawnBell(entityHost, hardMode),
     start: 100,
     src: "./ASSET/Enemies/Bell.png",
   },
   {
     name: "Mart",
-    spawn: () => spawnMart(entityHost),
+    spawn: () => spawnMart(entityHost, hardMode),
     start: 100,
     src: "./ASSET/Enemies/Mart.png",
   },
   {
     name: "Baby",
-    spawn: () => spawnBaby(entityHost),
+    spawn: () => spawnBaby(entityHost, hardMode),
     start: 100,
     src: "./ASSET/Enemies/Baby.png",
   },
   {
     name: "ICBM",
-    spawn: () => spawnICBM(entityHost),
+    spawn: () => spawnICBM(entityHost, hardMode),
     start: 100,
     src: "./ASSET/Enemies/ICBM.png",
   },
@@ -124,19 +125,19 @@ const ENTITY_POOL = [
   },
   {
     name: "Springer",
-    spawn: () => spawnSpringer(entityHost),
+    spawn: () => spawnSpringer(entityHost, hardMode),
     start: 100,
     src: "./ASSET/Enemies/Springer.png",
   },
   {
     name: "VoidboundBaby",
-    spawn: () => spawnVoidboundBaby(entityHost),
+    spawn: () => spawnVoidboundBaby(entityHost, hardMode),
     start: 200,
     src: "./ASSET/Enemies/VoidboundBaby.png",
   },
   {
     name: "Flesh",
-    spawn: () => spawnFlesh(entityHost),
+    spawn: () => spawnFlesh(entityHost, hardMode),
     start: 500,
     src: "./ASSET/Enemies/Flesh.png",
   },
@@ -148,20 +149,20 @@ const ENTITY_POOL = [
   },
   {
     name: "Guardian",
-    spawn: () => spawnGuardian(entityHost),
+    spawn: () => spawnGuardian(entityHost, hardMode),
     start: 500,
     src: "./ASSET/Enemies/Guardian.png",
   },
   {
     name: "Dozer",
-    spawn: () => spawnDozer(entityHost),
+    spawn: () => spawnDozer(entityHost, hardMode),
     start: 500,
     src: "./ASSET/Enemies/Dozer.png",
     unstackable: true,
   },
   {
     name: "Telefragger",
-    spawn: () => spawnTelefragger(entityHost),
+    spawn: () => spawnTelefragger(entityHost, hardMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
   },
@@ -210,27 +211,27 @@ const ENTITY_POOL = [
   },
   {
     name: "Ponderer",
-    spawn: () => spawnPonderer(entityHost),
+    spawn: () => spawnPonderer(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/Ponderer.png",
     rare: true,
   },
   {
     name: "Voidbreaker",
-    spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++),
+    spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/Voidbreaker.png",
   },
   {
     name: "Cadence",
-    spawn: () => spawnCadence(entityHost),
+    spawn: () => spawnCadence(entityHost, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
     unstackable: true,
   },
   {
     name: "VoidboundGuardian",
-    spawn: () => spawnVoidboundGuardian(entityHost),
+    spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
     start: 2000,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
@@ -267,6 +268,7 @@ document.getElementById("toggle-reduced-motion").checked = reducedMotion;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("toggle-casual-mode").checked = casualMode;
+document.getElementById("toggle-hard-mode").checked = hardMode;
 document.getElementById("sfx-volume").value = sfxVolume;
 document.getElementById("music-volume").value = musicVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
@@ -334,6 +336,19 @@ toggle("toggle-accurate-cursor", (v) => {
 });
 toggle("toggle-casual-mode", (v) => {
   casualMode = v;
+  if (casualMode) {
+    hardMode = false;
+    document.getElementById("toggle-hard-mode").checked = false;
+    localStorage.setItem("hard-mode", false);
+  }
+});
+toggle("toggle-hard-mode", (v) => {
+  hardMode = v;
+  if (hardMode) {
+    casualMode = false;
+    document.getElementById("toggle-casual-mode").checked = false;
+    localStorage.setItem("casual-mode", false);
+  }
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = Number(e.target.value);
@@ -1394,7 +1409,9 @@ function placeSuper(sx, sy, pattern) {
       }
 
       const isTripmineEnabled =
-        !disableTripmine && !casualMode && collectedCount > 500;
+        !disableTripmine &&
+        !casualMode &&
+        (hardMode ? collectedCount > 200 : collectedCount > 500);
 
       if (
         pattern[y][x] === 2 ||
@@ -1409,7 +1426,10 @@ function placeSuper(sx, sy, pattern) {
         } else if (isTripmineEnabled) {
           if (r < 0.01)
             type = "gold"; // 1%
-          else if (r < Math.min(0.00009 * collectedCount - 0.035, 0.1))
+          else if (
+            r <
+            Math.min(0.00009 * collectedCount - (hardMode ? 0.008 : 0.035), 0.1)
+          )
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
         } else {
@@ -2025,6 +2045,7 @@ function loop(now) {
   const dt = (now - loop.lastTime) / 1000;
 
   // only update ~30fps
+  // const FRAME_TIME = 1;
   const FRAME_TIME = 33.333;
   if (now - loop.lastTime < FRAME_TIME) {
     requestAnimationFrame(loop);
@@ -2251,3 +2272,5 @@ export function onFinalContact() {
     }, 6667);
   }, 28667);
 }
+document.getElementById("beaten-only").style.display =
+  localStorage.getItem("GameBeaten") === null ? "none" : "flex";

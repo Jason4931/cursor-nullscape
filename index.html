@@ -282,7 +282,8 @@
         display: none;
       }
 
-      .slider-toggle {
+      .slider-toggle,
+      .slider-toggle-red {
         position: absolute;
         cursor: pointer;
         background: #333;
@@ -294,7 +295,8 @@
         transition: 0.2s;
       }
 
-      .slider-toggle::before {
+      .slider-toggle::before,
+      .slider-toggle-red::before {
         content: "";
         position: absolute;
         height: 1vw;
@@ -309,8 +311,12 @@
       .toggle input:checked + .slider-toggle {
         background: #4caf50;
       }
+      .toggle input:checked + .slider-toggle-red {
+        background: #f00;
+      }
 
-      .toggle input:checked + .slider-toggle::before {
+      .toggle input:checked + .slider-toggle::before,
+      .toggle input:checked + .slider-toggle-red::before {
         transform: translateX(1.3vw);
       }
 
@@ -629,6 +635,13 @@
           <label class="toggle">
             <input type="checkbox" id="toggle-casual-mode" />
             <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row" id="beaten-only">
+          <span style="color: #f00"><b>HARD MODE</b></span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-hard-mode" />
+            <span class="slider-toggle-red"></span>
           </label>
         </div>
         <hr />

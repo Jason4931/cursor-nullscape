@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 1,
 
@@ -12,9 +12,9 @@ export function setup(host) {
     y: 0,
 
     size: 100,
-    speed: 40,
+    speed: hardMode ? 80 : 40,
 
-    teleportTimer: 9 + Math.random(),
+    teleportTimer: 1,
     teleportDistance: 600,
 
     prevMouseX: NaN,
@@ -79,7 +79,7 @@ export function setup(host) {
       state.x = mouse.x + state.predDirX * state.teleportDistance;
       state.y = mouse.y + state.predDirY * state.teleportDistance;
 
-      state.teleportTimer = 9 + Math.random();
+      state.teleportTimer = hardMode ? 5 + Math.random() : 9 + Math.random();
 
       state.flashTime = state.flashDuration;
       state.flashAngle = Math.random() * Math.PI * 2;

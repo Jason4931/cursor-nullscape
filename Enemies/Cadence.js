@@ -9,7 +9,7 @@ violin.src = "./ASSET/Misc/Violin.png";
 const harp = new Image();
 harp.src = "./ASSET/Misc/Harp.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const canvas = host.canvas;
 
   const state = {
@@ -30,7 +30,7 @@ export function setup(host) {
 
   const SPAWN_MIN = 11.5;
   const SPAWN_MAX = 12.5;
-  const AGRO_SPEED = 900;
+  const AGRO_SPEED = hardMode ? 1350 : 900;
   const PICKUP_RADIUS = 56;
 
   function rollDelay() {
@@ -82,7 +82,7 @@ export function setup(host) {
 
   function update(dt) {
     state.timer += dt;
-    if (state.instruments.length >= 3) {
+    if (state.instruments.length >= (hardMode ? 2 : 3)) {
       const target = getNearestInstrument();
       if (target) {
         const dx = target.x - mouse.x;
@@ -130,7 +130,7 @@ export function setup(host) {
 
     if (state.mode === "idle") {
       if (state.timer >= state.nextDelay) {
-        if (state.instruments.length < 3) {
+        if (state.instruments.length < (hardMode ? 2 : 3)) {
           spawnInstrument();
           rollDelay();
         } else {
@@ -169,7 +169,7 @@ export function setup(host) {
       state.soundState = state.instruments.length;
       if (!state.sound)
         state.sound = playSound(
-          `./ASSET/Sound/Enemies/Cadence/Cad_lv${state.instruments.length + 1}.wav`,
+          `./ASSET/Sound/Enemies/Cadence/Cad_lv${state.instruments.length + (hardMode ? 2 : 1)}.wav`,
           undefined,
           undefined,
           undefined,
@@ -179,7 +179,7 @@ export function setup(host) {
           true,
         );
     } else {
-      if (state.soundState != 4 && state.sound) {
+      if (state.soundState != (hardMode ? 3 : 4) && state.sound) {
         state.sound();
         state.sound = null;
       }
@@ -347,7 +347,7 @@ export function setup(host) {
       }
     }
 
-    if (state.instruments.length >= 3) {
+    if (state.instruments.length >= (hardMode ? 2 : 3)) {
       ctx.save();
       const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 48);
       const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 48);

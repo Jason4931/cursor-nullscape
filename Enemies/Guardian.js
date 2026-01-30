@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Guardian.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     x: 0,
     y: 0,
@@ -57,7 +57,7 @@ export function setup(host) {
     state.mode = "shoot";
     state.timer = 0;
     state.shotsFired = 0;
-    state.shootDuration = 2 + Math.random();
+    state.shootDuration = hardMode ? 1 + Math.random() : 2 + Math.random();
   }
 
   function startIdle() {
@@ -108,9 +108,12 @@ export function setup(host) {
       }
     } else if (state.mode === "shoot") {
       /* ===== SHOOT ===== */
-      const interval = state.shootDuration / 3;
+      const interval = state.shootDuration / (hardMode ? 4 : 3);
 
-      if (state.shotsFired < 3 && state.timer >= interval * state.shotsFired) {
+      if (
+        state.shotsFired < (hardMode ? 4 : 3) &&
+        state.timer >= interval * state.shotsFired
+      ) {
         firePellet();
         playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
         state.shotsFired++;

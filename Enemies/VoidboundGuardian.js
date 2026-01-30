@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     x: 0,
     y: 0,
@@ -23,7 +23,7 @@ export function setup(host) {
     shootDuration: 0,
   };
 
-  const DASH_RADIUS = 640;
+  const DASH_RADIUS = hardMode ? 320 : 640;
   const DASH_TIME = 1.5;
   const IDLE_SHOOT_TIME = 0.5;
   const IDLE_TIME = 0.5;
@@ -75,7 +75,7 @@ export function setup(host) {
     const dy = mouse.y - state.y;
     const len = Math.hypot(dx, dy) || 1;
 
-    const speed = 630;
+    const speed = hardMode ? 945 : 630;
 
     state.pellets.push({
       x: state.x,
@@ -106,9 +106,12 @@ export function setup(host) {
         startShoot();
       }
     } else if (state.mode === "shoot") {
-      const interval = state.shootDuration / 3;
+      const interval = state.shootDuration / (hardMode ? 4 : 3);
 
-      if (state.shotsFired < 3 && state.timer >= interval * state.shotsFired) {
+      if (
+        state.shotsFired < (hardMode ? 4 : 3) &&
+        state.timer >= interval * state.shotsFired
+      ) {
         firePellet();
         playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
         state.shotsFired++;

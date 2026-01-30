@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
 
-export function setup(host) {
+export function setup(host, hardMode) {
   const state = {
     opacity: 0,
     x: 0,
@@ -28,6 +28,11 @@ export function setup(host) {
     initialized: false,
 
     icbmstrikeSound: false,
+
+    prevMouseX: 0,
+    prevMouseY: 0,
+    velocityX: 0,
+    velocityY: 0,
   };
 
   const easeIn = (t) => t * t;
@@ -39,14 +44,33 @@ export function setup(host) {
     if (!state.initialized) {
       state.x = host.canvas.width / 2;
       state.y = host.canvas.height / 2;
+      state.prevMouseX = mouse.x;
+      state.prevMouseY = mouse.y;
       state.initialized = true;
     }
+
+    state.velocityX = (mouse.x - state.prevMouseX) / dt;
+    state.velocityY = (mouse.y - state.prevMouseY) / dt;
+
+    state.prevMouseX = mouse.x;
+    state.prevMouseY = mouse.y;
 
     state.timer += dt;
 
     if (state.phase === "lock") {
-      state.lockPosX = mouse.x;
-      state.lockPosY = mouse.y;
+      if (hardMode && state.timer >= 0.1) {
+        const predictionMultiplier = 1;
+        const predictedX = mouse.x + state.velocityX * predictionMultiplier;
+        const predictedY = mouse.y + state.velocityY * predictionMultiplier;
+
+        const easeFactor = 0.12;
+
+        state.lockPosX += (predictedX - state.lockPosX) * easeFactor;
+        state.lockPosY += (predictedY - state.lockPosY) * easeFactor;
+      } else {
+        state.lockPosX = mouse.x;
+        state.lockPosY = mouse.y;
+      }
 
       const t = Math.min(state.timer, 1);
       state.circleRadius = 80 - easeOut(t) * (80 - 40);

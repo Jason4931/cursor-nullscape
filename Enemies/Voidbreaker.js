@@ -12,7 +12,7 @@ enemy.src = "./ASSET/Enemies/Voidbreaker.png";
 const sword = new Image();
 sword.src = "./ASSET/Misc/Sword.png";
 
-export function setup(host, stack) {
+export function setup(host, stack, hardMode) {
   if (stack == 0) {
     const state = {
       phase: "idle",
@@ -20,11 +20,23 @@ export function setup(host, stack) {
       delay: 0,
 
       opacity: 0,
-      flash: 0,
       flashX: 0,
       flashY: 0,
+      flashX2: 0,
+      flashY2: 0,
 
       sword: {
+        active: false,
+        x: 0,
+        y: 0,
+        dx: 0,
+        dy: 0,
+        opacity: 1,
+        lockX: 0,
+        lockY: 0,
+        angle: 0,
+      },
+      sword2: {
         active: false,
         x: 0,
         y: 0,
@@ -93,6 +105,21 @@ export function setup(host, stack) {
           state.sword.dy = dir[1];
           state.sword.angle = Math.atan2(dir[1], dir[0]);
 
+          if (hardMode) {
+            let dir2;
+            do {
+              dir2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
+            } while (dir2[0] === dir[0] && dir2[1] === dir[1]);
+
+            state.sword2.active = true;
+            state.sword2.opacity = 1;
+            state.sword2.dx = dir2[0];
+            state.sword2.dy = dir2[1];
+            state.sword2.angle = Math.atan2(dir2[1], dir2[0]);
+          } else {
+            state.sword2.active = false;
+          }
+
           setVoidbreakerActive({
             start: performance.now(),
             count: stack + 1,
@@ -144,6 +171,46 @@ export function setup(host, stack) {
 
           if (t > 0.25 && t <= 0.5 && dist <= KILL_RADIUS) {
             death("Voidbreaker");
+          }
+        }
+
+        if (hardMode && state.sword2.active) {
+          if (state.timer <= 1.5) {
+            state.sword2.x = mouse.x + state.sword2.dx * 120;
+            state.sword2.y = mouse.y + state.sword2.dy * 120;
+          } else {
+            if (state.timer - dt <= 1.5) {
+              state.sword2.lockX = state.sword2.x;
+              state.sword2.lockY = state.sword2.y;
+              state.sword2.flash = 1;
+              state.flashX2 = state.sword2.x;
+              state.flashY2 = state.sword2.y;
+            }
+            const t = state.timer - 1.5;
+            const k = Math.min(1, t);
+            state.sword2.x =
+              state.sword2.lockX - state.sword2.dx * DASH_DIST * k;
+            state.sword2.y =
+              state.sword2.lockY - state.sword2.dy * DASH_DIST * k;
+            state.sword2.flash = Math.max(0, state.sword2.flash - dt);
+            state.sword2.opacity = 1 - k;
+
+            const FLASH_FOLLOW = 0.5;
+            state.flashX2 +=
+              (state.sword2.x - state.flashX2) * FLASH_FOLLOW * dt;
+            state.flashY2 +=
+              (state.sword2.y - state.flashY2) * FLASH_FOLLOW * dt;
+
+            const vx = mouse.x - state.sword2.lockX;
+            const vy = mouse.y - state.sword2.lockY;
+            if (
+              t > 0.25 &&
+              t <= 0.5 &&
+              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
+                KILL_RADIUS
+            ) {
+              death("Voidbreaker");
+            }
           }
         }
 
@@ -226,6 +293,41 @@ export function setup(host, stack) {
           ctx.restore();
         }
       }
+      if (state.sword2.active) {
+        ctx.globalAlpha = state.sword2.opacity;
+        ctx.save();
+        ctx.translate(Math.round(state.sword2.x), Math.round(state.sword2.y));
+        ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
+        ctx.drawImage(
+          sword,
+          Math.round(-SWORD_SIZE / 2),
+          Math.round(-SWORD_SIZE / 2),
+          SWORD_SIZE,
+          SWORD_SIZE,
+        );
+        ctx.restore();
+
+        if (state.sword2.flash > 0) {
+          ctx.save();
+          ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
+          ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
+          ctx.globalAlpha = 0.5 * state.sword2.flash;
+          ctx.fillStyle = "#b300ff";
+
+          ctx.beginPath();
+          ctx.moveTo(0, -FLASH_OUTER);
+          ctx.lineTo(FLASH_INNER, -FLASH_INNER);
+          ctx.lineTo(FLASH_OUTER, 0);
+          ctx.lineTo(FLASH_INNER, FLASH_INNER);
+          ctx.lineTo(0, FLASH_OUTER);
+          ctx.lineTo(-FLASH_INNER, FLASH_INNER);
+          ctx.lineTo(-FLASH_OUTER, 0);
+          ctx.lineTo(-FLASH_INNER, -FLASH_INNER);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+      }
 
       ctx.restore();
     }
@@ -250,10 +352,24 @@ export function setup(host, stack) {
         lockX: 0,
         lockY: 0,
       },
+      sword2: {
+        active: false,
+        x: 0,
+        y: 0,
+        dx: 0,
+        dy: 0,
+        opacity: 1,
+        lockX: 0,
+        lockY: 0,
+        angle: 0,
+      },
 
       flash: 0,
       flashX: 0,
       flashY: 0,
+      flash2: 0,
+      flashX2: 0,
+      flashY2: 0,
     };
 
     const DASH_DIST = 500;
@@ -295,6 +411,21 @@ export function setup(host, stack) {
       state.sword.angle = Math.atan2(dir[1], dir[0]);
 
       state.sword.opacity = 1;
+
+      if (hardMode) {
+        let dir2;
+        do {
+          dir2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
+        } while (dir2[0] === dir[0] && dir2[1] === dir[1]);
+
+        state.sword2.active = true;
+        state.sword2.opacity = 1;
+        state.sword2.dx = dir2[0];
+        state.sword2.dy = dir2[1];
+        state.sword2.angle = Math.atan2(dir2[1], dir2[0]);
+      } else {
+        state.sword2.active = false;
+      }
 
       state.phase = "attack";
       playSound(
@@ -346,6 +477,46 @@ export function setup(host, stack) {
 
           if (t > 0.25 && t <= 0.5 && perp <= KILL_RADIUS) {
             death("Voidbreaker");
+          }
+        }
+
+        if (hardMode && state.sword2.active) {
+          if (state.timer <= 1.5) {
+            state.sword2.x = mouse.x + state.sword2.dx * 120;
+            state.sword2.y = mouse.y + state.sword2.dy * 120;
+          } else {
+            if (state.timer - dt <= 1.5) {
+              state.sword2.lockX = state.sword2.x;
+              state.sword2.lockY = state.sword2.y;
+              state.flash2 = 1;
+              state.flashX2 = state.sword2.x;
+              state.flashY2 = state.sword2.y;
+            }
+            const t = state.timer - 1.5;
+            const k = Math.min(1, t);
+            state.sword2.x =
+              state.sword2.lockX - state.sword2.dx * DASH_DIST * k;
+            state.sword2.y =
+              state.sword2.lockY - state.sword2.dy * DASH_DIST * k;
+            state.flash2 = Math.max(0, state.flash2 - dt);
+            state.sword2.opacity = 1 - k;
+
+            const FLASH_FOLLOW = 0.5;
+            state.flashX2 +=
+              (state.sword2.x - state.flashX2) * FLASH_FOLLOW * dt;
+            state.flashY2 +=
+              (state.sword2.y - state.flashY2) * FLASH_FOLLOW * dt;
+
+            const vx = mouse.x - state.sword2.lockX;
+            const vy = mouse.y - state.sword2.lockY;
+            if (
+              t > 0.25 &&
+              t <= 0.5 &&
+              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
+                KILL_RADIUS
+            ) {
+              death("Voidbreaker");
+            }
           }
         }
 
@@ -401,6 +572,45 @@ export function setup(host, stack) {
         ctx.fill();
 
         ctx.restore();
+      }
+
+      if (state.sword2.active) {
+        ctx.globalAlpha = state.sword2.opacity;
+        ctx.save();
+        ctx.translate(Math.round(state.sword2.x), Math.round(state.sword2.y));
+        ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
+        ctx.drawImage(
+          sword,
+          Math.round(-SWORD_SIZE / 2),
+          Math.round(-SWORD_SIZE / 2),
+          SWORD_SIZE,
+          SWORD_SIZE,
+        );
+        ctx.restore();
+
+        if (state.flash2 > 0) {
+          ctx.save();
+          ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
+          ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
+          ctx.globalAlpha = 0.5 * state.flash2;
+          ctx.fillStyle = "#b300ff";
+
+          const rOuter = Math.round(27);
+          const rInner = Math.round(6);
+
+          ctx.beginPath();
+          ctx.moveTo(0, -rOuter);
+          ctx.lineTo(rInner, -rInner);
+          ctx.lineTo(rOuter, 0);
+          ctx.lineTo(rInner, rInner);
+          ctx.lineTo(0, rOuter);
+          ctx.lineTo(-rInner, rInner);
+          ctx.lineTo(-rOuter, 0);
+          ctx.lineTo(-rInner, -rInner);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
       }
     }
 
