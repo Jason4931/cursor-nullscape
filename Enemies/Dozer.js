@@ -26,6 +26,8 @@ export function setup(host, hardMode) {
     jitterX: 0,
     jitterY: 0,
     jitterRot: 0,
+
+    death: false,
   };
 
   function enterIdle() {
@@ -80,7 +82,8 @@ export function setup(host, hardMode) {
         state.lastMouseY = mouse._clientY;
       }
 
-      if (state.timer >= state.watchDuration) {
+      if (state.timer >= state.watchDuration && !state.death) {
+        state.death = true;
         death("Dozer");
         playSound("./ASSET/Sound/Enemies/Dozer/DozerJumpTextFull.wav");
         playSound("./ASSET/Sound/Enemies/Dozer/DozerDeathEffect.wav");
