@@ -256,7 +256,7 @@ let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
-let musicVolume = Number(localStorage.getItem("musicVolume")) ?? 10;
+let musicVolume = Number(localStorage.getItem("musicVolume")) ?? 30;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
@@ -420,7 +420,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
-  localStorage.setItem("musicVolume", "10");
+  localStorage.setItem("musicVolume", "30");
   showBorder = true;
   showFloor = true;
   showGrids = false;
@@ -430,7 +430,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   accurateCursor = false;
   sfxVolume = 50;
-  musicVolume = 10;
+  musicVolume = 30;
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
@@ -440,7 +440,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
-  document.getElementById("music-volume").value = 10;
+  document.getElementById("music-volume").value = 30;
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
@@ -597,9 +597,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -901,10 +900,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
