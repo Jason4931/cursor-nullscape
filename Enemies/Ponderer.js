@@ -21,7 +21,7 @@ export function setup(host, hardMode) {
 
     agro: false,
 
-    speed: hardMode ? 1260 : 840,
+    speed: hardMode ? 1000 : 840,
     size: 150,
 
     wobbleTime: 0,
