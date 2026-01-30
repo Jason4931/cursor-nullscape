@@ -750,14 +750,39 @@ const musicList = [
     src: "./ASSET/Sound/Music/Kenophobia.mp3",
   },
   {
+    start: 100,
+    end: 599,
+    src: "./ASSET/Sound/Music/Mart.ogg",
+  },
+  {
     start: 500,
     end: 999,
     src: "./ASSET/Sound/Music/Dimension.mp3",
   },
   {
+    start: 500,
+    end: 999,
+    src: "./ASSET/Sound/Music/Baby_Face.ogg",
+  },
+  {
     start: 100,
     end: 999,
     src: "./ASSET/Sound/Music/A-Delightful-New-Death.mp3",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Void_Explorer.ogg",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Seems_you_got_Telefragged.ogg",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Paradox_Trip.ogg",
   },
   {
     start: 1000,
@@ -775,14 +800,49 @@ const musicList = [
     src: "./ASSET/Sound/Music/Death-Defiance.mp3",
   },
   {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Conviction_(feat._SPIRIT_GARDEN_).ogg",
+  },
+  {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Congratulations,_you_beat_the_Tutorial.ogg",
+  },
+  {
+    start: 1000,
+    end: 1999, //+
+    src: "./ASSET/Sound/Music/Line_of_Fire.ogg",
+  },
+  {
+    start: 1000,
+    end: 1999, //+
+    src: "./ASSET/Sound/Music/FearOfShadow.ogg",
+  },
+  {
+    start: 1000,
+    end: 1999, //+
+    src: "./ASSET/Sound/Music/AudioInescapable.ogg",
+  },
+  {
     start: 2000,
-    end: 3999,
+    end: 3999, //+
     src: "./ASSET/Sound/Music/Void-Breaker.mp3",
   },
   {
     start: 2000,
-    end: 3999,
+    end: 3999, //+
     src: "./ASSET/Sound/Music/IMPERIAL-ENIGMA.mp3",
+  },
+  {
+    start: 2000,
+    end: 3999, //+
+    src: "./ASSET/Sound/Music/AudioDetermination.ogg",
+  },
+  {
+    start: 2000,
+    end: 3999, //+
+    src: "./ASSET/Sound/Music/AudioTHISWORLDWILLCOLLAPSE.ogg",
   },
   {
     start: 4000,
@@ -1983,7 +2043,9 @@ function loop(now) {
   // music
   if (!lobbyMusic) {
     lobbyMusic = playSound(
-      "./ASSET/Sound/Music/Your_New_Prision.mp3",
+      Math.random() < 0.6
+        ? "./ASSET/Sound/Music/Your_New_Prision.mp3"
+        : "./ASSET/Sound/Music/Nullscape.ogg",
       1,
       { start: 0, end: 1 },
       true,
