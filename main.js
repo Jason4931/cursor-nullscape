@@ -253,6 +253,7 @@ let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
+let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
@@ -266,6 +267,7 @@ document.getElementById("toggle-epileptic").checked = epilepticMode;
 document.getElementById("toggle-blindness").checked = blindnessMode;
 document.getElementById("toggle-reduced-motion").checked = reducedMotion;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
+document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("toggle-casual-mode").checked = casualMode;
 document.getElementById("toggle-hard-mode").checked = hardMode;
@@ -321,6 +323,9 @@ toggle("toggle-reduced-motion", (v) => {
 });
 toggle("toggle-drunk-camera", (v) => {
   drunkCamera = v;
+});
+toggle("toggle-tripmine-hell", (v) => {
+  tripmineHell = v;
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
@@ -417,6 +422,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("epileptic");
   localStorage.removeItem("blindness");
   localStorage.removeItem("drunk-camera");
+  localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
@@ -428,6 +434,7 @@ document.getElementById("reset-settings").onclick = () => {
   epilepticMode = false;
   blindnessMode = false;
   drunkCamera = false;
+  tripmineHell = false;
   accurateCursor = false;
   sfxVolume = 50;
   musicVolume = 30;
@@ -438,6 +445,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-epileptic").checked = false;
   document.getElementById("toggle-blindness").checked = false;
   document.getElementById("toggle-drunk-camera").checked = false;
+  document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
   document.getElementById("music-volume").value = 30;
@@ -1421,13 +1429,13 @@ function placeSuper(sx, sy, pattern) {
         const r = Math.random();
         let type = "gift";
         if (allGold) {
-          type = r < 0.9 ? "gold" : "tripmine";
+          type = r < (tripmineHell ? 0.1 : 0.9) ? "gold" : "tripmine";
         } else if (isTripmineEnabled) {
           if (r < 0.01)
             type = "gold"; // 1%
           else if (
             r <
-            Math.min(0.00009 * collectedCount - (hardMode ? 0.008 : 0.035), 0.1)
+            (tripmineHell ? Math.min(0.000245 * collectedCount - (hardMode ? 0.039 : 0.1125), 0.5) : Math.min(0.00009 * collectedCount - (hardMode ? 0.008 : 0.035), 0.1))
           )
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
