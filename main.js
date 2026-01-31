@@ -1513,10 +1513,33 @@ export function pickRandomPlaced4or5(minRadius = 0) {
     }
   }
 
-  if (candidates.length === 0) return { x: 0, y: 0 };
+  let pool = candidates;
+
+  if (pool.length === 0) {
+    // fallback: ignore radius, pick from any pattern that contains 4 or 5
+    for (const p of patternsState.values()) {
+      const pat = p.pattern;
+      if (!pat) continue;
+
+      for (let y = 0; y < pat.length; y++) {
+        for (let x = 0; x < pat[0].length; x++) {
+          if (pat[y][x] === 4 || pat[y][x] === 5) {
+            pool.push(p);
+            y = pat.length; // break outer
+            break;
+          }
+        }
+      }
+    }
+
+    // if STILL empty, just return mouse position instead of (0,0)
+    if (pool.length === 0) {
+      return { x: mouse.x, y: mouse.y };
+    }
+  }
 
   // pick random pattern
-  const pickedPattern = candidates[(Math.random() * candidates.length) | 0];
+  const pickedPattern = pool[(Math.random() * pool.length) | 0];
   const pat = pickedPattern.pattern;
 
   // collect all 4/5 coords in that pattern
@@ -1527,8 +1550,6 @@ export function pickRandomPlaced4or5(minRadius = 0) {
       if (v === 4 || v === 5) coords.push({ x, y, v });
     }
   }
-
-  if (coords.length === 0) return { x: 0, y: 0 }; // should not happen because we filtered, but safe
 
   const c = coords[(Math.random() * coords.length) | 0];
 
