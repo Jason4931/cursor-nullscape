@@ -1429,7 +1429,7 @@ function placeSuper(sx, sy, pattern) {
         const r = Math.random();
         let type = "gift";
         if (allGold) {
-          type = r < (tripmineHell ? 0.1 : 0.9) ? "gold" : "tripmine";
+          type = r < (tripmineHell ? 0.5 : 0.9) ? "gold" : "tripmine";
         } else if (isTripmineEnabled) {
           if (r < 0.01)
             type = "gold"; // 1%
