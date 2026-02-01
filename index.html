@@ -1,533 +1,548 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursor Nullscape</title>
+    <meta
+      name="description"
+      content="Play roblox nullscape with cursor (PC required)"
+    />
+    <meta
+      name="keywords"
+      content="roblox nullscape, cursor nullscape, nullscape game, pc game, online game"
+    />
+    <link rel="canonical" href="https://cursor-nullscape.vercel.app/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Jason4931, Nullscape Developers" />
+    <meta name="publisher" content="Jason4931" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <style>
+      #viewport {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cursor Nullscape</title>
-  <meta name="description" content="Play roblox nullscape with cursor (PC required)" />
-  <meta name="keywords" content="roblox nullscape, cursor nullscape, nullscape game, pc game, online game" />
-  <link rel="canonical" href="https://cursor-nullscape.vercel.app/" />
-  <meta name="robots" content="index, follow" />
-  <meta name="author" content="Jason4931, Nullscape Developers" />
-  <meta name="publisher" content="Jason4931" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <style>
-    #viewport {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: contain;
+        background-position: center;
+        background-blend-mode: multiply;
+        background-color: #000;
+        overflow: hidden;
+      }
 
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-size: contain;
-      background-position: center;
-      background-blend-mode: multiply;
-      background-color: #000;
-      overflow: hidden;
-    }
-
-    canvas .screen {
-      position: absolute;
-      left: 0;
-      top: 0;
-      background: #111;
-      transition: background-color 0.2s ease;
-      animation: bg 60s infinite;
-      box-shadow:
-        0 0 240px rgba(255, 0, 0, 0.5),
-        0 0 240px rgba(255, 0, 0, 0.5),
-        inset 0 0 240px rgba(255, 0, 0, 0.5);
-    }
-
-    canvas .entities {
-      position: absolute;
-      left: 0;
-      top: 0;
-      z-index: 1000;
-      box-shadow:
-        0 0 240px rgba(255, 255, 0, 0.5),
-        0 0 240px rgba(255, 255, 0, 0.5),
-        inset 0 0 240px rgba(255, 255, 0, 0.5);
-    }
-
-    canvas .entities-2 {
-      position: absolute;
-      left: 0;
-      top: 0;
-      z-index: 1000;
-      box-shadow:
-        0 0 240px rgba(255, 255, 0, 0.5),
-        0 0 240px rgba(255, 255, 0, 0.5),
-        inset 0 0 240px rgba(255, 255, 0, 0.5);
-    }
-
-    @keyframes bg {
-      0% {
+      canvas .screen {
+        position: absolute;
+        left: 0;
+        top: 0;
         background: #111;
+        transition: background-color 0.2s ease;
+        animation: bg 60s infinite;
+        box-shadow:
+          0 0 240px rgba(255, 0, 0, 0.5),
+          0 0 240px rgba(255, 0, 0, 0.5),
+          inset 0 0 240px rgba(255, 0, 0, 0.5);
       }
 
-      14% {
-        background: #100;
+      canvas .entities {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        box-shadow:
+          0 0 240px rgba(255, 255, 0, 0.5),
+          0 0 240px rgba(255, 255, 0, 0.5),
+          inset 0 0 240px rgba(255, 255, 0, 0.5);
       }
 
-      29% {
-        background: #010;
+      canvas .entities-2 {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        box-shadow:
+          0 0 240px rgba(255, 255, 0, 0.5),
+          0 0 240px rgba(255, 255, 0, 0.5),
+          inset 0 0 240px rgba(255, 255, 0, 0.5);
       }
 
-      43% {
-        background: #001;
+      @keyframes bg {
+        0% {
+          background: #111;
+        }
+
+        14% {
+          background: #100;
+        }
+
+        29% {
+          background: #010;
+        }
+
+        43% {
+          background: #001;
+        }
+
+        57% {
+          background: #110;
+        }
+
+        71% {
+          background: #101;
+        }
+
+        86% {
+          background: #011;
+        }
+
+        100% {
+          background: #111;
+        }
       }
 
-      57% {
-        background: #110;
+      @keyframes bg-epileptic-lol {
+        0% {
+          background: #888;
+        }
+
+        14% {
+          background: #800;
+        }
+
+        29% {
+          background: #080;
+        }
+
+        43% {
+          background: #008;
+        }
+
+        57% {
+          background: #880;
+        }
+
+        71% {
+          background: #808;
+        }
+
+        86% {
+          background: #088;
+        }
+
+        100% {
+          background: #888;
+        }
       }
 
-      71% {
-        background: #101;
+      #counter {
+        position: absolute;
+        left: 1vw;
+        bottom: 1vw;
+        margin: 0;
+        color: #fff;
+        font-family: monospace;
+        font-size: 1.5vw;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1000;
+        transition: color 1.5s ease;
       }
 
-      86% {
-        background: #011;
+      #lvl {
+        position: absolute;
+        left: 1vw;
+        bottom: 3vw;
+        margin: 0;
+        color: #fff;
+        font-family: monospace;
+        font-size: 1vw;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1000;
+        transition: color 1.5s ease;
       }
 
-      100% {
+      #settings-btn {
+        position: absolute;
+        right: 1vw;
+        bottom: 1vw;
+        font-size: 4vw;
+        cursor: pointer;
+        user-select: none;
+        z-index: 20;
+        transition: opacity 1.5s ease;
+        filter: invert();
+      }
+
+      #settings-panel {
+        position: absolute;
+        right: 1vw;
+        bottom: 6vw;
+        padding: 1vw 1vw;
+        font-size: 1vw;
+        width: 11vw;
+        background: rgba(0, 0, 0, 0.85);
+        border: 0.1vw solid #333;
+        color: white;
+        font-family: monospace;
+        display: none;
+        z-index: 20;
+      }
+
+      #graphics-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 6vw;
+        height: 0.4vw;
+        background: #333;
+        border-radius: 1vw;
+        outline: none;
+      }
+
+      #graphics-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      #graphics-slider::-moz-range-thumb {
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .setting-row {
+        margin-bottom: 0.6vw;
+      }
+
+      .setting-row label {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      #settings-panel hr {
+        border: none;
+        border-top: 0.1vw solid #333;
+        margin: 0.8vw 0.1vw;
+      }
+
+      .range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 6vw;
+        height: 0.4vw;
+        background: #333;
+        border-radius: 1vw;
+        outline: none;
+      }
+
+      .range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .range::-moz-range-thumb {
+        width: 1vw;
+        height: 1vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .toggle {
+        position: relative;
+        width: 2.6vw;
+        height: 1.3vw;
+      }
+
+      .toggle input {
+        display: none;
+      }
+
+      .slider-toggle,
+      .slider-toggle-red {
+        position: absolute;
+        cursor: pointer;
+        background: #333;
+        border-radius: 2vw;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: 0.2s;
+      }
+
+      .slider-toggle::before,
+      .slider-toggle-red::before {
+        content: "";
+        position: absolute;
+        height: 1vw;
+        width: 1vw;
+        left: 0.15vw;
+        bottom: 0.15vw;
+        background: white;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+
+      .toggle input:checked + .slider-toggle {
+        background: #4caf50;
+      }
+
+      .toggle input:checked + .slider-toggle-red {
+        background: #f00;
+      }
+
+      .toggle input:checked + .slider-toggle::before,
+      .toggle input:checked + .slider-toggle-red::before {
+        transform: translateX(1.3vw);
+      }
+
+      .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.6vw;
+        gap: 0.5vw;
+      }
+
+      #reset-settings {
         background: #111;
-      }
-    }
-
-    @keyframes bg-epileptic-lol {
-      0% {
-        background: #888;
-      }
-
-      14% {
-        background: #800;
-      }
-
-      29% {
-        background: #080;
+        color: #fff;
+        border: 0.1vw solid #444;
+        padding: 0.6vw 0;
+        font-family: monospace;
+        font-size: 0.9vw;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease,
+          border-color 0.2s;
       }
 
-      43% {
-        background: #008;
+      #reset-settings:hover {
+        background: #200;
+        border-color: #800;
       }
 
-      57% {
-        background: #880;
+      #reset-settings:active {
+        transform: scale(0.97);
+        background: #400;
       }
 
-      71% {
-        background: #808;
+      #credit {
+        background: #111;
+        color: #fff;
+        border: 0.1vw solid #444;
+        padding: 0.6vw 3.7vw;
+        font-family: monospace;
+        font-size: 0.9vw;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease,
+          border-color 0.2s;
       }
 
-      86% {
-        background: #088;
+      #credit:hover {
+        background: #220;
+        border-color: #880;
       }
 
-      100% {
-        background: #888;
-      }
-    }
-
-    #counter {
-      position: absolute;
-      left: 1vw;
-      bottom: 1vw;
-      margin: 0;
-      color: #fff;
-      font-family: monospace;
-      font-size: 1.5vw;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1000;
-      transition: color 1.5s ease;
-    }
-
-    #lvl {
-      position: absolute;
-      left: 1vw;
-      bottom: 3vw;
-      margin: 0;
-      color: #fff;
-      font-family: monospace;
-      font-size: 1vw;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1000;
-      transition: color 1.5s ease;
-    }
-
-    #settings-btn {
-      position: absolute;
-      right: 1vw;
-      bottom: 1vw;
-      font-size: 4vw;
-      cursor: pointer;
-      user-select: none;
-      z-index: 20;
-      transition: opacity 1.5s ease;
-      filter: invert();
-    }
-
-    #settings-panel {
-      position: absolute;
-      right: 1vw;
-      bottom: 6vw;
-      padding: 1vw 1vw;
-      font-size: 1vw;
-      width: 11vw;
-      background: rgba(0, 0, 0, 0.85);
-      border: 0.1vw solid #333;
-      color: white;
-      font-family: monospace;
-      display: none;
-      z-index: 20;
-    }
-
-    #graphics-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 6vw;
-      height: 0.4vw;
-      background: #333;
-      border-radius: 1vw;
-      outline: none;
-    }
-
-    #graphics-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 1vw;
-      height: 1vw;
-      background: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    #graphics-slider::-moz-range-thumb {
-      width: 1vw;
-      height: 1vw;
-      background: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .setting-row {
-      margin-bottom: 0.6vw;
-    }
-
-    .setting-row label {
-      cursor: pointer;
-      user-select: none;
-    }
-
-    #settings-panel hr {
-      border: none;
-      border-top: 0.1vw solid #333;
-      margin: 0.8vw 0.1vw;
-    }
-
-    .range {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 6vw;
-      height: 0.4vw;
-      background: #333;
-      border-radius: 1vw;
-      outline: none;
-    }
-
-    .range::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 1vw;
-      height: 1vw;
-      background: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .range::-moz-range-thumb {
-      width: 1vw;
-      height: 1vw;
-      background: #fff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .toggle {
-      position: relative;
-      width: 2.6vw;
-      height: 1.3vw;
-    }
-
-    .toggle input {
-      display: none;
-    }
-
-    .slider-toggle,
-    .slider-toggle-red {
-      position: absolute;
-      cursor: pointer;
-      background: #333;
-      border-radius: 2vw;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      transition: 0.2s;
-    }
-
-    .slider-toggle::before,
-    .slider-toggle-red::before {
-      content: "";
-      position: absolute;
-      height: 1vw;
-      width: 1vw;
-      left: 0.15vw;
-      bottom: 0.15vw;
-      background: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
-
-    .toggle input:checked+.slider-toggle {
-      background: #4caf50;
-    }
-
-    .toggle input:checked+.slider-toggle-red {
-      background: #f00;
-    }
-
-    .toggle input:checked+.slider-toggle::before,
-    .toggle input:checked+.slider-toggle-red::before {
-      transform: translateX(1.3vw);
-    }
-
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.6vw;
-      gap: 0.5vw;
-    }
-
-    #reset-settings {
-      background: #111;
-      color: #fff;
-      border: 0.1vw solid #444;
-      padding: 0.6vw 0;
-      font-family: monospace;
-      font-size: 0.9vw;
-      cursor: pointer;
-      transition:
-        background 0.2s ease,
-        transform 0.1s ease,
-        border-color 0.2s;
-    }
-
-    #reset-settings:hover {
-      background: #200;
-      border-color: #800;
-    }
-
-    #reset-settings:active {
-      transform: scale(0.97);
-      background: #400;
-    }
-
-    #credit {
-      background: #111;
-      color: #fff;
-      border: 0.1vw solid #444;
-      padding: 0.6vw 3.7vw;
-      font-family: monospace;
-      font-size: 0.9vw;
-      cursor: pointer;
-      text-decoration: none;
-      transition:
-        background 0.2s ease,
-        transform 0.1s ease,
-        border-color 0.2s;
-    }
-
-    #credit:hover {
-      background: #220;
-      border-color: #880;
-    }
-
-    #credit:active {
-      transform: scale(0.97);
-      background: #440;
-    }
-
-    #death-screen {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: none;
-      z-index: 999;
-    }
-
-    #intro-screen {
-      position: fixed;
-      inset: 0;
-      background: #111;
-      display: block;
-      z-index: 999;
-    }
-
-    #death-image {
-      position: absolute;
-      top: 50%;
-      left: 25%;
-      transform: translate(-50%, -50%);
-      max-width: 30vw;
-      max-height: 60vh;
-      opacity: 0;
-      transition: opacity 2.4s ease;
-    }
-
-    #death-text {
-      position: absolute;
-      top: 1.5vw;
-      left: 1vw;
-      transform: translateY(-50%);
-      color: white;
-      font-family: monospace;
-      font-size: 1vw;
-      white-space: nowrap;
-    }
-
-    #death-input {
-      position: absolute;
-      top: 50%;
-      left: 42.5%;
-      width: 50vw;
-      transform: translateY(-50%);
-      color: white;
-      background: transparent;
-      border: none;
-      outline: none;
-      font-family: monospace;
-      font-size: 5vw;
-      white-space: nowrap;
-    }
-
-    #retry-btn {
-      position: absolute;
-      right: 1vw;
-      bottom: 1vw;
-      font-size: 4vw;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0;
-      pointer-events: none;
-      filter: invert();
-      transition: opacity 2.4s ease;
-      animation: spin 4s linear infinite;
-    }
-
-    body.player-dead {
-      filter: grayscale(1) brightness(0.6);
-      transition: filter 0.2s ease;
-    }
-
-    body.player-dead.fade-out {
-      filter: grayscale(0) brightness(1);
-      transition: filter 0.5s ease;
-    }
-
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
+      #credit:active {
+        transform: scale(0.97);
+        background: #440;
       }
 
-      to {
-        transform: rotate(360deg);
+      #death-screen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: none;
+        z-index: 999;
       }
-    }
 
-    #entity-panel {
-      position: absolute;
-      top: 0;
-      left: 25%;
-      transform: translateX(-50%);
-      width: 50%;
-      min-height: 4vw;
-      background: #0a3cff80;
-      border: 0.1vw solid #0a3cff;
-      border-top: none;
-      color: #fff;
-      transform: translateY(-100%);
-      transition: transform 0.35s ease;
-      z-index: 1000;
-      padding: 0.6vw 1vw;
-      box-sizing: border-box;
-    }
+      #intro-screen {
+        position: fixed;
+        inset: 0;
+        background: #111;
+        display: block;
+        z-index: 999;
+      }
 
-    #entity-panel.open {
-      transform: translateY(0);
-    }
+      #death-image {
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        max-width: 30vw;
+        max-height: 60vh;
+        opacity: 0;
+        transition: opacity 2.4s ease;
+      }
 
-    #entity-panel-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6vw;
-    }
+      #death-text {
+        position: absolute;
+        top: 1.5vw;
+        left: 1vw;
+        transform: translateY(-50%);
+        color: white;
+        font-family: monospace;
+        font-size: 1vw;
+        white-space: nowrap;
+      }
 
-    .entity-slot {
-      position: relative;
-      width: 3vw;
-      height: 3vw;
-    }
+      #death-input {
+        position: absolute;
+        top: 50%;
+        left: 42.5%;
+        width: 50vw;
+        transform: translateY(-50%);
+        color: white;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: monospace;
+        font-size: 5vw;
+        white-space: nowrap;
+      }
 
-    .entity-slot img {
-      width: 100%;
-      height: 100%;
-      image-rendering: pixelated;
-    }
+      #retry-btn {
+        position: absolute;
+        right: 1vw;
+        bottom: 1vw;
+        font-size: 4vw;
+        cursor: pointer;
+        user-select: none;
+        opacity: 0;
+        pointer-events: none;
+        filter: invert();
+        transition: opacity 2.4s ease;
+        animation: spin 4s linear infinite;
+      }
 
-    .entity-count {
-      position: absolute;
-      right: -0.3vw;
-      bottom: -0.3vw;
-      background: #00000080;
-      color: #fff;
-      font-family: monospace;
-      font-size: 0.8vw;
-      padding: 0.1vw 0.3vw;
-      border-radius: 0.3vw;
-    }
+      body.player-dead {
+        filter: grayscale(1) brightness(0.6);
+        transition: filter 0.2s ease;
+      }
 
-    #entity-panel-count {
-      position: absolute;
-      top: 1vw;
-      right: -8.25vw;
-      transform: translateY(-50%);
-      margin: 0;
-      white-space: nowrap;
-      font-size: 1vw;
-      font-family: monospace;
-      opacity: 50%;
-    }
-  </style>
-  <meta name="google-site-verification" content="uoM9zl7asfE0uft1FwDiV5z1ZEQKeezhEW71Hj0f7iY" />
-</head>
+      body.player-dead.fade-out {
+        filter: grayscale(0) brightness(1);
+        transition: filter 0.5s ease;
+      }
 
-<body>
-  <div id="viewport">
-    <input id="spawn-input" type="text" placeholder="Type here..." style="
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      #entity-panel {
+        position: absolute;
+        top: 0;
+        left: 25%;
+        transform: translateX(-50%);
+        width: 50%;
+        min-height: 4vw;
+        background: #0a3cff80;
+        border: 0.1vw solid #0a3cff;
+        border-top: none;
+        color: #fff;
+        transform: translateY(-100%);
+        transition: transform 0.35s ease;
+        z-index: 1000;
+        padding: 0.6vw 1vw;
+        box-sizing: border-box;
+      }
+
+      #entity-panel.open {
+        transform: translateY(0);
+      }
+
+      #entity-panel-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6vw;
+      }
+
+      .entity-slot {
+        position: relative;
+        width: 3vw;
+        height: 3vw;
+      }
+
+      .entity-slot img {
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+
+      .entity-count {
+        position: absolute;
+        right: -0.3vw;
+        bottom: -0.3vw;
+        background: #00000080;
+        color: #fff;
+        font-family: monospace;
+        font-size: 0.8vw;
+        padding: 0.1vw 0.3vw;
+        border-radius: 0.3vw;
+      }
+
+      #entity-panel-count {
+        position: absolute;
+        top: 1vw;
+        right: -8.25vw;
+        transform: translateY(-50%);
+        margin: 0;
+        white-space: nowrap;
+        font-size: 1vw;
+        font-family: monospace;
+        opacity: 50%;
+      }
+    </style>
+    <meta
+      name="google-site-verification"
+      content="uoM9zl7asfE0uft1FwDiV5z1ZEQKeezhEW71Hj0f7iY"
+    />
+  </head>
+
+  <body>
+    <div id="viewport">
+      <input
+        id="spawn-input"
+        type="text"
+        placeholder="Type here..."
+        style="
           position: absolute;
           top: 1vw;
           left: 1vw;
@@ -537,129 +552,161 @@
           font-family: monospace;
           display: none;
           z-index: 2000;
-        " autocomplete="off" />
-    <div id="entity-panel">
-      <div id="entity-panel-content"></div>
-      <p id="entity-panel-count">EntityCount: 0</p>
+        "
+        autocomplete="off"
+      />
+      <div id="entity-panel">
+        <div id="entity-panel-content"></div>
+        <p id="entity-panel-count">EntityCount: 0</p>
+      </div>
+      <canvas id="screen" width="1920" height="1200"></canvas>
+      <canvas id="entities" width="1920" height="1200"></canvas>
+      <canvas id="entities-2" width="1920" height="1200"></canvas>
+      <p id="counter">Collected: 0</p>
+      <p id="lvl">Lvl 0</p>
+      <div id="settings-btn">⚙</div>
+      <div id="settings-panel">
+        <div class="setting-row">
+          <span>Graphics</span>
+          <input
+            id="graphics-slider"
+            class="range"
+            type="range"
+            min="0"
+            max="3"
+            step="1"
+          />
+        </div>
+        <div class="setting-row">
+          <span>Show grids</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-grids" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show floor</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-floor" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show border</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-border" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>SFX Volume</span>
+          <input
+            id="sfx-volume"
+            class="range"
+            type="range"
+            min="0"
+            max="100"
+            step="10"
+            value="50"
+          />
+        </div>
+        <div class="setting-row">
+          <span>Music Volume</span>
+          <input
+            id="music-volume"
+            class="range"
+            type="range"
+            min="0"
+            max="100"
+            step="10"
+            value="30"
+          />
+        </div>
+        <div class="setting-row">
+          <span>Reduced motion</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-reduced-motion" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span style="font-size: 0.95vw">Accurate Cursor</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-accurate-cursor" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <hr />
+        <div class="setting-row">
+          <span style="color: #0f0">Casual Mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-casual-mode" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row" id="beaten-only">
+          <span style="color: #f00"><b>HARD MODE</b></span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-hard-mode" />
+            <span class="slider-toggle-red"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Tripmine Hell</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-tripmine-hell" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <hr />
+        <div class="setting-row">
+          <span>Epileptic mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-epileptic" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Blindness</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-blindness" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Drunk camera</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-drunk-camera" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <hr />
+        <div class="setting-row">
+          <button
+            id="reset-settings"
+            style="width: 100%; font-family: monospace"
+          >
+            Reset
+          </button>
+        </div>
+        <div class="setting-row" style="margin: 0">
+          <a
+            href="./credit.html"
+            id="credit"
+            style="width: 100%; font-family: monospace"
+          >
+            Credits
+          </a>
+        </div>
+      </div>
+      <div id="intro-screen"></div>
+      <div id="death-screen">
+        <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
+        <div id="death-text">You died</div>
+        <input type="text" id="death-input" />
+        <div id="retry-btn">↻</div>
+      </div>
     </div>
-    <canvas id="screen" width="1920" height="1200"></canvas>
-    <canvas id="entities" width="1920" height="1200"></canvas>
-    <canvas id="entities-2" width="1920" height="1200"></canvas>
-    <p id="counter">Collected: 0</p>
-    <p id="lvl">Lvl 0</p>
-    <div id="settings-btn">⚙</div>
-    <div id="settings-panel">
-      <div class="setting-row">
-        <span>Graphics</span>
-        <input id="graphics-slider" class="range" type="range" min="0" max="3" step="1" />
-      </div>
-      <div class="setting-row">
-        <span>Show grids</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-grids" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>Show floor</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-floor" checked />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>Show border</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-border" checked />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>SFX Volume</span>
-        <input id="sfx-volume" class="range" type="range" min="0" max="100" step="10" value="50" />
-      </div>
-      <div class="setting-row">
-        <span>Music Volume</span>
-        <input id="music-volume" class="range" type="range" min="0" max="100" step="10" value="30" />
-      </div>
-      <div class="setting-row">
-        <span>Reduced motion</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-reduced-motion" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span style="font-size: 0.95vw">Accurate Cursor</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-accurate-cursor" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span style="color: #0f0">Casual Mode</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-casual-mode" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row" id="beaten-only">
-        <span style="color: #f00"><b>HARD MODE</b></span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-hard-mode" />
-          <span class="slider-toggle-red"></span>
-        </label>
-      </div>
-      <hr />
-      <div class="setting-row">
-        <span>Epileptic mode</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-epileptic" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>Blindness</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-blindness" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>Drunk camera</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-drunk-camera" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <div class="setting-row">
-        <span>Tripmine Hell</span>
-        <label class="toggle">
-          <input type="checkbox" id="toggle-tripmine-hell" />
-          <span class="slider-toggle"></span>
-        </label>
-      </div>
-      <hr />
-      <div class="setting-row">
-        <button id="reset-settings" style="width: 100%; font-family: monospace">
-          Reset
-        </button>
-      </div>
-      <div class="setting-row" style="margin: 0">
-        <a href="./credit.html" id="credit" style="width: 100%; font-family: monospace">
-          Credits
-        </a>
-      </div>
-    </div>
-    <div id="intro-screen"></div>
-    <div id="death-screen">
-      <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
-      <div id="death-text">You died</div>
-      <input type="text" id="death-input" />
-      <div id="retry-btn">↻</div>
-    </div>
-  </div>
-  <script type="module" src="./main.js"></script>
-</body>
-
+    <script type="module" src="./main.js"></script>
+  </body>
 </html>
