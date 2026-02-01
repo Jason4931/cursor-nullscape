@@ -3,6 +3,8 @@ import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
+const enemy2 = new Image();
+enemy2.src = "./ASSET/Enemies/Skull.png";
 
 export function setup(host, hardMode) {
   const state = {
@@ -23,6 +25,7 @@ export function setup(host, hardMode) {
     shootDuration: 0,
   };
 
+  const Enemy = Math.random() < 0.9 ? enemy : enemy2;
   const DASH_RADIUS = hardMode ? 320 : 640;
   const DASH_TIME = 1.5;
   const IDLE_SHOOT_TIME = 0.5;
@@ -168,7 +171,7 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity;
 
     ctx.drawImage(
-      enemy,
+      Enemy,
       Math.round(state.x - 50),
       Math.round(state.y - 50),
       100,
