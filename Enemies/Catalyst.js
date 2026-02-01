@@ -1,8 +1,13 @@
 import { death, mouse } from "../entityHost.js";
 import { despawnCatalyst, moveCamera } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Catalyst/Layer 1.png";
+const layers = [];
+for (let i = 1; i <= 8; i++) {
+  1;
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
+  layers.push(img);
+}
 
 export let catalystPos = { x: 0, y: 0 };
 export function setup(host) {
@@ -12,8 +17,8 @@ export function setup(host) {
     x: 0,
     y: 0,
 
-    layer: 1,
-    trueLayer: 1,
+    layer: 0,
+    enemy: layers[0],
     timer: 0,
     totalTimer: 0,
     nextScream: 14 + Math.random(),
@@ -89,9 +94,8 @@ export function setup(host) {
 
     catalystPos = { x: state.x, y: state.y };
     state.layer++;
-    if (state.layer > 23) state.layer = 0;
-    state.trueLayer = Math.floor(state.layer / 3) + 1;
-    enemy.src = `./ASSET/Enemies/Catalyst/Layer ${state.trueLayer}.png`;
+    if (state.layer > 8) state.layer = 1;
+    state.enemy = layers[state.layer - 1];
 
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
@@ -281,7 +285,7 @@ export function setup(host) {
     }
 
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(state.x - 100),
       Math.round(state.y - 100),
       200,
