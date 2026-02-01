@@ -327,6 +327,11 @@ toggle("toggle-drunk-camera", (v) => {
 });
 toggle("toggle-tripmine-hell", (v) => {
   tripmineHell = v;
+  if (tripmineHell) {
+    casualMode = false;
+    document.getElementById("toggle-casual-mode").checked = false;
+    localStorage.setItem("casual-mode", false);
+  }
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
@@ -346,6 +351,9 @@ toggle("toggle-casual-mode", (v) => {
     hardMode = false;
     document.getElementById("toggle-hard-mode").checked = false;
     localStorage.setItem("hard-mode", false);
+    tripmineHell = false;
+    document.getElementById("toggle-tripmine-hell").checked = false;
+    localStorage.setItem("tripmine-hell", false);
   }
 });
 toggle("toggle-hard-mode", (v) => {
