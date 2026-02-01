@@ -214,7 +214,7 @@ export function setup(host, stack, hardMode) {
           }
         }
 
-        if (state.timer >= 2.5 * voidbreakerCount) {
+        if (state.timer >= 2 * voidbreakerCount + 0.5) {
           state.sword.active = false;
           state.phase = "ending";
           state.timer = 0;
