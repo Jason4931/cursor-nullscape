@@ -59,7 +59,7 @@ const entityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
-let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
+export let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
@@ -74,6 +74,7 @@ let allGold = false;
 let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
+let disableKnockback = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
@@ -556,6 +557,12 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "disableknockback") {
+    disableKnockback = !disableKnockback;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
     setInterval(() => {
@@ -605,8 +612,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -908,10 +916,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -944,7 +952,7 @@ export function getCameraPos() {
   return { x: -camX, y: -camY };
 }
 export function moveCamera(x, y, instant = false) {
-  if (disableCollect) return;
+  if (disableCollect || disableKnockback) return;
   if (instant) {
     camX += x;
     camY += y;
@@ -980,7 +988,11 @@ function registerEntitySpawn(name, imageSrc) {
   }
   document.getElementById("entity-panel-count").textContent =
     `EntityCount: ${total}`;
-  if (total >= 10) {
+  if (total >= 100) {
+    document.getElementById("entity-panel-count").style.right = "-9.35vw";
+    document.getElementById("entity-panel-count").textContent =
+      `EntityCount: 100`;
+  } else if (total >= 10) {
     document.getElementById("entity-panel-count").style.right = "-8.8vw";
   }
   renderPanel();
@@ -1204,14 +1216,14 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 /* ===== ALTARS ===== */
 function ENTITY_SPAWN() {
   const unlocked = ENTITY_POOL.filter((e) => {
-    if (collectedCount < e.start) return false;
+    if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
     if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
     return true;
   });
 
   if (unlocked.length > 0) {
     let pick;
-    if (collectedCount >= 5000 && !spawnedCatalyst) {
+    if (collectedCount >= (hardMode ? 10000 : 5000) && !spawnedCatalyst) {
       spawnedCatalyst = true;
       pick = {
         name: "Catalyst",
@@ -1219,7 +1231,7 @@ function ENTITY_SPAWN() {
         start: 5000,
         src: "./ASSET/Enemies/CatalystIcon.png",
       };
-    } else if (collectedCount >= 5500 && !spawnedBeacon) {
+    } else if (collectedCount >= (hardMode ? 11000 : 5500) && !spawnedBeacon) {
       spawnedBeacon = true;
       pick = {
         name: "Beacon",
@@ -1281,7 +1293,7 @@ function ENTITY_SPAWN() {
     }
     if (pick.src) registerEntitySpawn(pick.name, pick.src);
     if (
-      collectedCount >= (casualMode ? 1500 : 1000) &&
+      collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
       !isSeamineEnabled &&
       !disablespawn
     ) {
@@ -1298,14 +1310,17 @@ function ENTITY_SPAWN() {
 export function activatePurgatory() {
   if (!disableCollect) actualCollectedCount += 1000;
   if (actualCollectedCount > 10000) actualCollectedCount = 10000;
-  collectedCount = Math.floor(actualCollectedCount / 2);
-  counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+  collectedCount = hardMode
+    ? actualCollectedCount
+    : Math.floor(actualCollectedCount / 2);
+  counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
-    latestCollectedCount >= 5000 && latestCollectedCount <= 5500
+    latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+    latestCollectedCount <= (hardMode ? 11000 : 5500)
       ? `lvl 100`
-      : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
+      : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
-  for (let i = 0; i < 5; i++) ENTITY_SPAWN();
+  for (let i = 0; i < (hardMode ? 10 : 5); i++) ENTITY_SPAWN();
 }
 let alreadyBenefitChanced = [false, false];
 export function activateChance() {
@@ -1321,12 +1336,15 @@ export function activateChance() {
       // - payment 1000
       actualCollectedCount -= 1000;
       // if (actualCollectedCount < 0) actualCollectedCount = 0;
-      collectedCount = Math.floor(actualCollectedCount / 2);
-      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+      collectedCount = hardMode
+        ? actualCollectedCount
+        : Math.floor(actualCollectedCount / 2);
+      counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
-        latestCollectedCount >= 5000 && latestCollectedCount <= 5500
+        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
-          : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
+          : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       break;
     case 1:
       // - random enemy 4
@@ -1353,12 +1371,15 @@ export function activateChance() {
 export function activateProtection() {
   if (actualCollectedCount >= 1000 && shieldActive === false) {
     actualCollectedCount -= 1000;
-    collectedCount = Math.floor(actualCollectedCount / 2);
-    counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+    collectedCount = hardMode
+      ? actualCollectedCount
+      : Math.floor(actualCollectedCount / 2);
+    counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
-      latestCollectedCount >= 5000 && latestCollectedCount <= 5500
+      latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+      latestCollectedCount <= (hardMode ? 11000 : 5500)
         ? `lvl 100`
-        : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
+        : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     activateShield();
     return true;
   }
@@ -1418,7 +1439,7 @@ function placeSuper(sx, sy, pattern) {
       const isTripmineEnabled =
         !disableTripmine &&
         !casualMode &&
-        (hardMode ? collectedCount > 200 : collectedCount > 500);
+        (hardMode ? collectedCount > 400 : collectedCount > 500);
 
       if (
         pattern[y][x] === 2 ||
@@ -1435,7 +1456,19 @@ function placeSuper(sx, sy, pattern) {
             type = "gold"; // 1%
           else if (
             r <
-            (tripmineHell ? Math.min(0.000245 * collectedCount - (hardMode ? 0.039 : 0.1125), 0.5) : Math.min(0.00009 * collectedCount - (hardMode ? 0.008 : 0.035), 0.1))
+            (tripmineHell
+              ? Math.min(
+                  hardMode
+                    ? 0.0001225 * collectedCount - 0.039
+                    : 0.000245 * collectedCount - 0.1125,
+                  0.5,
+                )
+              : Math.min(
+                  hardMode
+                    ? 0.000045 * collectedCount - 0.008
+                    : 0.00009 * collectedCount - 0.035,
+                  0.1,
+                ))
           )
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
@@ -1865,12 +1898,15 @@ function updateCamera() {
 
       const value = (g.golden ? 5 : 1) * giftMultiplier;
       if (!disableCollect) actualCollectedCount += value;
-      collectedCount = Math.floor(actualCollectedCount / 2);
-      counterEl.textContent = `Collected: ${collectedCount >= 5000 && collectedCount <= 5500 ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
+      collectedCount = hardMode
+        ? actualCollectedCount
+        : Math.floor(actualCollectedCount / 2);
+      counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5000) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
-        latestCollectedCount >= 5000 && latestCollectedCount <= 5500
+        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
-          : `Lvl ${Math.floor(latestCollectedCount / 50)}`;
+          : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
@@ -1878,7 +1914,7 @@ function updateCamera() {
         lastEntitySpawnAt = collectedCount;
 
         const unlocked = ENTITY_POOL.filter((e) => {
-          if (collectedCount < e.start) return false;
+          if (collectedCount < e.start * (hardMode ? 2 : 1) - 100) return false;
           if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
           return true;
         });
@@ -1887,22 +1923,28 @@ function updateCamera() {
           spawnedVoid = true;
           spawnVoid(entityHost);
         }
-        if (collectedCount >= 300 && !spawnedAltar[0]) {
+        if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
           spawnAltarChance(entityHost);
           spawnAltarProtection(entityHost);
         }
-        if (collectedCount >= 600 && !spawnedAltar[1]) {
+        if (collectedCount >= (hardMode ? 1200 : 600) && !spawnedAltar[1]) {
           spawnedAltar[1] = true;
           spawnAltarPurgatory(entityHost);
         }
 
         if (
           unlocked.length > 0 &&
-          (!disablespawn || (collectedCount >= 5500 && collectedCount <= 5599))
+          (!disablespawn ||
+            (collectedCount >= (hardMode ? 11000 : 5500) &&
+              collectedCount <= (hardMode ? 11199 : 5599)))
         ) {
           let pick;
-          if (collectedCount >= 5000 && !spawnedCatalyst && !disablespawn) {
+          if (
+            collectedCount >= (hardMode ? 10000 : 5000) &&
+            !spawnedCatalyst &&
+            !disablespawn
+          ) {
             spawnedCatalyst = true;
             pick = {
               name: "Catalyst",
@@ -1910,7 +1952,10 @@ function updateCamera() {
               start: 5000,
               src: "./ASSET/Enemies/CatalystIcon.png",
             };
-          } else if (collectedCount >= 5500 && !spawnedBeacon) {
+          } else if (
+            collectedCount >= (hardMode ? 11000 : 5500) &&
+            !spawnedBeacon
+          ) {
             spawnedBeacon = true;
             pick = {
               name: "Beacon",
@@ -1976,7 +2021,7 @@ function updateCamera() {
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (
-            collectedCount >= (casualMode ? 1500 : 1000) &&
+            collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
             !isSeamineEnabled &&
             !disablespawn
           ) {
@@ -2246,7 +2291,7 @@ function loop(now) {
   }
 
   //holy beacon
-  if (collectedCount >= 5500 && !transformAllGift) {
+  if (collectedCount >= (hardMode ? 11000 : 5500) && !transformAllGift) {
     transformAllGift = true;
     allGold = true;
     giftPositions.forEach((gift) => {
