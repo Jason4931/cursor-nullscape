@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, getCameraPos } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/NIL.png";
@@ -86,7 +86,7 @@ export function setup(host) {
 
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
-        if (Math.hypot(dx0, dy0) <= state.size * 0.25) {
+        if (Math.hypot(dx0, dy0) <= state.size * 0.5) {
           playSound("./ASSET/Sound/Enemies/NIL/Nil-kill.mp3");
           death("NIL");
           return;
@@ -224,6 +224,59 @@ export function setup(host) {
       Math.round(state.size),
       Math.round(state.size),
     );
+
+    const dist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
+
+    const maxRadius = 500;
+
+    if (dist <= maxRadius) {
+      const t = 1 - dist / maxRadius; // 0 → 1 as closer
+      const opacity = t * 0.6; // max intensity (adjust if too strong)
+
+      const cam = getCameraPos();
+
+      const screenX = cam.x;
+      const screenY = cam.y;
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const border = 100; // thickness
+
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      const color = "0,128,255"; // rgb for #0080ff
+
+      // TOP (fade downward)
+      let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
+      grad.addColorStop(0, `rgba(${color},1)`);
+      grad.addColorStop(1, `rgba(${color},0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX, screenY, w, border);
+
+      // BOTTOM (fade upward)
+      grad = ctx.createLinearGradient(0, screenY + h - border, 0, screenY + h);
+      grad.addColorStop(0, `rgba(${color},0)`);
+      grad.addColorStop(1, `rgba(${color},1)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX, screenY + h - border, w, border);
+
+      // LEFT (fade rightward)
+      grad = ctx.createLinearGradient(screenX, 0, screenX + border, 0);
+      grad.addColorStop(0, `rgba(${color},1)`);
+      grad.addColorStop(1, `rgba(${color},0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX, screenY, border, h);
+
+      // RIGHT (fade leftward)
+      grad = ctx.createLinearGradient(screenX + w - border, 0, screenX + w, 0);
+      grad.addColorStop(0, `rgba(${color},0)`);
+      grad.addColorStop(1, `rgba(${color},1)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX + w - border, screenY, border, h);
+
+      ctx.restore();
+    }
 
     ctx.restore();
   }
