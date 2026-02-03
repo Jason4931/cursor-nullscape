@@ -49,19 +49,19 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
   }
 
   function draw() {
+    let beacon;
     for (const e of entities) {
-      if (e.name === "Beacon") continue;
+      if (e.name === "Beacon") {
+        beacon = e; // store for later
+        continue;
+      }
       if (e.name === "Bell") {
         e.draw?.(backctx);
       } else {
         Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
       }
     }
-    for (const e of entities) {
-      if (e.name === "Beacon") {
-        e.draw?.(ctx2);
-      }
-    }
+    beacon?.draw?.(ctx2);
   }
 
   return {
