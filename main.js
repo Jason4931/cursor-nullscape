@@ -620,9 +620,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -924,10 +923,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1324,7 +1323,7 @@ export function activatePurgatory() {
   counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
     latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-    latestCollectedCount <= (hardMode ? 11000 : 5500)
+      latestCollectedCount <= (hardMode ? 11000 : 5500)
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
@@ -1350,7 +1349,7 @@ export function activateChance() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+          latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       break;
@@ -1385,7 +1384,7 @@ export function activateProtection() {
     counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
       latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-      latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
         ? `lvl 100`
         : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     activateShield();
@@ -1466,17 +1465,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.0001225 * collectedCount - 0.039
-                    : 0.000245 * collectedCount - 0.1125,
-                  0.5,
-                )
+                hardMode
+                  ? 0.0001225 * collectedCount - 0.039
+                  : 0.000245 * collectedCount - 0.1125,
+                0.5,
+              )
               : Math.min(
-                  hardMode
-                    ? 0.000045 * collectedCount - 0.008
-                    : 0.00009 * collectedCount - 0.035,
-                  0.1,
-                ))
+                hardMode
+                  ? 0.000045 * collectedCount - 0.008
+                  : 0.00009 * collectedCount - 0.035,
+                0.1,
+              ))
           )
             type = "tripmine"; // 0-9%
           else type = "gift"; // 99-90%
@@ -1637,23 +1636,22 @@ for (let sy = minSY; sy <= maxSY; sy++) {
 function drawGrid() {
   let cursorOnCorruptedTile = false;
 
-  // Clear only visible area (viewport + margin for movement)
-  const margin = MAX_SPEED * 2;
+  // Clear only visible area (viewport)
   const visibleX = -camX;
   const visibleY = -camY;
-  const visibleW = viewport.clientWidth + margin;
-  const visibleH = viewport.clientHeight + margin;
+  const visibleW = viewport.clientWidth;
+  const visibleH = viewport.clientHeight;
   ctx.clearRect(
-    visibleX - margin,
-    visibleY - margin,
-    visibleW + 2 * margin,
-    visibleH + 2 * margin,
+    visibleX,
+    visibleY,
+    visibleW,
+    visibleH,
   );
   entityCtx.clearRect(
-    visibleX - margin,
-    visibleY - margin,
-    visibleW + 2 * margin,
-    visibleH + 2 * margin,
+    visibleX,
+    visibleY,
+    visibleW,
+    visibleH,
   );
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
@@ -1912,7 +1910,7 @@ function updateCamera() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5000) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+          latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
 
