@@ -1046,34 +1046,19 @@ function patternCenter(sx, sy) {
 }
 
 function pickPatternsBySize(patterns) {
-  // Precompute weights once per call (cheap)
-  const pool = patterns.map((p) => {
-    const area = p.length * p[0].length;
-    return {
-      p,
-      // same rarity curve as before
-      w: 1 / area,
-    };
-  });
+  return patterns
+    .map((p) => {
+      const area = p.length * p[0].length;
+      const weight = 1 / area;
 
-  const result = [];
-  let totalWeight = pool.reduce((s, o) => s + o.w, 0);
+      // Generate weighted random key
+      // Higher weight => higher chance of larger key
+      const key = Math.pow(Math.random(), 1 / weight);
 
-  while (pool.length) {
-    let r = Math.random() * totalWeight;
-
-    for (let i = 0; i < pool.length; i++) {
-      r -= pool[i].w;
-      if (r <= 0) {
-        result.push(pool[i].p);
-        totalWeight -= pool[i].w;
-        pool.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  return result;
+      return { p, key };
+    })
+    .sort((a, b) => b.key - a.key)
+    .map((obj) => obj.p);
 }
 
 function count3x3Patterns() {
@@ -1246,13 +1231,13 @@ function ENTITY_SPAWN() {
         start: 5500,
       };
     } else {
+      const weighted = [];
+      for (const e of unlocked) {
+        const weight = pickedOnce.has(e.name) ? 1 : 3;
+        for (let i = 0; i < weight; i++) weighted.push(e);
+        if (e.name === "baby" && babyCount < 2) weighted.push(e);
+      }
       while (true) {
-        const weighted = [];
-        for (const e of unlocked) {
-          const weight = pickedOnce.has(e.name) ? 1 : 3;
-          for (let i = 0; i < weight; i++) weighted.push(e);
-          if (e.name === "baby" && babyCount < 2) weighted.push(e);
-        }
         pick = weighted[(Math.random() * weighted.length) | 0];
         if (lastEntityPicked !== pick.name) {
           if (pick.name === "Baby") {
@@ -1500,15 +1485,26 @@ function placeSuper(sx, sy, pattern) {
   const spw = pw / SUPER_TILE;
   const sph = ph / SUPER_TILE;
 
+  const coords4or5 = [];
+  for (let y = 0; y < pattern.length; y++) {
+    for (let x = 0; x < pattern[0].length; x++) {
+      const v = pattern[y][x];
+      if (v === 4 || v === 5) {
+        coords4or5.push({ x, y });
+      }
+    }
+  }
+
   patternsState.set(`${sx},${sy}`, {
     sx,
     sy,
     pw: spw,
     ph: sph,
-    sizeKey: `${spw}x${sph}`,
     giftsLeft: gifts,
     cleared: gifts === 0,
     pattern,
+    has4or5: coords4or5.length > 0,
+    coords4or5,
   });
 }
 
@@ -1523,31 +1519,18 @@ function destroyPattern(p) {
 }
 
 export function pickRandomPlaced4or5(minRadius = 0) {
-  // build list of placed patterns that actually contain a 4 or 5 AND are near the cursor
+  // Step 1: build list of placed patterns that contain 4 or 5 AND are near the cursor
   const candidates = [];
+  const maxRadius = minRadius + 1000;
+
   for (const p of patternsState.values()) {
-    const pat = p.pattern;
-    if (!pat) continue;
+    if (!p.pattern || !p.has4or5) continue;
 
-    // check if pattern contains 4 or 5
-    let hasTarget = false;
-    for (let y = 0; y < pat.length && !hasTarget; y++) {
-      for (let x = 0; x < pat[0].length; x++) {
-        if (pat[y][x] === 4 || pat[y][x] === 5) {
-          hasTarget = true;
-          break;
-        }
-      }
-    }
-    if (!hasTarget) continue;
-
-    // check distance to cursor
     const center = patternCenter(p.sx, p.sy);
     const dx = center.x - mouse.x;
     const dy = center.y - mouse.y;
     const d2 = dx * dx + dy * dy;
 
-    const maxRadius = minRadius + 1000;
     if (d2 >= minRadius * minRadius && d2 <= maxRadius * maxRadius) {
       candidates.push(p);
     }
@@ -1555,81 +1538,30 @@ export function pickRandomPlaced4or5(minRadius = 0) {
 
   let pool = candidates;
 
+  // Step 2: fallback if none are in radius
   if (pool.length === 0) {
-    // fallback: ignore radius, pick from any pattern that contains 4 or 5
     for (const p of patternsState.values()) {
-      const pat = p.pattern;
-      if (!pat) continue;
-
-      for (let y = 0; y < pat.length; y++) {
-        for (let x = 0; x < pat[0].length; x++) {
-          if (pat[y][x] === 4 || pat[y][x] === 5) {
-            pool.push(p);
-            y = pat.length; // break outer
-            break;
-          }
-        }
-      }
+      if (!p.pattern || !p.has4or5) continue;
+      pool.push(p);
     }
 
-    // if STILL empty, just return mouse position instead of (0,0)
     if (pool.length === 0) {
       return { x: mouse.x, y: mouse.y };
     }
   }
 
-  // pick random pattern
+  // Step 3: pick random pattern
   const pickedPattern = pool[(Math.random() * pool.length) | 0];
-  const pat = pickedPattern.pattern;
 
-  // collect all 4/5 coords in that pattern
-  const coords = [];
-  for (let y = 0; y < pat.length; y++) {
-    for (let x = 0; x < pat[0].length; x++) {
-      const v = pat[y][x];
-      if (v === 4 || v === 5) coords.push({ x, y, v });
-    }
-  }
-
+  // Step 4: pick a random 4/5 coordinate using precomputed coords
+  const coords = pickedPattern.coords4or5; // array of {x, y}
   const c = coords[(Math.random() * coords.length) | 0];
 
-  // convert to world coords; using tile center
+  // Step 5: convert to world coordinates
   const worldX = (pickedPattern.sx * SUPER_TILE + c.x) * TILE + TILE / 2;
   const worldY = (pickedPattern.sy * SUPER_TILE + c.y) * TILE + TILE / 2;
 
-  return {
-    x: worldX,
-    y: worldY,
-  };
-}
-
-/* ===== INITIAL MAP ===== */
-const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
-  mouse.x,
-  mouse.y,
-  RESPAWN_RADIUS,
-);
-
-for (let sy = minSY; sy <= maxSY; sy++) {
-  for (let sx = minSX; sx <= maxSX; sx++) {
-    if (superOccupied[sy][sx]) continue;
-
-    const shuffled = pickPatternsBySize(PATTERNS);
-    for (let i = 0; i < shuffled.length; i++) {
-      const base = shuffled[i];
-      const baseIndex = PATTERNS.indexOf(base);
-      const pat = pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState);
-      if (!pat) continue;
-
-      if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
-        continue;
-
-      if (canPlaceSuper(sx, sy, pat)) {
-        placeSuper(sx, sy, pat);
-        break;
-      }
-    }
-  }
+  return { x: worldX, y: worldY };
 }
 
 /* ===== DRAW ===== */
@@ -1969,13 +1901,13 @@ function updateCamera() {
               start: 5500,
             };
           } else {
+            const weighted = [];
+            for (const e of unlocked) {
+              const weight = pickedOnce.has(e.name) ? 1 : 3;
+              for (let i = 0; i < weight; i++) weighted.push(e);
+              if (e.name === "baby" && babyCount < 2) weighted.push(e);
+            }
             while (true) {
-              const weighted = [];
-              for (const e of unlocked) {
-                const weight = pickedOnce.has(e.name) ? 1 : 3;
-                for (let i = 0; i < weight; i++) weighted.push(e);
-                if (e.name === "baby" && babyCount < 2) weighted.push(e);
-              }
               pick = weighted[(Math.random() * weighted.length) | 0];
               if (lastEntityPicked !== pick.name) {
                 if (pick.name === "Baby") {
@@ -2068,11 +2000,15 @@ function updateCamera() {
 
   /* regenerate empty slots (THROTTLED + BUDGETED) */
   const now = performance.now();
+
+  // Clean expired zones
   for (let i = cleanseZones.length - 1; i >= 0; i--) {
     if (cleanseZones[i].expiresAt <= now) {
       cleanseZones.splice(i, 1);
     }
   }
+
+  // Throttle regeneration
   if (now - lastRegenTime > REGEN_INTERVAL) {
     lastRegenTime = now;
 
@@ -2081,26 +2017,25 @@ function updateCamera() {
     const { minSX, maxSX, minSY, maxSY } = superRangeFromRadius(
       mouse.x,
       mouse.y,
-      RESPAWN_RADIUS,
+      RESPAWN_RADIUS
     );
+
+    // Pre-shuffle patterns once for this regen pass
+    const shuffledPatterns = pickPatternsBySize(PATTERNS);
+    const baseIndexMap = new Map();
+    PATTERNS.forEach((p, i) => baseIndexMap.set(p, i));
 
     for (let sy = minSY; sy <= maxSY && regenLeft > 0; sy++) {
       for (let sx = minSX; sx <= maxSX && regenLeft > 0; sx++) {
         if (superOccupied[sy][sx]) continue;
 
         const c = patternCenter(sx, sy);
-        if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > RESPAWN_RADIUS) continue;
+        if (Math.hypot(c.x - mouse.x, c.y - mouse.y) > RESPAWN_RADIUS)
+          continue;
 
-        const shuffled = pickPatternsBySize(PATTERNS);
-        for (let i = 0; i < shuffled.length; i++) {
-          const base = shuffled[i];
-          const baseIndex = PATTERNS.indexOf(base);
-          const pat = pickBiasedRotatedPattern(
-            baseIndex,
-            sx,
-            sy,
-            patternsState,
-          );
+        for (const base of shuffledPatterns) {
+          const baseIndex = baseIndexMap.get(base);
+          const pat = pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState);
           if (!pat) continue;
 
           if (pat.length % SUPER_TILE !== 0 || pat[0].length % SUPER_TILE !== 0)
