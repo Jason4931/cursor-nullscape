@@ -86,7 +86,7 @@ export function setup(host) {
 
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
-        if (Math.hypot(dx0, dy0) <= state.size * 0.5) {
+        if (Math.hypot(dx0, dy0) <= state.size * 0.4) {
           playSound("./ASSET/Sound/Enemies/NIL/Nil-kill.mp3");
           death("NIL");
           return;
@@ -241,7 +241,7 @@ export function setup(host) {
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      const border = 100; // thickness
+      const border = 150; // thickness
 
       ctx.save();
       ctx.globalAlpha = opacity;
