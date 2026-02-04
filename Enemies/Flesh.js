@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { fleshPositions, playSound } from "../main.js";
+import { fleshPositions, playSound, isCursorOnFloor } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Flesh.png";
@@ -30,6 +30,7 @@ export function setup(host, hardMode) {
     pelletActive: false,
     pelletX: 0,
     pelletY: 0,
+    pelletAlreadyOnFloor: false,
     pelletDirX: 0,
     pelletDirY: 0,
     pelletTimer: 0,
@@ -49,6 +50,7 @@ export function setup(host, hardMode) {
     const angle = Math.random() * Math.PI * 2;
     state.pelletX = state.x;
     state.pelletY = state.y;
+    state.pelletAlreadyOnFloor = isCursorOnFloor({ x: state.pelletX, y: state.pelletY });
     state.pelletDirX = Math.cos(angle);
     state.pelletDirY = Math.sin(angle);
     state.pelletTimer = 0;
@@ -157,11 +159,22 @@ export function setup(host, hardMode) {
         state.pelletX += state.pelletDirX * state.pelletSpeed * dt;
         state.pelletY += state.pelletDirY * state.pelletSpeed * dt;
 
-        fleshPositions.add({
-          x: state.pelletX,
-          y: state.pelletY,
-          until: now + 25000,
-        });
+        if (state.pelletAlreadyOnFloor) {
+          if (!isCursorOnFloor({ x: state.pelletX, y: state.pelletY })) {
+            state.pelletAlreadyOnFloor = false;
+            return;
+          }
+        } else {
+          if (isCursorOnFloor({ x: state.pelletX, y: state.pelletY })) {
+            state.pelletActive = false;
+            fleshPositions.add({
+              x: state.pelletX,
+              y: state.pelletY,
+              until: now + 50000,
+            });
+            return;
+          }
+        }
 
         if (state.pelletTimer >= state.pelletDuration) {
           state.pelletActive = false;
@@ -186,16 +199,26 @@ export function setup(host, hardMode) {
     );
 
     if (state.pelletActive) {
+      const jitterX = (Math.random() - 0.5) * 6;
+      const jitterY = (Math.random() - 0.5) * 6;
+
+      const size = 10;
+
       ctx.fillStyle = `rgba(${128 + Math.floor(Math.random() * 128)}, 0, 0, 1)`;
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(state.pelletX),
-        Math.round(state.pelletY),
-        8,
-        0,
-        Math.PI * 2,
+
+      ctx.fillRect(
+        Math.round(state.pelletX + jitterX - size / 2),
+        Math.round(state.pelletY + jitterY - size / 2),
+        size,
+        size
       );
-      ctx.fill();
+
+      ctx.fillRect(
+        Math.round(state.pelletX - jitterX - size / 2),
+        Math.round(state.pelletY - jitterY - size / 2),
+        size,
+        size
+      );
     }
 
     ctx.restore();
