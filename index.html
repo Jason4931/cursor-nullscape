@@ -405,6 +405,19 @@
         display: block;
         z-index: 999;
       }
+      #clickstart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        color: #fff1;
+        font-family: monospace;
+        font-size: 2vw;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1000;
+        transition: color 1.5s ease;
+      }
 
       #death-image {
         position: absolute;
@@ -710,7 +723,9 @@
           </a>
         </div>
       </div>
-      <div id="intro-screen"></div>
+      <div id="intro-screen">
+        <p id="clickstart">Click to play</p>
+      </div>
       <div id="death-screen">
         <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
         <div id="death-text">You died</div>
