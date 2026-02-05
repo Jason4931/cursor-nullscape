@@ -171,7 +171,10 @@ export function setup(host, hardMode) {
             return;
           }
         } else {
-          if (isCursorOnFloor({ x: state.pelletX, y: state.pelletY })) {
+          if (
+            state.pelletTimer >= 1 &&
+            isCursorOnFloor({ x: state.pelletX, y: state.pelletY })
+          ) {
             state.pelletActive = false;
             fleshPositions.add({
               x: state.pelletX,
