@@ -1782,8 +1782,9 @@ function updateCamera() {
   if (!disableCollect) {
     const motionScale = reducedMotion ? 0.5 : 1;
     const slowScale = slowness ? 0.25 : 1;
-    camX += vx * motionScale * slowScale;
-    camY += vy * motionScale * slowScale;
+    const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
+    camX += vx * motionScale * slowScale * settingScale;
+    camY += vy * motionScale * slowScale * settingScale;
 
     const lim = getLimits();
     camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
