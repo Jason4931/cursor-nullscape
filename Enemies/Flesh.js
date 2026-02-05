@@ -50,7 +50,10 @@ export function setup(host, hardMode) {
     const angle = Math.random() * Math.PI * 2;
     state.pelletX = state.x;
     state.pelletY = state.y;
-    state.pelletAlreadyOnFloor = isCursorOnFloor({ x: state.pelletX, y: state.pelletY });
+    state.pelletAlreadyOnFloor = isCursorOnFloor({
+      x: state.pelletX,
+      y: state.pelletY,
+    });
     state.pelletDirX = Math.cos(angle);
     state.pelletDirY = Math.sin(angle);
     state.pelletTimer = 0;
@@ -142,6 +145,9 @@ export function setup(host, hardMode) {
 
     state.x += dx * state.speed * dt;
     state.y += dy * state.speed * dt;
+    const half = state.size / 2;
+    state.x = Math.max(half, Math.min(host.canvas.width - half, state.x));
+    state.y = Math.max(half, Math.min(host.canvas.height - half, state.y));
 
     fleshPositions.add({
       x: state.x,
@@ -210,14 +216,14 @@ export function setup(host, hardMode) {
         Math.round(state.pelletX + jitterX - size / 2),
         Math.round(state.pelletY + jitterY - size / 2),
         size,
-        size
+        size,
       );
 
       ctx.fillRect(
         Math.round(state.pelletX - jitterX - size / 2),
         Math.round(state.pelletY - jitterY - size / 2),
         size,
-        size
+        size,
       );
     }
 
