@@ -56,6 +56,7 @@ const graphicsSlider = document.getElementById("graphics-slider");
 const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
+const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
@@ -994,26 +995,38 @@ export function isCursorOnFloor(custom) {
   return false;
 }
 
-function registerEntitySpawn(name, imageSrc) {
-  let data = entityCounts.get(name);
+function registerEntitySpawn(name, imageSrc, temp = false) {
+  const map = temp ? tempEntityCounts : entityCounts;
+
+  let data = map.get(name);
   if (!data) {
     data = { count: 0, img: imageSrc };
-    entityCounts.set(name, data);
+    map.set(name, data);
   }
+
   data.count++;
+
   let total = 0;
-  for (const data of entityCounts.values()) {
-    total += data.count;
+  for (const d of entityCounts.values()) {
+    total += d.count;
   }
-  document.getElementById("entity-panel-count").textContent =
-    `EntityCount: ${total}`;
+
+  let tempTotal = 0;
+  for (const d of tempEntityCounts.values()) {
+    tempTotal += d.count;
+  }
+
+  const el = document.getElementById("entity-panel-count");
+
+  el.textContent =
+    tempTotal > 0
+      ? `EntityCount: ${total} (+${tempTotal})`
+      : `EntityCount: ${total}`;
+
   if (total >= 100) {
-    document.getElementById("entity-panel-count").style.right = "-9.35vw";
-    document.getElementById("entity-panel-count").textContent =
-      `EntityCount: 100`;
-  } else if (total >= 10) {
-    document.getElementById("entity-panel-count").style.right = "-8.8vw";
+    el.textContent = "EntityCount: 100+";
   }
+
   renderPanel();
 }
 
@@ -1027,6 +1040,26 @@ function renderPanel() {
     const img = document.createElement("img");
     img.src = data.img;
     img.alt = name;
+
+    slot.appendChild(img);
+
+    if (data.count >= 2) {
+      const badge = document.createElement("div");
+      badge.className = "entity-count";
+      badge.textContent = data.count;
+      slot.appendChild(badge);
+    }
+
+    content.appendChild(slot);
+  }
+  for (const [name, data] of tempEntityCounts) {
+    const slot = document.createElement("div");
+    slot.className = "entity-slot";
+
+    const img = document.createElement("img");
+    img.src = data.img;
+    img.alt = name;
+    img.style.opacity = 0.6;
 
     slot.appendChild(img);
 
@@ -1218,7 +1251,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 
 /* ===== ALTARS ===== */
-function ENTITY_SPAWN() {
+function ENTITY_SPAWN(temp = false) {
   const unlocked = ENTITY_POOL.filter((e) => {
     if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
     if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
@@ -1281,10 +1314,76 @@ function ENTITY_SPAWN() {
       });
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
-        randPick.spawn();
+        const unregister = randPick.spawn();
+        if (temp && typeof unregister === "function") {
+          setTimeout(() => {
+            unregister();
+
+            const data = tempEntityCounts.get(pick.name);
+            if (data) {
+              data.count--;
+
+              if (data.count <= 0) {
+                tempEntityCounts.delete(pick.name);
+              }
+            }
+
+            let total = 0;
+            for (const d of entityCounts.values()) total += d.count;
+
+            let tempTotal = 0;
+            for (const d of tempEntityCounts.values()) tempTotal += d.count;
+
+            const el = document.getElementById("entity-panel-count");
+
+            el.textContent =
+              tempTotal > 0
+                ? `EntityCount: ${total} (+${tempTotal})`
+                : `EntityCount: ${total}`;
+
+            if (total >= 100) {
+              el.textContent = "EntityCount: 100+";
+            }
+
+            renderPanel();
+          }, 60000);
+        }
       }
     } else if (pick.name === "Catalyst") {
-      pick.spawn();
+      const unregister = pick.spawn();
+      if (temp && typeof unregister === "function") {
+        setTimeout(() => {
+          unregister();
+
+          const data = tempEntityCounts.get(pick.name);
+          if (data) {
+            data.count--;
+
+            if (data.count <= 0) {
+              tempEntityCounts.delete(pick.name);
+            }
+          }
+
+          let total = 0;
+          for (const d of entityCounts.values()) total += d.count;
+
+          let tempTotal = 0;
+          for (const d of tempEntityCounts.values()) tempTotal += d.count;
+
+          const el = document.getElementById("entity-panel-count");
+
+          el.textContent =
+            tempTotal > 0
+              ? `EntityCount: ${total} (+${tempTotal})`
+              : `EntityCount: ${total}`;
+
+          if (total >= 100) {
+            el.textContent = "EntityCount: 100+";
+          }
+
+          renderPanel();
+        }, 60000);
+      }
       setInterval(() => {
         if (Math.random() < 0.5) {
           spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
@@ -1293,9 +1392,42 @@ function ENTITY_SPAWN() {
         }
       }, 20000);
     } else {
-      pick.spawn();
+      const unregister = pick.spawn();
+      if (temp && typeof unregister === "function") {
+        setTimeout(() => {
+          unregister();
+
+          const data = tempEntityCounts.get(pick.name);
+          if (data) {
+            data.count--;
+
+            if (data.count <= 0) {
+              tempEntityCounts.delete(pick.name);
+            }
+          }
+
+          let total = 0;
+          for (const d of entityCounts.values()) total += d.count;
+
+          let tempTotal = 0;
+          for (const d of tempEntityCounts.values()) tempTotal += d.count;
+
+          const el = document.getElementById("entity-panel-count");
+
+          el.textContent =
+            tempTotal > 0
+              ? `EntityCount: ${total} (+${tempTotal})`
+              : `EntityCount: ${total}`;
+
+          if (total >= 100) {
+            el.textContent = "EntityCount: 100+";
+          }
+
+          renderPanel();
+        }, 60000);
+      }
     }
-    if (pick.src) registerEntitySpawn(pick.name, pick.src);
+    if (pick.src) registerEntitySpawn(pick.name, pick.src, temp);
     if (
       collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
       !isSeamineEnabled &&
@@ -1312,6 +1444,10 @@ function ENTITY_SPAWN() {
   }
 }
 export function activatePurgatory() {
+  const actualDebt = Math.max(
+    0,
+    latestCollectedCount * (hardMode ? 1 : 2) - actualCollectedCount,
+  );
   if (!disableCollect) actualCollectedCount += 1000;
   if (actualCollectedCount > 10000) actualCollectedCount = 10000;
   collectedCount = hardMode
@@ -1324,7 +1460,19 @@ export function activatePurgatory() {
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
-  for (let i = 0; i < (hardMode ? 10 : 5); i++) ENTITY_SPAWN();
+  const spawnInterval = hardMode ? 100 : 200;
+  const totalSpawns = hardMode ? 10 : 5;
+
+  const missedSpawns = Math.min(
+    totalSpawns,
+    Math.floor((actualDebt - 1) / spawnInterval) + 1,
+  );
+
+  const tempCount = Math.max(0, missedSpawns);
+
+  for (let i = 0; i < totalSpawns; i++) {
+    ENTITY_SPAWN(i < tempCount);
+  }
 }
 let alreadyBenefitChanced = [false, false];
 export function activateChance() {
@@ -1456,28 +1604,26 @@ function placeSuper(sx, sy, pattern) {
         if (allGold) {
           type = r < (tripmineHell ? 0.5 : 0.9) ? "gold" : "tripmine";
         } else if (isTripmineEnabled) {
-          if (r < 0.01)
-            type = "gold"; // 1%
-          else if (
+          if (
             r <
             (tripmineHell
               ? Math.min(
                   hardMode
-                    ? 0.0001225 * collectedCount - 0.039
-                    : 0.000245 * collectedCount - 0.1125,
+                    ? 0.000125 * (collectedCount - 400)
+                    : 0.00025 * (collectedCount - 500),
                   0.5,
                 )
               : Math.min(
                   hardMode
-                    ? 0.000045 * collectedCount - 0.008
-                    : 0.00009 * collectedCount - 0.035,
+                    ? 0.00005 * (collectedCount - 400)
+                    : 0.0001 * (collectedCount - 500),
                   0.1,
                 ))
           )
-            type = "tripmine"; // 0-9%
-          else type = "gift"; // 99-90%
+            type = "tripmine"; // 0-10%
+          else type = "gift"; // 100-90%
         } else {
-          type = r < 0.01 ? "gold" : "gift"; // original
+          type = "gift"; // original
         }
 
         giftPositions.push({
@@ -1837,7 +1983,7 @@ function updateCamera() {
         continue;
       }
 
-      const value = (g.golden ? 5 : 1) * giftMultiplier;
+      const value = (g.golden ? 4 : 1) * giftMultiplier;
       if (!disableCollect) actualCollectedCount += value;
       collectedCount = hardMode
         ? actualCollectedCount
