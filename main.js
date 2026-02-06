@@ -14,6 +14,9 @@ import {
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
 import { setup as spawnAltarProtection } from "./Enemies/AltarOfProtection.js";
+import { setup as spawnAltarPurification } from "./Enemies/AltarOfPurification.js";
+import { setup as spawnAltarEcho } from "./Enemies/AltarOfEcho.js";
+import { setup as spawnAltarPassage } from "./Enemies/AltarOfPassage.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -67,11 +70,12 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedVoid = false;
-let spawnedAltar = [false, false];
+let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
 let transformAllGift = false;
 let allGold = false;
+let passageGoldPattern = 0;
 let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
@@ -80,6 +84,7 @@ let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
 let babyCount = 0;
+let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let despawnCatalyst = false;
@@ -1074,6 +1079,17 @@ function renderPanel() {
   }
 }
 
+function trackHighestEntity(unregister, startValue, name) {
+  if (typeof unregister !== "function") return;
+
+  highestEntitySpawned.push({ unregister, start: startValue, name });
+  highestEntitySpawned.sort((a, b) => b.start - a.start);
+
+  if (highestEntitySpawned.length > 3) {
+    highestEntitySpawned.length = 3;
+  }
+}
+
 function rotateMatrix90(m) {
   const h = m.length;
   const w = m[0].length;
@@ -1251,7 +1267,9 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 
 /* ===== ALTARS ===== */
+let lastAltar = null;
 function ENTITY_SPAWN(temp = false) {
+  let name = null;
   const unlocked = ENTITY_POOL.filter((e) => {
     if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
     if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
@@ -1315,6 +1333,7 @@ function ENTITY_SPAWN(temp = false) {
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
+        if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
         if (temp && typeof unregister === "function") {
           setTimeout(() => {
             unregister();
@@ -1351,6 +1370,7 @@ function ENTITY_SPAWN(temp = false) {
       }
     } else if (pick.name === "Catalyst") {
       const unregister = pick.spawn();
+      if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
@@ -1393,6 +1413,7 @@ function ENTITY_SPAWN(temp = false) {
       }, 20000);
     } else {
       const unregister = pick.spawn();
+      if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
@@ -1427,7 +1448,10 @@ function ENTITY_SPAWN(temp = false) {
         }, 60000);
       }
     }
-    if (pick.src) registerEntitySpawn(pick.name, pick.src, temp);
+    if (pick.src) {
+      name = pick.name;
+      registerEntitySpawn(pick.name, pick.src, temp);
+    }
     if (
       collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
       !isSeamineEnabled &&
@@ -1442,8 +1466,10 @@ function ENTITY_SPAWN(temp = false) {
       spawnedUnstackables.add(pick.name);
     }
   }
+  return name;
 }
 export function activatePurgatory() {
+  lastAltar = "Purgatory";
   let beforeCollectedCount = collectedCount;
   let beforeLastEntitySpawnAt = lastEntitySpawnAt;
   if (!disableCollect) actualCollectedCount += 1000;
@@ -1479,6 +1505,7 @@ export function activatePurgatory() {
 }
 let alreadyBenefitChanced = [false, false];
 export function activateChance() {
+  lastAltar = "Chance";
   let chance;
   while (true) {
     chance = Math.floor(Math.random() * 4);
@@ -1524,6 +1551,7 @@ export function activateChance() {
   return chance;
 }
 export function activateProtection() {
+  lastAltar = "Protection";
   if (actualCollectedCount >= 1000 && shieldActive === false) {
     actualCollectedCount -= 1000;
     collectedCount = hardMode
@@ -1539,6 +1567,98 @@ export function activateProtection() {
     return true;
   }
   return false;
+}
+export function activatePassage() {
+  lastAltar = "Passage";
+  passageGoldPattern += 10;
+}
+export function activateEcho() {
+  const beforeLastAltar = lastAltar;
+
+  switch (beforeLastAltar) {
+    case "Protection":
+      activateProtection();
+      break;
+    case "Chance":
+      activateChance();
+      break;
+    case "Purification":
+      activatePurification();
+      break;
+    case "Passage":
+      activatePassage();
+      break;
+    case "Purgatory":
+      activatePurgatory();
+      break;
+    case "Echo":
+      break;
+  }
+
+  lastAltar = "Echo";
+
+  switch (beforeLastAltar) {
+    case "Protection":
+      return "Altar Of Protection";
+    case "Chance":
+      return "Altar Of Chance";
+    case "Purification":
+      return "Altar Of Purification";
+    case "Passage":
+      return "Altar Of Passage";
+    case "Purgatory":
+      return "Altar Of Purgatory";
+    case "Echo":
+      return "Altar Of Echo";
+    default:
+      return "Altar Of Echo";
+  }
+}
+export function activatePurification() {
+  lastAltar = "Purification";
+
+  if (highestEntitySpawned.length === 0) return false;
+  const index = (Math.random() * highestEntitySpawned.length) | 0;
+  const chosen = highestEntitySpawned[index];
+  const replacedEntity = chosen.name;
+
+  chosen.unregister();
+
+  highestEntitySpawned.splice(index, 1);
+
+  const data = entityCounts.get(chosen.name);
+  if (data) {
+    data.count--;
+
+    if (data.count <= 0) {
+      entityCounts.delete(chosen.name);
+    }
+  }
+
+  let total = 0;
+  for (const d of entityCounts.values()) {
+    total += d.count;
+  }
+
+  let tempTotal = 0;
+  for (const d of tempEntityCounts.values()) {
+    tempTotal += d.count;
+  }
+
+  const el = document.getElementById("entity-panel-count");
+
+  el.textContent =
+    tempTotal > 0
+      ? `EntityCount: ${total} (+${tempTotal})`
+      : `EntityCount: ${total}`;
+
+  if (total >= 100) {
+    el.textContent = "EntityCount: 100+";
+  }
+
+  renderPanel();
+  const newEntity = ENTITY_SPAWN();
+  return [replacedEntity, newEntity];
 }
 
 /* ===== PRECOMPUTE ROTATED PATTERNS ===== */
@@ -1588,7 +1708,13 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 5 ||
         pattern[y][x] === 9
       ) {
-        floorTiles.push({ x: wx, y: wy, sx, sy });
+        floorTiles.push({
+          x: wx,
+          y: wy,
+          sx,
+          sy,
+          passageGoldPattern: passageGoldPattern > 0,
+        });
       }
 
       const isTripmineEnabled =
@@ -1604,7 +1730,9 @@ function placeSuper(sx, sy, pattern) {
       ) {
         const r = Math.random();
         let type = "gift";
-        if (allGold) {
+        if (passageGoldPattern > 0) {
+          type = "gold";
+        } else if (allGold) {
           type = r < (tripmineHell ? 0.5 : 0.9) ? "gold" : "tripmine";
         } else if (isTripmineEnabled) {
           if (
@@ -1666,7 +1794,9 @@ function placeSuper(sx, sy, pattern) {
     pattern,
     has4or5: coords4or5.length > 0,
     coords4or5,
+    passageGoldPattern: passageGoldPattern > 0,
   });
+  if (passageGoldPattern > 0) passageGoldPattern--;
 }
 
 function destroyPattern(p) {
@@ -1790,7 +1920,10 @@ function drawGrid() {
         : `rgba(120, 0, 0, 0.066)`;
       ctx.fillRect(t.x, t.y, TILE, TILE);
     } else {
-      if (randTile < 0.6) {
+      if (t.passageGoldPattern) {
+        ctx.fillStyle = showFloor ? "#800" : "#8001";
+        ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else if (randTile < 0.6) {
         ctx.fillStyle = showFloor ? "#333" : "#3331";
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else {
@@ -2015,12 +2148,21 @@ function updateCamera() {
         }
         if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
-          spawnAltarChance(entityHost);
           spawnAltarProtection(entityHost);
+          spawnAltarChance(entityHost);
         }
         if (collectedCount >= (hardMode ? 1200 : 600) && !spawnedAltar[1]) {
           spawnedAltar[1] = true;
           spawnAltarPurgatory(entityHost);
+          spawnAltarPassage(entityHost);
+        }
+        if (collectedCount >= (hardMode ? 1600 : 800) && !spawnedAltar[2]) {
+          spawnedAltar[2] = true;
+          spawnAltarEcho(entityHost);
+        }
+        if (collectedCount >= (hardMode ? 2000 : 1000) && !spawnedAltar[3]) {
+          spawnedAltar[3] = true;
+          spawnAltarPurification(entityHost);
         }
 
         if (
@@ -2095,10 +2237,12 @@ function updateCamera() {
             if (randUnlocked.length !== 0) {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
-              randPick.spawn();
+              const unregister = randPick.spawn();
+              trackHighestEntity(unregister, pick.start, pick.name);
             }
           } else if (pick.name === "Catalyst") {
-            pick.spawn();
+            const unregister = pick.spawn();
+            trackHighestEntity(unregister, pick.start, pick.name);
             setInterval(() => {
               if (Math.random() < 0.5) {
                 spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
@@ -2107,7 +2251,8 @@ function updateCamera() {
               }
             }, 20000);
           } else {
-            pick.spawn();
+            const unregister = pick.spawn();
+            trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (
@@ -2410,6 +2555,16 @@ const unlock = () => {
   loop();
 };
 window.addEventListener("pointerdown", unlock, { once: true });
+
+setInterval(() => {
+  for (const [key, p] of patternsState) {
+    if (p.passageGoldPattern) {
+      destroyPattern(p);
+      patternsState.delete(key);
+      break;
+    }
+  }
+}, 6000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
