@@ -1444,10 +1444,8 @@ function ENTITY_SPAWN(temp = false) {
   }
 }
 export function activatePurgatory() {
-  const actualDebt = Math.max(
-    0,
-    latestCollectedCount * (hardMode ? 1 : 2) - actualCollectedCount,
-  );
+  let beforeCollectedCount = collectedCount;
+  let beforeLastEntitySpawnAt = lastEntitySpawnAt;
   if (!disableCollect) actualCollectedCount += 1000;
   if (actualCollectedCount > 10000) actualCollectedCount = 10000;
   collectedCount = hardMode
@@ -1460,17 +1458,22 @@ export function activatePurgatory() {
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
-  const spawnInterval = hardMode ? 100 : 200;
   const totalSpawns = hardMode ? 10 : 5;
 
-  const missedSpawns = Math.min(
-    totalSpawns,
-    Math.floor((actualDebt - 1) / spawnInterval) + 1,
-  );
-
-  const tempCount = Math.max(0, missedSpawns);
-
+  let validTemp = false;
+  let tempCount = 0;
   for (let i = 0; i < totalSpawns; i++) {
+    beforeCollectedCount += 100;
+    if (beforeCollectedCount < beforeLastEntitySpawnAt) {
+      tempCount++;
+      validTemp = true;
+    } else {
+      break;
+    }
+  }
+  if (validTemp) tempCount++;
+  for (let i = 0; i < totalSpawns; i++) {
+    console.log(i < tempCount);
     ENTITY_SPAWN(i < tempCount);
   }
 }
