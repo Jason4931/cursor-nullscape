@@ -1804,6 +1804,8 @@ function placeSuper(sx, sy, pattern) {
 }
 
 function destroyPattern(p) {
+  if (!p) return;
+
   floorTiles = floorTiles.filter((t) => t.sx !== p.sx || t.sy !== p.sy);
   giftPositions = giftPositions.filter((g) => g.sx !== p.sx || g.sy !== p.sy);
 
@@ -2568,6 +2570,9 @@ setInterval(() => {
       break;
     }
   }
+  const [key, p] = patternsState.entries().next().value;
+  destroyPattern(p);
+  patternsState.delete(key);
 }, 6000);
 
 let originalVolume = [0, 0];
