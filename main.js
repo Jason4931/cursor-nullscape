@@ -71,6 +71,7 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedVoid = false;
+let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
@@ -2379,6 +2380,13 @@ function loop(now) {
 
   if (collectedCount > latestCollectedCount)
     latestCollectedCount = collectedCount;
+
+  if (collectedCount < latestCollectedCount && !debtAltar) {
+    debtAltar = spawnAltarPurgatory(entityHost, hardMode);
+  } else if (collectedCount >= latestCollectedCount && debtAltar) {
+    debtAltar();
+    debtAltar = null;
+  }
 
   // music
   if (!lobbyMusic) {
