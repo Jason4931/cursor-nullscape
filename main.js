@@ -62,7 +62,8 @@ const entityCounts = new Map();
 const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
-let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
+export let casualMode =
+  JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 export let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
@@ -2583,6 +2584,17 @@ export function onFinalContact() {
   sfxVolume = 0;
   disableCollect = true;
   localStorage.setItem("GameBeaten", `${new Date()}`);
+  setStars();
+  if (casualMode) {
+    localStorage.setItem("win-casual", `${new Date()}`);
+  } else if (hardMode) {
+    localStorage.removeItem("win-casual");
+    localStorage.removeItem("win-normal");
+    localStorage.setItem("win-hard", `${new Date()}`);
+  } else {
+    localStorage.removeItem("win-casual");
+    localStorage.setItem("win-normal", `${new Date()}`);
+  }
   setTimeout(() => {
     despawnCatalyst = true;
     for (const [key, p] of patternsState) {
@@ -2605,3 +2617,74 @@ export function onFinalContact() {
 }
 document.getElementById("beaten-only").style.display =
   localStorage.getItem("GameBeaten") === null ? "none" : "flex";
+export function setStars() {
+  const level = Math.floor(latestCollectedCount / (hardMode ? 100 : 50));
+
+  if (casualMode) {
+    if (level >= 5) {
+      localStorage.setItem("lv5-casual", `${new Date()}`);
+    }
+  } else if (hardMode) {
+    if (level >= 50) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.removeItem("lv12-normal");
+      localStorage.removeItem("lv25-normal");
+      localStorage.removeItem("lv50-normal");
+
+      localStorage.removeItem("lv5-hard");
+      localStorage.removeItem("lv12-hard");
+      localStorage.removeItem("lv25-hard");
+      localStorage.setItem("lv50-hard", `${new Date()}`);
+    } else if (level >= 25) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.removeItem("lv12-normal");
+      localStorage.removeItem("lv25-normal");
+
+      localStorage.removeItem("lv5-hard");
+      localStorage.removeItem("lv12-hard");
+      localStorage.setItem("lv25-hard", `${new Date()}`);
+    } else if (level >= 12) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.removeItem("lv12-normal");
+
+      localStorage.removeItem("lv5-hard");
+      localStorage.setItem("lv12-hard", `${new Date()}`);
+    } else if (level >= 5) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+
+      localStorage.setItem("lv5-hard", `${new Date()}`);
+    }
+  } else {
+    if (level >= 50) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.removeItem("lv12-normal");
+      localStorage.removeItem("lv25-normal");
+      localStorage.setItem("lv50-normal", `${new Date()}`);
+    } else if (level >= 25) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.removeItem("lv12-normal");
+      localStorage.setItem("lv25-normal", `${new Date()}`);
+    } else if (level >= 12) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.removeItem("lv5-normal");
+      localStorage.setItem("lv12-normal", `${new Date()}`);
+    } else if (level >= 5) {
+      localStorage.removeItem("lv5-casual");
+
+      localStorage.setItem("lv5-normal", `${new Date()}`);
+    }
+  }
+}

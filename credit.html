@@ -177,9 +177,111 @@
       #return-btn:active {
         transform: scale(0.95);
       }
+
+      #stars {
+        position: fixed;
+        left: 1.5vw;
+        bottom: 1.5vw;
+        display: flex;
+        gap: 0.6vw;
+        font-size: 1.8vw;
+        z-index: 2000;
+      }
+
+      .star {
+        position: relative;
+        opacity: 0.15;
+        cursor: default;
+        transition:
+          opacity 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .star.active {
+        opacity: 1;
+      }
+
+      .star.green {
+        color: #22aa22;
+      }
+      .star.white {
+        color: #ffffff;
+      }
+      .star.red {
+        color: #cc2222;
+      }
+      .star.yellow {
+        color: #ffcc00;
+      }
+
+      @keyframes flash-green {
+        0% {
+          color: #ffcc00;
+        }
+        50% {
+          color: #22aa22;
+        }
+        100% {
+          color: #ffcc00;
+        }
+      }
+
+      @keyframes flash-red {
+        0% {
+          color: #ffcc00;
+        }
+        50% {
+          color: #cc2222;
+        }
+        100% {
+          color: #ffcc00;
+        }
+      }
+
+      .star.flash-green {
+        animation: flash-green 1s infinite;
+      }
+
+      .star.flash-red {
+        animation: flash-red 1s infinite;
+      }
+
+      .star::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(5px);
+
+        background: #111;
+        color: #ccc;
+        padding: 0.3vw 0.6vw;
+        font-size: 1vw;
+        white-space: nowrap;
+        border: 0.1vw solid #333;
+        border-radius: 0.1vw;
+
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .star:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     </style>
   </head>
 
+  <div id="stars">
+    <span class="star" data-label="LVL 5">★</span>
+    <span class="star" data-label="LVL 12">★</span>
+    <span class="star" data-label="LVL 25">★</span>
+    <span class="star" data-label="LVL 50">★</span>
+    <span class="star" data-label="Win">★</span>
+  </div>
   <body>
     <div id="credit">
       <p class="section">
@@ -250,6 +352,63 @@
           el.style.display = "none";
         });
       }
+
+      (function renderStars() {
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        const now = new Date();
+
+        function valid(key) {
+          const raw = localStorage.getItem(key);
+          if (!raw) return false;
+
+          const date = new Date(raw);
+          if (now - date > sevenDays) {
+            localStorage.removeItem(key);
+            return false;
+          }
+          return true;
+        }
+
+        const stars = document.querySelectorAll(".star");
+
+        // Determine highest tier per difficulty
+        function getTier(prefix) {
+          if (valid(`lv50-${prefix}`)) return 4;
+          if (valid(`lv25-${prefix}`)) return 3;
+          if (valid(`lv12-${prefix}`)) return 2;
+          if (valid(`lv5-${prefix}`)) return 1;
+          return 0;
+        }
+
+        const hardTier = getTier("hard");
+        const normalTier = getTier("normal");
+        const casualTier = valid("lv5-casual") ? 1 : 0;
+
+        // Apply NORMAL first
+        for (let i = 0; i < normalTier; i++) {
+          stars[i].classList.add("active", "white");
+        }
+
+        // Apply CASUAL (only star 1 if no normal)
+        if (casualTier && normalTier === 0) {
+          stars[0].classList.add("active", "green");
+        }
+
+        // Apply HARD last (overrides lower tiers up to its range)
+        for (let i = 0; i < hardTier; i++) {
+          stars[i].classList.remove("white", "green");
+          stars[i].classList.add("active", "red");
+        }
+
+        // -------- WIN STAR --------
+        if (valid("win-hard")) {
+          stars[4].classList.add("active", "flash-red");
+        } else if (valid("win-normal")) {
+          stars[4].classList.add("active", "yellow");
+        } else if (valid("win-casual")) {
+          stars[4].classList.add("active", "flash-green");
+        }
+      })();
     </script>
   </body>
 </html>

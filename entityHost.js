@@ -8,6 +8,7 @@ let prevMouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 import {
   actualCollectedCount,
   collectedCount,
+  setStars,
   hardMode,
   latestCollectedCount,
   stopAllSounds,
@@ -430,4 +431,5 @@ export function death(name = "Unknown", color = "#f70000") {
       retry.onclick = () => location.reload();
     }, 5000);
   }, 200);
+  setStars();
 }
