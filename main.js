@@ -1085,8 +1085,8 @@ function trackHighestEntity(unregister, startValue, name) {
   highestEntitySpawned.push({ unregister, start: startValue, name });
   highestEntitySpawned.sort((a, b) => b.start - a.start);
 
-  if (highestEntitySpawned.length > 3) {
-    highestEntitySpawned.length = 3;
+  if (highestEntitySpawned.length > 5) {
+    highestEntitySpawned.length = 5;
   }
 }
 
@@ -1337,6 +1337,7 @@ function ENTITY_SPAWN(temp = false) {
         if (temp && typeof unregister === "function") {
           setTimeout(() => {
             unregister();
+            spawnedUnstackables.delete(pick.name);
 
             const data = tempEntityCounts.get(pick.name);
             if (data) {
@@ -1374,6 +1375,7 @@ function ENTITY_SPAWN(temp = false) {
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
+          spawnedUnstackables.delete(pick.name);
 
           const data = tempEntityCounts.get(pick.name);
           if (data) {
@@ -1417,6 +1419,7 @@ function ENTITY_SPAWN(temp = false) {
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
+          spawnedUnstackables.delete(pick.name);
 
           const data = tempEntityCounts.get(pick.name);
           if (data) {
@@ -1623,6 +1626,7 @@ export function activatePurification() {
   const replacedEntity = chosen.name;
 
   chosen.unregister();
+  spawnedUnstackables.delete(chosen.name);
 
   highestEntitySpawned.splice(index, 1);
 
