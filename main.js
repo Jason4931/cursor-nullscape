@@ -2152,21 +2152,21 @@ function updateCamera() {
         }
         if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
-          spawnAltarProtection(entityHost);
-          spawnAltarChance(entityHost);
+          spawnAltarProtection(entityHost, hardMode);
+          spawnAltarChance(entityHost, hardMode);
         }
         if (collectedCount >= (hardMode ? 1200 : 600) && !spawnedAltar[1]) {
           spawnedAltar[1] = true;
-          spawnAltarPurgatory(entityHost);
-          spawnAltarPassage(entityHost);
+          spawnAltarPurgatory(entityHost, hardMode);
+          spawnAltarPassage(entityHost, hardMode);
         }
         if (collectedCount >= (hardMode ? 1600 : 800) && !spawnedAltar[2]) {
           spawnedAltar[2] = true;
-          spawnAltarEcho(entityHost);
+          spawnAltarEcho(entityHost, hardMode);
         }
         if (collectedCount >= (hardMode ? 2000 : 1000) && !spawnedAltar[3]) {
           spawnedAltar[3] = true;
-          spawnAltarPurification(entityHost);
+          spawnAltarPurification(entityHost, hardMode);
         }
 
         if (
