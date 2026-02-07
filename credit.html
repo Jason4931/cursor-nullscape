@@ -371,7 +371,6 @@
 
         const stars = document.querySelectorAll(".star");
 
-        // Determine highest tier per difficulty
         function getTier(prefix) {
           if (valid(`lv50-${prefix}`)) return 4;
           if (valid(`lv25-${prefix}`)) return 3;
@@ -384,23 +383,19 @@
         const normalTier = getTier("normal");
         const casualTier = valid("lv5-casual") ? 1 : 0;
 
-        // Apply NORMAL first
         for (let i = 0; i < normalTier; i++) {
           stars[i].classList.add("active", "white");
         }
 
-        // Apply CASUAL (only star 1 if no normal)
         if (casualTier && normalTier === 0) {
           stars[0].classList.add("active", "green");
         }
 
-        // Apply HARD last (overrides lower tiers up to its range)
         for (let i = 0; i < hardTier; i++) {
           stars[i].classList.remove("white", "green");
           stars[i].classList.add("active", "red");
         }
 
-        // -------- WIN STAR --------
         if (valid("win-hard")) {
           stars[4].classList.add("active", "flash-red");
         } else if (valid("win-normal")) {
