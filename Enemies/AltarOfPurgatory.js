@@ -50,7 +50,7 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= hardMode ? 9000 : 4500) return;
+    if (collectedCount >= (hardMode ? 9000 : 4500)) return;
 
     state.timer += dt;
 
@@ -69,7 +69,7 @@ export function setup(host, hardMode) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= hardMode ? 9000 : 4500) return;
+    if (collectedCount >= (hardMode ? 9000 : 4500)) return;
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
