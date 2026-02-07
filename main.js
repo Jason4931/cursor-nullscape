@@ -62,8 +62,7 @@ const entityCounts = new Map();
 const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
-export let casualMode =
-  JSON.parse(localStorage.getItem("casual-mode")) ?? false;
+let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 export let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
@@ -284,6 +283,15 @@ document.getElementById("sfx-volume").value = sfxVolume;
 document.getElementById("music-volume").value = musicVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
 
+function checkDiff() {
+  if (casualMode) {
+    document.getElementById("entity-panel-diff").textContent = "Casual";
+  } else if (hardMode) {
+    document.getElementById("entity-panel-diff").textContent = "Hard";
+  } else {
+    document.getElementById("entity-panel-diff").textContent = "Normal";
+  }
+}
 settingsBtn.addEventListener("click", () => {
   if (settingsPanel.style.display === "block") {
     settingsPanel.style.display = "none";
@@ -340,6 +348,7 @@ toggle("toggle-tripmine-hell", (v) => {
     document.getElementById("toggle-casual-mode").checked = false;
     localStorage.setItem("casual-mode", false);
   }
+  checkDiff();
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
@@ -363,6 +372,7 @@ toggle("toggle-casual-mode", (v) => {
     document.getElementById("toggle-tripmine-hell").checked = false;
     localStorage.setItem("tripmine-hell", false);
   }
+  checkDiff();
 });
 toggle("toggle-hard-mode", (v) => {
   hardMode = v;
@@ -371,6 +381,7 @@ toggle("toggle-hard-mode", (v) => {
     document.getElementById("toggle-casual-mode").checked = false;
     localStorage.setItem("casual-mode", false);
   }
+  checkDiff();
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = Number(e.target.value);
@@ -480,6 +491,7 @@ document.getElementById("reset-settings").onclick = () => {
     entityCanvas.style.cursor = "auto";
     entityCanvas2.style.cursor = "auto";
   }
+  checkDiff();
 
   RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 };
@@ -701,6 +713,7 @@ if (accurateCursor) {
   entityCanvas.style.cursor = "auto";
   entityCanvas2.style.cursor = "auto";
 }
+checkDiff();
 
 /* ===== SOUND ===== */
 const activeSounds = new Set();
