@@ -1491,18 +1491,15 @@ export function activatePurgatory() {
   lastEntitySpawnAt = collectedCount;
   const totalSpawns = hardMode ? 10 : 5;
 
-  let validTemp = false;
   let tempCount = 0;
   for (let i = 0; i < totalSpawns; i++) {
-    beforeCollectedCount += 100;
     if (beforeCollectedCount < beforeLastEntitySpawnAt) {
       tempCount++;
-      validTemp = true;
+      beforeCollectedCount += 100;
     } else {
       break;
     }
   }
-  if (validTemp) tempCount++;
   for (let i = 0; i < totalSpawns; i++) {
     console.log(i < tempCount);
     ENTITY_SPAWN(i < tempCount);
