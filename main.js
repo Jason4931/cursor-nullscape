@@ -633,16 +633,24 @@ const input = document.getElementById("death-input");
 const img = document.getElementById("death-image");
 let wobbleTimer;
 input.addEventListener("input", () => {
-  if (input.value.toLowerCase() === "shutup") {
+  const value = input.value.toLowerCase();
+  const target = "shutup";
+
+  if (target.startsWith(value) && value.length > 0) {
+    input.style.color = "lime";
+  } else {
+    input.style.color = "";
+  }
+
+  if (input.value.toLowerCase() === target) {
     location.reload();
   }
 
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -945,10 +953,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1498,7 +1506,7 @@ export function activatePurgatory() {
   counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
     latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-    latestCollectedCount <= (hardMode ? 11000 : 5500)
+      latestCollectedCount <= (hardMode ? 11000 : 5500)
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
@@ -1539,7 +1547,7 @@ export function activateChance() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+          latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       break;
@@ -1575,7 +1583,7 @@ export function activateProtection() {
     counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
       latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-      latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
         ? `lvl 100`
         : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     activateShield();
@@ -1755,17 +1763,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 400)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5,
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 400)
+                  : 0.00025 * (collectedCount - 500),
+                0.5,
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 400)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1,
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 400)
+                  : 0.0001 * (collectedCount - 500),
+                0.1,
+              ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -2145,7 +2153,7 @@ function updateCamera() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+          latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
 
