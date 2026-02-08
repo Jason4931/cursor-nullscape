@@ -17,6 +17,7 @@ export function setup(host, hardMode) {
     size: 200,
     timer: 0,
     nextDelay: 19 + Math.random(),
+    flashTimer: 0,
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -42,7 +43,12 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       const result = activateProtection();
-      if (result) teleport();
+
+      if (result) {
+        teleport();
+      } else {
+        state.flashTimer = 1;
+      }
     }
   }
 
@@ -52,6 +58,10 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (collectedCount >= (hardMode ? 10000 : 5000)) return;
 
+    if (state.flashTimer > 0) {
+      state.flashTimer -= dt;
+      if (state.flashTimer < 0) state.flashTimer = 0;
+    }
     state.timer += dt;
 
     if (state.timer <= 1) {
@@ -85,6 +95,30 @@ export function setup(host, hardMode) {
       size,
       size,
     );
+
+    if (state.flashTimer > 0) {
+      ctx.save();
+      const radius = state.size * 0.1;
+      const intensity = state.flashTimer;
+
+      const gradient = ctx.createRadialGradient(
+        state.x,
+        state.y - 5,
+        0,
+        state.x,
+        state.y - 5,
+        radius
+      );
+
+      gradient.addColorStop(0, `rgba(255, 0, 0, ${0.7 * intensity})`);
+      gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(state.x, state.y - 5, radius - 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
 
     ctx.restore();
   }
