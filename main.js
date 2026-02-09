@@ -2180,6 +2180,23 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
+          if (Math.random() < 0.01) {
+            const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
+            const pick = pool[(Math.random() * pool.length) | 0];
+
+            let spawned = 0;
+
+            const interval = setInterval(() => {
+              if (spawned >= 50) {
+                clearInterval(interval);
+                return;
+              }
+
+              pick.spawn();
+              registerEntitySpawn(pick.name, pick.src);
+              spawned++;
+            }, 200);
+          }
         }
         if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
