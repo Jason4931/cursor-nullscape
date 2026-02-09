@@ -262,6 +262,7 @@ let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
+let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
@@ -276,6 +277,7 @@ document.getElementById("toggle-blindness").checked = blindnessMode;
 document.getElementById("toggle-reduced-motion").checked = reducedMotion;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
+document.getElementById("toggle-enable-void").checked = enableVoid;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("toggle-casual-mode").checked = casualMode;
 document.getElementById("toggle-hard-mode").checked = hardMode;
@@ -349,6 +351,9 @@ toggle("toggle-tripmine-hell", (v) => {
     localStorage.setItem("casual-mode", false);
   }
   checkDiff();
+});
+toggle("toggle-enable-void", (v) => {
+  enableVoid = v;
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
@@ -451,6 +456,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("blindness");
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
+  localStorage.removeItem("enable-void");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
@@ -463,6 +469,7 @@ document.getElementById("reset-settings").onclick = () => {
   blindnessMode = false;
   drunkCamera = false;
   tripmineHell = false;
+  enableVoid = false;
   accurateCursor = false;
   sfxVolume = 50;
   musicVolume = 30;
@@ -474,6 +481,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-blindness").checked = false;
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
+  document.getElementById("toggle-enable-void").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
   document.getElementById("music-volume").value = 30;
@@ -649,8 +657,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -953,10 +962,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1506,7 +1515,7 @@ export function activatePurgatory() {
   counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
     latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-      latestCollectedCount <= (hardMode ? 11000 : 5500)
+    latestCollectedCount <= (hardMode ? 11000 : 5500)
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
@@ -1547,7 +1556,7 @@ export function activateChance() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-          latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       break;
@@ -1583,7 +1592,7 @@ export function activateProtection() {
     counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
       latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+      latestCollectedCount <= (hardMode ? 11000 : 5500)
         ? `lvl 100`
         : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     activateShield();
@@ -1763,17 +1772,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 400)
-                  : 0.00025 * (collectedCount - 500),
-                0.5,
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 400)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5,
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 400)
-                  : 0.0001 * (collectedCount - 500),
-                0.1,
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 400)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1,
+                ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -2153,7 +2162,7 @@ function updateCamera() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-          latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
 
@@ -2170,7 +2179,7 @@ function updateCamera() {
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
-          spawnVoid(entityHost);
+          spawnVoid(entityHost, enableVoid);
         }
         if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
