@@ -24,12 +24,20 @@ export function setup(host, enableVoid) {
     const progress = Math.min(state.offFloorTime / limit, 1);
     const alpha = progress * 0.5;
 
+    const cx = Math.round(cam.x);
+    const cy = Math.round(cam.y);
+
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     ctx.globalAlpha = alpha;
     ctx.fillStyle = "black";
-    ctx.fillRect(cam.x, cam.y, window.innerWidth, window.innerHeight);
+    ctx.fillRect(
+      cx,
+      cy,
+      Math.round(window.innerWidth),
+      Math.round(window.innerHeight),
+    );
 
     ctx.restore();
   }
