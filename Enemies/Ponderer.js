@@ -16,7 +16,7 @@ export function setup(host, hardMode) {
     timer: 8,
     maxTimer: 8,
 
-    decayRate: 1,
+    decayRate: 0.95,
     recoverRate: hardMode ? 0.5 : 0.9,
 
     agro: false,
