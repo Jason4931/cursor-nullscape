@@ -71,6 +71,7 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedVoid = false;
+let voidScale = 1;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
@@ -97,6 +98,9 @@ export function setVoidbreakerActive(v) {
 }
 export function setSorrowActive(v) {
   sorrowActive = v;
+}
+export function setVoidScale(v) {
+  voidScale = v;
 }
 export const pondererPositions = new Set();
 export const fleshPositions = new Set();
@@ -2101,8 +2105,8 @@ function updateCamera() {
     const motionScale = reducedMotion ? 0.5 : 1;
     const slowScale = slowness ? 0.25 : 1;
     const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
-    camX += vx * motionScale * slowScale * settingScale;
-    camY += vy * motionScale * slowScale * settingScale;
+    camX += vx * motionScale * slowScale * settingScale * voidScale;
+    camY += vy * motionScale * slowScale * settingScale * voidScale;
 
     const lim = getLimits();
     camX = Math.max(lim.minX, Math.min(lim.maxX, camX));

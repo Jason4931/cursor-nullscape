@@ -1,5 +1,5 @@
 import { death } from "../entityHost.js";
-import { isCursorOnFloor, getCameraPos } from "../main.js";
+import { isCursorOnFloor, getCameraPos, setVoidScale } from "../main.js";
 
 export function setup(host, enableVoid) {
   const state = {
@@ -22,6 +22,7 @@ export function setup(host, enableVoid) {
     const limit = enableVoid ? 6 : 60;
 
     const progress = Math.min(state.offFloorTime / limit, 1);
+    setVoidScale(1 - progress);
     const alpha = progress * 0.5;
 
     const cx = Math.round(cam.x);
