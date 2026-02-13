@@ -21,7 +21,7 @@ export function setup(host, casualMode) {
 
   const SPAWN_RADIUS = 2000;
   const TOUCH_RADIUS = state.size / 2;
-  const EXPLODE_RADIUS = casualMode ? state.size * 0.9 : state.size * 1.8;
+  const EXPLODE_RADIUS = casualMode ? (state.size * 0.9) : (state.size * 1.8);
   const FLASH_TIME = 1;
   const RESPAWN_DELAY = 10;
 
