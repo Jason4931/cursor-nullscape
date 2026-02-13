@@ -41,6 +41,7 @@ import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js"
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
+import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 
@@ -2180,6 +2181,7 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
+          spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
             const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
             const pick = pool[(Math.random() * pool.length) | 0];
