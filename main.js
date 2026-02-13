@@ -1304,11 +1304,12 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
 /* ===== ALTARS ===== */
 let lastAltar = null;
-function ENTITY_SPAWN(temp = false) {
+function ENTITY_SPAWN(temp = false, exceptEntity = null) {
   let name = null;
   const unlocked = ENTITY_POOL.filter((e) => {
     if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
     if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+    if (exceptEntity && e.name === exceptEntity) return false;
     return true;
   });
 
@@ -1509,8 +1510,6 @@ function ENTITY_SPAWN(temp = false) {
 }
 export function activatePurgatory() {
   lastAltar = "Purgatory";
-  let beforeCollectedCount = collectedCount;
-  let beforeLastEntitySpawnAt = lastEntitySpawnAt;
   if (!disableCollect) actualCollectedCount += 1000;
   if (actualCollectedCount > 10000) actualCollectedCount = 10000;
   collectedCount = hardMode
@@ -1524,19 +1523,8 @@ export function activatePurgatory() {
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
   const totalSpawns = hardMode ? 10 : 5;
-
-  let tempCount = 0;
   for (let i = 0; i < totalSpawns; i++) {
-    if (beforeCollectedCount < beforeLastEntitySpawnAt) {
-      tempCount++;
-      beforeCollectedCount += 100;
-    } else {
-      break;
-    }
-  }
-  for (let i = 0; i < totalSpawns; i++) {
-    console.log(i < tempCount);
-    ENTITY_SPAWN(i < tempCount);
+    ENTITY_SPAWN(true);
   }
 }
 let alreadyBenefitChanced = [false, false];
@@ -1694,7 +1682,7 @@ export function activatePurification() {
   }
 
   renderPanel();
-  const newEntity = ENTITY_SPAWN();
+  const newEntity = ENTITY_SPAWN(false, chosen.name);
   return [replacedEntity, newEntity];
 }
 
