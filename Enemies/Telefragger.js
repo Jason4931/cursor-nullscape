@@ -113,7 +113,7 @@ export function setup(host, hardMode) {
 
     state.ripplePhase += dt * 3;
 
-    if (dist < state.size * 0.2) {
+    if (dist < state.size * 0.15) {
       death("Telefragger");
     }
   }
