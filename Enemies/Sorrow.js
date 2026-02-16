@@ -150,7 +150,6 @@ export function setup(host) {
 
       ctx.fillStyle = "white";
 
-      // Upper half
       ctx.fillRect(
         offsetX,
         centerY - innerHalfHeight,
@@ -158,7 +157,6 @@ export function setup(host) {
         innerHalfHeight,
       );
 
-      // Lower half
       ctx.fillRect(offsetX, centerY, innerWidth, innerHalfHeight);
     }
 
