@@ -662,8 +662,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -706,6 +707,7 @@ let camY = 0;
 let camVX = 0;
 let camVY = 0;
 export let slowness = false;
+let slownessTime = 0;
 let slownessTimeout = null;
 
 /* ===== TILE DATA ===== */
@@ -966,10 +968,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1520,7 +1522,7 @@ export function activatePurgatory() {
   counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
   lvlEl.textContent =
     latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-      latestCollectedCount <= (hardMode ? 11000 : 5500)
+    latestCollectedCount <= (hardMode ? 11000 : 5500)
       ? `lvl 100`
       : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   lastEntitySpawnAt = collectedCount;
@@ -1560,7 +1562,7 @@ export function activateChance() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-          latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       break;
@@ -1596,7 +1598,7 @@ export function activateProtection() {
     counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
     lvlEl.textContent =
       latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
+      latestCollectedCount <= (hardMode ? 11000 : 5500)
         ? `lvl 100`
         : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     activateShield();
@@ -1776,17 +1778,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 400)
-                  : 0.00025 * (collectedCount - 500),
-                0.5,
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 400)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5,
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 400)
-                  : 0.0001 * (collectedCount - 500),
-                0.1,
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 400)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1,
+                ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -1941,15 +1943,33 @@ function drawGrid() {
       }
     }
 
-    // cursor inside this tile?
+    // cursor inside this tile and certain distance from flesh?
     if (corrupted) {
-      if (
+      const insideTile =
         mouse.x >= t.x &&
         mouse.x <= t.x + TILE &&
         mouse.y >= t.y &&
-        mouse.y <= t.y + TILE
-      ) {
-        cursorOnCorruptedTile = true;
+        mouse.y <= t.y + TILE;
+
+      if (insideTile) {
+        let nearFlesh = false;
+
+        for (const f of fleshPositions) {
+          if (!f.fromFlesh) continue;
+
+          const dx = mouse.x - f.x;
+          const dy = mouse.y - f.y;
+          const radius = 1000;
+
+          if (dx * dx + dy * dy <= radius * radius) {
+            nearFlesh = true;
+            break;
+          }
+        }
+
+        if (nearFlesh || Math.random() < 0.1) {
+          cursorOnCorruptedTile = true;
+        }
       }
     }
 
@@ -1988,15 +2008,21 @@ function drawGrid() {
   }
   if (cursorOnCorruptedTile) {
     slowness = true;
+    slownessTime++;
 
     if (slownessTimeout) {
       clearTimeout(slownessTimeout);
       slownessTimeout = null;
     }
   } else {
-    if (slowness && !slownessTimeout) {
+    if (slownessTime >= 150) {
+      slowness = false;
+      slownessTime = 0;
+      slownessTimeout = null;
+    } else if (slowness && !slownessTimeout) {
       slownessTimeout = setTimeout(() => {
         slowness = false;
+        slownessTime = 0;
         slownessTimeout = null;
       }, 1500);
     }
@@ -2131,6 +2157,7 @@ function updateCamera() {
         x: mouse.x,
         y: mouse.y,
         until: now + 18750,
+        fromFlesh: false,
       });
 
       lastCursorInfectAt = now;
@@ -2166,7 +2193,7 @@ function updateCamera() {
       counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
       lvlEl.textContent =
         latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-          latestCollectedCount <= (hardMode ? 11000 : 5500)
+        latestCollectedCount <= (hardMode ? 11000 : 5500)
           ? `lvl 100`
           : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
 

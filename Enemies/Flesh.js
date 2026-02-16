@@ -153,6 +153,7 @@ export function setup(host, hardMode) {
       x: state.x,
       y: state.y,
       until: now + 25000,
+      fromFlesh: true,
     });
 
     if (hardMode) {
@@ -180,6 +181,7 @@ export function setup(host, hardMode) {
               x: state.pelletX,
               y: state.pelletY,
               until: now + 50000,
+              fromFlesh: true,
             });
             return;
           }

@@ -3,6 +3,7 @@ import {
   isCursorOnFloor,
   setSorrowActive,
   moveCamera,
+  getCameraPos,
   TILE,
   playSound,
 } from "../main.js";
@@ -119,6 +120,46 @@ export function setup(host) {
       const h = Math.round(6 + Math.random() * 6);
 
       ctx.fillRect(x, y, 1, h);
+    }
+
+    const cam = getCameraPos();
+
+    const limit = 3;
+    const progress = Math.min(state.offFloorTime / limit, 1);
+
+    const barWidth = 20;
+    const barHeight = window.innerHeight * 0.8;
+    const marginLeft = 20;
+
+    const centerY = cam.y + window.innerHeight / 2;
+    const topY = centerY - barHeight / 2;
+    const x = cam.x + marginLeft;
+
+    ctx.globalAlpha = state.opacity * 0.6;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "white";
+    ctx.strokeRect(x, topY, barWidth, barHeight);
+
+    if (progress > 0) {
+      const halfHeight = (barHeight / 2) * progress;
+
+      const innerWidth = barWidth * 0.75;
+      const innerHalfHeight = halfHeight * 0.99;
+
+      const offsetX = x + (barWidth - innerWidth) / 2;
+
+      ctx.fillStyle = "white";
+
+      // Upper half
+      ctx.fillRect(
+        offsetX,
+        centerY - innerHalfHeight,
+        innerWidth,
+        innerHalfHeight,
+      );
+
+      // Lower half
+      ctx.fillRect(offsetX, centerY, innerWidth, innerHalfHeight);
     }
 
     ctx.restore();
