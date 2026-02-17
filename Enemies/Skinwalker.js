@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Skinwalker.png";
 
-export function setup(host, stack) {
+export function setup(host, stack, hardMode) {
   const state = {
     opacity: 1,
 
@@ -24,7 +24,7 @@ export function setup(host, stack) {
   };
 
   function pickDelay() {
-    state.delayTarget = 2 + Math.random() + stack * 2.5;
+    state.delayTarget = hardMode ? (0.75 + Math.random() + stack * 1.25) : (2 + Math.random() + stack * 2.5);
   }
 
   function update(dt) {

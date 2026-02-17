@@ -133,7 +133,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Skinwalker",
-    spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++),
+    spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++, hardMode),
     start: 100,
     src: "./ASSET/Enemies/Skinwalker.png",
   },
