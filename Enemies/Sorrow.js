@@ -53,7 +53,8 @@ export function setup(host) {
           }
         }
       } else {
-        state.offFloorTime = 0;
+        state.offFloorTime -= dt;
+        if (state.offFloorTime < 0) state.offFloorTime = 0;
         if (state.sound && state.soundTime >= 1) {
           state.sound();
           state.sound = null;
