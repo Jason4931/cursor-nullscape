@@ -2038,7 +2038,7 @@ function drawGrid() {
         slowness = false;
         slownessTime = 0;
         slownessTimeout = null;
-      }, 2000);
+      }, 1750);
     }
   }
 
