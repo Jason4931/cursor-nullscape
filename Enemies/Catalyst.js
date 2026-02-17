@@ -24,7 +24,7 @@ export function setup(host) {
     nextScream: 14 + Math.random(),
 
     cycleTime: 0,
-    cycleDuration: 1,
+    cycleDuration: 0.75,
 
     auraTimer: 0,
     screaming: false,
