@@ -12,7 +12,7 @@ export function setup(host, hardMode) {
     timer: 0,
 
     idleDuration: 9 + Math.random(),
-    watchDuration: hardMode ? 3 : 6,
+    watchDuration: hardMode ? 2 : 6,
 
     x: 0,
     y: 0,
