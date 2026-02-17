@@ -76,6 +76,7 @@ let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
+let SHAKE = false;
 let transformAllGift = false;
 let allGold = false;
 let passageGoldPattern = 0;
@@ -606,6 +607,7 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
+    SHAKE = true;
     setInterval(() => {
       if (Math.random() < 0.5) {
         spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
@@ -1319,6 +1321,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     let pick;
     if (collectedCount >= (hardMode ? 10000 : 5000) && !spawnedCatalyst) {
       spawnedCatalyst = true;
+      SHAKE = true;
       pick = {
         name: "Catalyst",
         spawn: () => spawnCatalyst(entityHost),
@@ -2144,6 +2147,11 @@ function updateCamera() {
     canvas.style.transform = `translate(${camX}px, ${camY}px)`;
     entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
     entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
+    if (SHAKE) {
+      canvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
+      entityCanvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
+      entityCanvas2.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
+    }
   }
 
   // mouseWorld = screenToWorld(mouseX, mouseY);
@@ -2262,6 +2270,7 @@ function updateCamera() {
             !disablespawn
           ) {
             spawnedCatalyst = true;
+            SHAKE = true;
             pick = {
               name: "Catalyst",
               spawn: () => spawnCatalyst(entityHost),
@@ -2681,6 +2690,7 @@ export function onFinalContact() {
   }
   setTimeout(() => {
     despawnCatalyst = true;
+    SHAKE = false;
     for (const [key, p] of patternsState) {
       destroyPattern(p);
       patternsState.delete(key);
