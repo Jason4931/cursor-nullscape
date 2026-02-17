@@ -28,8 +28,8 @@ export function setup(host, hardMode) {
     instrumentSounds: [null, null, null],
   };
 
-  const SPAWN_MIN = 11.5;
-  const SPAWN_MAX = 12.5;
+  const SPAWN_MIN = 9.5;
+  const SPAWN_MAX = 10.5;
   const AGRO_SPEED = hardMode ? 1350 : 900;
   const PICKUP_RADIUS = 56;
 
