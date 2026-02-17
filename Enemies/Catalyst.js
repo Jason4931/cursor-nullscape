@@ -180,7 +180,7 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        const MAX_DASH_DIST = 840;
+        const MAX_DASH_DIST = 630;
         const d = Math.hypot(dx, dy) || 1;
 
         if (d > MAX_DASH_DIST) {
