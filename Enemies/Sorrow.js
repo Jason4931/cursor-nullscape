@@ -56,7 +56,7 @@ export function setup(host) {
           }
         }
       } else {
-        state.offFloorTime -= dt;
+        state.offFloorTime -= 1.5 * dt;
         if (state.offFloorTime < 0) state.offFloorTime = 0;
         if (state.sound && state.soundTime >= 0.5) {
           state.sound();
