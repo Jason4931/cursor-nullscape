@@ -37,16 +37,16 @@ export function setup(host) {
     if (state.phase === 0) {
       state.soundTime += dt;
       if (!state.sound) {
-        const t = Math.min(state.offFloorTime / 3, 1);
+        const t = Math.min(state.offFloorTime / 4, 1);
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Sorrow/SorrowNewSound.wav",
-          2.6,
+          2,
           { start: t, end: 1 },
         );
       }
       if (!isCursorOnFloor()) {
         state.offFloorTime += dt;
-        if (state.offFloorTime >= 3) {
+        if (state.offFloorTime >= 4) {
           death("Sorrow");
           if (!state.deathsound) {
             state.deathsound = true;
@@ -92,7 +92,7 @@ export function setup(host) {
     moveCamera(-state.shakeX, -state.shakeY, true);
 
     if (state.phase === 0 && state.offFloorTime > 0) {
-      const t = Math.min(state.offFloorTime / 3, 1);
+      const t = Math.min(state.offFloorTime / 4, 1);
       const strength = t * t * 24;
 
       state.shakeX = (Math.random() * 2 - 1) * strength;
@@ -128,7 +128,7 @@ export function setup(host) {
 
     const cam = getCameraPos();
 
-    const progress = Math.min(state.offFloorTime / 3, 1);
+    const progress = Math.min(state.offFloorTime / 4, 1);
 
     const barWidth = 20;
     const barHeight = window.innerHeight * 0.8;
