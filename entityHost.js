@@ -351,10 +351,17 @@ let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
-export let shieldActive = false;
-export let shieldBroken = false;
+export let shieldActive = [false, false];
+export let shieldBroken = [false, false];
 export function activateShield() {
-  shieldActive = true;
+  if (!shieldActive[0]) {
+    shieldActive[0] = true;
+    return;
+  }
+  if (!shieldActive[1]) {
+    shieldActive[1] = true;
+    return;
+  }
 }
 export function toggleToggleDeath() {
   toggleDeath = !toggleDeath;
@@ -383,11 +390,19 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (shieldActive) {
-    shieldBroken = true;
+  if (shieldActive[1]) {
+    shieldBroken[1] = true;
     setTimeout(() => {
-      shieldBroken = false;
-      shieldActive = false;
+      shieldBroken[1] = false;
+      shieldActive[1] = false;
+    }, 1000);
+    return;
+  }
+  if (shieldActive[0] && !shieldActive[1]) {
+    shieldBroken[0] = true;
+    setTimeout(() => {
+      shieldBroken[0] = false;
+      shieldActive[0] = false;
     }, 1000);
     return;
   }

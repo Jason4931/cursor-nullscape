@@ -1600,7 +1600,7 @@ export function activateChance() {
 }
 export function activateProtection() {
   lastAltar = "Protection";
-  if (actualCollectedCount >= 1000 && shieldActive === false) {
+  if (actualCollectedCount >= 1000 && (shieldActive[0] === false || shieldActive[1] === false)) {
     actualCollectedCount -= 1000;
     collectedCount = hardMode
       ? actualCollectedCount
@@ -2539,7 +2539,7 @@ function loop(now) {
   ctx.fillStyle = g;
   ctx.fill();
 
-  if (shieldBroken) {
+  if (shieldBroken[0] || shieldBroken[1]) {
     const size = TILE * (1 + Math.random());
     const shieldg = ctx.createRadialGradient(
       mouse.x,
@@ -2558,7 +2558,7 @@ function loop(now) {
     ctx.arc(mouse.x, mouse.y, size - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
     ctx.fill();
-  } else if (shieldActive) {
+  } else if (shieldActive[0] || shieldActive[1]) {
     const shieldg = ctx.createRadialGradient(
       mouse.x,
       mouse.y,
@@ -2568,7 +2568,11 @@ function loop(now) {
       TILE,
     );
     shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
-    shieldg.addColorStop(1, `rgba(0, 0, 255, 1)`);
+    if (shieldActive[1]) {
+      shieldg.addColorStop(1, `rgba(255, 0, 255, 1)`);
+    } else if (shieldActive[0]) {
+      shieldg.addColorStop(1, `rgba(0, 0, 255, 1)`);
+    }
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
