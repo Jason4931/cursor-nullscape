@@ -1124,8 +1124,8 @@ function trackHighestEntity(unregister, startValue, name) {
   highestEntitySpawned.push({ unregister, start: startValue, name });
   highestEntitySpawned.sort((a, b) => b.start - a.start);
 
-  if (highestEntitySpawned.length > 5) {
-    highestEntitySpawned.length = 5;
+  if (highestEntitySpawned.length > 3) {
+    highestEntitySpawned.length = 3;
   }
 }
 
