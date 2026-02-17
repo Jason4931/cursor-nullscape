@@ -1916,7 +1916,7 @@ function drawGrid() {
 
   // Clear only visible area (viewport)
   const visibleX = -camX;
-  const visibleY = -camY;
+  const visibleY = -camY - 2;
   const visibleW = viewport.clientWidth;
   const visibleH = viewport.clientHeight;
   ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
