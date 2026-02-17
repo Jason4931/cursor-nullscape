@@ -664,9 +664,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -970,10 +969,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1522,12 +1521,16 @@ export function activatePurgatory() {
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
-  counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
-  lvlEl.textContent =
-    latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-    latestCollectedCount <= (hardMode ? 11000 : 5500)
-      ? `lvl 100`
-      : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+  if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
+    counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+  } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
+    counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+    lvlEl.textContent = `lvl 100`;
+  } else {
+    counterEl.textContent = `Collected: ${actualCollectedCount}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+  }
   lastEntitySpawnAt = collectedCount;
   const totalSpawns = hardMode ? 10 : 5;
   let tempCount = 0;
@@ -1562,12 +1565,16 @@ export function activateChance() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
-      lvlEl.textContent =
-        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
-          ? `lvl 100`
-          : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+      if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
+        counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+      } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
+        counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        lvlEl.textContent = `lvl 100`;
+      } else {
+        counterEl.textContent = `Collected: ${actualCollectedCount}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+      }
       break;
     case 1:
       // - random enemy 4
@@ -1598,12 +1605,16 @@ export function activateProtection() {
     collectedCount = hardMode
       ? actualCollectedCount
       : Math.floor(actualCollectedCount / 2);
-    counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
-    lvlEl.textContent =
-      latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-      latestCollectedCount <= (hardMode ? 11000 : 5500)
-        ? `lvl 100`
-        : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+    if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
+      counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+    } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
+      counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+      lvlEl.textContent = `lvl 100`;
+    } else {
+      counterEl.textContent = `Collected: ${actualCollectedCount}`;
+      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+    }
     activateShield();
     return true;
   }
@@ -1781,17 +1792,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 400)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5,
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 400)
+                  : 0.00025 * (collectedCount - 500),
+                0.5,
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 400)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1,
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 400)
+                  : 0.0001 * (collectedCount - 500),
+                0.1,
+              ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -2198,12 +2209,16 @@ function updateCamera() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      counterEl.textContent = `Collected: ${collectedCount >= (hardMode ? 10000 : 5000) && collectedCount <= (hardMode ? 11000 : 5500) ? -11000 + Math.floor(Math.random() * 22000) : actualCollectedCount}`;
-      lvlEl.textContent =
-        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 11000 : 5500)
-          ? `lvl 100`
-          : `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+      if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
+        counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+      } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
+        counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        lvlEl.textContent = `lvl 100`;
+      } else {
+        counterEl.textContent = `Collected: ${actualCollectedCount}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+      }
 
       if (
         Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
