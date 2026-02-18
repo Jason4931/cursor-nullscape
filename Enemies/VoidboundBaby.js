@@ -58,7 +58,7 @@ export function setup(host, hardMode) {
     state.timer += dt;
 
     if (state.state === "idle") {
-      if (state.timer >= 0.5) {
+      if (state.timer >= 0.375) {
         state.timer = 0;
         state.state = "indicator";
         playSound("./ASSET/Sound/Enemies/VoidboundBaby/Shadow_Baby_Alarm.ogg");
@@ -71,7 +71,7 @@ export function setup(host, hardMode) {
         state.dirY = dy / d;
       }
     } else if (state.state === "indicator") {
-      if (state.timer >= 0.5) {
+      if (state.timer >= 0.375) {
         state.timer = 0;
         state.state = "charging";
         playSound("./ASSET/Sound/Enemies/VoidboundBaby/Shadow_Baby_Scream.ogg");
@@ -81,8 +81,8 @@ export function setup(host, hardMode) {
 
         state.chargeTime = 0;
         state.chargeDuration = hardMode
-          ? 0.25 + Math.random()
-          : 0.5 + Math.random();
+          ? 0.1875 + Math.random()
+          : 0.375 + Math.random();
 
         if (hardMode) {
           playSound(
@@ -103,7 +103,7 @@ export function setup(host, hardMode) {
           state.startY2 = By;
 
           state.chargeTime2 = 0;
-          state.chargeDuration2 = 0.25 + Math.random();
+          state.chargeDuration2 = 0.1875 + Math.random();
         }
       }
     } else if (state.state === "charging") {
@@ -139,7 +139,7 @@ export function setup(host, hardMode) {
           state.startY2 = state.startY + state.dirY * state.lineLength;
 
           state.chargeTime2 = 0;
-          state.chargeDuration2 = 0.25 + Math.random();
+          state.chargeDuration2 = 0.1875 + Math.random();
         }
       }
     } else if (state.state === "charging2") {
@@ -180,7 +180,7 @@ export function setup(host, hardMode) {
       state.state === "indicator" ||
       (hardMode && state.state === "charging")
     ) {
-      const alpha = 0.5 - state.timer;
+      const alpha = 0.375 - state.timer;
       ctx.fillStyle = `rgba(255,0,255,${alpha})`;
 
       const dashLength = 30;
