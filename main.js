@@ -664,8 +664,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -969,10 +970,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1600,7 +1601,10 @@ export function activateChance() {
 }
 export function activateProtection() {
   lastAltar = "Protection";
-  if (actualCollectedCount >= 1000 && (shieldActive[0] === false || shieldActive[1] === false)) {
+  if (
+    actualCollectedCount >= 1000 &&
+    (shieldActive[0] === false || shieldActive[1] === false)
+  ) {
     actualCollectedCount -= 1000;
     collectedCount = hardMode
       ? actualCollectedCount
@@ -1792,17 +1796,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 400)
-                  : 0.00025 * (collectedCount - 500),
-                0.5,
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 400)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5,
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 400)
-                  : 0.0001 * (collectedCount - 500),
-                0.1,
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 400)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1,
+                ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -2029,17 +2033,19 @@ function drawGrid() {
       slownessTimeout = null;
     }
   } else {
-    if (slownessTime >= 150) {
-      slowness = false;
-      slownessTime = 0;
-      slownessTimeout = null;
-    } else if (slowness && !slownessTimeout) {
+    if (slowness && !slownessTimeout) {
       slownessTimeout = setTimeout(() => {
         slowness = false;
         slownessTime = 0;
         slownessTimeout = null;
       }, 1750);
     }
+  }
+  if (slownessTime >= 160) {
+    slownessTime = 0;
+  } else if (slownessTime >= 150) {
+    slowness = false;
+    slownessTimeout = null;
   }
 
   // gifts (center inside the tile)
