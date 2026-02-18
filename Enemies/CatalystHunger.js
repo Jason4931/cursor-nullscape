@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera } from "../main.js";
+import { despawnCatalyst, moveCamera, playSound } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const enemy = new Image();
@@ -44,6 +44,14 @@ export function setup(host, overshootBrake) {
     if (!state.screaming && state.screamTimer >= state.nextScream) {
       state.screaming = true;
       state.screamTimer = 0;
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
 
       state.accel += 100;
       state.maxSpeed += 100;

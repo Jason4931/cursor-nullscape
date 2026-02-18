@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera } from "../main.js";
+import { despawnCatalyst, moveCamera, playSound } from "../main.js";
 
 const layers = [];
 for (let i = 1; i <= 8; i++) {
@@ -135,6 +135,14 @@ export function setup(host) {
         state.timer = 0;
         state.phase = "scream";
         state.screaming = true;
+        playSound(
+          "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
       }
       return;
     }
@@ -223,6 +231,14 @@ export function setup(host) {
       state.totalTimer = 0;
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       state.timer = 0;
       state.screaming = true;
       state.cycleDuration *= 0.9;

@@ -1,7 +1,7 @@
 import { mouse, toggleImmortality } from "../entityHost.js";
 import { onFinalContact, TILE, getCameraPos } from "../main.js";
 
-export function setup(host) {
+export function setup(host, deafMode) {
   const TEXT_DELAY = 6.667;
   const HOLD_AFTER_LAST = 6.6667;
 
@@ -221,7 +221,7 @@ export function setup(host) {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(cx - half, cy - half, size, size);
 
-    if (state.phase === "active") {
+    if (state.phase === "active" && deafMode) {
       drawArrow(ctx);
     }
 

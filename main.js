@@ -63,6 +63,7 @@ const entityCounts = new Map();
 const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
+let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
 let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
 export let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
 let panelOpen = false;
@@ -169,7 +170,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Telefragger",
-    spawn: () => spawnTelefragger(entityHost, hardMode),
+    spawn: () => spawnTelefragger(entityHost, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
   },
@@ -243,7 +244,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Cadence",
-    spawn: () => spawnCadence(entityHost, hardMode),
+    spawn: () => spawnCadence(entityHost, hardMode, deafMode),
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
     unstackable: true,
@@ -280,6 +281,7 @@ document.getElementById("toggle-border").checked = showBorder;
 document.getElementById("toggle-epileptic").checked = epilepticMode;
 document.getElementById("toggle-blindness").checked = blindnessMode;
 document.getElementById("toggle-reduced-motion").checked = reducedMotion;
+document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
@@ -344,6 +346,9 @@ toggle("toggle-blindness", (v) => {
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
+});
+toggle("toggle-deaf-mode", (v) => {
+  deafMode = v;
 });
 toggle("toggle-drunk-camera", (v) => {
   drunkCamera = v;
@@ -470,6 +475,7 @@ document.getElementById("reset-settings").onclick = () => {
   showFloor = true;
   showGrids = false;
   reducedMotion = false;
+  deafMode = true;
   epilepticMode = false;
   blindnessMode = false;
   drunkCamera = false;
@@ -1330,7 +1336,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       spawnedBeacon = true;
       pick = {
         name: "Beacon",
-        spawn: () => spawnBeacon(entityHost),
+        spawn: () => spawnBeacon(entityHost, deafMode),
         start: 5500,
       };
     } else {
@@ -2303,7 +2309,7 @@ function updateCamera() {
             spawnedBeacon = true;
             pick = {
               name: "Beacon",
-              spawn: () => spawnBeacon(entityHost),
+              spawn: () => spawnBeacon(entityHost, deafMode),
               start: 5500,
             };
           } else {

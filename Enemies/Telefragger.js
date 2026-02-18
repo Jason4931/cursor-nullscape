@@ -4,7 +4,7 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, deafMode) {
   const state = {
     opacity: 1,
 
@@ -124,7 +124,7 @@ export function setup(host, hardMode) {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-    if (state.teleportTimer > 0 && state.teleportTimer <= 1) {
+    if (state.teleportTimer > 0 && state.teleportTimer <= 1 && deafMode) {
       const t = 1 - state.teleportTimer;
 
       const cx = Math.round(mouse.x);

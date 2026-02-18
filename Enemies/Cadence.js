@@ -9,7 +9,7 @@ violin.src = "./ASSET/Misc/Violin.png";
 const harp = new Image();
 harp.src = "./ASSET/Misc/Harp.png";
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, deafMode) {
   const canvas = host.canvas;
 
   const state = {
@@ -347,7 +347,7 @@ export function setup(host, hardMode) {
       }
     }
 
-    if (state.instruments.length >= (hardMode ? 2 : 3)) {
+    if (state.instruments.length >= (hardMode ? 2 : 3) && deafMode) {
       ctx.save();
       const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 48);
       const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 48);
