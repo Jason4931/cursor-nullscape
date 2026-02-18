@@ -20,7 +20,7 @@ export function setup(host, hardMode) {
     dirY: 0,
     dirX2: 0,
     dirY2: 0,
-    lineLength: 1125,
+    lineLength: 1000,
 
     chargeTime: 0,
     chargeDuration: 0,
