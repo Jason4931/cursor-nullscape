@@ -102,8 +102,8 @@ export function setup(host) {
           state.timer = STRIKE_TIME;
           state.showEntity = false;
 
-          state.strikeMouseX = mouse.x;
-          state.strikeMouseY = mouse.y;
+          state.strikeMouseX = mouse._clientX;
+          state.strikeMouseY = mouse._clientY;
         }
         break;
       }
@@ -119,8 +119,8 @@ export function setup(host) {
         }
 
         if (state.timer <= 0) {
-          const dx = mouse.x - state.strikeMouseX;
-          const dy = mouse.y - state.strikeMouseY;
+          const dx = mouse._clientX - state.strikeMouseX;
+          const dy = mouse._clientY - state.strikeMouseY;
 
           if (dx * dx + dy * dy <= STRIKE_RADIUS * STRIKE_RADIUS) {
             death("Kookoo");
