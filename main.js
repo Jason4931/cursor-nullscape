@@ -462,6 +462,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("floor");
   localStorage.removeItem("grids");
   localStorage.removeItem("reduced-motion");
+  localStorage.removeItem("deaf-mode");
   localStorage.removeItem("epileptic");
   localStorage.removeItem("blindness");
   localStorage.removeItem("drunk-camera");
@@ -488,6 +489,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
+  document.getElementById("toggle-deaf-mode").checked = true;
   document.getElementById("toggle-epileptic").checked = false;
   document.getElementById("toggle-blindness").checked = false;
   document.getElementById("toggle-drunk-camera").checked = false;
