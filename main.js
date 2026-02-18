@@ -568,25 +568,35 @@ window.addEventListener("keydown", (e) => {
 });
 const topLeftInput = document.getElementById("spawn-input");
 topLeftInput.addEventListener("input", () => {
-  const input = topLeftInput.value.trim().toLowerCase();
+  let rawInput = topLeftInput.value.trim().toLowerCase();
+  if (rawInput === "\\") topLeftInput.value = "";
+  const match = rawInput.match(/^(\d+)(.+)$/);
+  let spawnCount = 1;
+  let input = rawInput;
+  if (match) {
+    spawnCount = parseInt(match[1], 10);
+    input = match[2];
+  }
   if (input === "\\") topLeftInput.value = "";
   const entity = ENTITY_POOL.find((e) => e.name.toLowerCase() === input);
   if (entity) {
-    if (entity.name === "Random") {
-      const randUnlocked = ENTITY_POOL.filter((e) => {
-        if (e.name === "Random") return false;
-        if (collectedCount < e.start) return false;
-        if (e.unstackable) return false;
-        return true;
-      });
-      if (randUnlocked.length !== 0) {
-        let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
-        randPick.spawn();
+    for (let i = 0; i < spawnCount; i++) {
+      if (entity.name === "Random") {
+        const randUnlocked = ENTITY_POOL.filter((e) => {
+          if (e.name === "Random") return false;
+          if (collectedCount < e.start) return false;
+          if (e.unstackable) return false;
+          return true;
+        });
+        if (randUnlocked.length !== 0) {
+          let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+          randPick.spawn();
+          registerEntitySpawn(entity.name, entity.src);
+        }
+      } else {
+        entity.spawn();
         registerEntitySpawn(entity.name, entity.src);
       }
-    } else {
-      entity.spawn();
-      registerEntitySpawn(entity.name, entity.src);
     }
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
@@ -2286,7 +2296,7 @@ function updateCamera() {
           unlocked.length > 0 &&
           (!disablespawn ||
             (collectedCount >= (hardMode ? 11000 : 5500) &&
-              collectedCount <= (hardMode ? 11199 : 5599)))
+              collectedCount <= (hardMode ? 11199 : 5599))) && (spawnedCatalyst ? (collectedCount >= (hardMode ? 11000 : 5500)) : true)
         ) {
           let pick;
           if (
