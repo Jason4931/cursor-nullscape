@@ -663,9 +663,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -969,10 +968,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
-        return true;
-      });
+      if (collectedCount < m.start) return false;
+      if (m.end !== 0 && collectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1787,17 +1786,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 400)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5,
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 400)
+                  : 0.00025 * (collectedCount - 500),
+                0.5,
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 400)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1,
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 400)
+                  : 0.0001 * (collectedCount - 500),
+                0.1,
+              ))
           )
             type = "tripmine"; // 0-10%
           else type = "gift"; // 100-90%
@@ -2051,7 +2050,7 @@ function drawGrid() {
       }, 1750);
     }
   }
-  if (slownessTime >= 130) {
+  if (slownessTime >= 150) {
     slownessTime = 0;
   } else if (slownessTime >= 120) {
     slowness = false;
