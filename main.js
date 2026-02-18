@@ -87,7 +87,6 @@ let disableKnockback = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
-let babyCount = 0;
 let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
@@ -144,12 +143,6 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Springer.png",
   },
   {
-    name: "VoidboundBaby",
-    spawn: () => spawnVoidboundBaby(entityHost, hardMode),
-    start: 200,
-    src: "./ASSET/Enemies/VoidboundBaby.png",
-  },
-  {
     name: "Flesh",
     spawn: () => spawnFlesh(entityHost, hardMode),
     start: 500,
@@ -198,7 +191,7 @@ const ENTITY_POOL = [
   {
     name: "Kookoo",
     spawn: () => spawnKookoo(entityHost),
-    start: 1000,
+    start: 800,
     src: "./ASSET/Enemies/Kookoo.png",
     unstackable: true,
   },
@@ -224,11 +217,23 @@ const ENTITY_POOL = [
     unstackable: true,
   },
   {
+    name: "VoidboundBaby",
+    spawn: () => spawnVoidboundBaby(entityHost, hardMode),
+    start: 1200,
+    src: "./ASSET/Enemies/VoidboundBaby.png",
+  },
+  {
     name: "Ponderer",
     spawn: () => spawnPonderer(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/Ponderer.png",
     rare: true,
+  },
+  {
+    name: "VoidboundGuardian",
+    spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
+    start: 1200,
+    src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
   {
     name: "Voidbreaker",
@@ -242,12 +247,6 @@ const ENTITY_POOL = [
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
     unstackable: true,
-  },
-  {
-    name: "VoidboundGuardian",
-    spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
-    start: 2000,
-    src: "./ASSET/Enemies/VoidboundGuardian.png",
   },
 ];
 
@@ -1340,18 +1339,10 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       for (const e of unlocked) {
         const weight = pickedOnce.has(e.name) ? 1 : 3;
         for (let i = 0; i < weight; i++) weighted.push(e);
-        if (e.name === "baby" && babyCount < 2) weighted.push(e);
       }
       while (true) {
         pick = weighted[(Math.random() * weighted.length) | 0];
         if (lastEntityPicked !== pick.name) {
-          if (pick.name === "Baby") {
-            babyCount++;
-          } else if (pick.name === "VoidboundBaby") {
-            if (babyCount < 2) {
-              continue;
-            }
-          }
           if (pick.rare) {
             if (Math.random() < 0.25) {
               continue;
@@ -1868,8 +1859,26 @@ function destroyPattern(p) {
   patternsState.delete(`${p.sx},${p.sy}`);
 }
 
+let lastMouseX = mouse.x;
+let lastMouseY = mouse.y;
+let headingX = 1; // default direction (right)
+let headingY = 0;
+
 export function pickRandomPlaced4or5(minRadius = 0) {
-  // Step 1: build list of placed patterns that contain 4 or 5 AND are near the cursor
+  // --- Update heading ---
+  const dxMove = mouse.x - lastMouseX;
+  const dyMove = mouse.y - lastMouseY;
+  const moveLen = Math.hypot(dxMove, dyMove);
+
+  if (moveLen > 0.001) {
+    headingX = dxMove / moveLen;
+    headingY = dyMove / moveLen;
+  }
+
+  lastMouseX = mouse.x;
+  lastMouseY = mouse.y;
+
+  // --- Build candidate list ---
   const candidates = [];
   const maxRadius = minRadius + 1000;
 
@@ -1881,14 +1890,18 @@ export function pickRandomPlaced4or5(minRadius = 0) {
     const dy = center.y - mouse.y;
     const d2 = dx * dx + dy * dy;
 
-    if (d2 >= minRadius * minRadius && d2 <= maxRadius * maxRadius) {
-      candidates.push(p);
-    }
+    if (d2 < minRadius * minRadius || d2 > maxRadius * maxRadius) continue;
+
+    // 180° forward check
+    const dot = dx * headingX + dy * headingY;
+    if (dot <= 0) continue;
+
+    candidates.push(p);
   }
 
   let pool = candidates;
 
-  // Step 2: fallback if none are in radius
+  // --- Fallback ---
   if (pool.length === 0) {
     for (const p of patternsState.values()) {
       if (!p.pattern || !p.has4or5) continue;
@@ -1900,14 +1913,11 @@ export function pickRandomPlaced4or5(minRadius = 0) {
     }
   }
 
-  // Step 3: pick random pattern
+  // --- Random pick ---
   const pickedPattern = pool[(Math.random() * pool.length) | 0];
-
-  // Step 4: pick a random 4/5 coordinate using precomputed coords
-  const coords = pickedPattern.coords4or5; // array of {x, y}
+  const coords = pickedPattern.coords4or5;
   const c = coords[(Math.random() * coords.length) | 0];
 
-  // Step 5: convert to world coordinates
   const worldX = (pickedPattern.sx * SUPER_TILE + c.x) * TILE + TILE / 2;
   const worldY = (pickedPattern.sy * SUPER_TILE + c.y) * TILE + TILE / 2;
 
@@ -2041,9 +2051,9 @@ function drawGrid() {
       }, 1750);
     }
   }
-  if (slownessTime >= 160) {
+  if (slownessTime >= 130) {
     slownessTime = 0;
-  } else if (slownessTime >= 150) {
+  } else if (slownessTime >= 120) {
     slowness = false;
     slownessTimeout = null;
   }
@@ -2313,18 +2323,10 @@ function updateCamera() {
             for (const e of unlocked) {
               const weight = pickedOnce.has(e.name) ? 1 : 3;
               for (let i = 0; i < weight; i++) weighted.push(e);
-              if (e.name === "baby" && babyCount < 2) weighted.push(e);
             }
             while (true) {
               pick = weighted[(Math.random() * weighted.length) | 0];
               if (lastEntityPicked !== pick.name) {
-                if (pick.name === "Baby") {
-                  babyCount++;
-                } else if (pick.name === "VoidboundBaby") {
-                  if (babyCount < 2) {
-                    continue;
-                  }
-                }
                 if (pick.rare) {
                   if (Math.random() < 0.25) {
                     continue;

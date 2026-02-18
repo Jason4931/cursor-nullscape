@@ -245,7 +245,7 @@ export function setup(host) {
 
       ctx.save();
       ctx.globalAlpha = opacity;
-      const color = "0,128,255"; // rgb for #0080ff
+      const color = "255,0,255"; // rgb for #ff00ff
 
       // TOP (fade downward)
       let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
