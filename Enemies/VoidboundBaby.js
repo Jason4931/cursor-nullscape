@@ -81,8 +81,8 @@ export function setup(host, hardMode) {
 
         state.chargeTime = 0;
         state.chargeDuration = hardMode
-          ? 0.1875 + Math.random()
-          : 0.375 + Math.random();
+          ? 0.125 + Math.random() * 0.5
+          : 0.25 + Math.random() * 0.5;
 
         if (hardMode) {
           playSound(
@@ -103,7 +103,7 @@ export function setup(host, hardMode) {
           state.startY2 = By;
 
           state.chargeTime2 = 0;
-          state.chargeDuration2 = 0.1875 + Math.random();
+          state.chargeDuration2 = 0.125 + Math.random() * 0.5;
         }
       }
     } else if (state.state === "charging") {
@@ -139,7 +139,7 @@ export function setup(host, hardMode) {
           state.startY2 = state.startY + state.dirY * state.lineLength;
 
           state.chargeTime2 = 0;
-          state.chargeDuration2 = 0.1875 + Math.random();
+          state.chargeDuration2 = 0.125 + Math.random() * 0.5;
         }
       }
     } else if (state.state === "charging2") {

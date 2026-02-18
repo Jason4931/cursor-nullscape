@@ -57,7 +57,7 @@ export function setup(host, hardMode) {
     state.mode = "shoot";
     state.timer = 0;
     state.shotsFired = 0;
-    state.shootDuration = hardMode ? 1 + Math.random() : 2 + Math.random();
+    state.shootDuration = hardMode ? 0.5 + Math.random() : 1 + Math.random();
   }
 
   function startIdle() {

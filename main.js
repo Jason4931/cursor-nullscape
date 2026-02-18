@@ -707,8 +707,8 @@ let camY = 0;
 let camVX = 0;
 let camVY = 0;
 export let slowness = false;
+let slownessCooldown = false;
 let slownessTime = 0;
-let slownessTimeout = null;
 
 /* ===== TILE DATA ===== */
 let giftPositions = [];
@@ -1929,7 +1929,7 @@ function drawGrid() {
 
   // Clear only visible area (viewport)
   const visibleX = -camX;
-  const visibleY = -camY - 2;
+  const visibleY = -camY - 3;
   const visibleW = viewport.clientWidth;
   const visibleH = viewport.clientHeight;
   ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
@@ -2033,28 +2033,17 @@ function drawGrid() {
       }
     }
   }
-  if (cursorOnCorruptedTile) {
-    slowness = true;
-    slownessTime++;
-
-    if (slownessTimeout) {
-      clearTimeout(slownessTimeout);
-      slownessTimeout = null;
-    }
-  } else {
-    if (slowness && !slownessTimeout) {
-      slownessTimeout = setTimeout(() => {
-        slowness = false;
-        slownessTime = 0;
-        slownessTimeout = null;
-      }, 1750);
-    }
-  }
-  if (slownessTime >= 150) {
+  if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
     slownessTime = 0;
-  } else if (slownessTime >= 120) {
+    slowness = true;
+  }
+  slownessTime++;
+  if (slownessTime >= 120 && slowness) {
     slowness = false;
-    slownessTimeout = null;
+    slownessCooldown = true;
+    setTimeout(() => {
+      slownessCooldown = false;
+    }, 1000);
   }
 
   // gifts (center inside the tile)
