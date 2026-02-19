@@ -2791,11 +2791,12 @@ export function setStars() {
   const level = Math.floor(latestCollectedCount / (hardMode ? 100 : 50));
 
   if (!casualMode) {
-    const highest =
-      parseInt(
-        localStorage.getItem("highest-level-reached")?.split(" ")[0],
-        10,
-      ) ?? 0;
+    const highest = localStorage.getItem("highest-level-reached")
+      ? parseInt(
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
+      : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
         "highest-level-reached",
