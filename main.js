@@ -2101,26 +2101,44 @@ function drawGrid() {
       if (t.passageGoldPattern) {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
-      } else if (randTile < 0.6) {
-        ctx.fillStyle = showFloor ? "#333" : "#3331";
+      } else if (randTile < 0.4) {
+        ctx.fillStyle = showFloor ? "#222" : "#2221";
         ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else if (randTile < 0.7) {
+        const h = TILE / 2;
+
+        // top-left
+        ctx.fillStyle = showFloor ? "#022" : "#0441";
+        ctx.fillRect(t.x, t.y, h, h);
+
+        // top-right
+        ctx.fillStyle = showFloor ? "#033" : "#0551";
+        ctx.fillRect(t.x + h, t.y, h, h);
+
+        // bottom-left
+        ctx.fillStyle = showFloor ? "#032" : "#0541";
+        ctx.fillRect(t.x, t.y + h, h, h);
+
+        // bottom-right
+        ctx.fillStyle = showFloor ? "#043" : "#0651";
+        ctx.fillRect(t.x + h, t.y + h, h, h);
       } else {
         const h = TILE / 2;
 
         // top-left
-        ctx.fillStyle = showFloor ? "#ccc" : "#ccc1";
+        ctx.fillStyle = showFloor ? "#888" : "#8881";
         ctx.fillRect(t.x, t.y, h, h);
 
         // top-right
-        ctx.fillStyle = showFloor ? "#333" : "#3331";
+        ctx.fillStyle = showFloor ? "#222" : "#2221";
         ctx.fillRect(t.x + h, t.y, h, h);
 
         // bottom-left
-        ctx.fillStyle = showFloor ? "#333" : "#3331";
+        ctx.fillStyle = showFloor ? "#222" : "#2221";
         ctx.fillRect(t.x, t.y + h, h, h);
 
         // bottom-right
-        ctx.fillStyle = showFloor ? "#ccc" : "#ccc1";
+        ctx.fillStyle = showFloor ? "#888" : "#8881";
         ctx.fillRect(t.x + h, t.y + h, h, h);
       }
     }
