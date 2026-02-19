@@ -1,4 +1,4 @@
-import { PATTERNS, TILE_SIZE } from "./patterns.js";
+import { PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
 import {
   createEntityHost,
   updateMouseWorld,
@@ -668,6 +668,14 @@ topLeftInput.addEventListener("input", () => {
   if (input === "catalyst") {
     spawnCatalyst(entityHost);
     SHAKE = true;
+    finalPatterns(true);
+    ROTATED_PATTERNS = PATTERNS.map((base) => {
+      const r0 = base;
+      const r1 = rotateMatrix90(r0);
+      const r2 = rotateMatrix90(r1);
+      const r3 = rotateMatrix90(r2);
+      return [r0, r1, r2, r3];
+    });
     setInterval(() => {
       if (Math.random() < 0.5) {
         spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
@@ -1382,6 +1390,14 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (collectedCount >= (hardMode ? 10000 : 5000) && !spawnedCatalyst) {
       spawnedCatalyst = true;
       SHAKE = true;
+      finalPatterns(true);
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
       pick = {
         name: "Catalyst",
         spawn: () => spawnCatalyst(entityHost),
@@ -1768,7 +1784,7 @@ export function activatePurification() {
 }
 
 /* ===== PRECOMPUTE ROTATED PATTERNS ===== */
-const ROTATED_PATTERNS = PATTERNS.map((base) => {
+let ROTATED_PATTERNS = PATTERNS.map((base) => {
   const r0 = base;
   const r1 = rotateMatrix90(r0);
   const r2 = rotateMatrix90(r1);
@@ -2367,6 +2383,14 @@ function updateCamera() {
           ) {
             spawnedCatalyst = true;
             SHAKE = true;
+            finalPatterns(true);
+            ROTATED_PATTERNS = PATTERNS.map((base) => {
+              const r0 = base;
+              const r1 = rotateMatrix90(r0);
+              const r2 = rotateMatrix90(r1);
+              const r3 = rotateMatrix90(r2);
+              return [r0, r1, r2, r3];
+            });
             pick = {
               name: "Catalyst",
               spawn: () => spawnCatalyst(entityHost),
@@ -2761,6 +2785,14 @@ setInterval(() => {
 let originalVolume = [0, 0];
 export function onFinalContact() {
   originalVolume = [musicVolume, sfxVolume];
+  finalPatterns(false);
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
   stopAllSounds();
   musicVolume = 0;
   sfxVolume = 0;
