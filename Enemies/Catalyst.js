@@ -77,8 +77,8 @@ export function setup(host) {
     spawnPellet(
       state.x,
       state.y,
-      (dx / d - 0.1 + Math.random() * 0.2) * 220,
-      (dy / d - 0.1 + Math.random() * 0.2) * 220,
+      (dx / d - 0.1 + Math.random() * 0.2) * 330,
+      (dy / d - 0.1 + Math.random() * 0.2) * 330,
     );
   }
 
