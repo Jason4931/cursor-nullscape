@@ -2765,6 +2765,9 @@ const unlock = () => {
   if (windowClicked) return;
   windowClicked = true;
   document.getElementById("intro-screen").style.display = "none";
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
   loop();
 };
 window.addEventListener("pointerdown", unlock, { once: true });
