@@ -330,7 +330,9 @@ let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
-let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? false;
+let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
+let enablePonderer =
+  JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = Number(localStorage.getItem("sfxVolume")) ?? 50;
@@ -347,6 +349,7 @@ document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
+document.getElementById("toggle-enable-ponderer").checked = enablePonderer;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("sfx-volume").value = sfxVolume;
 document.getElementById("music-volume").value = musicVolume;
@@ -418,6 +421,9 @@ toggle("toggle-tripmine-hell", (v) => {
 });
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
+});
+toggle("toggle-enable-ponderer", (v) => {
+  enablePonderer = v;
 });
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
@@ -501,6 +507,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
+  localStorage.removeItem("enable-ponderer");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
@@ -514,7 +521,8 @@ document.getElementById("reset-settings").onclick = () => {
   blindnessMode = false;
   drunkCamera = false;
   tripmineHell = false;
-  enableVoid = false;
+  enableVoid = true;
+  enablePonderer = true;
   accurateCursor = false;
   sfxVolume = 50;
   musicVolume = 30;
@@ -527,7 +535,8 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-blindness").checked = false;
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
-  document.getElementById("toggle-enable-void").checked = false;
+  document.getElementById("toggle-enable-void").checked = true;
+  document.getElementById("toggle-enable-ponderer").checked = true;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
   document.getElementById("music-volume").value = 30;
@@ -1400,6 +1409,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
               continue;
             }
           }
+          if (!enablePonderer && pick.name === "Ponderer") continue;
           if (casualMode && (pick.name === "Kookoo" || pick.name === "Cadence"))
             continue;
           lastEntityPicked = pick.name;
@@ -2387,6 +2397,7 @@ function updateCamera() {
                     continue;
                   }
                 }
+                if (!enablePonderer && pick.name === "Ponderer") continue;
                 if (
                   casualMode &&
                   (pick.name === "Kookoo" || pick.name === "Cadence")
