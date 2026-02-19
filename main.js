@@ -2102,7 +2102,7 @@ function drawGrid() {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else if (randTile < 0.4) {
-        ctx.fillStyle = showFloor ? "#222" : "#2221";
+        ctx.fillStyle = showFloor ? "#282828" : "#28282811";
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else if (randTile < 0.7) {
         const h = TILE / 2;
