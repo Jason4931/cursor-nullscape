@@ -2442,7 +2442,7 @@ function updateCamera() {
       if (p && --p.giftsLeft === 0) p.cleared = true;
     }
   }
-  if (collectedCount >= 100 && settingsEnabled) {
+  if (actualCollectedCount >= 100 && settingsEnabled) {
     settingsBtn.style.opacity = "0";
     settingsBtn.style.pointerEvents = "none";
     settingsEnabled = false;
