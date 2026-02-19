@@ -15,7 +15,7 @@ export function setup(host, hardMode, deafMode) {
     speed: hardMode ? 80 : 40,
 
     teleportTimer: 1,
-    teleportDistance: 600,
+    teleportDistance: 450,
 
     prevMouseX: NaN,
     prevMouseY: NaN,
@@ -79,7 +79,7 @@ export function setup(host, hardMode, deafMode) {
       state.x = mouse.x + state.predDirX * state.teleportDistance;
       state.y = mouse.y + state.predDirY * state.teleportDistance;
 
-      state.teleportTimer = hardMode ? 5 + Math.random() : 9 + Math.random();
+      state.teleportTimer = hardMode ? 4 + Math.random() : 9 + Math.random();
 
       state.flashTime = state.flashDuration;
       state.flashAngle = Math.random() * Math.PI * 2;

@@ -6,9 +6,16 @@ export function setup(host, deafMode) {
   const HOLD_AFTER_LAST = 6.6667;
 
   const messages = [
-    { text: "Do you hear it?", y: -140 },
-    { text: "Our hearts beat as one.", y: 0 },
-    { text: "We will meet again.", y: 140 },
+    {
+      text: "You saw through the illusion built from all your burdens.",
+      y: -180,
+    },
+    {
+      text: "You chose to remain, despite everything that chased you.",
+      y: -70,
+    },
+    { text: "You were not deceived. You refused the false paradise.", y: 40 },
+    { text: "You endured. And you can endure again.", y: 150 },
   ];
 
   const SIZE = 3 * TILE;
@@ -87,7 +94,7 @@ export function setup(host, deafMode) {
 
     if (
       state.phase === "finalBurst" &&
-      state.timer >= 28.667 &&
+      state.timer >= 34.333 &&
       state.opacity > 0
     ) {
       document.getElementById("counter").style.color = "#fff";

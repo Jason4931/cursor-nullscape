@@ -64,8 +64,70 @@ const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
-let casualMode = JSON.parse(localStorage.getItem("casual-mode")) ?? false;
-export let hardMode = JSON.parse(localStorage.getItem("hard-mode")) ?? false;
+
+/* ===== DIFFICULTY ===== */
+const beaten = localStorage.getItem("GameBeaten") != null;
+const difficulties = beaten
+  ? ["Casual", "Normal", "Hard"]
+  : ["Casual", "Normal"];
+let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
+let casualMode = difficultyIndex === 0;
+export let hardMode = difficultyIndex === 2;
+const diffLabel = document.getElementById("diff-label");
+const diffLeft = document.getElementById("diff-left");
+const diffRight = document.getElementById("diff-right");
+function applyDifficulty(firstLoad = false, direction = 0) {
+  const diff = difficulties[difficultyIndex];
+  // diffLabel.textContent = diff;
+  if (direction !== 0) {
+    diffLabel.style.transform =
+      direction > 0 ? "translateX(-100%)" : "translateX(100%)";
+    diffLabel.style.opacity = "0";
+
+    setTimeout(() => {
+      diffLabel.textContent = diff;
+
+      // Move instantly to opposite side
+      diffLabel.style.transition = "none";
+      diffLabel.style.transform =
+        direction > 0 ? "translateX(100%)" : "translateX(-100%)";
+
+      // Force layout flush
+      diffLabel.offsetWidth;
+
+      // Now animate back in
+      diffLabel.style.transition =
+        "transform 0.25s ease, opacity 0.2s ease, color 0.2s ease";
+      diffLabel.style.transform = "translateX(0)";
+      diffLabel.style.opacity = "1";
+    }, 200);
+  } else {
+    diffLabel.textContent = diff;
+  }
+
+  if (diff === "Casual") {
+    diffLabel.style.color = "#0f0";
+  } else if (diff === "Hard") {
+    diffLabel.style.color = "#f00";
+  } else {
+    diffLabel.style.color = "#fff";
+  }
+  casualMode = diff === "Casual";
+  hardMode = diff === "Hard";
+  if (!firstLoad) localStorage.setItem("difficulty", difficultyIndex);
+  checkDiff();
+}
+diffLeft.addEventListener("click", () => {
+  difficultyIndex =
+    (difficultyIndex - 1 + difficulties.length) % difficulties.length;
+  applyDifficulty(false, -1);
+});
+diffRight.addEventListener("click", () => {
+  difficultyIndex = (difficultyIndex + 1) % difficulties.length;
+  applyDifficulty(false, 1);
+});
+applyDifficulty(true);
+
 let panelOpen = false;
 let lastEntitySpawnAt = 0;
 let lastEntityPicked;
@@ -199,21 +261,21 @@ const ENTITY_POOL = [
   {
     name: "VoidImplosions",
     spawn: () => spawnVoidImplosions(entityHost),
-    start: casualMode ? 1500 : 1000,
+    start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
   },
   {
     name: "Sorrow",
     spawn: () => spawnSorrow(entityHost),
-    start: casualMode ? 1500 : 1000,
+    start: 1000,
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
   },
   {
     name: "Doombringer",
     spawn: () => spawnDoombringer(entityHost),
-    start: casualMode ? 1500 : 1000,
+    start: 1000,
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
   },
@@ -286,8 +348,6 @@ document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
-document.getElementById("toggle-casual-mode").checked = casualMode;
-document.getElementById("toggle-hard-mode").checked = hardMode;
 document.getElementById("sfx-volume").value = sfxVolume;
 document.getElementById("music-volume").value = musicVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
@@ -355,12 +415,6 @@ toggle("toggle-drunk-camera", (v) => {
 });
 toggle("toggle-tripmine-hell", (v) => {
   tripmineHell = v;
-  if (tripmineHell) {
-    casualMode = false;
-    document.getElementById("toggle-casual-mode").checked = false;
-    localStorage.setItem("casual-mode", false);
-  }
-  checkDiff();
 });
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
@@ -376,27 +430,6 @@ toggle("toggle-accurate-cursor", (v) => {
     entityCanvas.style.cursor = "auto";
     entityCanvas2.style.cursor = "auto";
   }
-});
-toggle("toggle-casual-mode", (v) => {
-  casualMode = v;
-  if (casualMode) {
-    hardMode = false;
-    document.getElementById("toggle-hard-mode").checked = false;
-    localStorage.setItem("hard-mode", false);
-    tripmineHell = false;
-    document.getElementById("toggle-tripmine-hell").checked = false;
-    localStorage.setItem("tripmine-hell", false);
-  }
-  checkDiff();
-});
-toggle("toggle-hard-mode", (v) => {
-  hardMode = v;
-  if (hardMode) {
-    casualMode = false;
-    document.getElementById("toggle-casual-mode").checked = false;
-    localStorage.setItem("casual-mode", false);
-  }
-  checkDiff();
 });
 document.getElementById("sfx-volume").oninput = (e) => {
   sfxVolume = Number(e.target.value);
@@ -591,7 +624,8 @@ topLeftInput.addEventListener("input", () => {
           return true;
         });
         if (randUnlocked.length !== 0) {
-          let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
+          let randPick =
+            randUnlocked[(Math.random() * randUnlocked.length) | 0];
           randPick.spawn();
           registerEntitySpawn(entity.name, entity.src);
         }
@@ -681,8 +715,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -986,10 +1021,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (collectedCount < m.start) return false;
-      if (m.end !== 0 && collectedCount > m.end) return false;
-      return true;
-    });
+        if (collectedCount < m.start) return false;
+        if (m.end !== 0 && collectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1505,11 +1540,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       name = pick.name;
       registerEntitySpawn(pick.name, pick.src, temp);
     }
-    if (
-      collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
-      !isSeamineEnabled &&
-      !disablespawn
-    ) {
+    if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
@@ -1746,6 +1777,25 @@ function canPlaceSuper(sx, sy, pattern) {
     for (let x = 0; x < pw; x++)
       if (superOccupied[sy + y][sx + x]) return false;
 
+  // --- NEW EDGE SAFETY CHECK ---
+  for (let ty = 0; ty < pattern.length; ty++) {
+    for (let tx = 0; tx < pattern[ty].length; tx++) {
+      const value = pattern[ty][tx];
+      if (value === 0) continue;
+
+      const worldX = sx * SUPER_TILE + tx;
+      const worldY = sy * SUPER_TILE + ty;
+
+      const isEdge =
+        worldX === 0 ||
+        worldY === 0 ||
+        worldX === SUPER_W * SUPER_TILE - 1 ||
+        worldY === SUPER_H * SUPER_TILE - 1;
+
+      if (isEdge) return false;
+    }
+  }
+
   return true;
 }
 
@@ -1783,9 +1833,7 @@ function placeSuper(sx, sy, pattern) {
       }
 
       const isTripmineEnabled =
-        !disableTripmine &&
-        !casualMode &&
-        (hardMode ? collectedCount > 400 : collectedCount > 500);
+        !disableTripmine && !casualMode && collectedCount > 500;
 
       if (
         pattern[y][x] === 2 ||
@@ -1804,19 +1852,19 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 400)
-                  : 0.00025 * (collectedCount - 500),
-                0.5,
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 400)
-                  : 0.0001 * (collectedCount - 500),
-                0.1,
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
-            type = "tripmine"; // 0-10%
+            type = "tripmine";
           else type = "gift"; // 100-90%
         } else {
           type = "gift"; // original
@@ -2248,10 +2296,11 @@ function updateCamera() {
         lastEntitySpawnAt = collectedCount;
 
         const unlocked = ENTITY_POOL.filter((e) => {
-          if (collectedCount < e.start * (hardMode ? 2 : 1) - 100) return false;
+          if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
           if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
           return true;
         });
+        console.log(unlocked);
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
@@ -2298,7 +2347,8 @@ function updateCamera() {
           unlocked.length > 0 &&
           (!disablespawn ||
             (collectedCount >= (hardMode ? 11000 : 5500) &&
-              collectedCount <= (hardMode ? 11199 : 5599))) && (spawnedCatalyst ? (collectedCount >= (hardMode ? 11000 : 5500)) : true)
+              collectedCount <= (hardMode ? 11199 : 5599))) &&
+          (spawnedCatalyst ? collectedCount >= (hardMode ? 11000 : 5500) : true)
         ) {
           let pick;
           if (
@@ -2377,11 +2427,7 @@ function updateCamera() {
             trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
-          if (
-            collectedCount >= (casualMode ? 1500 : 1000) * (hardMode ? 2 : 1) &&
-            !isSeamineEnabled &&
-            !disablespawn
-          ) {
+          if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
@@ -2740,20 +2786,46 @@ export function onFinalContact() {
         toggleImmortality(false);
       }, 500);
     }, 6667);
-  }, 28667);
+  }, 34333);
 }
-document.getElementById("beaten-only").style.display =
-  localStorage.getItem("GameBeaten") === null ? "none" : "flex";
 export function setStars() {
   const level = Math.floor(latestCollectedCount / (hardMode ? 100 : 50));
 
+  if (!casualMode) {
+    const highest =
+      parseInt(
+        localStorage.getItem("highest-level-reached")?.split(" ")[0],
+        10,
+      ) ?? 0;
+    if (actualCollectedCount > highest)
+      localStorage.setItem(
+        "highest-level-reached",
+        `${actualCollectedCount} ${level}`,
+      );
+  }
+
   if (casualMode) {
-    if (level >= 5) {
+    if (level >= 50) {
+      localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.removeItem("lv25-casual");
+      localStorage.setItem("lv50-casual", `${new Date()}`);
+    } else if (level >= 25) {
+      localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.setItem("lv25-casual", `${new Date()}`);
+    } else if (level >= 12) {
+      localStorage.removeItem("lv5-casual");
+      localStorage.setItem("lv12-casual", `${new Date()}`);
+    } else if (level >= 5) {
       localStorage.setItem("lv5-casual", `${new Date()}`);
     }
   } else if (hardMode) {
     if (level >= 50) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.removeItem("lv25-casual");
+      localStorage.removeItem("lv50-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.removeItem("lv12-normal");
@@ -2766,6 +2838,8 @@ export function setStars() {
       localStorage.setItem("lv50-hard", `${new Date()}`);
     } else if (level >= 25) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.removeItem("lv25-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.removeItem("lv12-normal");
@@ -2776,6 +2850,7 @@ export function setStars() {
       localStorage.setItem("lv25-hard", `${new Date()}`);
     } else if (level >= 12) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.removeItem("lv12-normal");
@@ -2792,6 +2867,9 @@ export function setStars() {
   } else {
     if (level >= 50) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.removeItem("lv25-casual");
+      localStorage.removeItem("lv50-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.removeItem("lv12-normal");
@@ -2799,12 +2877,15 @@ export function setStars() {
       localStorage.setItem("lv50-normal", `${new Date()}`);
     } else if (level >= 25) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
+      localStorage.removeItem("lv25-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.removeItem("lv12-normal");
       localStorage.setItem("lv25-normal", `${new Date()}`);
     } else if (level >= 12) {
       localStorage.removeItem("lv5-casual");
+      localStorage.removeItem("lv12-casual");
 
       localStorage.removeItem("lv5-normal");
       localStorage.setItem("lv12-normal", `${new Date()}`);
