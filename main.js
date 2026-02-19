@@ -2300,7 +2300,6 @@ function updateCamera() {
           if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
           return true;
         });
-        console.log(unlocked);
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
