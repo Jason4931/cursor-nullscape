@@ -172,37 +172,37 @@ const ENTITY_POOL = [
   {
     name: "Bell",
     spawn: () => spawnBell(entityHost, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/Bell.png",
   },
   {
     name: "Mart",
     spawn: () => spawnMart(entityHost, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/Mart.png",
   },
   {
     name: "Baby",
     spawn: () => spawnBaby(entityHost, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/Baby.png",
   },
   {
     name: "ICBM",
     spawn: () => spawnICBM(entityHost, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/ICBM.png",
   },
   {
     name: "Skinwalker",
     spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/Skinwalker.png",
   },
   {
     name: "Springer",
     spawn: () => spawnSpringer(entityHost, hardMode),
-    start: 100,
+    start: 0,
     src: "./ASSET/Enemies/Springer.png",
   },
   {
@@ -1362,7 +1362,7 @@ let lastAltar = null;
 function ENTITY_SPAWN(temp = false, exceptEntity = null) {
   let name = null;
   const unlocked = ENTITY_POOL.filter((e) => {
-    if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
+    if (collectedCount < e.start) return false;
     if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
     if (exceptEntity && e.name === exceptEntity) return false;
     return true;
@@ -2296,7 +2296,7 @@ function updateCamera() {
         lastEntitySpawnAt = collectedCount;
 
         const unlocked = ENTITY_POOL.filter((e) => {
-          if (collectedCount < e.start * (hardMode ? 2 : 1)) return false;
+          if (collectedCount < e.start) return false;
           if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
           return true;
         });
