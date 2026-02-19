@@ -2165,6 +2165,27 @@ function drawGrid() {
 
       const img = g.golden ? goldGift : g.type === "tripmine" ? tripmine : gift;
 
+      if (g.type === "tripmine") {
+        const centerX = g.x + GIFT_SIZE / 2;
+        const centerY = g.y + GIFT_SIZE / 2;
+
+        const gradient = ctx.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          TILE * 1.5,
+        );
+
+        gradient.addColorStop(0, "rgba(255, 0, 255, 0.5)"); // strong purple center
+        gradient.addColorStop(1, "rgba(255, 0, 255, 0)"); // fully transparent edge
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, TILE * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.drawImage(
         img,
         g.x + (TILE - GIFT_SIZE) / 2,
@@ -2303,7 +2324,7 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
-    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.2 : dynamicHitRadius;
+    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.25 : dynamicHitRadius;
 
     if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
