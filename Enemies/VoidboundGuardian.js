@@ -151,7 +151,7 @@ export function setup(host, hardMode) {
       p.x += p.vx * dt;
       p.y += p.vy * dt;
 
-      if (now - p.born > 3000) {
+      if (now - p.born > 4500) {
         state.pellets.splice(i, 1);
         continue;
       }
