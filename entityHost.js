@@ -425,7 +425,7 @@ export function death(name = "Unknown", color = "#f70000") {
     const counterEl = document.getElementById("counter");
     const lvlEl = document.getElementById("lvl");
 
-    counterEl.textContent = `Collected: ${actualCollectedCount}`;
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
     lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     canvas.style.display = "none";
     entityCanvas.style.display = "none";

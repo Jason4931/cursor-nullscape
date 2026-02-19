@@ -1562,13 +1562,13 @@ export function activatePurgatory() {
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
   if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-    counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
     lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
   } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-    counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+    counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
     lvlEl.textContent = `lvl 100`;
   } else {
-    counterEl.textContent = `Collected: ${actualCollectedCount}`;
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
     lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   }
   lastEntitySpawnAt = collectedCount;
@@ -1606,13 +1606,13 @@ export function activateChance() {
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
       if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-        counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
       } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
-        counterEl.textContent = `Collected: ${actualCollectedCount}`;
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
       break;
@@ -1649,13 +1649,13 @@ export function activateProtection() {
       ? actualCollectedCount
       : Math.floor(actualCollectedCount / 2);
     if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-      counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
       lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
     } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-      counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+      counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
       lvlEl.textContent = `lvl 100`;
     } else {
-      counterEl.textContent = `Collected: ${actualCollectedCount}`;
+      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
       lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
     }
     activateShield();
@@ -2280,13 +2280,13 @@ function updateCamera() {
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
       if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-        counterEl.textContent = `Collected: ${actualCollectedCount - 900}`;
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
       } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
-        counterEl.textContent = `Collected: ${actualCollectedCount}`;
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
 
