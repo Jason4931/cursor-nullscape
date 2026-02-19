@@ -78,7 +78,7 @@ export function setup(host, hardMode) {
     const dy = mouse.y - state.y;
     const len = Math.hypot(dx, dy) || 1;
 
-    const speed = hardMode ? 1181 : 788;
+    const speed = hardMode ? 1418 : 945;
 
     state.pellets.push({
       x: state.x,
