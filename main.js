@@ -693,6 +693,53 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "oneofeach") {
+    spawnBell(entityHost, hardMode, immunebell);
+    spawnMart(entityHost, hardMode);
+    spawnBaby(entityHost, hardMode);
+    spawnICBM(entityHost, hardMode);
+    spawnSkinwalker(entityHost, skinwalkerCount++, hardMode);
+    spawnSpringer(entityHost, hardMode);
+    spawnFlesh(entityHost, hardMode);
+    spawnNIL(entityHost);
+    spawnGuardian(entityHost, hardMode);
+    spawnDozer(entityHost, hardMode);
+    spawnTelefragger(entityHost, hardMode, deafMode);
+    spawnKookoo(entityHost);
+    spawnVoidImplosions(entityHost);
+    spawnSorrow(entityHost);
+    spawnDoombringer(entityHost);
+    spawnVoidboundBaby(entityHost, hardMode);
+    spawnPonderer(entityHost, hardMode);
+    spawnVoidboundGuardian(entityHost, hardMode);
+    spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
+    spawnCadence(entityHost, hardMode, deafMode);
+    spawnCatalyst(entityHost);
+    registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
+    registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
+    registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
+    registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
+    registerEntitySpawn("Skinwalker", "./ASSET/Enemies/Skinwalker.png");
+    registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
+    registerEntitySpawn("Flesh", "./ASSET/Enemies/Flesh.png");
+    registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
+    registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
+    registerEntitySpawn("Dozer", "./ASSET/Enemies/Dozer.png");
+    registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
+    registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
+    registerEntitySpawn("VoidImplosions", "./ASSET/Curses/VoidImplosions.png");
+    registerEntitySpawn("Sorrow", "./ASSET/Curses/Sorrow.png");
+    registerEntitySpawn("Doombringer", "./ASSET/Curses/Doombringer.png");
+    registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
+    registerEntitySpawn("Ponderer", "./ASSET/Enemies/Ponderer.png");
+    registerEntitySpawn("VoidboundGuardian", "./ASSET/Enemies/VoidboundGuardian.png");
+    registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
+    registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
+    registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   for (const altar of altars) {
     if (input === altar.name) {
       altar.activate();
