@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activatePassage,
   entityCanvas2,
+  getCameraPos,
   collectedCount,
 } from "../main.js";
 
@@ -17,6 +18,7 @@ export function setup(host, hardMode) {
     size: 200,
     timer: 0,
     nextDelay: 19 + Math.random(),
+    resultTimer: 0,
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -43,6 +45,7 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       activatePassage();
+      state.resultTimer = 4;
       teleport();
     }
   }
@@ -54,6 +57,8 @@ export function setup(host, hardMode) {
     if (collectedCount >= (hardMode ? 10000 : 5000)) return;
 
     state.timer += dt;
+    state.resultTimer -= dt;
+    if (state.resultTimer < 0) state.resultTimer = 0;
 
     if (state.timer <= 1) {
       state.opacity = 0;
@@ -86,6 +91,56 @@ export function setup(host, hardMode) {
       size * 0.8,
       size,
     );
+
+    if (state.resultTimer > 0) {
+      const cam = getCameraPos();
+
+      const boxHeight = 100;
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      const boxX = cam.x + screenW * 0.25;
+      const boxY = cam.y + screenH - boxHeight * 1.5;
+
+      let alpha = 1;
+      if (state.resultTimer < 0.5) {
+        alpha = state.resultTimer / 0.5;
+      } else if (state.resultTimer > 3.5) {
+        alpha = (4 - state.resultTimer) / 0.5;
+      }
+      ctx.globalAlpha = alpha;
+
+      ctx.fillStyle = "#0a3cff80";
+      ctx.fillRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.strokeStyle = "#0a3cff";
+      ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
+
+      ctx.strokeStyle = "#0a3cff";
+      ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ff0";
+      ctx.strokeText(
+        "Altar of Passage",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Altar of Passage",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#fff";
+      ctx.strokeText(`Tiles with golden gifts (4x normal gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(`Tiles with golden gifts (4x normal gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+    }
 
     ctx.restore();
   }

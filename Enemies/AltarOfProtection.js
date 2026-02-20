@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activateProtection,
   entityCanvas2,
+  getCameraPos,
   collectedCount,
 } from "../main.js";
 
@@ -18,6 +19,7 @@ export function setup(host, hardMode) {
     timer: 0,
     nextDelay: 19 + Math.random(),
     flashTimer: 0,
+    resultTimer: 0,
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -47,6 +49,7 @@ export function setup(host, hardMode) {
 
       if (result) {
         teleport();
+        state.resultTimer = 4;
       } else {
         state.flashTimer = 1;
       }
@@ -64,6 +67,8 @@ export function setup(host, hardMode) {
       if (state.flashTimer < 0) state.flashTimer = 0;
     }
     state.timer += dt;
+    state.resultTimer -= dt;
+    if (state.resultTimer < 0) state.resultTimer = 0;
 
     if (state.timer <= 1) {
       state.opacity = 0;
@@ -119,6 +124,56 @@ export function setup(host, hardMode) {
       ctx.arc(state.x, state.y - 5, radius - 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
+    }
+
+    if (state.resultTimer > 0) {
+      const cam = getCameraPos();
+
+      const boxHeight = 100;
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      const boxX = cam.x + screenW * 0.25;
+      const boxY = cam.y + screenH - boxHeight * 1.5;
+
+      let alpha = 1;
+      if (state.resultTimer < 0.5) {
+        alpha = state.resultTimer / 0.5;
+      } else if (state.resultTimer > 3.5) {
+        alpha = (4 - state.resultTimer) / 0.5;
+      }
+      ctx.globalAlpha = alpha;
+
+      ctx.fillStyle = "#0a3cff80";
+      ctx.fillRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.strokeStyle = "#0a3cff";
+      ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
+
+      ctx.strokeStyle = "#0a3cff";
+      ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ff0";
+      ctx.strokeText(
+        "Altar of Protection",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Altar of Protection",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#fff";
+      ctx.strokeText(`-1000 Golden Gifts.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(`-1000 Golden Gifts.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
     }
 
     ctx.restore();

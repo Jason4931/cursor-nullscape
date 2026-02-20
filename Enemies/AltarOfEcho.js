@@ -101,7 +101,7 @@ export function setup(host, hardMode) {
     if (state.result !== null && state.resultTimer > 0) {
       const cam = getCameraPos();
 
-      const boxHeight = 70;
+      const boxHeight = 100;
 
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
@@ -122,16 +122,30 @@ export function setup(host, hardMode) {
       ctx.strokeStyle = "#0a3cff";
       ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
 
-      ctx.fillStyle = "#fff";
       ctx.strokeStyle = "#0a3cff";
       ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ff0";
+      ctx.strokeText(
+        "Altar of Echo",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Altar of Echo",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
 
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      ctx.strokeText(state.result, boxX + screenW * 0.25, boxY + boxHeight / 2);
-      ctx.fillText(state.result, boxX + screenW * 0.25, boxY + boxHeight / 2);
+      ctx.fillStyle = "#fff";
+      ctx.strokeText(`Echoed ${state.result}.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(`Echoed ${state.result}.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
     }
 
     ctx.restore();

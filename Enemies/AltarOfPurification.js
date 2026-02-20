@@ -111,7 +111,7 @@ export function setup(host, hardMode) {
     if (state.result !== null && state.resultTimer > 0) {
       const cam = getCameraPos();
 
-      const boxHeight = 70;
+      const boxHeight = 100;
 
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
@@ -132,45 +132,38 @@ export function setup(host, hardMode) {
       ctx.strokeStyle = "#0a3cff";
       ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
 
-      ctx.fillStyle = "#fff";
       ctx.strokeStyle = "#0a3cff";
       ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ff0";
+      ctx.strokeText(
+        "Altar of Purification",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Altar of Purification",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
 
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
-      const part1 = "Changed ";
-      const part2 = `${state.result[0]}`;
-      const part3 = " for ";
-      const part4 = `${state.result[1]}`;
-
-      const fullText = part1 + part2 + part3 + part4;
-      const centerX = boxX + screenW * 0.25;
-      const centerY = boxY + boxHeight / 2;
-
-      const totalWidth = ctx.measureText(fullText).width;
-      let drawX = centerX - totalWidth / 2;
-      ctx.strokeStyle = "#0a3cff";
-
       ctx.fillStyle = "#fff";
-      ctx.strokeText(part1, drawX + ctx.measureText(part1).width / 2, centerY);
-      ctx.fillText(part1, drawX + ctx.measureText(part1).width / 2, centerY);
-      drawX += ctx.measureText(part1).width;
-
-      ctx.fillStyle = "#ff3b3b";
-      ctx.strokeText(part2, drawX + ctx.measureText(part2).width / 2, centerY);
-      ctx.fillText(part2, drawX + ctx.measureText(part2).width / 2, centerY);
-      drawX += ctx.measureText(part2).width;
-
-      ctx.fillStyle = "#fff";
-      ctx.strokeText(part3, drawX + ctx.measureText(part3).width / 2, centerY);
-      ctx.fillText(part3, drawX + ctx.measureText(part3).width / 2, centerY);
-      drawX += ctx.measureText(part3).width;
-
-      ctx.fillStyle = "#ff3b3b";
-      ctx.strokeText(part4, drawX + ctx.measureText(part4).width / 2, centerY);
-      ctx.fillText(part4, drawX + ctx.measureText(part4).width / 2, centerY);
+      ctx.strokeText(
+        `Removed ${state.result[0]}. Gained ${state.result[1]}.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
+      ctx.fillText(
+        `Removed ${state.result[0]}. Gained ${state.result[1]}.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
     }
 
     if (state.flashTimer > 0) {

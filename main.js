@@ -1861,19 +1861,19 @@ export function activateEcho() {
 
   switch (beforeLastAltar) {
     case "Protection":
-      return "Altar Of Protection";
+      return "Altar of Protection";
     case "Chance":
-      return "Altar Of Chance";
+      return "Altar of Chance";
     case "Purification":
-      return "Altar Of Purification";
+      return "Altar of Purification";
     case "Passage":
-      return "Altar Of Passage";
+      return "Altar of Passage";
     case "Purgatory":
-      return "Altar Of Purgatory";
+      return "Altar of Purgatory";
     case "Echo":
-      return "Altar Of Echo";
+      return "Altar of Echo";
     default:
-      return "Altar Of Echo";
+      return "Altar of Echo";
   }
 }
 export function activatePurification() {

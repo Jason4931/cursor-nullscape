@@ -23,10 +23,10 @@ export function setup(host, hardMode) {
   };
 
   const RESULT_TEXT = {
-    0: "Payment 1000",
-    1: "Random Enemy 4",
-    2: "Gift Multiplier x2",
-    3: "No Tripmines",
+    0: "Payment 1000.",
+    1: "Random enemy 4.",
+    2: "Gift multiplier x2.",
+    3: "No tripmines.",
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -107,7 +107,7 @@ export function setup(host, hardMode) {
     if (state.result !== null && state.resultTimer > 0) {
       const cam = getCameraPos();
 
-      const boxHeight = 70;
+      const boxHeight = 100;
 
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
@@ -128,23 +128,37 @@ export function setup(host, hardMode) {
       ctx.strokeStyle = "#0a3cff";
       ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
 
-      ctx.fillStyle = state.result <= 1 ? "#ff3b3b" : "#3bff6a";
       ctx.strokeStyle = "#0a3cff";
       ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#ff0";
+      ctx.strokeText(
+        "Altar of Chance",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Altar of Chance",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
 
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-
+      ctx.fillStyle = "#fff";
       ctx.strokeText(
         RESULT_TEXT[state.result],
         boxX + screenW * 0.25,
-        boxY + boxHeight / 2,
+        boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
         RESULT_TEXT[state.result],
         boxX + screenW * 0.25,
-        boxY + boxHeight / 2,
+        boxY + boxHeight / 2 + 20,
       );
     }
 
