@@ -595,6 +595,7 @@ const altars = [
   { name: "purgatory", activate: () => activatePurgatory() },
   { name: "purification", activate: () => activatePurification() },
 ];
+let soundStopped = false;
 const topLeftInput = document.getElementById("spawn-input");
 topLeftInput.addEventListener("input", () => {
   let rawInput = topLeftInput.value.trim().toLowerCase();
@@ -689,6 +690,7 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "revive") {
     revive();
+    soundStopped = false;
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -919,6 +921,7 @@ export function playSound(
   onEnd = null,
   important = false,
 ) {
+  if (soundStopped) return;
   const audio = new Audio(soundPath);
   audio.playbackRate = rate;
   if (typeof important === "string") {
@@ -973,6 +976,7 @@ export function playSound(
   return stop;
 }
 export function stopAllSounds() {
+  soundStopped = true;
   const fadeDuration = 1000;
   const start = performance.now();
 
