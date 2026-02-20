@@ -138,8 +138,8 @@ export function setup(host, hardMode) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
-      ctx.strokeText(`Tiles with golden gifts (4x normal gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
-      ctx.fillText(`Tiles with golden gifts (4x normal gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.strokeText(`Tiles with Golden Gifts (4x normal Gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(`Tiles with Golden Gifts (4x normal Gifts) appear.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
     }
 
     ctx.restore();
