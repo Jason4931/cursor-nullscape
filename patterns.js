@@ -1754,7 +1754,7 @@ const RawFinalPatterns = [
 
 const WeightedPatterns = [];
 for (const pattern of RawPatterns) {
-  const weight = pattern[0][0] === 100 ? 1 : 3;
+  const weight = pattern[0][0] === 100 ? 1 : 5;
 
   for (let i = 0; i < weight; i++) {
     WeightedPatterns.push(pattern);
