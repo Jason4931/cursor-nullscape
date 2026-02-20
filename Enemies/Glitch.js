@@ -8,7 +8,7 @@ for (let i = 1; i <= 5; i++) {
   layers.push(img);
 }
 
-export function setup(host) {
+export function setup(host, insanelyFast = false) {
   const state = {
     opacity: 1,
     layer: 0,
@@ -24,7 +24,7 @@ export function setup(host) {
     targetY: 0,
 
     moveTimer: 0,
-    moveDuration: 10,
+    moveDuration: insanelyFast ? 1 : 10,
   };
 
   state.startX = state.x;
@@ -59,7 +59,7 @@ export function setup(host) {
 
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y;
-    const r = state.size * 0.5;
+    const r = state.size * (insanelyFast ? 1 : 0.5);
 
     if (dx * dx + dy * dy <= r * r) {
       death("Glitch");

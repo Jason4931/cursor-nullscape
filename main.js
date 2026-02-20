@@ -740,6 +740,17 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "youwillnotsurvivethis") {
+    let i = 0;
+    let interval = setInterval(() => {
+      i++;
+      spawnGlitch(entityHost, true);
+      if (i >= 10) clearInterval(interval);
+    }, 100);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   for (const altar of altars) {
     if (input === altar.name) {
       altar.activate();
