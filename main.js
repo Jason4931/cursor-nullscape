@@ -3081,6 +3081,7 @@ export function onFinalContact() {
   }
   setTimeout(() => {
     despawnCatalyst = true;
+    soundStopped = false;
     SHAKE = false;
     for (const [key, p] of patternsState) {
       destroyPattern(p);
