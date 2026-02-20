@@ -1070,8 +1070,8 @@ let lastMusicSrc = null;
 let currentMusic = null;
 function playNextMusic() {
   const candidates = musicList.filter((m) => {
-    if (collectedCount < m.start) return false;
-    if (m.end !== 0 && collectedCount > m.end) return false;
+    if (actualCollectedCount < m.start) return false;
+    if (m.end !== 0 && actualCollectedCount > m.end) return false;
     if (m.src === lastMusicSrc) return false; // prevent repeat
     return true;
   });
@@ -1080,8 +1080,8 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (collectedCount < m.start) return false;
-        if (m.end !== 0 && collectedCount > m.end) return false;
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
         return true;
       });
 
@@ -2710,7 +2710,7 @@ function loop(now) {
   if (
     currentMusic &&
     currentMusic.end !== 0 &&
-    collectedCount > currentMusic.end
+    actualCollectedCount > currentMusic.end
   ) {
     playNextMusic();
   }
