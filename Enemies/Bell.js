@@ -4,7 +4,7 @@ import { playSound, cleanseZones, setSlowness, TILE } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, immunebell) {
   const state = {
     opacity: 1,
 
@@ -201,7 +201,7 @@ export function setup(host, hardMode) {
       ctx.restore();
     }
 
-    if (state.hitActive) {
+    if (state.hitActive && !immunebell) {
       const fade = 1 - state.hitTimer / state.hitCooldown;
 
       const strength = 120 * fade;

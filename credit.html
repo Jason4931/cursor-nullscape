@@ -239,12 +239,25 @@
         opacity: 0.85;
         z-index: 2000;
       }
+
+      #secret {
+        position: fixed;
+        left: 1vw;
+        top: 1vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #aaa;
+        opacity: 0.1;
+        z-index: 2000;
+        display: none;
+      }
     </style>
   </head>
 
   <div id="highest-level-display">
     Highest level reached: 0<br />(Normal & Hard only)
   </div>
+  <div id="secret">Ctrl+Shift+/ to open commands</div>
 
   <div id="stars">
     <div class="star-row casual"></div>
@@ -371,6 +384,9 @@
       (function renderHighestLevel() {
         const el = document.getElementById("highest-level-display");
         const raw = localStorage.getItem("highest-level-reached");
+        if (localStorage.getItem("GameBeaten") != null) {
+          document.getElementById("secret").style.display = "block";
+        }
 
         if (!raw) {
           el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";

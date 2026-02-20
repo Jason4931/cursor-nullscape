@@ -687,6 +687,50 @@
         "
         autocomplete="off"
       />
+      <p
+        id="spawn-input-text"
+        style="
+          position: absolute;
+          top: 2.5vw;
+          left: 1vw;
+          font-size: 0.8vw;
+          color: white;
+          font-family: monospace;
+          display: none;
+          opacity: 50%;
+          z-index: 2000;
+        "
+      >
+        Type "commandlist" for full commands
+      </p>
+      <p
+        id="spawn-input-commands"
+        style="
+          position: absolute;
+          top: 3.5vw;
+          left: 1vw;
+          font-size: 0.8vw;
+          color: white;
+          font-family: monospace;
+          cursor: default;
+          display: block;
+          opacity: 0;
+          z-index: 2000;
+        "
+      >
+        commandlist<br />
+        toggledeath<br />
+        disablespawn<br />
+        disableknockback<br />
+        biggerradius<br />
+        shield<br />
+        immunebell<br />
+        revive<br />
+        {entityname}<br />
+        {count}{entityname}<br />
+        {altarname}<br />
+        pattern{num}spawn<br />
+      </p>
       <div id="entity-panel">
         <div id="entity-panel-content"></div>
         <p id="entity-panel-count">EntityCount: 0</p>
@@ -782,13 +826,6 @@
           </label>
         </div>
         <div class="setting-row">
-          <span>Show grids</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-grids" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
           <span>Show floor</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-floor" checked />
@@ -799,6 +836,13 @@
           <span>Show border</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-border" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show grids</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-grids" />
             <span class="slider-toggle"></span>
           </label>
         </div>

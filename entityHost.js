@@ -448,3 +448,13 @@ export function death(name = "Unknown", color = "#f70000") {
   }, 200);
   setStars();
 }
+
+export function revive() {
+  dies = false;
+  const canvas = document.getElementById("screen");
+  const entityCanvas = document.getElementById("entities");
+  const screen = document.getElementById("death-screen");
+  canvas.style.display = "block";
+  entityCanvas.style.display = "block";
+  screen.style.display = "none";
+}

@@ -1776,3 +1776,4 @@ export function finalPatterns(v) {
     PATTERNS = WeightedPatterns;
   }
 }
+export const AllPatterns = [...RawPatterns, ...RawFinalPatterns];

@@ -1,4 +1,4 @@
-import { PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
+import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
 import {
   createEntityHost,
   updateMouseWorld,
@@ -10,6 +10,7 @@ import {
   shieldActive,
   activateShield,
   shieldBroken,
+  revive,
 } from "./entityHost.js";
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
@@ -147,6 +148,7 @@ let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
 let disableKnockback = false;
+let immunebell = false;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
@@ -171,7 +173,7 @@ export const cleanseZones = [];
 const ENTITY_POOL = [
   {
     name: "Bell",
-    spawn: () => spawnBell(entityHost, hardMode),
+    spawn: () => spawnBell(entityHost, hardMode, immunebell),
     start: 0,
     src: "./ASSET/Enemies/Bell.png",
   },
@@ -400,12 +402,7 @@ toggle("toggle-epileptic", (v) => {
 });
 toggle("toggle-blindness", (v) => {
   blindnessMode = v;
-  RENDER_RADIUS =
-    cheat >= 8 && cheat <= 16
-      ? RESPAWN_RADIUS * 10
-      : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+  RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 });
 toggle("toggle-reduced-motion", (v) => {
   reducedMotion = v;
@@ -457,36 +454,21 @@ function setGraphicsLow() {
   REGEN_INTERVAL = 400;
   DESPAWN_RADIUS = SUPER_TILE * TILE * 6;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 4.5;
-  RENDER_RADIUS =
-    cheat >= 8 && cheat <= 16
-      ? RESPAWN_RADIUS * 10
-      : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+  RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsMedium() {
   REGEN_BUDGET = 12;
   REGEN_INTERVAL = 300;
   DESPAWN_RADIUS = SUPER_TILE * TILE * 7.5;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 6;
-  RENDER_RADIUS =
-    cheat >= 8 && cheat <= 16
-      ? RESPAWN_RADIUS * 10
-      : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+  RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsHigh() {
   REGEN_BUDGET = 18;
   REGEN_INTERVAL = 180;
   DESPAWN_RADIUS = SUPER_TILE * TILE * 10;
   RESPAWN_RADIUS = SUPER_TILE * TILE * 8;
-  RENDER_RADIUS =
-    cheat >= 8 && cheat <= 16
-      ? RESPAWN_RADIUS * 10
-      : blindnessMode
-        ? 200
-        : RESPAWN_RADIUS * 1.3;
+  RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 }
 function setGraphicsUltra() {
   REGEN_BUDGET = 28;
@@ -578,7 +560,6 @@ let HIT_RADIUS = GIFT_SIZE;
 let cameraRadius = 0.4;
 let dynamicHitRadius;
 const randTile = Math.random();
-let cheat = 0;
 const SUPER_TILE = 9;
 let lagDebt = 0;
 let lagFactor = 1;
@@ -586,16 +567,9 @@ let lagFactor = 1;
 /* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
   if (e.repeat) return;
-  if (e.key === "/") cheat++;
-  if (cheat >= 8 && cheat <= 16) {
-    HIT_RADIUS = GIFT_SIZE * 10;
-    RENDER_RADIUS = RESPAWN_RADIUS * 10;
-  } else {
-    HIT_RADIUS = GIFT_SIZE;
-    RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
-  }
-  if (e.key === "\\") {
+  if (e.key === "?" && e.shiftKey && e.ctrlKey) {
     if (topLeftInput.style.display === "none") {
+      disableProgression = true;
       topLeftInput.value = "";
       topLeftInput.style.display = "block";
       topLeftInput.focus();
@@ -610,6 +584,15 @@ window.addEventListener("keydown", (e) => {
     panel.classList.toggle("open", panelOpen);
   }
 });
+let disableProgression = false;
+const altars = [
+  { name: "chance", activate: () => activateChance() },
+  { name: "echo", activate: () => activateEcho() },
+  { name: "passage", activate: () => activatePassage() },
+  { name: "protection", activate: () => activateProtection() },
+  { name: "purgatory", activate: () => activatePurgatory() },
+  { name: "purification", activate: () => activatePurification() },
+];
 const topLeftInput = document.getElementById("spawn-input");
 topLeftInput.addEventListener("input", () => {
   let rawInput = topLeftInput.value.trim().toLowerCase();
@@ -622,10 +605,19 @@ topLeftInput.addEventListener("input", () => {
     input = match[2];
   }
   if (input === "\\") topLeftInput.value = "";
-  const entity = ENTITY_POOL.find((e) => e.name.toLowerCase() === input);
+  const entity =
+    ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
+    input.toLowerCase() === "catalyst" ||
+    input.toLowerCase() === "seamine";
   if (entity) {
     for (let i = 0; i < spawnCount; i++) {
-      if (entity.name === "Random") {
+      if (input.toLowerCase() === "catalyst") {
+        spawnCatalyst(entityHost);
+        spawnCatalystIntro();
+        registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+      } else if (input.toLowerCase() === "seamine") {
+        spawnSeamine(entityHost);
+      } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;
           if (collectedCount < e.start) return false;
@@ -665,31 +657,81 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
-  if (input === "catalyst") {
-    spawnCatalyst(entityHost);
-    SHAKE = true;
-    finalPatterns(true);
-    ROTATED_PATTERNS = PATTERNS.map((base) => {
-      const r0 = base;
-      const r1 = rotateMatrix90(r0);
-      const r2 = rotateMatrix90(r1);
-      const r3 = rotateMatrix90(r2);
-      return [r0, r1, r2, r3];
-    });
-    setInterval(() => {
-      if (Math.random() < 0.5) {
-        spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
-      } else {
-        spawnCatalystHand(entityHost);
-      }
-    }, 20000);
-    registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+  if (input === "shield") {
+    activateShield();
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
-  if (input === "shield") {
-    activateShield();
+  if (input === "commandlist") {
+    document.getElementById("spawn-input-commands").style.opacity = 1;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "biggerradius") {
+    if (HIT_RADIUS === GIFT_SIZE) {
+      HIT_RADIUS = GIFT_SIZE * 10;
+    } else {
+      HIT_RADIUS = GIFT_SIZE;
+    }
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "immunebell") {
+    immunebell = !immunebell;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "revive") {
+    revive();
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  for (const altar of altars) {
+    if (input === altar.name) {
+      altar.activate();
+
+      topLeftInput.value = "";
+      topLeftInput.style.display = "none";
+      topLeftInput.blur();
+
+      break;
+    }
+  }
+  const patternMatch = input.match(/^pattern(\d+)spawn$/);
+  if (patternMatch) {
+    const index = parseInt(patternMatch[1], 10);
+    const base = AllPatterns[index];
+    if (!base) return;
+
+    const sx = Math.floor(mouse.x / (SUPER_TILE * TILE));
+    const sy = Math.floor(mouse.y / (SUPER_TILE * TILE));
+
+    // find existing pattern at this super tile
+    let target = null;
+    for (const p of patternsState.values()) {
+      if (p.sx === sx && p.sy === sy) {
+        target = p;
+        break;
+      }
+    }
+
+    if (target) {
+      destroyPattern(target);
+
+      for (let y = 0; y < target.ph; y++) {
+        for (let x = 0; x < target.pw; x++) {
+          superOccupied[target.sy + y][target.sx + x] = false;
+        }
+      }
+    }
+
+    placeSuper(sx, sy, base);
+
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -1373,7 +1415,62 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
   if (bestScore === 0) return null;
   return variants[bestList[(Math.random() * bestList.length) | 0]];
 }
+function spawnCatalystIntro() {
+  SHAKE = true;
+  finalPatterns(true);
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
 
+  const base3x3 = PATTERNS.filter(
+    (p) => p.length / SUPER_TILE === 3 && p[0].length / SUPER_TILE === 3,
+  );
+  if (!base3x3.length) return;
+  const existing3x3 = [];
+  for (const p of patternsState.values()) {
+    if (p.pw === 3 && p.ph === 3) {
+      existing3x3.push(p);
+    }
+  }
+  for (const target of existing3x3) {
+    destroyPattern(target);
+
+    const shuffled = pickPatternsBySize(base3x3);
+
+    for (let i = 0; i < shuffled.length; i++) {
+      const base = shuffled[i];
+      const baseIndex = PATTERNS.indexOf(base);
+
+      let pat = pickBiasedRotatedPattern(
+        baseIndex,
+        target.sx,
+        target.sy,
+        patternsState,
+      );
+
+      if (!pat) {
+        pat = pickRotatedPattern(baseIndex);
+      }
+
+      if (canPlaceSuper(target.sx, target.sy, pat)) {
+        placeSuper(target.sx, target.sy, pat);
+        break;
+      }
+    }
+  }
+
+  setInterval(() => {
+    if (Math.random() < 0.5) {
+      spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
+    } else {
+      spawnCatalystHand(entityHost);
+    }
+  }, 20000);
+}
 /* ===== ALTARS ===== */
 let lastAltar = null;
 function ENTITY_SPAWN(temp = false, exceptEntity = null) {
@@ -1389,15 +1486,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     let pick;
     if (collectedCount >= (hardMode ? 10000 : 5000) && !spawnedCatalyst) {
       spawnedCatalyst = true;
-      SHAKE = true;
-      finalPatterns(true);
-      ROTATED_PATTERNS = PATTERNS.map((base) => {
-        const r0 = base;
-        const r1 = rotateMatrix90(r0);
-        const r2 = rotateMatrix90(r1);
-        const r3 = rotateMatrix90(r2);
-        return [r0, r1, r2, r3];
-      });
+      spawnCatalystIntro();
       pick = {
         name: "Catalyst",
         spawn: () => spawnCatalyst(entityHost),
@@ -1517,13 +1606,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
           renderPanel();
         }, 60000);
       }
-      setInterval(() => {
-        if (Math.random() < 0.5) {
-          spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
-        } else {
-          spawnCatalystHand(entityHost);
-        }
-      }, 20000);
     } else {
       const unregister = pick.spawn();
       if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
@@ -2421,15 +2503,7 @@ function updateCamera() {
             !disablespawn
           ) {
             spawnedCatalyst = true;
-            SHAKE = true;
-            finalPatterns(true);
-            ROTATED_PATTERNS = PATTERNS.map((base) => {
-              const r0 = base;
-              const r1 = rotateMatrix90(r0);
-              const r2 = rotateMatrix90(r1);
-              const r3 = rotateMatrix90(r2);
-              return [r0, r1, r2, r3];
-            });
+            spawnCatalystIntro();
             pick = {
               name: "Catalyst",
               spawn: () => spawnCatalyst(entityHost),
@@ -2488,13 +2562,6 @@ function updateCamera() {
           } else if (pick.name === "Catalyst") {
             const unregister = pick.spawn();
             trackHighestEntity(unregister, pick.start, pick.name);
-            setInterval(() => {
-              if (Math.random() < 0.5) {
-                spawnCatalystHunger(entityHost, 0.82 + Math.random() * 0.2);
-              } else {
-                spawnCatalystHand(entityHost);
-              }
-            }, 20000);
           } else {
             const unregister = pick.spawn();
             trackHighestEntity(unregister, pick.start, pick.name);
@@ -2657,20 +2724,26 @@ function loop(now) {
   }
 
   // hitradius
-  const g = ctx.createRadialGradient(
-    mouse.x,
-    mouse.y,
-    0,
-    mouse.x,
-    mouse.y,
-    dynamicHitRadius,
-  );
-  g.addColorStop(0, "rgba(0, 0, 255, 0)");
-  g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
-  ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, dynamicHitRadius - GIFT_SIZE / 2, 0, Math.PI * 2);
-  ctx.fillStyle = g;
-  ctx.fill();
+  if (
+    Number.isFinite(mouse.x) &&
+    Number.isFinite(mouse.y) &&
+    Number.isFinite(dynamicHitRadius)
+  ) {
+    const g = ctx.createRadialGradient(
+      mouse.x,
+      mouse.y,
+      0,
+      mouse.x,
+      mouse.y,
+      dynamicHitRadius,
+    );
+    g.addColorStop(0, "rgba(0, 0, 255, 0)");
+    g.addColorStop(1, `rgba(0, 0, 255, ${Math.random() * 0.2})`);
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, dynamicHitRadius - GIFT_SIZE / 2, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
 
   if (shieldBroken[0] || shieldBroken[1]) {
     const size = TILE * (1 + Math.random());
@@ -2792,6 +2865,14 @@ function loop(now) {
     });
   }
 
+  //cheat
+  const zoom = window.outerWidth / window.document.documentElement.clientWidth;
+  if (zoom > 1.5 || zoom < 0.5) disableProgression = true;
+  document.getElementById("spawn-input").style.display === "block"
+    ? (document.getElementById("spawn-input-text").style.display = "block")
+    : (document.getElementById("spawn-input-text").style.display = "none");
+  document.getElementById("spawn-input-commands").style.opacity -= 0.01;
+
   requestAnimationFrame(loop);
 }
 
@@ -2840,16 +2921,18 @@ export function onFinalContact() {
   sfxVolume = 0;
   disableCollect = true;
   localStorage.setItem("GameBeaten", `${new Date()}`);
-  setStars();
-  if (casualMode) {
-    localStorage.setItem("win-casual", `${new Date()}`);
-  } else if (hardMode) {
-    localStorage.removeItem("win-casual");
-    localStorage.removeItem("win-normal");
-    localStorage.setItem("win-hard", `${new Date()}`);
-  } else {
-    localStorage.removeItem("win-casual");
-    localStorage.setItem("win-normal", `${new Date()}`);
+  if (!disableProgression) {
+    setStars();
+    if (casualMode) {
+      localStorage.setItem("win-casual", `${new Date()}`);
+    } else if (hardMode) {
+      localStorage.removeItem("win-casual");
+      localStorage.removeItem("win-normal");
+      localStorage.setItem("win-hard", `${new Date()}`);
+    } else {
+      localStorage.removeItem("win-casual");
+      localStorage.setItem("win-normal", `${new Date()}`);
+    }
   }
   setTimeout(() => {
     despawnCatalyst = true;
@@ -2873,6 +2956,7 @@ export function onFinalContact() {
   }, 34333);
 }
 export function setStars() {
+  if (disableProgression) return;
   const level = Math.floor(latestCollectedCount / (hardMode ? 100 : 50));
 
   if (!casualMode) {
