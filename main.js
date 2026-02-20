@@ -2404,6 +2404,7 @@ function updateCamera() {
   /* collect gifts */
   for (let i = giftPositions.length - 1; i >= 0; i--) {
     const g = giftPositions[i];
+    if (!g || !mouse) return;
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
@@ -2868,7 +2869,7 @@ function loop(now) {
 
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
-  if (zoom > 1.5 || zoom < 0.5) disableProgression = true;
+  if (zoom > 1.25 || zoom < 0.75) disableProgression = true;
   document.getElementById("spawn-input").style.display === "block"
     ? (document.getElementById("spawn-input-text").style.display = "block")
     : (document.getElementById("spawn-input-text").style.display = "none");
