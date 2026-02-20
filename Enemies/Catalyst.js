@@ -128,7 +128,7 @@ export function setup(host) {
     }
 
     if (state.phase === "waitSpawn") {
-      if (state.timer >= 7) {
+      if (state.timer >= 2) {
         const p = randNearCursor();
         state.x = p.x;
         state.y = p.y;
