@@ -2450,7 +2450,7 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
-          if (Math.random() < 0.1) spawnGlitch(entityHost);
+          if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
             const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
             const pick = pool[(Math.random() * pool.length) | 0];
