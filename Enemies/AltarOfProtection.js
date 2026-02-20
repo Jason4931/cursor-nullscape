@@ -172,8 +172,8 @@ export function setup(host, hardMode) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
-      ctx.strokeText(`-1000 Golden Gifts.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
-      ctx.fillText(`-1000 Golden Gifts.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.strokeText(`-1000 Gifts in exchange for Shield.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(`-1000 Gifts in exchange for Shield.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
     }
 
     ctx.restore();
