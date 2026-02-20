@@ -585,6 +585,8 @@ window.addEventListener("keydown", (e) => {
   }
 });
 let disableProgression = false;
+let firstDisableProgression = false;
+let cheattimer = 0;
 const altars = [
   { name: "chance", activate: () => activateChance() },
   { name: "echo", activate: () => activateEcho() },
@@ -1492,7 +1494,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
         start: 5000,
         src: "./ASSET/Enemies/CatalystIcon.png",
       };
-    } else if (collectedCount >= (hardMode ? 11000 : 5500) && !spawnedBeacon) {
+    } else if (collectedCount >= (hardMode ? 11000 : 5500) && !spawnedBeacon && !disableProgression) {
       spawnedBeacon = true;
       pick = {
         name: "Beacon",
@@ -2511,7 +2513,7 @@ function updateCamera() {
             };
           } else if (
             collectedCount >= (hardMode ? 11000 : 5500) &&
-            !spawnedBeacon
+            !spawnedBeacon && !disableProgression
           ) {
             spawnedBeacon = true;
             pick = {
@@ -2871,10 +2873,70 @@ function loop(now) {
     ? (document.getElementById("spawn-input-text").style.display = "block")
     : (document.getElementById("spawn-input-text").style.display = "none");
   document.getElementById("spawn-input-commands").style.opacity -= 0.005;
+  if (disableProgression) {
+    if (!firstDisableProgression) {
+      cheattimer = 300;
+      firstDisableProgression = true;
+    }
+    ctx.save();
+    if (cheattimer > 0) {
+      cheattimer--;
+      const cam = getCameraPos();
+
+      const boxHeight = 100;
+
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      const boxX = cam.x + screenW * 0.25;
+      const boxY = cam.y + screenH - boxHeight * 1.5;
+
+      ctx.globalAlpha = cheattimer / 300;
+
+      ctx.fillStyle = "#0a3cff80";
+      ctx.fillRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.strokeStyle = "#0a3cff";
+      ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
+
+      ctx.strokeStyle = "#0a3cff";
+      ctx.lineWidth = 2;
+
+      ctx.font = "30px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#f00";
+      ctx.strokeText(
+        "Cheater...",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+      ctx.fillText(
+        "Cheater...",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 - 15,
+      );
+
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#fff";
+      ctx.strokeText(
+        "Run will not be submitted and beacon will not appear.",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
+      ctx.fillText(
+        "Run will not be submitted and beacon will not appear.",
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
+    }
+
+    ctx.restore();
+  }
 
   requestAnimationFrame(loop);
 }
-
 // center camera
 camX = (viewport.clientWidth - canvas.offsetWidth) / 2;
 camY = (viewport.clientHeight - canvas.offsetHeight) / 2;

@@ -1,680 +1,669 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cursor Nullscape</title>
-    <meta
-      name="description"
-      content="Play roblox nullscape with cursor (PC required)"
-    />
-    <meta
-      name="keywords"
-      content="roblox nullscape, cursor nullscape, nullscape game, pc game, online game"
-    />
-    <link rel="canonical" href="https://cursor-nullscape.vercel.app/" />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Jason4931, Nullscape Developers" />
-    <meta name="publisher" content="Jason4931" />
-    <meta
-      http-equiv="Cache-Control"
-      content="no-cache, no-store, must-revalidate"
-    />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <style>
-      #viewport {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-      }
 
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-size: contain;
-        background-position: center;
-        background-blend-mode: multiply;
-        background-color: #000;
-        overflow: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cursor Nullscape</title>
+  <meta name="description" content="Play roblox nullscape with cursor (PC required)" />
+  <meta name="keywords" content="roblox nullscape, cursor nullscape, nullscape game, pc game, online game" />
+  <link rel="canonical" href="https://cursor-nullscape.vercel.app/" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Jason4931, Nullscape Developers" />
+  <meta name="publisher" content="Jason4931" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <style>
+    #viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-      canvas .screen {
-        position: absolute;
-        left: 0;
-        top: 0;
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: contain;
+      background-position: center;
+      background-blend-mode: multiply;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    canvas .screen {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #111;
+      transition: background-color 0.2s ease;
+      animation: bg 60s infinite;
+      box-shadow:
+        0 0 240px rgba(255, 0, 0, 0.5),
+        0 0 240px rgba(255, 0, 0, 0.5),
+        inset 0 0 240px rgba(255, 0, 0, 0.5);
+    }
+
+    canvas .entities {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1000;
+      box-shadow:
+        0 0 240px rgba(255, 255, 0, 0.5),
+        0 0 240px rgba(255, 255, 0, 0.5),
+        inset 0 0 240px rgba(255, 255, 0, 0.5);
+    }
+
+    canvas .entities-2 {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1000;
+      box-shadow:
+        0 0 240px rgba(255, 255, 0, 0.5),
+        0 0 240px rgba(255, 255, 0, 0.5),
+        inset 0 0 240px rgba(255, 255, 0, 0.5);
+    }
+
+    @keyframes bg {
+      0% {
         background: #111;
-        transition: background-color 0.2s ease;
-        animation: bg 60s infinite;
-        box-shadow:
-          0 0 240px rgba(255, 0, 0, 0.5),
-          0 0 240px rgba(255, 0, 0, 0.5),
-          inset 0 0 240px rgba(255, 0, 0, 0.5);
       }
 
-      canvas .entities {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1000;
-        box-shadow:
-          0 0 240px rgba(255, 255, 0, 0.5),
-          0 0 240px rgba(255, 255, 0, 0.5),
-          inset 0 0 240px rgba(255, 255, 0, 0.5);
+      14% {
+        background: #100;
       }
 
-      canvas .entities-2 {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1000;
-        box-shadow:
-          0 0 240px rgba(255, 255, 0, 0.5),
-          0 0 240px rgba(255, 255, 0, 0.5),
-          inset 0 0 240px rgba(255, 255, 0, 0.5);
+      29% {
+        background: #010;
       }
 
-      @keyframes bg {
-        0% {
-          background: #111;
-        }
-
-        14% {
-          background: #100;
-        }
-
-        29% {
-          background: #010;
-        }
-
-        43% {
-          background: #001;
-        }
-
-        57% {
-          background: #110;
-        }
-
-        71% {
-          background: #101;
-        }
-
-        86% {
-          background: #011;
-        }
-
-        100% {
-          background: #111;
-        }
+      43% {
+        background: #001;
       }
 
-      @keyframes bg-epileptic-lol {
-        0% {
-          background: #888;
-        }
-
-        14% {
-          background: #800;
-        }
-
-        29% {
-          background: #080;
-        }
-
-        43% {
-          background: #008;
-        }
-
-        57% {
-          background: #880;
-        }
-
-        71% {
-          background: #808;
-        }
-
-        86% {
-          background: #088;
-        }
-
-        100% {
-          background: #888;
-        }
+      57% {
+        background: #110;
       }
 
-      #counter {
-        position: absolute;
-        left: 1vw;
-        bottom: 1vw;
-        margin: 0;
-        color: #fff;
-        font-family: monospace;
-        font-size: 1.5vw;
-        pointer-events: none;
-        user-select: none;
-        z-index: 1000;
-        transition: color 1.5s ease;
+      71% {
+        background: #101;
       }
 
-      #lvl {
-        position: absolute;
-        left: 1vw;
-        bottom: 3vw;
-        margin: 0;
-        color: #fff;
-        font-family: monospace;
-        font-size: 1vw;
-        pointer-events: none;
-        user-select: none;
-        z-index: 1000;
-        transition: color 1.5s ease;
+      86% {
+        background: #011;
       }
 
-      #settings-btn {
-        position: absolute;
-        right: 1vw;
-        bottom: 1vw;
-        font-size: 4vw;
-        cursor: pointer;
-        user-select: none;
-        z-index: 20;
-        transition: opacity 1.5s ease;
-        filter: invert();
-      }
-
-      #settings-panel {
-        position: absolute;
-        right: 1vw;
-        bottom: 6vw;
-        padding: 1vw 1vw;
-        font-size: 1vw;
-        width: 11vw;
-        background: rgba(0, 0, 0, 0.85);
-        border: 0.1vw solid #333;
-        color: white;
-        font-family: monospace;
-        display: none;
-        z-index: 20;
-      }
-
-      #graphics-slider {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 6vw;
-        height: 0.4vw;
-        background: #333;
-        border-radius: 1vw;
-        outline: none;
-      }
-
-      #graphics-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 1vw;
-        height: 1vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      #graphics-slider::-moz-range-thumb {
-        width: 1vw;
-        height: 1vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      .setting-row {
-        margin-bottom: 0.6vw;
-      }
-
-      .setting-row label {
-        cursor: pointer;
-        user-select: none;
-      }
-
-      #settings-panel hr {
-        border: none;
-        border-top: 0.1vw solid #333;
-        margin: 0.8vw 0.1vw;
-      }
-
-      .range {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 6vw;
-        height: 0.4vw;
-        background: #333;
-        border-radius: 1vw;
-        outline: none;
-      }
-
-      .range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 1vw;
-        height: 1vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      .range::-moz-range-thumb {
-        width: 1vw;
-        height: 1vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-      }
-
-      .toggle {
-        position: relative;
-        width: 2.6vw;
-        height: 1.3vw;
-      }
-
-      .toggle input {
-        display: none;
-      }
-
-      .slider-toggle,
-      .slider-toggle-green,
-      .slider-toggle-red,
-      .slider-toggle-purple,
-      .slider-toggle-black {
-        position: absolute;
-        cursor: pointer;
-        background: #333;
-        border-radius: 2vw;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: 0.2s;
-      }
-
-      .slider-toggle::before,
-      .slider-toggle-green::before,
-      .slider-toggle-red::before {
-        content: "";
-        position: absolute;
-        height: 1vw;
-        width: 1vw;
-        left: 0.15vw;
-        bottom: 0.15vw;
-        background: white;
-        border-radius: 50%;
-        transition: 0.2s;
-      }
-
-      .toggle input:checked + .slider-toggle {
-        background: #4caf50;
-      }
-
-      .toggle input:checked + .slider-toggle-green {
-        background: #0f0;
-      }
-
-      .toggle input:checked + .slider-toggle-red {
-        background: #f00;
-      }
-
-      .toggle input:checked + .slider-toggle::before,
-      .toggle input:checked + .slider-toggle-green::before,
-      .toggle input:checked + .slider-toggle-red::before {
-        transform: translateX(1.3vw);
-      }
-
-      .setting-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.6vw;
-        gap: 0.5vw;
-      }
-
-      #reset-settings {
+      100% {
         background: #111;
-        color: #fff;
-        border: 0.1vw solid #444;
-        padding: 0.6vw 0;
-        font-family: monospace;
-        font-size: 0.9vw;
-        cursor: pointer;
-        transition:
-          background 0.2s ease,
-          transform 0.1s ease,
-          border-color 0.2s;
+      }
+    }
+
+    @keyframes bg-epileptic-lol {
+      0% {
+        background: #888;
       }
 
-      #reset-settings:hover {
-        background: #200;
-        border-color: #800;
+      14% {
+        background: #800;
       }
 
-      #reset-settings:active {
-        transform: scale(0.97);
-        background: #400;
+      29% {
+        background: #080;
       }
 
-      #credit {
-        background: #111;
-        color: #fff;
-        border: 0.1vw solid #444;
-        padding: 0.6vw 3.7vw;
-        font-family: monospace;
-        font-size: 0.9vw;
-        cursor: pointer;
-        text-decoration: none;
-        transition:
-          background 0.2s ease,
-          transform 0.1s ease,
-          border-color 0.2s;
+      43% {
+        background: #008;
       }
 
-      #credit:hover {
-        background: #220;
-        border-color: #880;
+      57% {
+        background: #880;
       }
 
-      #credit:active {
-        transform: scale(0.97);
-        background: #440;
+      71% {
+        background: #808;
       }
 
-      #death-screen {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        display: none;
-        z-index: 999;
+      86% {
+        background: #088;
       }
 
-      #intro-screen {
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(circle at center, #111 0%, #000 80%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-        animation: fadeInIntro 1s ease;
+      100% {
+        background: #888;
       }
+    }
 
-      @keyframes fadeInIntro {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
+    #counter {
+      position: absolute;
+      left: 1vw;
+      bottom: 1vw;
+      margin: 0;
+      color: #fff;
+      font-family: monospace;
+      font-size: 1.5vw;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1000;
+      transition: color 1.5s ease;
+    }
 
-      #intro-card {
-        width: 40vw;
-        max-width: 75vw;
-        background: rgba(10, 10, 10, 0.9);
-        border: 0.15vw solid #222;
-        padding: 2.5vw;
-        text-align: center;
-        font-family: monospace;
-        box-shadow:
-          0 0 1vw rgba(100, 100, 255, 0.15),
-          inset 0 0 1vw rgba(0, 0, 0, 0.6);
-        animation: slideUp 0.8s ease;
-      }
+    #lvl {
+      position: absolute;
+      left: 1vw;
+      bottom: 3vw;
+      margin: 0;
+      color: #fff;
+      font-family: monospace;
+      font-size: 1vw;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1000;
+      transition: color 1.5s ease;
+    }
 
-      @keyframes slideUp {
-        from {
-          transform: translateY(2vw);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
+    #settings-btn {
+      position: absolute;
+      right: 1vw;
+      bottom: 1vw;
+      font-size: 4vw;
+      cursor: pointer;
+      user-select: none;
+      z-index: 20;
+      transition: opacity 1.5s ease;
+      filter: invert();
+    }
 
-      #intro-card h1 {
-        font-size: 2vw;
-        margin-bottom: 1.5vw;
-        color: #ff4444;
-        letter-spacing: 0.1vw;
-      }
+    #settings-panel {
+      position: absolute;
+      right: 1vw;
+      bottom: 6vw;
+      padding: 1vw 1vw;
+      font-size: 1vw;
+      width: 11vw;
+      background: rgba(0, 0, 0, 0.85);
+      border: 0.1vw solid #333;
+      color: white;
+      font-family: monospace;
+      display: none;
+      z-index: 20;
+    }
 
-      #intro-card p {
-        font-size: 1vw;
-        line-height: 1.6;
-        color: #ccc;
-        margin-bottom: 1.5vw;
-      }
+    #graphics-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 6vw;
+      height: 0.4vw;
+      background: #333;
+      border-radius: 1vw;
+      outline: none;
+    }
 
-      .intro-link {
-        color: #66ccff;
-      }
+    #graphics-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 1vw;
+      height: 1vw;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
 
-      #intro-start {
-        margin-top: 2vw;
-        font-size: 1.1vw;
-        color: #888;
-        letter-spacing: 0.1vw;
-        animation: pulse 1.5s infinite;
-      }
+    #graphics-slider::-moz-range-thumb {
+      width: 1vw;
+      height: 1vw;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
 
-      @keyframes pulse {
-        0% {
-          opacity: 0.5;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0.5;
-        }
-      }
+    .setting-row {
+      margin-bottom: 0.6vw;
+    }
 
-      #death-image {
-        position: absolute;
-        top: 50%;
-        left: 25%;
-        transform: translate(-50%, -50%);
-        max-width: 30vw;
-        max-height: 60vh;
+    .setting-row label {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #settings-panel hr {
+      border: none;
+      border-top: 0.1vw solid #333;
+      margin: 0.8vw 0.1vw;
+    }
+
+    .range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 6vw;
+      height: 0.4vw;
+      background: #333;
+      border-radius: 1vw;
+      outline: none;
+    }
+
+    .range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 1vw;
+      height: 1vw;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .range::-moz-range-thumb {
+      width: 1vw;
+      height: 1vw;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .toggle {
+      position: relative;
+      width: 2.6vw;
+      height: 1.3vw;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider-toggle,
+    .slider-toggle-green,
+    .slider-toggle-red,
+    .slider-toggle-purple,
+    .slider-toggle-black {
+      position: absolute;
+      cursor: pointer;
+      background: #333;
+      border-radius: 2vw;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: 0.2s;
+    }
+
+    .slider-toggle::before,
+    .slider-toggle-green::before,
+    .slider-toggle-red::before {
+      content: "";
+      position: absolute;
+      height: 1vw;
+      width: 1vw;
+      left: 0.15vw;
+      bottom: 0.15vw;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .toggle input:checked+.slider-toggle {
+      background: #4caf50;
+    }
+
+    .toggle input:checked+.slider-toggle-green {
+      background: #0f0;
+    }
+
+    .toggle input:checked+.slider-toggle-red {
+      background: #f00;
+    }
+
+    .toggle input:checked+.slider-toggle::before,
+    .toggle input:checked+.slider-toggle-green::before,
+    .toggle input:checked+.slider-toggle-red::before {
+      transform: translateX(1.3vw);
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6vw;
+      gap: 0.5vw;
+    }
+
+    #reset-settings {
+      background: #111;
+      color: #fff;
+      border: 0.1vw solid #444;
+      padding: 0.6vw 0;
+      font-family: monospace;
+      font-size: 0.9vw;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        transform 0.1s ease,
+        border-color 0.2s;
+    }
+
+    #reset-settings:hover {
+      background: #200;
+      border-color: #800;
+    }
+
+    #reset-settings:active {
+      transform: scale(0.97);
+      background: #400;
+    }
+
+    #credit {
+      background: #111;
+      color: #fff;
+      border: 0.1vw solid #444;
+      padding: 0.6vw 3.7vw;
+      font-family: monospace;
+      font-size: 0.9vw;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        background 0.2s ease,
+        transform 0.1s ease,
+        border-color 0.2s;
+    }
+
+    #credit:hover {
+      background: #220;
+      border-color: #880;
+    }
+
+    #credit:active {
+      transform: scale(0.97);
+      background: #440;
+    }
+
+    #death-screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: none;
+      z-index: 999;
+    }
+
+    #intro-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #111 0%, #000 80%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      animation: fadeInIntro 1s ease;
+    }
+
+    @keyframes fadeInIntro {
+      from {
         opacity: 0;
-        transition: opacity 2.4s ease;
       }
 
-      #death-text {
-        position: absolute;
-        top: 1.5vw;
-        left: 1vw;
-        transform: translateY(-50%);
-        color: white;
-        font-family: monospace;
-        font-size: 1vw;
-        white-space: nowrap;
+      to {
+        opacity: 1;
       }
+    }
 
-      #death-input {
-        position: absolute;
-        top: 50%;
-        left: 42.5%;
-        width: 50vw;
-        transform: translateY(-50%);
-        color: white;
-        background: transparent;
-        border: none;
-        outline: none;
-        font-family: monospace;
-        font-size: 5vw;
-        white-space: nowrap;
-      }
+    #intro-card {
+      width: 40vw;
+      max-width: 75vw;
+      background: rgba(10, 10, 10, 0.9);
+      border: 0.15vw solid #222;
+      padding: 2.5vw;
+      text-align: center;
+      font-family: monospace;
+      box-shadow:
+        0 0 1vw rgba(100, 100, 255, 0.15),
+        inset 0 0 1vw rgba(0, 0, 0, 0.6);
+      animation: slideUp 0.8s ease;
+    }
 
-      #retry-btn {
-        position: absolute;
-        right: 1vw;
-        bottom: 1vw;
-        font-size: 4vw;
-        cursor: pointer;
-        user-select: none;
+    @keyframes slideUp {
+      from {
+        transform: translateY(2vw);
         opacity: 0;
-        pointer-events: none;
-        filter: invert();
-        transition: opacity 2.4s ease;
-        animation: spin 4s linear infinite;
       }
 
-      body.player-dead {
-        filter: grayscale(1) brightness(0.6);
-        transition: filter 0.2s ease;
-      }
-
-      body.player-dead.fade-out {
-        filter: grayscale(0) brightness(1);
-        transition: filter 0.5s ease;
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      #entity-panel {
-        position: absolute;
-        top: 0;
-        left: 25%;
-        transform: translateX(-50%);
-        width: 50%;
-        min-height: 4.5vw;
-        background: #0a3cff80;
-        border: 0.1vw solid #0a3cff;
-        border-top: none;
-        color: #fff;
-        transform: translateY(-100%);
-        transition: transform 0.35s ease;
-        z-index: 1000;
-        padding: 0.6vw 1vw;
-        box-sizing: border-box;
-      }
-
-      #entity-panel.open {
+      to {
         transform: translateY(0);
+        opacity: 1;
       }
+    }
 
-      #entity-panel-content {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6vw;
-      }
+    #intro-card h1 {
+      font-size: 2vw;
+      margin-bottom: 1.5vw;
+      color: #ff4444;
+      letter-spacing: 0.1vw;
+    }
 
-      .entity-slot {
-        position: relative;
-        width: 3vw;
-        height: 3vw;
-      }
+    #intro-card p {
+      font-size: 1vw;
+      line-height: 1.6;
+      color: #ccc;
+      margin-bottom: 1.5vw;
+    }
 
-      .entity-slot img {
-        width: 100%;
-        height: 100%;
-        image-rendering: pixelated;
-      }
+    .intro-link {
+      color: #66ccff;
+    }
 
-      .entity-count {
-        position: absolute;
-        right: -0.3vw;
-        bottom: -0.3vw;
-        background: #00000080;
-        color: #fff;
-        font-family: monospace;
-        font-size: 0.8vw;
-        padding: 0.1vw 0.3vw;
-        border-radius: 0.3vw;
-      }
+    #intro-start {
+      margin-top: 2vw;
+      font-size: 1.1vw;
+      color: #888;
+      letter-spacing: 0.1vw;
+      animation: pulse 1.5s infinite;
+    }
 
-      #entity-panel-count {
-        position: absolute;
-        top: 1vw;
-        left: 50vw;
-        margin: 0;
-        margin-left: 0.5vw;
-        transform: translateY(-50%);
-        white-space: nowrap;
-        font-size: 1vw;
-        font-family: monospace;
+    @keyframes pulse {
+      0% {
         opacity: 0.5;
       }
 
-      #entity-panel-diff {
-        position: absolute;
-        top: 2.25vw;
-        left: 50vw;
-        margin: 0;
-        margin-left: 0.5vw;
-        transform: translateY(-50%);
-        white-space: nowrap;
-        font-size: 1vw;
-        font-family: monospace;
+      50% {
+        opacity: 1;
+      }
+
+      100% {
         opacity: 0.5;
       }
+    }
 
-      .diff-arrow {
-        padding: 0.45vw 0.75vw;
-        background: #111;
-        border: 0.1vw solid #444;
-        cursor: pointer;
-        transition:
-          background 0.15s ease,
-          transform 0.1s ease;
+    #death-image {
+      position: absolute;
+      top: 50%;
+      left: 25%;
+      transform: translate(-50%, -50%);
+      max-width: 30vw;
+      max-height: 60vh;
+      opacity: 0;
+      transition: opacity 2.4s ease;
+    }
+
+    #death-text {
+      position: absolute;
+      top: 1.5vw;
+      left: 1vw;
+      transform: translateY(-50%);
+      color: white;
+      font-family: monospace;
+      font-size: 1vw;
+      white-space: nowrap;
+    }
+
+    #death-input {
+      position: absolute;
+      top: 50%;
+      left: 42.5%;
+      width: 50vw;
+      transform: translateY(-50%);
+      color: white;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: monospace;
+      font-size: 5vw;
+      white-space: nowrap;
+    }
+
+    #retry-btn {
+      position: absolute;
+      right: 1vw;
+      bottom: 1vw;
+      font-size: 4vw;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      pointer-events: none;
+      filter: invert();
+      transition: opacity 2.4s ease;
+      animation: spin 4s linear infinite;
+    }
+
+    body.player-dead {
+      filter: grayscale(1) brightness(0.6);
+      transition: filter 0.2s ease;
+    }
+
+    body.player-dead.fade-out {
+      filter: grayscale(0) brightness(1);
+      transition: filter 0.5s ease;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
       }
 
-      .diff-arrow:hover {
-        background: #222;
+      to {
+        transform: rotate(360deg);
       }
+    }
 
-      .diff-arrow:active {
-        transform: scale(0.95);
-      }
+    #entity-panel {
+      position: absolute;
+      top: 0;
+      left: 25%;
+      transform: translateX(-50%);
+      width: 50%;
+      min-height: 4.5vw;
+      background: #0a3cff80;
+      border: 0.1vw solid #0a3cff;
+      border-top: none;
+      color: #fff;
+      transform: translateY(-100%);
+      transition: transform 0.35s ease;
+      z-index: 1000;
+      padding: 0.6vw 1vw;
+      box-sizing: border-box;
+    }
 
-      .diff-mask {
-        width: 4.5vw;
-        overflow: hidden;
-        position: relative;
-      }
+    #entity-panel.open {
+      transform: translateY(0);
+    }
 
-      .diff-label {
-        text-align: center;
-        font-weight: bold;
-        white-space: nowrap;
-        transition:
-          transform 0.25s ease,
-          opacity 0.2s ease,
-          color 0.2s ease;
-      }
-    </style>
-    <meta
-      name="google-site-verification"
-      content="uoM9zl7asfE0uft1FwDiV5z1ZEQKeezhEW71Hj0f7iY"
-    />
-  </head>
+    #entity-panel-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6vw;
+    }
 
-  <body>
-    <div id="viewport">
-      <input
-        id="spawn-input"
-        type="text"
-        placeholder="Type here..."
-        style="
+    .entity-slot {
+      position: relative;
+      width: 3vw;
+      height: 3vw;
+    }
+
+    .entity-slot img {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    .entity-count {
+      position: absolute;
+      right: -0.3vw;
+      bottom: -0.3vw;
+      background: #00000080;
+      color: #fff;
+      font-family: monospace;
+      font-size: 0.8vw;
+      padding: 0.1vw 0.3vw;
+      border-radius: 0.3vw;
+    }
+
+    #entity-panel-count {
+      position: absolute;
+      top: 1vw;
+      left: 50vw;
+      margin: 0;
+      margin-left: 0.5vw;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 1vw;
+      font-family: monospace;
+      opacity: 0.5;
+    }
+
+    #entity-panel-diff {
+      position: absolute;
+      top: 2.25vw;
+      left: 50vw;
+      margin: 0;
+      margin-left: 0.5vw;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 1vw;
+      font-family: monospace;
+      opacity: 0.5;
+    }
+
+    .diff-arrow {
+      padding: 0.45vw 0.75vw;
+      background: #111;
+      border: 0.1vw solid #444;
+      cursor: pointer;
+      transition:
+        background 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .diff-arrow:hover {
+      background: #222;
+    }
+
+    .diff-arrow:active {
+      transform: scale(0.95);
+    }
+
+    .diff-mask {
+      width: 4.5vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .diff-label {
+      text-align: center;
+      font-weight: bold;
+      white-space: nowrap;
+      transition:
+        transform 0.25s ease,
+        opacity 0.2s ease,
+        color 0.2s ease;
+    }
+  </style>
+  <meta name="google-site-verification" content="uoM9zl7asfE0uft1FwDiV5z1ZEQKeezhEW71Hj0f7iY" />
+</head>
+
+<body>
+  <div id="viewport">
+    <input id="spawn-input" type="text" placeholder="Type here..." style="
           position: absolute;
           top: 1vw;
           left: 1vw;
@@ -684,12 +673,8 @@
           font-family: monospace;
           display: none;
           z-index: 2000;
-        "
-        autocomplete="off"
-      />
-      <p
-        id="spawn-input-text"
-        style="
+        " autocomplete="off" />
+    <p id="spawn-input-text" style="
           position: absolute;
           top: 2.5vw;
           left: 1vw;
@@ -699,13 +684,10 @@
           display: none;
           opacity: 50%;
           z-index: 2000;
-        "
-      >
-        Type "commandlist" for full commands
-      </p>
-      <p
-        id="spawn-input-commands"
-        style="
+        ">
+      Type "commandlist" for full commands
+    </p>
+    <p id="spawn-input-commands" style="
           position: absolute;
           top: 3.5vw;
           left: 1vw;
@@ -716,223 +698,186 @@
           display: block;
           opacity: 0;
           z-index: 2000;
-        "
-      >
-        commandlist<br />
-        toggledeath<br />
-        disablespawn<br />
-        disableknockback<br />
-        biggerradius<br />
-        shield<br />
-        immunebell<br />
-        revive<br />
-        {entityname}<br />
-        {count}{entityname}<br />
-        {altarname}<br />
-        pattern{num}spawn<br />
-      </p>
-      <div id="entity-panel">
-        <div id="entity-panel-content"></div>
-        <p id="entity-panel-count">EntityCount: 0</p>
-        <p id="entity-panel-diff">Normal</p>
-      </div>
-      <canvas id="screen" width="1920" height="1200"></canvas>
-      <canvas id="entities" width="1920" height="1200"></canvas>
-      <canvas id="entities-2" width="1920" height="1200"></canvas>
-      <p id="counter">Gift(s) Collected: 0</p>
-      <p id="lvl">Lvl 0</p>
-      <div id="settings-btn">⚙</div>
-      <div id="settings-panel">
-        <div class="setting-row" style="justify-content: center">
-          <div
-            id="difficulty-selector"
-            style="
+        ">
+      commandlist<br />
+      toggledeath<br />
+      disablespawn<br />
+      disableknockback<br />
+      biggerradius<br />
+      shield<br />
+      immunebell<br />
+      revive<br />
+      {entityname}<br />
+      {count}{entityname}<br />
+      {altarname}<br />
+      pattern{num}spawn<br />
+    </p>
+    <div id="entity-panel">
+      <div id="entity-panel-content"></div>
+      <p id="entity-panel-count">EntityCount: 0</p>
+      <p id="entity-panel-diff">Normal</p>
+    </div>
+    <canvas id="screen" width="1920" height="1200"></canvas>
+    <canvas id="entities" width="1920" height="1200"></canvas>
+    <canvas id="entities-2" width="1920" height="1200"></canvas>
+    <p id="counter">Gift(s) Collected: 0</p>
+    <p id="lvl">Lvl 0</p>
+    <div id="settings-btn">⚙</div>
+    <div id="settings-panel">
+      <div class="setting-row" style="justify-content: center">
+        <div id="difficulty-selector" style="
               display: flex;
               align-items: center;
               gap: 1vw;
               font-family: monospace;
               font-size: 1.1vw;
               user-select: none;
-            "
-          >
-            <div id="diff-left" class="diff-arrow">&lt;</div>
+            ">
+          <div id="diff-left" class="diff-arrow">&lt;</div>
 
-            <div class="diff-mask">
-              <div id="diff-label" class="diff-label">Normal</div>
-            </div>
-
-            <div id="diff-right" class="diff-arrow">&gt;</div>
+          <div class="diff-mask">
+            <div id="diff-label" class="diff-label">Normal</div>
           </div>
-        </div>
-        <hr />
-        <div class="setting-row">
-          <span style="font-size: 0.95vw">Graphics</span>
-          <input
-            id="graphics-slider"
-            class="range"
-            type="range"
-            min="0"
-            max="3"
-            step="1"
-          />
-        </div>
-        <div class="setting-row">
-          <span>Music<br />volume</span>
-          <input
-            id="music-volume"
-            class="range"
-            type="range"
-            min="0"
-            max="100"
-            step="10"
-            value="30"
-          />
-        </div>
-        <div class="setting-row">
-          <span>SFX<br />volume</span>
-          <input
-            id="sfx-volume"
-            class="range"
-            type="range"
-            min="0"
-            max="100"
-            step="10"
-            value="50"
-          />
-        </div>
-        <div class="setting-row">
-          <span>Reduced motion</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-reduced-motion" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span
-            >Deaf mode<br /><span style="font-size: 0.75vw"
-              >(recommended)</span
-            ></span
-          >
-          <label class="toggle">
-            <input type="checkbox" id="toggle-deaf-mode" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="font-size: 0.95vw">Accurate cursor</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-accurate-cursor" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span>Show floor</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-floor" checked />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span>Show border</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-border" checked />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span>Show grids</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-grids" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <hr />
-        <div class="setting-row">
-          <span style="color: #888888">An old friend?</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-enable-ponderer" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="color: #8800ff">Enable void</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-enable-void" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="color: #ff00ff">Tripmine hell</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-tripmine-hell" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="color: #ffff00">Epileptic mode</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-epileptic" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="color: #444444">Blindness</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-blindness" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <div class="setting-row">
-          <span style="color: #ff8800">Drunk camera</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-drunk-camera" />
-            <span class="slider-toggle"></span>
-          </label>
-        </div>
-        <hr />
-        <div class="setting-row">
-          <button
-            id="reset-settings"
-            style="width: 100%; font-family: monospace"
-          >
-            Reset to default
-          </button>
-        </div>
-        <div class="setting-row" style="margin: 0">
-          <a
-            href="./credit.html"
-            id="credit"
-            style="width: 100%; font-family: monospace"
-          >
-            Credits
-          </a>
+
+          <div id="diff-right" class="diff-arrow">&gt;</div>
         </div>
       </div>
-      <div id="intro-screen">
-        <div id="intro-card">
-          <h1>Disclaimer!</h1>
-
-          <p>
-            This is a fan project from the game called
-            <span class="intro-link">Nullscape</span> from Roblox and is not
-            meant to surpass the popularity of the original game.
-          </p>
-
-          <p>
-            The default page zoom for gameplay is <b>100%</b>. Other than that,
-            the run is considered illegitimate and disqualified.
-          </p>
-
-          <div id="intro-start">Click anywhere to begin</div>
-        </div>
+      <hr />
+      <div class="setting-row">
+        <span style="font-size: 0.95vw">Graphics</span>
+        <input id="graphics-slider" class="range" type="range" min="0" max="3" step="1" />
       </div>
-      <div id="death-screen">
-        <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
-        <div id="death-text">You died</div>
-        <input type="text" id="death-input" />
-        <div id="retry-btn">↻</div>
+      <div class="setting-row">
+        <span>Music<br />volume</span>
+        <input id="music-volume" class="range" type="range" min="0" max="100" step="10" value="30" />
+      </div>
+      <div class="setting-row">
+        <span>SFX<br />volume</span>
+        <input id="sfx-volume" class="range" type="range" min="0" max="100" step="10" value="50" />
+      </div>
+      <div class="setting-row">
+        <span>Reduced motion</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-reduced-motion" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Deaf mode<br /><span style="font-size: 0.75vw">(recommended)</span></span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-deaf-mode" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="font-size: 0.95vw">Accurate cursor</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-accurate-cursor" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Show floor</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-floor" checked />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Show border</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-border" checked />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Show grids</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-grids" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <hr />
+      <div class="setting-row">
+        <span style="color: #888888">An old friend?</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-enable-ponderer" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="color: #8800ff">Enable void</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-enable-void" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="color: #ff00ff">Tripmine hell</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-tripmine-hell" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="color: #ffff00">Epileptic mode</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-epileptic" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="color: #444444">Blindness</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-blindness" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span style="color: #ff8800">Drunk camera</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-drunk-camera" />
+          <span class="slider-toggle"></span>
+        </label>
+      </div>
+      <hr />
+      <div class="setting-row">
+        <button id="reset-settings" style="width: 100%; font-family: monospace">
+          Reset to default
+        </button>
+      </div>
+      <div class="setting-row" style="margin: 0">
+        <a href="./credit.html" id="credit" style="width: 100%; font-family: monospace">
+          Credits
+        </a>
       </div>
     </div>
-    <script type="module" src="./main.js"></script>
-  </body>
+    <div id="intro-screen">
+      <div id="intro-card">
+        <h1>Disclaimer!</h1>
+
+        <p>
+          This is a fan project from the game called
+          <span class="intro-link">Nullscape</span> from Roblox and is not
+          meant to surpass the popularity of the original game.
+        </p>
+
+        <p>
+          The default page zoom for gameplay is <b>100%</b>. Other than that,
+          the run is considered illegitimate and will not be submitted.
+        </p>
+
+        <div id="intro-start">Click anywhere to begin</div>
+      </div>
+    </div>
+    <div id="death-screen">
+      <img id="death-image" src="./ASSET/Misc/DeathGuy.png" alt="Death" />
+      <div id="death-text">You died</div>
+      <input type="text" id="death-input" />
+      <div id="retry-btn">↻</div>
+    </div>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+
 </html>
