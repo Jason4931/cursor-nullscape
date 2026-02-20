@@ -1930,7 +1930,9 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 2 ||
         pattern[y][x] === 4 ||
         pattern[y][x] === 5 ||
-        pattern[y][x] === 9
+        pattern[y][x] === 9 ||
+        pattern[y][x] === 10 ||
+        pattern[y][x] === 14
       ) {
         floorTiles.push({
           x: wx,
@@ -1938,6 +1940,7 @@ function placeSuper(sx, sy, pattern) {
           sx,
           sy,
           passageGoldPattern: passageGoldPattern > 0,
+          diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
         });
       }
 
@@ -2000,7 +2003,7 @@ function placeSuper(sx, sy, pattern) {
   for (let y = 0; y < pattern.length; y++) {
     for (let x = 0; x < pattern[0].length; x++) {
       const v = pattern[y][x];
-      if (v === 4 || v === 5) {
+      if (v === 4 || v === 5 || v === 14) {
         coords4or5.push({ x, y });
       }
     }
@@ -2184,6 +2187,24 @@ function drawGrid() {
       if (t.passageGoldPattern) {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else if (t.diorite) {
+        const h = TILE / 2;
+
+        // top-left
+        ctx.fillStyle = showFloor ? "#778" : "#7781";
+        ctx.fillRect(t.x, t.y, h, h);
+
+        // top-right
+        ctx.fillStyle = showFloor ? "#658" : "#6581";
+        ctx.fillRect(t.x + h, t.y, h, h);
+
+        // bottom-left
+        ctx.fillStyle = showFloor ? "#557" : "#5571";
+        ctx.fillRect(t.x, t.y + h, h, h);
+
+        // bottom-right
+        ctx.fillStyle = showFloor ? "#446" : "#4461";
+        ctx.fillRect(t.x + h, t.y + h, h, h);
       } else if (randTile < 0.4) {
         ctx.fillStyle = showFloor ? "#282828" : "#28282811";
         ctx.fillRect(t.x, t.y, TILE, TILE);
