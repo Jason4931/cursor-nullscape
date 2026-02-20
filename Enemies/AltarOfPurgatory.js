@@ -32,6 +32,7 @@ export function setup(host, hardMode) {
   }
 
   function onClick(e) {
+    if (collectedCount >= (hardMode ? 9000 : 4500)) return;
     const rect = entityCanvas2.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
