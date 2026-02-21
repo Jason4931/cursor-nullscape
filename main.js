@@ -923,7 +923,7 @@ export function playSound(
   important = false,
 ) {
   if (soundStopped) return;
-  const audio = new Audio(`${soundPath}?t=${Date.now()}`);
+  const audio = new Audio(soundPath);
   audio.playbackRate = rate;
   if (typeof important === "string") {
     audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
