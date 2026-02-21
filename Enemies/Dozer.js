@@ -11,7 +11,7 @@ export function setup(host, hardMode) {
     phase: "idle",
     timer: 0,
 
-    idleDuration: 9 + Math.random(),
+    idleDuration: 14 + Math.random(),
     watchDuration: hardMode ? 2 : 6,
 
     x: 0,
@@ -33,7 +33,7 @@ export function setup(host, hardMode) {
   function enterIdle() {
     state.phase = "idle";
     state.timer = 0;
-    state.idleDuration = 9 + Math.random();
+    state.idleDuration = 14 + Math.random();
   }
 
   enterIdle();

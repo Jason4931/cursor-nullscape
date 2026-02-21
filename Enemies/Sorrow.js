@@ -80,7 +80,7 @@ export function setup(host) {
         state.time = 0;
       }
     } else if (state.phase === 1) {
-      if (state.time >= 10) {
+      if (state.time >= 15) {
         setSorrowActive(true);
         state.phase = 0;
         state.soundTime = 0;

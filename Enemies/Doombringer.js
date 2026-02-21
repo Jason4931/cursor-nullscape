@@ -25,7 +25,7 @@ export function setup(host) {
   function resetDelay() {
     state.phase = "idle";
     state.timer = 0;
-    state.delay = 9 + Math.random();
+    state.delay = 14 + Math.random();
     state.pads.length = 0;
   }
 
