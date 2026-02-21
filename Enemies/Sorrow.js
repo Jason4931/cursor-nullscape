@@ -71,7 +71,7 @@ export function setup(host) {
     if (state.phase === 0) {
       if (state.time >= state.duration) {
         setSorrowActive(false);
-        playSound("./ASSET/Sound/Enemies/Sorrow/SorrowGone.mp3.mpeg");
+        playSound("./ASSET/Sound/Enemies/Sorrow/Sorrowgone.mp3.mpeg");
         if (state.sound) {
           state.sound();
           state.sound = null;

@@ -151,7 +151,7 @@ export function setup(host) {
         state.soundState = 2;
         if (!state.sound)
           state.sound = playSound(
-            `./ASSET/Sound/Enemies/NIL/Nil_-_loop_v3.ogg?t=${Date.now()}`,
+            `./ASSET/Sound/Enemies/NIL/Nil_-_loop_v3.ogg?t=${Math.floor(Date.now() / 60000)}`,
             undefined,
             undefined,
             undefined,
@@ -186,7 +186,7 @@ export function setup(host) {
 
     if (dist <= 220) {
       state.attacking = true;
-      if (!soundStopped) playSound(`./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3?t=${Date.now()}`);
+      if (!soundStopped) playSound(`./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3?t=${Math.floor(Date.now() / 60000)}`);
       state.attackTimer = 0;
 
       const adx = mouse.x - state.x;
