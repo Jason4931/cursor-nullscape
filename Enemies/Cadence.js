@@ -13,8 +13,8 @@ export function setup(host, hardMode, deafMode) {
   const canvas = host.canvas;
 
   const state = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
+    x: canvas.width / 2 + 200,
+    y: canvas.height / 2 + 200,
 
     mode: "idle",
     timer: 0,
