@@ -65,6 +65,7 @@ const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
+const cheatDetector = true;
 
 /* ===== DIFFICULTY ===== */
 const beaten = localStorage.getItem("GameBeaten") != null;
@@ -569,7 +570,7 @@ window.addEventListener("keydown", (e) => {
   if (e.repeat) return;
   if (e.key === "?" && e.shiftKey && e.ctrlKey) {
     if (topLeftInput.style.display === "none") {
-      disableProgression = true;
+      if (cheatDetector) disableProgression = true;
       topLeftInput.value = "";
       topLeftInput.style.display = "block";
       topLeftInput.focus();
@@ -595,7 +596,7 @@ const altars = [
   { name: "purgatory", activate: () => activatePurgatory() },
   { name: "purification", activate: () => activatePurification() },
 ];
-let soundStopped = false;
+export let soundStopped = false;
 const topLeftInput = document.getElementById("spawn-input");
 topLeftInput.addEventListener("input", () => {
   let rawInput = topLeftInput.value.trim().toLowerCase();
@@ -922,7 +923,7 @@ export function playSound(
   important = false,
 ) {
   if (soundStopped) return;
-  const audio = new Audio(soundPath);
+  const audio = new Audio(`${soundPath}?t=${Date.now()}`);
   audio.playbackRate = rate;
   if (typeof important === "string") {
     audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
@@ -943,7 +944,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play();
+    audio.play().catch(() => { });
 
     const stopAt = () => {
       if (stopped) return;
@@ -2952,7 +2953,7 @@ function loop(now) {
 
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
-  if (zoom > 1.25 || zoom < 0.75) disableProgression = true;
+  if ((zoom > 1.25 || zoom < 0.75) && cheatDetector) disableProgression = true;
   document.getElementById("spawn-input").style.display === "block"
     ? (document.getElementById("spawn-input-text").style.display = "block")
     : (document.getElementById("spawn-input-text").style.display = "none");
@@ -3045,9 +3046,12 @@ setInterval(() => {
       break;
     }
   }
-  const [key, p] = patternsState.entries().next().value;
-  destroyPattern(p);
-  patternsState.delete(key);
+  const first = patternsState.entries().next();
+  if (!first.done) {
+    const [key, p] = first.value;
+    destroyPattern(p);
+    patternsState.delete(key);
+  }
 }, 6000);
 
 let originalVolume = [0, 0];
