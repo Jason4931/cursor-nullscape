@@ -131,14 +131,16 @@
       z-index: 2000;
     }
 
-    #return-btn:hover {
+    #return-btn:hover,
+    #secret-gallery:hover {
       opacity: 1;
       transform: scale(1.1);
       box-shadow: 0 0 1.25vw rgba(100, 100, 255, 0.25);
       color: #bbb;
     }
 
-    #return-btn:active {
+    #return-btn:active,
+    #secret-gallery:active {
       transform: scale(0.95);
     }
 
@@ -226,7 +228,7 @@
       z-index: 2000;
     }
 
-    #secret {
+    #secret-command {
       position: fixed;
       left: 1vw;
       top: 1vw;
@@ -237,13 +239,46 @@
       z-index: 2000;
       display: none;
     }
+
+    #secret-gallery {
+      position: fixed;
+      right: 1.25vw;
+      top: 1.5vw;
+
+      width: 3.2vw;
+      height: 3.2vw;
+      min-width: 3.28125vw;
+      min-height: 3.28125vw;
+
+      padding-bottom: 0.15625vw;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      background: #0a0a0a;
+      border: 0.078125vw solid #333;
+      border-radius: 50%;
+
+      color: #888;
+      font-size: 1.75vw;
+      text-decoration: none;
+
+      opacity: 0.75;
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+      z-index: 2000;
+    }
   </style>
 </head>
 
 <div id="highest-level-display">
   Highest level reached: 0<br />(Normal & Hard only)
 </div>
-<div id="secret">Ctrl+Shift+/ to open commands</div>
+<div id="secret-command">Ctrl+Shift+/ to open commands</div>
 
 <div id="stars">
   <div class="star-row casual"></div>
@@ -333,13 +368,26 @@
     </p>
   </div>
 
+  <a href="./gallery.html" id="secret-gallery">▣</a>
   <a href="./" id="return-btn">⮌</a>
   <script>
     (function renderHighestLevel() {
       const el = document.getElementById("highest-level-display");
       const raw = localStorage.getItem("highest-level-reached");
       if (localStorage.getItem("GameBeaten") != null) {
-        document.getElementById("secret").style.display = "block";
+        document.getElementById("secret-command").style.display = "block";
+        document.getElementById("secret-gallery").style.display = "flex";
+        setInterval(() => {
+          const arrsymbol = [
+            "▣",
+            "▤",
+            "▥",
+            "▦",
+            "▧",
+            "▨",
+          ]
+          document.getElementById("secret-gallery").innerHTML = arrsymbol[Math.floor(Math.random() * arrsymbol.length)];
+        }, 100)
       }
 
       if (!raw) {

@@ -4,7 +4,7 @@ import { playSound, getCameraPos, soundStopped } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/NIL.png";
 
-export function setup(host) {
+export function setup(host, deafMode) {
   const state = {
     opacity: 0.1,
 
@@ -231,7 +231,7 @@ export function setup(host) {
 
     const maxRadius = 500;
 
-    if (dist <= maxRadius) {
+    if (dist <= maxRadius && deafMode) {
       const t = 1 - dist / maxRadius; // 0 → 1 as closer
       const opacity = t * 0.6; // max intensity (adjust if too strong)
 

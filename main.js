@@ -216,7 +216,7 @@ const ENTITY_POOL = [
   },
   {
     name: "NIL",
-    spawn: () => spawnNIL(entityHost),
+    spawn: () => spawnNIL(entityHost, deafMode),
     start: 500,
     src: "./ASSET/Enemies/NIL.png",
   },
@@ -2331,7 +2331,7 @@ function drawGrid() {
     slownessCooldown = true;
     setTimeout(() => {
       slownessCooldown = false;
-    }, 1000);
+    }, 2000);
   }
 
   // gifts (center inside the tile)
