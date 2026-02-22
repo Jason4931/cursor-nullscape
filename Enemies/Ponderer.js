@@ -29,8 +29,8 @@ export function setup(host, hardMode) {
   };
 
   const canvas = host.ctx.canvas;
-  state.x = canvas.width * 0.5;
-  state.y = canvas.height * 0.5;
+  state.x = canvas.width * (0.333 + 0.333 * Math.random());
+  state.y = canvas.height * (0.333 + 0.333 * Math.random());
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;

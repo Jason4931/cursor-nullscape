@@ -21,6 +21,7 @@ export function setup(host) {
     screenY: 0,
     strikeMouseX: 0,
     strikeMouseY: 0,
+    deathStrike: true,
 
     lastSecond: -1,
     arrowSpinStart: -1,
@@ -36,7 +37,7 @@ export function setup(host) {
   const RING_RADIUS = 60;
   const INTRO_TIME = 2;
   const STRIKE_TIME = 1;
-  const STRIKE_RADIUS = 190;
+  const STRIKE_RADIUS = 210;
 
   function resetIntro() {
     state.phase = "intro";
@@ -47,6 +48,7 @@ export function setup(host) {
     state.screenX = window.innerWidth / 2;
     state.screenY = window.innerHeight / 2;
     state.strikesound = false;
+    state.deathStrike = true;
     playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Startup.wav");
   }
 
@@ -118,14 +120,17 @@ export function setup(host) {
           }
         }
 
-        if (state.timer <= 0) {
-          const dx = mouse._clientX - state.strikeMouseX;
-          const dy = mouse._clientY - state.strikeMouseY;
+        const dx = mouse._clientX - state.strikeMouseX;
+        const dy = mouse._clientY - state.strikeMouseY;
+        if (dx * dx + dy * dy > STRIKE_RADIUS * STRIKE_RADIUS) {
+          state.deathStrike = false;
+        }
 
-          if (dx * dx + dy * dy <= STRIKE_RADIUS * STRIKE_RADIUS) {
+        if (state.timer <= 0) {
+          if (state.deathStrike) {
             death("Kookoo");
             if (!state.deathsound) {
-              playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Died.wav");
+              playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Died.wav", 1, { start: 0.2, end: 1 });
               state.deathsound = true;
             }
           }
