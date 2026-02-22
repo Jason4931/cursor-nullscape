@@ -2454,29 +2454,40 @@ function updateCamera() {
     Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5,
   );
 
-  if (!disableCollect) {
-    const motionScale = reducedMotion ? 0.5 : 1;
-    const slowScale = slowness ? 0.25 : 1;
-    const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
-    camX += vx * motionScale * slowScale * settingScale * voidScale;
-    camY += vy * motionScale * slowScale * settingScale * voidScale;
+  const motionScale = reducedMotion ? 0.5 : 1;
+  const slowScale = slowness ? 0.25 : 1;
+  const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
+  const disableCollectScale = disableCollect ? 0.01 : 1;
+  camX +=
+    vx *
+    motionScale *
+    slowScale *
+    settingScale *
+    voidScale *
+    disableCollectScale;
+  camY +=
+    vy *
+    motionScale *
+    slowScale *
+    settingScale *
+    voidScale *
+    disableCollectScale;
 
-    const lim = getLimits();
-    camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
-    camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
-    if (drunkCamera) {
-      const t = performance.now() * 0.002;
-      camX += Math.sin(t * 1.3) * 2;
-      camY += Math.cos(t * 1.7) * 2;
-    }
-    canvas.style.transform = `translate(${camX}px, ${camY}px)`;
-    entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
-    entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
-    if (SHAKE) {
-      canvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
-      entityCanvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
-      entityCanvas2.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
-    }
+  const lim = getLimits();
+  camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
+  camY = Math.max(lim.minY, Math.min(lim.maxY, camY));
+  if (drunkCamera) {
+    const t = performance.now() * 0.002;
+    camX += Math.sin(t * 1.3) * 2;
+    camY += Math.cos(t * 1.7) * 2;
+  }
+  canvas.style.transform = `translate(${camX}px, ${camY}px)`;
+  entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
+  entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
+  if (SHAKE) {
+    canvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
+    entityCanvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
+    entityCanvas2.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
   }
 
   // mouseWorld = screenToWorld(mouseX, mouseY);
