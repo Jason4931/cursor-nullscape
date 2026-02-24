@@ -157,6 +157,7 @@ let skinwalkerCount = 0;
 let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+export let beaconed = false;
 export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
 export let voidbreakerActive;
@@ -3092,54 +3093,57 @@ setInterval(() => {
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
-  originalVolume = [musicVolume, sfxVolume];
-  finalPatterns(false);
-  ROTATED_PATTERNS = PATTERNS.map((base) => {
-    const r0 = base;
-    const r1 = rotateMatrix90(r0);
-    const r2 = rotateMatrix90(r1);
-    const r3 = rotateMatrix90(r2);
-    return [r0, r1, r2, r3];
-  });
-  stopAllSounds();
-  musicVolume = 0;
-  sfxVolume = 0;
-  disableCollect = true;
-  localStorage.setItem("GameBeaten", `${new Date()}`);
-  if (!disableProgression) {
-    setStars();
-    if (casualMode) {
-      localStorage.setItem("win-casual", `${new Date()}`);
-    } else if (hardMode) {
-      localStorage.removeItem("win-casual");
-      localStorage.removeItem("win-normal");
-      localStorage.setItem("win-hard", `${new Date()}`);
-    } else {
-      localStorage.removeItem("win-casual");
-      localStorage.setItem("win-normal", `${new Date()}`);
-    }
-  }
+  beaconed = true;
   setTimeout(() => {
-    despawnCatalyst = true;
-    soundStopped = false;
-    SHAKE = false;
-    for (const [key, p] of patternsState) {
-      destroyPattern(p);
-      patternsState.delete(key);
+    originalVolume = [musicVolume, sfxVolume];
+    finalPatterns(false);
+    ROTATED_PATTERNS = PATTERNS.map((base) => {
+      const r0 = base;
+      const r1 = rotateMatrix90(r0);
+      const r2 = rotateMatrix90(r1);
+      const r3 = rotateMatrix90(r2);
+      return [r0, r1, r2, r3];
+    });
+    stopAllSounds();
+    musicVolume = 0;
+    sfxVolume = 0;
+    disableCollect = true;
+    localStorage.setItem("GameBeaten", `${new Date()}`);
+    if (!disableProgression) {
+      setStars();
+      if (casualMode) {
+        localStorage.setItem("win-casual", `${new Date()}`);
+      } else if (hardMode) {
+        localStorage.removeItem("win-casual");
+        localStorage.removeItem("win-normal");
+        localStorage.setItem("win-hard", `${new Date()}`);
+      } else {
+        localStorage.removeItem("win-casual");
+        localStorage.setItem("win-normal", `${new Date()}`);
+      }
     }
-    musicVolume = originalVolume[0];
-    sfxVolume = originalVolume[1];
-    allGold = false;
-    document.body.classList.add("player-dead");
     setTimeout(() => {
-      document.body.classList.add("fade-out");
+      despawnCatalyst = true;
+      soundStopped = false;
+      SHAKE = false;
+      for (const [key, p] of patternsState) {
+        destroyPattern(p);
+        patternsState.delete(key);
+      }
+      musicVolume = originalVolume[0];
+      sfxVolume = originalVolume[1];
+      allGold = false;
+      document.body.classList.add("player-dead");
       setTimeout(() => {
-        document.body.classList.remove("player-dead", "fade-out");
-        disableCollect = false;
-        toggleImmortality(false);
-      }, 500);
-    }, 6667);
-  }, 34333);
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+          document.body.classList.remove("player-dead", "fade-out");
+          disableCollect = false;
+          toggleImmortality(false);
+        }, 500);
+      }, 6667);
+    }, 34233);
+  }, 100);
 }
 export function setStars() {
   if (disableProgression) return;

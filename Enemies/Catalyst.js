@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera, playSound } from "../main.js";
+import {
+  despawnCatalyst,
+  moveCamera,
+  playSound,
+  beaconed,
+  actualCollectedCount,
+} from "../main.js";
 
 const layers = [];
 for (let i = 1; i <= 8; i++) {
@@ -36,6 +42,8 @@ export function setup(host) {
     dashStarted: false,
     camShakeX: 0,
     camShakeY: 0,
+    MAX_DASH_DIST: 630,
+    lastscream: false,
 
     pellets: [],
   };
@@ -91,6 +99,23 @@ export function setup(host) {
   function update(dt) {
     if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
+
+    if (beaconed) {
+      if (!state.lastscream) {
+        state.lastscream = true;
+        playSound(
+          "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+      state.phase = "scream";
+      state.screaming = true;
+      state.timer = 0;
+    }
 
     catalystPos = { x: state.x, y: state.y };
     state.layer++;
@@ -188,12 +213,12 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        const MAX_DASH_DIST = 630;
+        if (actualCollectedCount >= 11000) state.MAX_DASH_DIST = 10000;
         const d = Math.hypot(dx, dy) || 1;
 
-        if (d > MAX_DASH_DIST) {
-          dx = (dx / d) * MAX_DASH_DIST;
-          dy = (dy / d) * MAX_DASH_DIST;
+        if (d > state.MAX_DASH_DIST) {
+          dx = (dx / d) * state.MAX_DASH_DIST;
+          dy = (dy / d) * state.MAX_DASH_DIST;
         }
 
         state.dashToX = state.dashFromX + dx;
@@ -298,6 +323,23 @@ export function setup(host) {
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
+    }
+
+    if (beaconed) {
+      ctx.save();
+      ctx.translate(Math.round(state.x), Math.round(state.y));
+
+      const rx = 40 + Math.random() * 200;
+      const ry = 40 + Math.random() * 200;
+      const rot = Math.random() * Math.PI;
+
+      ctx.rotate(rot);
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
     }
 
     ctx.drawImage(
