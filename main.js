@@ -938,7 +938,12 @@ export function playSound(
   onEnd = null,
   important = false,
 ) {
-  if (soundStopped) return;
+  if (
+    soundStopped &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
+  )
+    return;
   const audio = new Audio(soundPath);
   audio.playbackRate = rate;
   if (typeof important === "string") {
@@ -988,7 +993,11 @@ export function playSound(
     activeSounds.delete(entry);
   }
   const entry = { stop, audio };
-  activeSounds.add(entry);
+  if (
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
+  )
+    activeSounds.add(entry);
 
   return stop;
 }
@@ -3094,6 +3103,17 @@ setInterval(() => {
 let originalVolume = [0, 0];
 export function onFinalContact() {
   beaconed = true;
+  canvas.style.cursor = "none";
+  entityCanvas.style.cursor = "none";
+  entityCanvas2.style.cursor = "none";
+  playSound(
+    "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3",
+    1.724,
+    undefined,
+    undefined,
+    undefined,
+    "50",
+  );
   setTimeout(() => {
     originalVolume = [musicVolume, sfxVolume];
     finalPatterns(false);
@@ -3122,10 +3142,22 @@ export function onFinalContact() {
         localStorage.setItem("win-normal", `${new Date()}`);
       }
     }
+    SHAKE = false;
     setTimeout(() => {
       despawnCatalyst = true;
+      sfxVolume = originalVolume[1];
+      playSound(
+        "./ASSET/Sound/Enemies/ending_2.mp3",
+        0.626,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      sfxVolume = 0;
+    }, 2400);
+    setTimeout(() => {
       soundStopped = false;
-      SHAKE = false;
       for (const [key, p] of patternsState) {
         destroyPattern(p);
         patternsState.delete(key);
@@ -3133,6 +3165,15 @@ export function onFinalContact() {
       musicVolume = originalVolume[0];
       sfxVolume = originalVolume[1];
       allGold = false;
+      if (accurateCursor) {
+        canvas.style.cursor = "none";
+        entityCanvas.style.cursor = "none";
+        entityCanvas2.style.cursor = "none";
+      } else {
+        canvas.style.cursor = "auto";
+        entityCanvas.style.cursor = "auto";
+        entityCanvas2.style.cursor = "auto";
+      }
       document.body.classList.add("player-dead");
       setTimeout(() => {
         document.body.classList.add("fade-out");
@@ -3142,8 +3183,8 @@ export function onFinalContact() {
           toggleImmortality(false);
         }, 500);
       }, 6667);
-    }, 34233);
-  }, 100);
+    }, 34333);
+  }, 500);
 }
 export function setStars() {
   if (disableProgression) return;

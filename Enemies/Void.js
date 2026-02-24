@@ -11,7 +11,6 @@ export function setup(host, enableVoid) {
       state.offFloorTime += dt;
       if (state.offFloorTime >= (enableVoid ? 6 : 60)) {
         death("Void");
-        state.offFloorTime = -60;
       }
     } else {
       state.offFloorTime = 0;

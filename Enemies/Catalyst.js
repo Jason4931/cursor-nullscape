@@ -43,7 +43,10 @@ export function setup(host) {
     camShakeX: 0,
     camShakeY: 0,
     MAX_DASH_DIST: 630,
-    lastscream: false,
+
+    beaconWaveRadius: 0,
+    beaconWaveOpacity: 1,
+    beaconTime: 0,
 
     pellets: [],
   };
@@ -101,20 +104,14 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x)) return;
 
     if (beaconed) {
-      if (!state.lastscream) {
-        state.lastscream = true;
-        playSound(
-          "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          "50",
-        );
-      }
       state.phase = "scream";
       state.screaming = true;
       state.timer = 0;
+      state.beaconWaveRadius += dt * 2000;
+      if (state.beaconWaveRadius > 1000) {
+        state.beaconWaveRadius = 1000;
+        state.beaconWaveOpacity -= 0.1;
+      }
     }
 
     catalystPos = { x: state.x, y: state.y };
@@ -292,6 +289,45 @@ export function setup(host) {
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
+    if (beaconed) {
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+        ctx.translate(Math.round(state.x), Math.round(state.y));
+
+        const rx = 320;
+        const ry = 30;
+        const rot = Math.random() * Math.PI;
+
+        ctx.rotate(rot);
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#000";
+
+        ctx.beginPath();
+        const points = 24;
+        for (let i = 0; i <= points; i++) {
+          const a = (i / points) * Math.PI * 2;
+
+          const distortion = 0.6 + Math.random() * 0.2;
+
+          const x = Math.cos(a) * rx * distortion;
+          const y = Math.sin(a) * ry * distortion;
+
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#111";
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    }
+
     if (state.screaming) {
       const sx = Math.round(state.x);
       const sy = Math.round(state.y);
@@ -299,14 +335,14 @@ export function setup(host) {
       for (let i = 0; i < 4; i++) {
         const r = Math.round((state.auraTimer * 250 + i * 200) % 2200);
         const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
-        g.addColorStop(0, "rgba(0,0,0,0.35)");
+        g.addColorStop(0, `rgba(0,0,0,${beaconed ? 0.1 : 0.35})`);
         g.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
-      const speed = 0.25;
-      const maxR = 2600;
+      const speed = beaconed ? 1 : 0.25;
+      const maxR = beaconed ? 300 : 3000;
       const r = Math.round((state.auraTimer * speed * maxR) % maxR);
 
       if (r > 1) {
@@ -325,21 +361,19 @@ export function setup(host) {
       }
     }
 
-    if (beaconed) {
-      ctx.save();
-      ctx.translate(Math.round(state.x), Math.round(state.y));
+    if (beaconed && state.beaconWaveRadius > 1) {
+      const sx = Math.round(state.x);
+      const sy = Math.round(state.y);
+      const r = state.beaconWaveRadius;
 
-      const rx = 40 + Math.random() * 200;
-      const ry = 40 + Math.random() * 200;
-      const rot = Math.random() * Math.PI;
+      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
 
-      ctx.rotate(rot);
-      ctx.fillStyle = "#000";
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
-      ctx.fill();
+      g.addColorStop(0.0, "rgba(0,0,0,0)");
+      g.addColorStop(0.99, `rgba(0,0,0,${state.beaconWaveOpacity})`);
+      g.addColorStop(1.0, "rgba(0,0,0,0)");
 
-      ctx.restore();
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
     ctx.drawImage(

@@ -83,13 +83,18 @@ export function setup(host, deafMode) {
 
       if (inside && !state.touched) {
         state.touched = true;
-        state.phase = "finalBurst";
+        state.phase = "waitFinalBurst";
         state.timer = 0;
-        document.getElementById("counter").style.color = "#000";
-        document.getElementById("lvl").style.color = "#000";
         toggleImmortality(true);
         onFinalContact();
       }
+    }
+
+    if (state.phase === "waitFinalBurst" && state.timer >= 0.5) {
+      state.phase = "finalBurst";
+      state.timer = 0;
+      document.getElementById("counter").style.color = "#000";
+      document.getElementById("lvl").style.color = "#000";
     }
 
     if (

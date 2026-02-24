@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst } from "../main.js";
+import { despawnCatalyst, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/CatalystHand.png";
@@ -61,6 +61,14 @@ export function setup(host) {
       if (state.timer >= 0.4) {
         state.timer = 0;
         state.phase = "spawn";
+        playSound(
+          "./ASSET/Sound/Enemies/Catalyst/hand.mp3",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
+        );
 
         state.x = state.lx;
         state.startY = state.ly - 120;
