@@ -65,7 +65,7 @@ export function setup(host, casualMode) {
       state.flashing = true;
       state.flashTimer = FLASH_TIME;
       playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Arm_1.ogg");
-      setSeamineScale(0);
+      setSeamineScale(0.25);
     }
 
     if (state.flashing) {

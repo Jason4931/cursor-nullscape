@@ -2987,7 +2987,7 @@ function loop(now) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   }
-  seamineScale += 0.033;
+  seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
