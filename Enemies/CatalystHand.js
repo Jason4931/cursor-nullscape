@@ -157,10 +157,10 @@ export function setup(host) {
       ctx.globalAlpha = state.opacity;
       ctx.drawImage(
         enemy,
-        Math.round(state.x - 50),
-        Math.round(state.y - 175),
-        Math.round(100),
-        Math.round(300),
+        Math.round(state.x - 60),
+        Math.round(state.y - 210),
+        Math.round(120),
+        Math.round(360),
       );
     }
 
