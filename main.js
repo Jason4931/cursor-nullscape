@@ -634,6 +634,7 @@ topLeftInput.addEventListener("input", () => {
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;
+          if (!enablePonderer && e.name === "Ponderer") return false;
           if (collectedCount < e.start) return false;
           if (e.unstackable) return false;
           return true;
@@ -1622,6 +1623,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (pick.name === "Random") {
       const randUnlocked = ENTITY_POOL.filter((e) => {
         if (e.name === "Random") return false;
+        if (!enablePonderer && e.name === "Ponderer") return false;
         if (collectedCount < e.start) return false;
         if (e.unstackable) return false;
         return true;
@@ -2686,6 +2688,7 @@ function updateCamera() {
           if (pick.name === "Random") {
             const randUnlocked = ENTITY_POOL.filter((e) => {
               if (e.name === "Random") return false;
+              if (!enablePonderer && e.name === "Ponderer") return false;
               if (collectedCount < e.start) return false;
               if (e.unstackable) return false;
               return true;
