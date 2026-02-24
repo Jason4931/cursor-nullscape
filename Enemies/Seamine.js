@@ -1,5 +1,5 @@
 import { death, mouse, toggleTripmineLeniency } from "../entityHost.js";
-import { moveCamera, playSound } from "../main.js";
+import { moveCamera, playSound, setSeamineScale } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Curses/Seamine.png";
@@ -65,6 +65,7 @@ export function setup(host, casualMode) {
       state.flashing = true;
       state.flashTimer = FLASH_TIME;
       playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Arm_1.ogg");
+      setSeamineScale(0);
     }
 
     if (state.flashing) {

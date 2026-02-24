@@ -85,8 +85,6 @@ export function setup(host, hardMode) {
           : 1.5 + Math.random();
 
         if (hardMode) {
-          playSound("./ASSET/Sound/Enemies/Baby/Baby_Alarm.ogg");
-
           const Bx = state.startX + state.dirX * state.lineLength;
           const By = state.startY + state.dirY * state.lineLength;
 

@@ -138,6 +138,7 @@ let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
+let seamineScale = 1;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
@@ -169,6 +170,9 @@ export function setSorrowActive(v) {
 }
 export function setVoidScale(v) {
   voidScale = v;
+}
+export function setSeamineScale(v) {
+  seamineScale = v;
 }
 export const pondererPositions = new Set();
 export const fleshPositions = new Set();
@@ -852,9 +856,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -965,7 +968,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
 
     const stopAt = () => {
       if (stopped) return;
@@ -1169,10 +1172,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (actualCollectedCount < m.start) return false;
-        if (m.end !== 0 && actualCollectedCount > m.end) return false;
-        return true;
-      });
+      if (actualCollectedCount < m.start) return false;
+      if (m.end !== 0 && actualCollectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -2061,17 +2064,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 500)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5, // 0-50%
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 500)
+                  : 0.00025 * (collectedCount - 500),
+                0.5, // 0-50%
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 500)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1, // 0-10%
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 500)
+                  : 0.0001 * (collectedCount - 500),
+                0.1, // 0-10%
+              ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2486,6 +2489,7 @@ function updateCamera() {
     slowScale *
     settingScale *
     voidScale *
+    seamineScale *
     disableCollectScale;
   camY +=
     vy *
@@ -2493,6 +2497,7 @@ function updateCamera() {
     slowScale *
     settingScale *
     voidScale *
+    seamineScale *
     disableCollectScale;
 
   const lim = getLimits();
@@ -2982,6 +2987,8 @@ function loop(now) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   }
+  seamineScale += 0.033;
+  if (seamineScale > 1) seamineScale = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
@@ -3078,7 +3085,7 @@ const unlock = () => {
   windowClicked = true;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch(() => { });
   }
   loop();
 };
@@ -3193,9 +3200,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-          localStorage.getItem("highest-level-reached").split(" ")[0],
-          10,
-        )
+        localStorage.getItem("highest-level-reached").split(" ")[0],
+        10,
+      )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
