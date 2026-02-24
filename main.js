@@ -45,6 +45,7 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
+import { setup as spawnCascade } from "./Enemies/Cascade.js";
 
 const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -700,6 +701,12 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "cascade") {
+    spawnCascade(entityHost);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   if (input === "oneofeach") {
     spawnBell(entityHost, hardMode, immunebell);
     spawnMart(entityHost, hardMode);
@@ -844,8 +851,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -951,7 +959,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1151,10 +1159,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -2032,23 +2040,28 @@ function placeSuper(sx, sy, pattern) {
         if (passageGoldPattern > 0) {
           type = "gold";
         } else if (allGold) {
-          type = (!disableTripmine && !casualMode) ? (r < (tripmineHell ? 0.5 : 0.9) ? "gold" : "tripmine") : "gold";
+          type =
+            !disableTripmine && !casualMode
+              ? r < (tripmineHell ? 0.5 : 0.9)
+                ? "gold"
+                : "tripmine"
+              : "gold";
         } else if (isTripmineEnabled) {
           if (
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -3055,7 +3068,7 @@ const unlock = () => {
   windowClicked = true;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   loop();
 };
@@ -3135,9 +3148,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
