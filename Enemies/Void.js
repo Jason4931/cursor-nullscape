@@ -11,6 +11,7 @@ export function setup(host, enableVoid) {
       state.offFloorTime += dt;
       if (state.offFloorTime >= (enableVoid ? 6 : 60)) {
         death("Void");
+        state.offFloorTime = -60;
       }
     } else {
       state.offFloorTime = 0;
@@ -21,7 +22,7 @@ export function setup(host, enableVoid) {
     const cam = getCameraPos();
     const limit = enableVoid ? 6 : 60;
 
-    const progress = Math.min(state.offFloorTime / limit, 1);
+    const progress = Math.min(Math.max(0, state.offFloorTime / limit), 1);
     setVoidScale(1 - progress);
     const alpha = progress * 0.5;
 
