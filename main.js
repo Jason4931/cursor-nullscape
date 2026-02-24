@@ -735,6 +735,7 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
     spawnCatalyst(entityHost);
+    spawnCatalystIntro();
     registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
     registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
     registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
