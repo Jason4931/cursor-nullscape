@@ -100,6 +100,25 @@ export function setup(host, stack, hardMode) {
       death("Skinwalker");
       return;
     }
+
+    const sounddist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
+    if (sounddist <= 500) {
+      if (!state.sound)
+        state.sound = playSound(
+          `./ASSET/Sound/Enemies/Skinwalker/Skinwalker.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+        );
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
   }
 
   function draw(ctx) {

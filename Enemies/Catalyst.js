@@ -47,6 +47,7 @@ export function setup(host) {
     beaconWaveRadius: 0,
     beaconWaveOpacity: 1,
     beaconTime: 0,
+    dashSound: 1,
 
     pellets: [],
   };
@@ -254,6 +255,27 @@ export function setup(host) {
         state.dashToY = state.dashFromY + dy;
 
         state.dashStarted = true;
+        if (state.dashSound == 1) {
+          playSound(
+            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_oyv1u8u8.mp3",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+          state.dashSound = 2;
+        } else {
+          playSound(
+            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_fbTIhPqt.mp3",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+          state.dashSound = 1;
+        }
       }
 
       const k = state.cycleTime / t0;
