@@ -23,7 +23,7 @@ export function setup(host, deafMode) {
 
   const INIT_HOLD = 1.0;
   const INIT_GROW = 0.5;
-  const BURST_TIME = 2.4;
+  const BURST_TIME = 1.4;
 
   const FADE_IN = 1.0;
   const FADE_OUT = 1.0;
@@ -90,7 +90,7 @@ export function setup(host, deafMode) {
       }
     }
 
-    if (state.phase === "waitFinalBurst" && state.timer >= 0.5) {
+    if (state.phase === "waitFinalBurst" && state.timer >= 1.5) {
       state.phase = "finalBurst";
       state.timer = 0;
       document.getElementById("counter").style.color = "#000";

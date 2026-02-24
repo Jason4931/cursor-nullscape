@@ -3114,6 +3114,7 @@ export function onFinalContact() {
     undefined,
     "50",
   );
+  disableCollect = true;
   setTimeout(() => {
     originalVolume = [musicVolume, sfxVolume];
     finalPatterns(false);
@@ -3127,7 +3128,6 @@ export function onFinalContact() {
     stopAllSounds();
     musicVolume = 0;
     sfxVolume = 0;
-    disableCollect = true;
     localStorage.setItem("GameBeaten", `${new Date()}`);
     if (!disableProgression) {
       setStars();
@@ -3155,7 +3155,7 @@ export function onFinalContact() {
         "50",
       );
       sfxVolume = 0;
-    }, 2400);
+    }, 1400);
     setTimeout(() => {
       soundStopped = false;
       for (const [key, p] of patternsState) {
@@ -3183,8 +3183,8 @@ export function onFinalContact() {
           toggleImmortality(false);
         }, 500);
       }, 6667);
-    }, 34333);
-  }, 500);
+    }, 33833);
+  }, 2000);
 }
 export function setStars() {
   if (disableProgression) return;
