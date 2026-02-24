@@ -1563,7 +1563,7 @@ function spawnCatalystIntro() {
     } else {
       spawnCatalystHand(entityHost);
     }
-  }, 20000);
+  }, 15000);
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;

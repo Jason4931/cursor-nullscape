@@ -107,7 +107,7 @@ export function setup(host) {
 
       if (state.timer >= 0.5) {
         state.timer = 0;
-        state.idleTime = 9.5 + Math.random();
+        state.idleTime = 4.5 + Math.random();
         state.phase = "idle";
       }
       return;
