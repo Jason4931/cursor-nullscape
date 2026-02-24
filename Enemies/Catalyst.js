@@ -169,6 +169,38 @@ export function setup(host) {
       return;
     }
 
+    const dxEnemy = mouse.x - state.x;
+    const dyEnemy = mouse.y - state.y;
+    const distEnemy = Math.hypot(dxEnemy, dyEnemy);
+
+    const FORCE_SCREAM_RADIUS = 3000;
+
+    if (
+      state.phase !== "scream" &&
+      distEnemy > FORCE_SCREAM_RADIUS
+    ) {
+      state.totalTimer = 0;
+      state.phase = "scream";
+      state.nextScream = 14 + Math.random();
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      state.timer = 0;
+      state.screaming = true;
+      state.cycleDuration *= 0.99;
+
+      const p = randNearCursor();
+      state.x = p.x;
+      state.y = p.y;
+
+      return;
+    }
+
     if (state.phase === "scream") {
       state.auraTimer += dt * 6;
 
@@ -263,7 +295,10 @@ export function setup(host) {
       );
       state.timer = 0;
       state.screaming = true;
-      state.cycleDuration *= 0.9;
+      state.cycleDuration *= 0.99;
+      const p = randNearCursor();
+      state.x = p.x;
+      state.y = p.y;
     }
 
     checkDeath(state.x, state.y, BODY_RADIUS);
