@@ -152,6 +152,7 @@ let disableCollect = false;
 let disablespawn = false;
 let disableKnockback = false;
 let immunebell = false;
+let deathOpacity = 0;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let skinwalkerCount = 0;
@@ -173,6 +174,9 @@ export function setVoidScale(v) {
 }
 export function setSeamineScale(v) {
   seamineScale = v;
+}
+export function setDeathOpacity(v) {
+  deathOpacity = v;
 }
 export const pondererPositions = new Set();
 export const fleshPositions = new Set();
@@ -858,8 +862,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -970,7 +975,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1174,10 +1179,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -2067,17 +2072,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2210,9 +2215,9 @@ function drawGrid() {
 
   // Clear only visible area (viewport)
   const visibleX = -camX;
-  const visibleY = -camY - 3;
+  const visibleY = -camY - 5;
   const visibleW = viewport.clientWidth;
-  const visibleH = viewport.clientHeight;
+  const visibleH = viewport.clientHeight + 10;
   ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
   entityCtx.clearRect(visibleX, visibleY, visibleW, visibleH);
 
@@ -3008,6 +3013,46 @@ function loop(now) {
     });
   }
 
+  const cam = getCameraPos();
+  const screenX = cam.x;
+  const screenY = cam.y;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  //deathglow
+  const border = 150;
+  ctx.save();
+  deathOpacity -= 0.033;
+  if (deathOpacity < 0) deathOpacity = 0;
+  ctx.globalAlpha = deathOpacity;
+  const color = "255,0,0";
+
+  let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
+  grad.addColorStop(0, `rgba(${color},1)`);
+  grad.addColorStop(1, `rgba(${color},0)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(screenX, screenY, w, border);
+
+  grad = ctx.createLinearGradient(0, screenY + h - border, 0, screenY + h);
+  grad.addColorStop(0, `rgba(${color},0)`);
+  grad.addColorStop(1, `rgba(${color},1)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(screenX, screenY + h - border, w, border);
+
+  grad = ctx.createLinearGradient(screenX, 0, screenX + border, 0);
+  grad.addColorStop(0, `rgba(${color},1)`);
+  grad.addColorStop(1, `rgba(${color},0)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(screenX, screenY, border, h);
+
+  grad = ctx.createLinearGradient(screenX + w - border, 0, screenX + w, 0);
+  grad.addColorStop(0, `rgba(${color},0)`);
+  grad.addColorStop(1, `rgba(${color},1)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(screenX + w - border, screenY, border, h);
+
+  ctx.restore();
+
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
   if ((zoom > 1.25 || zoom < 0.75) && cheatDetector) disableProgression = true;
@@ -3023,22 +3068,18 @@ function loop(now) {
     ctx.save();
     if (cheattimer > 0) {
       cheattimer--;
-      const cam = getCameraPos();
 
       const boxHeight = 100;
 
-      const screenW = window.innerWidth;
-      const screenH = window.innerHeight;
-
-      const boxX = cam.x + screenW * 0.25;
-      const boxY = cam.y + screenH - boxHeight * 1.5;
+      const boxX = cam.x + w * 0.25;
+      const boxY = cam.y + h - boxHeight * 1.5;
 
       ctx.globalAlpha = cheattimer / 300;
 
       ctx.fillStyle = "#0a3cff80";
-      ctx.fillRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.fillRect(boxX, boxY, w * 0.5, boxHeight);
       ctx.strokeStyle = "#0a3cff";
-      ctx.strokeRect(boxX, boxY, screenW * 0.5, boxHeight);
+      ctx.strokeRect(boxX, boxY, w * 0.5, boxHeight);
 
       ctx.strokeStyle = "#0a3cff";
       ctx.lineWidth = 2;
@@ -3047,16 +3088,8 @@ function loop(now) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#f00";
-      ctx.strokeText(
-        "Cheater...",
-        boxX + screenW * 0.25,
-        boxY + boxHeight / 2 - 15,
-      );
-      ctx.fillText(
-        "Cheater...",
-        boxX + screenW * 0.25,
-        boxY + boxHeight / 2 - 15,
-      );
+      ctx.strokeText("Cheater...", boxX + w * 0.25, boxY + boxHeight / 2 - 15);
+      ctx.fillText("Cheater...", boxX + w * 0.25, boxY + boxHeight / 2 - 15);
 
       ctx.font = "20px sans-serif";
       ctx.textAlign = "center";
@@ -3064,12 +3097,12 @@ function loop(now) {
       ctx.fillStyle = "#fff";
       ctx.strokeText(
         "Run will not be submitted and beacon will not appear.",
-        boxX + screenW * 0.25,
+        boxX + w * 0.25,
         boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
         "Run will not be submitted and beacon will not appear.",
-        boxX + screenW * 0.25,
+        boxX + w * 0.25,
         boxY + boxHeight / 2 + 20,
       );
     }
@@ -3089,7 +3122,7 @@ const unlock = () => {
   windowClicked = true;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   loop();
 };
@@ -3204,9 +3237,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(

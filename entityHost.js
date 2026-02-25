@@ -13,6 +13,7 @@ import {
   latestCollectedCount,
   stopAllSounds,
   TILE,
+  setDeathOpacity,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -380,7 +381,11 @@ export function toggleTripmineLeniency(state) {
   else if (typeof state === "boolean") tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
-  if (dies || !toggleDeath || immortality || springerImmortality) return;
+  if (dies || immortality || springerImmortality) return;
+  if (!toggleDeath) {
+    setDeathOpacity(1);
+    return;
+  }
   if (bellLeniency) {
     if (Math.random() < 0.667) return;
   }
