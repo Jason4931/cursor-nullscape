@@ -176,10 +176,7 @@ export function setup(host) {
 
     const FORCE_SCREAM_RADIUS = 3000;
 
-    if (
-      state.phase !== "scream" &&
-      distEnemy > FORCE_SCREAM_RADIUS
-    ) {
+    if (state.phase !== "scream" && distEnemy > FORCE_SCREAM_RADIUS) {
       state.totalTimer = 0;
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
@@ -398,7 +395,7 @@ export function setup(host) {
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
-      const speed = beaconed ? 1 : 0.25;
+      const speed = beaconed ? 1 : 0.5;
       const maxR = beaconed ? 300 : 3000;
       const r = Math.round((state.auraTimer * speed * maxR) % maxR);
 
