@@ -246,7 +246,18 @@ export function setup(host) {
 
       const dx = mouse.x - e.x;
       const dy = mouse.y - e.y;
-      if (Math.hypot(dx, dy) < e.height) {
+
+      const cos = Math.cos(-e.angle);
+      const sin = Math.sin(-e.angle);
+
+      const localX = dx * cos - dy * sin;
+      const localY = dx * sin + dy * cos;
+
+      const value =
+        (localX * localX) / (e.width * e.width) +
+        (localY * localY) / (e.height * e.height);
+
+      if (value <= 1) {
         death();
       }
     }
