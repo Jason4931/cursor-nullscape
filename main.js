@@ -2255,7 +2255,8 @@ function drawGrid() {
   const visibleW = viewport.clientWidth;
   const visibleH = viewport.clientHeight + 10;
   ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
-  entityCtx.clearRect(visibleX, visibleY, visibleW, visibleH);
+  // entityCtx.clearRect(visibleX, visibleY, visibleW * 0.01, visibleH * 0.01);
+  entityCanvas.width = entityCanvas.width;
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
   for (const t of floorTiles) {
@@ -2566,9 +2567,15 @@ function updateCamera() {
     camX += Math.sin(t * 1.3) * 2;
     camY += Math.cos(t * 1.7) * 2;
   }
-  canvas.style.transform = `translate(${camX}px, ${camY}px)`;
-  entityCanvas.style.transform = `translate(${camX}px, ${camY - 10000}px)`;
-  entityCanvas2.style.transform = `translate(${camX}px, ${camY - 20000}px)`;
+  // canvas.style.transform = `translate(${camX}px, ${camY}px)`;
+  // entityCanvas.style.transform = `translate(${camX}px, ${camY}px)`;
+  // entityCanvas2.style.transform = `translate(${camX}px, ${camY}px)`;
+  canvas.style.left = `${camX}px`;
+  canvas.style.top = `${camY}px`;
+  entityCanvas.style.left = `${camX}px`;
+  entityCanvas.style.top = `${camY}px`;
+  entityCanvas2.style.left = `${camX}px`;
+  entityCanvas2.style.top = `${camY}px`;
   if (SHAKE) {
     canvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
     entityCanvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
@@ -3042,7 +3049,7 @@ function loop(now) {
   // slowness
   if (slowness || sorrowActive) {
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
