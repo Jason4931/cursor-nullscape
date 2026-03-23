@@ -187,54 +187,63 @@ const ENTITY_POOL = [
     spawn: () => spawnBell(entityHost, hardMode, immunebell),
     start: 0,
     src: "./ASSET/Enemies/Bell.png",
+    desc: "A mostly harmless bell. Rings on contact and cleanses flesh.",
   },
   {
     name: "Mart",
     spawn: () => spawnMart(entityHost, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Mart.png",
+    desc: "I am Mart! The waterimp!",
   },
   {
     name: "Baby",
     spawn: () => spawnBaby(entityHost, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Baby.png",
+    desc: "Dashes in a straight line towards you.",
   },
   {
     name: "ICBM",
     spawn: () => spawnICBM(entityHost, hardMode),
     start: 0,
     src: "./ASSET/Enemies/ICBM.png",
+    desc: "Highly explosive, stay out of the blast.",
   },
   {
     name: "Skinwalker",
     spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Skinwalker.png",
+    desc: "Mimics your every movement.",
   },
   {
     name: "Springer",
     spawn: () => spawnSpringer(entityHost, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Springer.png",
+    desc: "Jumps around the map, creating shockwaves that fling you.",
   },
   {
     name: "Flesh",
     spawn: () => spawnFlesh(entityHost, hardMode),
     start: 500,
     src: "./ASSET/Enemies/Flesh.png",
+    desc: "Infects nearby tiles, hinders ability usage for a short duration.",
   },
   {
     name: "NIL",
     spawn: () => spawnNIL(entityHost, deafMode),
     start: 500,
     src: "./ASSET/Enemies/NIL.png",
+    desc: "<0>",
   },
   {
     name: "Guardian",
     spawn: () => spawnGuardian(entityHost, hardMode),
     start: 500,
     src: "./ASSET/Enemies/Guardian.png",
+    desc: "Fires a volley of bullets.",
   },
   {
     name: "Dozer",
@@ -242,27 +251,32 @@ const ENTITY_POOL = [
     start: 500,
     src: "./ASSET/Enemies/Dozer.png",
     unstackable: true,
+    desc: "Let go of all movements before its eyes open: the earlier you stop, the earlier it triggers.",
   },
   {
     name: "Telefragger",
     spawn: () => spawnTelefragger(entityHost, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
+    desc: "Teleports infront of you.",
   },
   {
     name: "Random",
     start: 800,
     src: "./ASSET/Enemies/Random.png",
+    desc: "Takes on the temporary form of a random enemy.",
   },
   {
     name: "Random",
     start: 1300,
     src: "./ASSET/Enemies/Random.png",
+    desc: "Takes on the temporary form of a random enemy.",
   },
   {
     name: "Random",
     start: 1800,
     src: "./ASSET/Enemies/Random.png",
+    desc: "Takes on the temporary form of a random enemy.",
   },
   {
     name: "Kookoo",
@@ -270,6 +284,7 @@ const ENTITY_POOL = [
     start: 800,
     src: "./ASSET/Enemies/Kookoo.png",
     unstackable: true,
+    desc: "Dash your cursor right after it hits the number that was shown at the start.",
   },
   {
     name: "VoidImplosions",
@@ -277,6 +292,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
+    desc: "Creates several implosions around the map that explode after a short duration.",
   },
   {
     name: "Sorrow",
@@ -284,6 +300,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
+    desc: "When the rain starts, get above something, those in the air will quickly melt away.",
   },
   {
     name: "Doombringer",
@@ -291,12 +308,14 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/Doombringer.png",
     unstackable: true,
+    desc: "It will scream, shut it up by touching a Jumppad.",
   },
   {
     name: "VoidboundBaby",
     spawn: () => spawnVoidboundBaby(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundBaby.png",
+    desc: "Much quicker dash. Much deadlier.",
   },
   {
     name: "Ponderer",
@@ -304,25 +323,36 @@ const ENTITY_POOL = [
     start: 1200,
     src: "./ASSET/Enemies/Ponderer.png",
     rare: true,
+    desc: "Focus on it. Don't let the clock tick down.",
   },
   {
     name: "VoidboundGuardian",
     spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
+    desc: "Bullets will begin to home in, much more agile.",
   },
   {
     name: "Voidbreaker",
     spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/Voidbreaker.png",
+    desc: "Steer clear of his blades direction, his accuracy cannot be underestimated.",
   },
   {
     name: "Cadence",
     spawn: () => spawnCadence(entityHost, hardMode, deafMode),
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
+    desc: "Collect the instruments, keep it at bay.",
     unstackable: true,
+  },
+  {
+    name: "Catalyst",
+    spawn: () => spawnCatalyst(entityHost),
+    start: 1000000000,
+    src: "./ASSET/Enemies/CatalystIcon.png",
+    desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
   },
 ];
 
@@ -1254,7 +1284,11 @@ function registerEntitySpawn(name, imageSrc, temp = false) {
 
   let data = map.get(name);
   if (!data) {
-    data = { count: 0, img: imageSrc };
+    data = {
+      count: 0,
+      img: imageSrc,
+      desc: ENTITY_POOL.find((e) => e.name === name)?.desc || "",
+    };
     map.set(name, data);
   }
 
@@ -1294,6 +1328,7 @@ function renderPanel() {
     const img = document.createElement("img");
     img.src = data.img;
     img.alt = name;
+    img.title = data.desc;
 
     slot.appendChild(img);
 
@@ -1591,6 +1626,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
         spawn: () => spawnCatalyst(entityHost),
         start: 5000,
         src: "./ASSET/Enemies/CatalystIcon.png",
+        desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
       };
     } else if (
       collectedCount >= (hardMode ? 11000 : 5500) &&
@@ -2653,6 +2689,7 @@ function updateCamera() {
               spawn: () => spawnCatalyst(entityHost),
               start: 5000,
               src: "./ASSET/Enemies/CatalystIcon.png",
+              desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
             };
           } else if (
             collectedCount >= (hardMode ? 11000 : 5500) &&
