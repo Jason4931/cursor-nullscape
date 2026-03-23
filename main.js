@@ -2259,6 +2259,13 @@ function drawGrid() {
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
   for (const t of floorTiles) {
+    if (
+      t.x + TILE < visibleX ||
+      t.x > visibleX + visibleW ||
+      t.y + TILE < visibleY ||
+      t.y > visibleY + visibleH
+    )
+      continue;
     const cx = t.x + TILE / 2;
     const cy = t.y + TILE / 2;
 
@@ -2407,6 +2414,13 @@ function drawGrid() {
   // gifts (center inside the tile)
   if (gift.complete) {
     for (const g of giftPositions) {
+      if (
+        g.x + TILE < visibleX ||
+        g.x > visibleX + visibleW ||
+        g.y + TILE < visibleY ||
+        g.y > visibleY + visibleH
+      )
+        continue;
       const dx = g.x + TILE / 2 - mouse.x;
       const dy = g.y + TILE / 2 - mouse.y;
       if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
@@ -3057,38 +3071,40 @@ function loop(now) {
   const h = window.innerHeight;
 
   //deathglow
-  const border = 150;
-  ctx.save();
-  deathOpacity -= 0.033;
-  if (deathOpacity < 0) deathOpacity = 0;
-  ctx.globalAlpha = deathOpacity;
-  const color = "255,0,0";
+  if (deathOpacity > 0) {
+    const border = 150;
+    ctx.save();
+    deathOpacity -= 0.033;
+    if (deathOpacity < 0) deathOpacity = 0;
+    ctx.globalAlpha = deathOpacity;
+    const color = "255,0,0";
 
-  let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
-  grad.addColorStop(0, `rgba(${color},1)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(screenX, screenY, w, border);
+    let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
+    grad.addColorStop(0, `rgba(${color},1)`);
+    grad.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY, w, border);
 
-  grad = ctx.createLinearGradient(0, screenY + h - border, 0, screenY + h);
-  grad.addColorStop(0, `rgba(${color},0)`);
-  grad.addColorStop(1, `rgba(${color},1)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(screenX, screenY + h - border, w, border);
+    grad = ctx.createLinearGradient(0, screenY + h - border, 0, screenY + h);
+    grad.addColorStop(0, `rgba(${color},0)`);
+    grad.addColorStop(1, `rgba(${color},1)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY + h - border, w, border);
 
-  grad = ctx.createLinearGradient(screenX, 0, screenX + border, 0);
-  grad.addColorStop(0, `rgba(${color},1)`);
-  grad.addColorStop(1, `rgba(${color},0)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(screenX, screenY, border, h);
+    grad = ctx.createLinearGradient(screenX, 0, screenX + border, 0);
+    grad.addColorStop(0, `rgba(${color},1)`);
+    grad.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY, border, h);
 
-  grad = ctx.createLinearGradient(screenX + w - border, 0, screenX + w, 0);
-  grad.addColorStop(0, `rgba(${color},0)`);
-  grad.addColorStop(1, `rgba(${color},1)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(screenX + w - border, screenY, border, h);
+    grad = ctx.createLinearGradient(screenX + w - border, 0, screenX + w, 0);
+    grad.addColorStop(0, `rgba(${color},0)`);
+    grad.addColorStop(1, `rgba(${color},1)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX + w - border, screenY, border, h);
 
-  ctx.restore();
+    ctx.restore();
+  }
 
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
