@@ -109,7 +109,6 @@ export function setup(host) {
     if (state.phase !== 0) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     const t = 6;

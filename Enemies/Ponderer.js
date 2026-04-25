@@ -102,7 +102,6 @@ export function setup(host, hardMode) {
 
   function draw(ctx) {
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     const decreasing = !state.wasNear && !state.agro;
     const darken = decreasing || state.agro;
@@ -130,7 +129,6 @@ export function setup(host, hardMode) {
     ctx.restore();
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = "#fff";
     ctx.font = "20px monospace";
     ctx.textAlign = "center";

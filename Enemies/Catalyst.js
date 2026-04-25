@@ -326,7 +326,6 @@ export function setup(host) {
   function draw(ctx) {
     if (despawnCatalyst) return;
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     if (state.phase === "initDarken") {
       const t = state.timer;

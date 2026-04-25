@@ -64,7 +64,7 @@ const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 const tempEntityCounts = new Map();
 
-const entityHost = createEntityHost(entityCanvas, entityCtx, entityCtx2, ctx);
+const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
 const cheatDetector = true;
 
@@ -589,10 +589,6 @@ document.getElementById("reset-settings").onclick = () => {
 /* ===== CONFIG ===== */
 canvas.width = 10000;
 canvas.height = 10000;
-entityCanvas.width = 10000;
-entityCanvas.height = 10000;
-entityCanvas2.width = 10000;
-entityCanvas2.height = 10000;
 
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
@@ -892,9 +888,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1005,7 +1000,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
 
     const stopAt = () => {
       if (stopped) return;
@@ -1209,10 +1204,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (actualCollectedCount < m.start) return false;
-        if (m.end !== 0 && actualCollectedCount > m.end) return false;
-        return true;
-      });
+      if (actualCollectedCount < m.start) return false;
+      if (m.end !== 0 && actualCollectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -2108,17 +2103,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 500)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5, // 0-50%
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 500)
+                  : 0.00025 * (collectedCount - 500),
+                0.5, // 0-50%
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 500)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1, // 0-10%
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 500)
+                  : 0.0001 * (collectedCount - 500),
+                0.1, // 0-10%
+              ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2572,10 +2567,10 @@ function updateCamera() {
   // entityCanvas2.style.transform = `translate(${camX}px, ${camY}px)`;
   canvas.style.left = `${camX}px`;
   canvas.style.top = `${camY}px`;
-  entityCanvas.style.left = `${camX}px`;
-  entityCanvas.style.top = `${camY}px`;
-  entityCanvas2.style.left = `${camX}px`;
-  entityCanvas2.style.top = `${camY}px`;
+  // entityCanvas.style.left = `${-camX}px`;
+  // entityCanvas.style.top = `${-camY}px`;
+  // entityCanvas2.style.left = `${-camX}px`;
+  // entityCanvas2.style.top = `${-camY}px`;
   if (SHAKE) {
     canvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
     entityCanvas.style.rotate = `${-0.05 + Math.random() * 0.1}deg`;
@@ -2861,7 +2856,6 @@ function updateCamera() {
     }
   }
 }
-
 /* ===== LOOP ===== */
 function loop(now) {
   // limit FPS to ~30
@@ -2878,8 +2872,13 @@ function loop(now) {
 
   loop.lastTime = now;
 
+  entityCanvas.width = window.innerWidth;
+  entityCanvas.height = window.innerHeight;
+  entityCanvas2.width = window.innerWidth;
+  entityCanvas2.height = window.innerHeight;
+
   updateCamera();
-  updateMouseWorld(entityCanvas, camX, camY);
+  updateMouseWorld(canvas, camX, camY);
   drawGrid();
 
   if (collectedCount > latestCollectedCount)
@@ -3044,6 +3043,12 @@ function loop(now) {
   }
 
   entityHost.update(dt);
+  entityCtx.setTransform(1, 0, 0, 1, 0, 0);
+  entityCtx2.setTransform(1, 0, 0, 1, 0, 0);
+  entityCtx.translate(0.5 * camX, 0.5 * camY);
+  entityCtx2.translate(0.5 * camX, 0.5 * camY);
+  // entityCtx.fillStyle = "red";
+  // entityCtx.fillRect(0, 0, 100, 100);
   entityHost.draw();
 
   // slowness
@@ -3182,7 +3187,7 @@ const unlock = () => {
   windowClicked = true;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch(() => { });
   }
   loop();
 };
@@ -3297,9 +3302,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-          localStorage.getItem("highest-level-reached").split(" ")[0],
-          10,
-        )
+        localStorage.getItem("highest-level-reached").split(" ")[0],
+        10,
+      )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { getCameraPos, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Baby.png";
@@ -165,7 +165,6 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     if (

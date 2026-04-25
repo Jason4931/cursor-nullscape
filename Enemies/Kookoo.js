@@ -153,7 +153,6 @@ export function setup(host) {
     if (state.phase === "idle") return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     let arrowAngle = 0;
 

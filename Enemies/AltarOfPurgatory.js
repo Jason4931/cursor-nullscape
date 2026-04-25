@@ -78,7 +78,6 @@ export function setup(host, hardMode) {
     if (collectedCount >= (hardMode ? 9000 : 4500)) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);

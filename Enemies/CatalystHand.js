@@ -126,7 +126,6 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x)) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     if (state.phase === "circleGrow" || state.phase === "circleShrink") {
       const g = ctx.createRadialGradient(

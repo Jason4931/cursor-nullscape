@@ -122,7 +122,6 @@ export function setup(host, hardMode, deafMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     if (state.teleportTimer > 0 && state.teleportTimer <= 1 && deafMode) {
       const t = 1 - state.teleportTimer;
@@ -177,6 +176,8 @@ export function setup(host, hardMode, deafMode) {
       const t = state.flashTime / state.flashDuration;
       const alpha = t * t;
 
+      ctx.save();
+
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(state.flashAngle);
 
@@ -188,7 +189,7 @@ export function setup(host, hardMode, deafMode) {
       ctx.fillStyle = "#ffd200";
       ctx.fillRect(-100, -3, 200, 6);
 
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.restore();
 
       const rippleRadius = Math.round((1 - t) * 80 + 20);
       ctx.globalAlpha = alpha * 0.35;

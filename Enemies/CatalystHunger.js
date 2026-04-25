@@ -124,7 +124,6 @@ export function setup(host, overshootBrake) {
   function draw(ctx) {
     if (despawnCatalyst) return;
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     for (const t of state.trail) {

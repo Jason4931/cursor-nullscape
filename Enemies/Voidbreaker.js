@@ -207,7 +207,7 @@ export function setup(host, stack, hardMode) {
               t > 0.25 &&
               t <= 0.5 &&
               Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-                KILL_RADIUS
+              KILL_RADIUS
             ) {
               death("Voidbreaker");
             }
@@ -237,7 +237,6 @@ export function setup(host, stack, hardMode) {
       if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
       ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
 
       if (state.phase !== "idle") {
         ctx.globalAlpha = state.opacity;
@@ -513,7 +512,7 @@ export function setup(host, stack, hardMode) {
               t > 0.25 &&
               t <= 0.5 &&
               Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-                KILL_RADIUS
+              KILL_RADIUS
             ) {
               death("Voidbreaker");
             }
@@ -532,7 +531,6 @@ export function setup(host, stack, hardMode) {
       if (state.phase === "idle") return;
 
       ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
 
       ctx.globalAlpha = state.sword.opacity;
       ctx.translate(Math.round(state.sword.x), Math.round(state.sword.y));

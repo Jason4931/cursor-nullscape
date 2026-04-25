@@ -30,7 +30,6 @@ export function setup(host, enableVoid) {
     const cy = Math.round(cam.y);
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
 
     ctx.globalAlpha = alpha;
     ctx.fillStyle = "black";

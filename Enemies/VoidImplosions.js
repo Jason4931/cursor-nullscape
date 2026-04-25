@@ -107,7 +107,6 @@ export function setup(host) {
     if (!state.circles.length) return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     for (const c of state.circles) {

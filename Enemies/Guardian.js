@@ -194,8 +194,6 @@ export function setup(host, hardMode) {
       ctx.closePath();
       ctx.fillStyle = `rgba(210,140,255,${alpha})`;
       ctx.fill();
-
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;

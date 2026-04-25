@@ -96,7 +96,6 @@ export function setup(host, hardMode) {
     if (state.phase !== "watch") return;
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     ctx.translate(Math.round(state.x), Math.round(state.y));

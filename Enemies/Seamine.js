@@ -101,7 +101,6 @@ export function setup(host, casualMode) {
     if (state.exploded) {
       if (state.blastAlpha > 0) {
         ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalAlpha = Math.max(0, state.blastAlpha);
         ctx.beginPath();
         ctx.arc(
@@ -119,7 +118,6 @@ export function setup(host, casualMode) {
     }
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = state.opacity;
 
     ctx.save();
