@@ -339,7 +339,7 @@ export function setup(host) {
       g.addColorStop(1, `rgba(0,0,0,${a})`);
 
       ctx.fillStyle = g;
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
     if (beaconed) {
@@ -391,7 +391,7 @@ export function setup(host) {
         g.addColorStop(0, `rgba(0,0,0,${beaconed ? 0.1 : 0.35})`);
         g.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
       }
 
       const speed = beaconed ? 1 : 0.5;
@@ -410,7 +410,7 @@ export function setup(host) {
         g.addColorStop(1.0, "rgba(0,0,0,0)");
 
         ctx.fillStyle = g;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
       }
     }
 
@@ -426,7 +426,7 @@ export function setup(host) {
       g.addColorStop(1.0, "rgba(0,0,0,0)");
 
       ctx.fillStyle = g;
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
     ctx.drawImage(
