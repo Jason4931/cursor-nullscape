@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activatePurgatory,
   entityCanvas2,
+  canvas,
   getCameraPos,
   collectedCount,
 } from "../main.js";
@@ -35,7 +36,7 @@ export function setup(host, hardMode) {
 
   function onClick(e) {
     if (collectedCount >= (hardMode ? 9000 : 4500)) return;
-    const rect = entityCanvas2.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
@@ -136,8 +137,16 @@ export function setup(host, hardMode) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
-      ctx.strokeText(`Gained 1000 gifts. Good luck.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
-      ctx.fillText(`Gained 1000 gifts. Good luck.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.strokeText(
+        `Gained 1000 gifts. Good luck.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
+      ctx.fillText(
+        `Gained 1000 gifts. Good luck.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
     }
 
     ctx.restore();

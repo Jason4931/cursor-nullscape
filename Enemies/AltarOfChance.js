@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activateChance,
   entityCanvas2,
+  canvas,
   getCameraPos,
   collectedCount,
 } from "../main.js";
@@ -43,7 +44,7 @@ export function setup(host, hardMode) {
 
   function onClick(e) {
     if (collectedCount >= (hardMode ? 10000 : 5000)) return;
-    const rect = entityCanvas2.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 

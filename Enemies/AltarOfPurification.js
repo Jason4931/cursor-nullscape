@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activatePurification,
   entityCanvas2,
+  canvas,
   getCameraPos,
   collectedCount,
 } from "../main.js";
@@ -37,7 +38,7 @@ export function setup(host, hardMode) {
 
   function onClick(e) {
     if (collectedCount >= (hardMode ? 10000 : 5000)) return;
-    const rect = entityCanvas2.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
@@ -176,7 +177,7 @@ export function setup(host, hardMode) {
         0,
         state.x,
         state.y - 5,
-        radius
+        radius,
       );
 
       gradient.addColorStop(0, `rgba(255, 0, 0, ${0.7 * intensity})`);

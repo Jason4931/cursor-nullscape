@@ -3,6 +3,7 @@ import {
   pickRandomPlaced4or5,
   activateEcho,
   entityCanvas2,
+  canvas,
   getCameraPos,
   collectedCount,
 } from "../main.js";
@@ -36,7 +37,7 @@ export function setup(host, hardMode) {
 
   function onClick(e) {
     if (collectedCount >= (hardMode ? 10000 : 5000)) return;
-    const rect = entityCanvas2.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
@@ -143,8 +144,16 @@ export function setup(host, hardMode) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
-      ctx.strokeText(`Echoed ${state.result}.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
-      ctx.fillText(`Echoed ${state.result}.`, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.strokeText(
+        `Echoed ${state.result}.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
+      ctx.fillText(
+        `Echoed ${state.result}.`,
+        boxX + screenW * 0.25,
+        boxY + boxHeight / 2 + 20,
+      );
     }
 
     ctx.restore();
