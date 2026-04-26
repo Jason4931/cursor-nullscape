@@ -3193,7 +3193,6 @@ const unlock = () => {
 };
 window.addEventListener('click', unlock);
 document.getElementById("intro-screen").addEventListener('click', unlock);
-setTimeout(unlock, 10000);
 
 setInterval(() => {
   for (const [key, p] of patternsState) {
