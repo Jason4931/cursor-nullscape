@@ -415,6 +415,17 @@
         animation: fadeInIntro 1s ease;
       }
 
+      #mobile-screen {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center, #111 0%, #000 80%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        animation: fadeInIntro 1s ease;
+      }
+
       @keyframes fadeInIntro {
         from {
           opacity: 0;
@@ -939,6 +950,17 @@
           </p>
 
           <div id="intro-start">Click anywhere to begin</div>
+        </div>
+      </div>
+      <div id="mobile-screen" style="display: none">
+        <div id="intro-card">
+          <h1>PC Required</h1>
+
+          <p>This game is designed for desktop use only.</p>
+
+          <p>Please open this on a PC or laptop for proper gameplay.</p>
+
+          <div id="intro-start">Mobile is not supported</div>
         </div>
       </div>
       <div id="death-screen">
