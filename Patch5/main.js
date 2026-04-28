@@ -2068,6 +2068,7 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 10 ||
         pattern[y][x] === 11 ||
         pattern[y][x] === 12 ||
+        pattern[y][x] === 13 ||
         pattern[y][x] === 14
       ) {
         floorTiles.push({
@@ -2078,6 +2079,7 @@ function placeSuper(sx, sy, pattern) {
           passageGoldPattern: passageGoldPattern > 0,
           diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
           wood: pattern[y][x] === 11 || pattern[y][x] === 12,
+          garden: pattern[y][x] === 13,
           deco: [
             pattern[y][x] === 1,
             Math.random() < 0.1,
@@ -2439,6 +2441,9 @@ function drawGrid() {
         // bottom-right
         ctx.fillStyle = showFloor ? "#744" : "#7441";
         ctx.fillRect(t.x + h, t.y + h, h, h);
+      } else if (t.garden) {
+        ctx.fillStyle = showFloor ? "#800" : "#8001";
+        ctx.fillRect(t.x, t.y, TILE, TILE);
       } else {
         const h = TILE / 2;
 
