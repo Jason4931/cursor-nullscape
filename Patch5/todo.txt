@@ -1,0 +1,3 @@
+add tree decoration
+taller pillar (3 tiles)
+rework the bush deco
