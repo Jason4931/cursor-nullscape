@@ -396,6 +396,32 @@
         background: #440;
       }
 
+      #patch5 {
+        background: #111;
+        color: #fff;
+        border: 0.1vw solid #444;
+        padding: 0.6vw 0vw;
+        font-family: monospace;
+        font-size: 0.9vw;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease,
+          border-color 0.2s;
+      }
+
+      #patch5:hover {
+        background: #202;
+        border-color: #808;
+      }
+
+      #patch5:active {
+        transform: scale(0.97);
+        background: #404;
+      }
+
       #death-screen {
         position: fixed;
         inset: 0;
@@ -923,6 +949,16 @@
           >
             Reset to default
           </button>
+        </div>
+        <div class="setting-row">
+          <a
+            href="./Patch5/"
+            id="patch5"
+            style="width: 100%; font-family: monospace"
+          >
+            Patch 5<br />
+            <span style="font-size: 0.75vw">(In Development)</span>
+          </a>
         </div>
         <div class="setting-row" style="margin: 0">
           <a
