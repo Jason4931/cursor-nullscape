@@ -2080,7 +2080,7 @@ function placeSuper(sx, sy, pattern) {
           wood: pattern[y][x] === 11 || pattern[y][x] === 12,
           garden: pattern[y][x] === 13,
           deco: [
-            pattern[y][x] === 1,
+            pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() < 0.05,
             Math.random(),
             Math.random(),
