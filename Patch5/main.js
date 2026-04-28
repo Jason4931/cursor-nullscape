@@ -2469,7 +2469,7 @@ function drawGrid() {
           const s = TILE * 0.5;
 
           const r = t.deco[3]; // stable random
-          if (r < 0.25) {
+          if (r < 0.2) {
             const drawVase = (ox, oy) => {
               ctx.fillStyle = "#886655";
               ctx.beginPath();
@@ -2546,7 +2546,7 @@ function drawGrid() {
               drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
               drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
             }
-          } else if (r < 0.75) {
+          } else if (r < 0.7) {
             const drawPillar = (cx, cy, w, h, d) => {
               ctx.fillStyle = "#aaa";
               ctx.beginPath();
@@ -2597,6 +2597,47 @@ function drawGrid() {
               TILE * 0.25,
               TILE * 0.2,
             );
+          } else if (r < 0.8) {
+            const r = TILE * 0.18;
+
+            ctx.fillStyle = "rgba(0,0,0,0.15)";
+            ctx.beginPath();
+            ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#b04cff";
+
+            ctx.beginPath();
+            ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#a03cef";
+
+            ctx.beginPath();
+            ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#c05cff";
+
+            ctx.beginPath();
+            ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
+            ctx.fill();
           } else {
             ctx.fillStyle = "#774433";
             ctx.beginPath();
