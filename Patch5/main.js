@@ -888,9 +888,8 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
+    }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1001,7 +1000,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
 
     const stopAt = () => {
       if (stopped) return;
@@ -1205,10 +1204,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (actualCollectedCount < m.start) return false;
-        if (m.end !== 0 && actualCollectedCount > m.end) return false;
-        return true;
-      });
+      if (actualCollectedCount < m.start) return false;
+      if (m.end !== 0 && actualCollectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1268,7 +1267,7 @@ export function isCursorOnFloor(custom) {
         mouse.y >= t.y &&
         mouse.y < t.y + TILE
       ) {
-        if (t.wall) wallScale = 0.5;
+        if (t.wall || (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)) wallScale = 0.5;
         return true;
       }
     }
@@ -2120,17 +2119,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 500)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5, // 0-50%
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 500)
+                  : 0.00025 * (collectedCount - 500),
+                0.5, // 0-50%
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 500)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1, // 0-10%
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 500)
+                  : 0.0001 * (collectedCount - 500),
+                0.1, // 0-10%
+              ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2611,8 +2610,6 @@ function drawGrid() {
               TILE * 0.2,
             );
           } else if (r < 0.8) {
-            const h = TILE * 1.4;
-
             ctx.fillStyle = "#4a2b1a";
             ctx.fillRect(
               cx - TILE * 0.1,
@@ -2634,31 +2631,26 @@ function drawGrid() {
             );
             ctx.fill();
 
-            const topY = cy - h;
+            const drawLeaves = (topY, w, y) => {
+              ctx.fillStyle = "#6a0f2a";
+              ctx.beginPath();
+              ctx.moveTo(cx, topY);
+              ctx.lineTo(cx - w, cy - y);
+              ctx.lineTo(cx, cy - y);
+              ctx.closePath();
+              ctx.fill();
 
-            ctx.fillStyle = "#7a1f3a";
-            ctx.beginPath();
-            ctx.moveTo(cx, topY);
-            ctx.lineTo(cx - TILE * 0.4, cy - TILE * 0.35);
-            ctx.lineTo(cx + TILE * 0.4, cy - TILE * 0.35);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#6a0f2a";
-            ctx.beginPath();
-            ctx.moveTo(cx, topY);
-            ctx.lineTo(cx - TILE * 0.4, cy - TILE * 0.35);
-            ctx.lineTo(cx, cy - TILE * 0.35);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = "#8a2f4a";
-            ctx.beginPath();
-            ctx.moveTo(cx, topY);
-            ctx.lineTo(cx + TILE * 0.4, cy - TILE * 0.35);
-            ctx.lineTo(cx, cy - TILE * 0.35);
-            ctx.closePath();
-            ctx.fill();
+              ctx.fillStyle = "#8a2f4a";
+              ctx.beginPath();
+              ctx.moveTo(cx, topY);
+              ctx.lineTo(cx + w, cy - y);
+              ctx.lineTo(cx, cy - y);
+              ctx.closePath();
+              ctx.fill();
+            }
+            drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
+            drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
+            drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
           } else if (r < 0.9) {
             const r = TILE * 0.2;
 
@@ -3555,7 +3547,7 @@ const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch(() => { });
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -3673,9 +3665,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-          localStorage.getItem("highest-level-reached").split(" ")[0],
-          10,
-        )
+        localStorage.getItem("highest-level-reached").split(" ")[0],
+        10,
+      )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
