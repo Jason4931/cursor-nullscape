@@ -139,6 +139,7 @@ let isSeamineEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
+let wallScale = 1;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
@@ -887,8 +888,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -999,7 +1001,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1203,10 +1205,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1266,6 +1268,7 @@ export function isCursorOnFloor(custom) {
         mouse.y >= t.y &&
         mouse.y < t.y + TILE
       ) {
+        if (t.wall) wallScale = 0.5;
         return true;
       }
     }
@@ -2063,6 +2066,7 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 2 ||
         pattern[y][x] === 4 ||
         pattern[y][x] === 5 ||
+        pattern[y][x] === 6 ||
         pattern[y][x] === 9 ||
         pattern[y][x] === 10 ||
         pattern[y][x] === 11 ||
@@ -2079,11 +2083,13 @@ function placeSuper(sx, sy, pattern) {
           diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
           wood: pattern[y][x] === 11 || pattern[y][x] === 12,
           garden: pattern[y][x] === 13,
+          wall: pattern[y][x] === 6,
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() < 0.05,
             Math.random(),
             Math.random(),
+            Math.random() < 0.05,
           ],
         });
       }
@@ -2114,17 +2120,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2305,7 +2311,7 @@ function drawGrid() {
     }
 
     if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood) {
-      ctx.fillStyle = showFloor ? "#666" : "#6661";
+      ctx.fillStyle = showFloor ? (t.deco[4] ? "#800" : "#666") : "#6661";
       ctx.fillRect(t.x - TILE * 0.1, t.y - TILE * 0.1, TILE * 1.2, TILE * 1.2);
     }
   }
@@ -2443,6 +2449,9 @@ function drawGrid() {
       } else if (t.garden) {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else if (t.wall) {
+        ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
+        ctx.fillRect(t.x, t.y, TILE, TILE);
       } else {
         const h = TILE / 2;
 
@@ -2521,7 +2530,7 @@ function drawGrid() {
               drawVase(cx - TILE * 0.22, cy + TILE * 0.12);
               drawVase(cx + TILE * 0.22, cy + TILE * 0.06);
             }
-          } else if (r < 0.5) {
+          } else if (r < 0.4) {
             const drawBox = (ox, oy) => {
               const size = s;
 
@@ -2550,7 +2559,7 @@ function drawGrid() {
               drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
               drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
             }
-          } else if (r < 0.7) {
+          } else if (r < 0.6) {
             const drawPillar = (cx, cy, w, h, d) => {
               ctx.fillStyle = "#aaa";
               ctx.beginPath();
@@ -2583,33 +2592,82 @@ function drawGrid() {
             drawPillar(
               cx,
               cy - TILE * 0.1,
-              TILE * 0.3,
+              TILE * 0.4,
               TILE * 0.25,
               TILE * 0.2,
             );
             drawPillar(
               cx,
               cy - TILE * 0.25,
-              TILE * 0.15,
-              TILE * 0.7,
+              TILE * 0.2,
+              TILE * 1.7,
               TILE * 0.1,
             );
             drawPillar(
               cx,
-              cy - TILE * 1.1,
-              TILE * 0.3,
+              cy - TILE * 2.1,
+              TILE * 0.4,
               TILE * 0.25,
               TILE * 0.2,
             );
           } else if (r < 0.8) {
-            const r = TILE * 0.18;
+            const h = TILE * 1.4;
+
+            ctx.fillStyle = "#4a2b1a";
+            ctx.fillRect(
+              cx - TILE * 0.1,
+              cy - TILE * 0.45,
+              TILE * 0.2,
+              TILE * 0.5,
+            );
+
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.beginPath();
+            ctx.ellipse(
+              cx,
+              cy + TILE * 0.1,
+              TILE * 0.4,
+              TILE * 0.2,
+              0,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+
+            const topY = cy - h;
+
+            ctx.fillStyle = "#7a1f3a";
+            ctx.beginPath();
+            ctx.moveTo(cx, topY);
+            ctx.lineTo(cx - TILE * 0.4, cy - TILE * 0.35);
+            ctx.lineTo(cx + TILE * 0.4, cy - TILE * 0.35);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#6a0f2a";
+            ctx.beginPath();
+            ctx.moveTo(cx, topY);
+            ctx.lineTo(cx - TILE * 0.4, cy - TILE * 0.35);
+            ctx.lineTo(cx, cy - TILE * 0.35);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#8a2f4a";
+            ctx.beginPath();
+            ctx.moveTo(cx, topY);
+            ctx.lineTo(cx + TILE * 0.4, cy - TILE * 0.35);
+            ctx.lineTo(cx, cy - TILE * 0.35);
+            ctx.closePath();
+            ctx.fill();
+          } else if (r < 0.9) {
+            const r = TILE * 0.2;
 
             ctx.fillStyle = "rgba(0,0,0,0.15)";
             ctx.beginPath();
             ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.fillStyle = "#b04cff";
+            ctx.fillStyle = "#6a0f2a";
 
             ctx.beginPath();
             ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
@@ -2623,7 +2681,7 @@ function drawGrid() {
             ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.fillStyle = "#a03cef";
+            ctx.fillStyle = "#7a1f3a";
 
             ctx.beginPath();
             ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
@@ -2633,7 +2691,7 @@ function drawGrid() {
             ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.fillStyle = "#c05cff";
+            ctx.fillStyle = "#6a0f2a";
 
             ctx.beginPath();
             ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
@@ -2665,7 +2723,7 @@ function drawGrid() {
             );
             ctx.fill();
 
-            ctx.strokeStyle = "#2a5";
+            ctx.strokeStyle = "#5a5";
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(cx, cy + s * 0.2);
@@ -2838,6 +2896,7 @@ function updateCamera() {
   const slowScale = slowness ? 0.25 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
+  isCursorOnFloor();
   camX +=
     vx *
     motionScale *
@@ -2845,6 +2904,7 @@ function updateCamera() {
     settingScale *
     voidScale *
     seamineScale *
+    wallScale *
     disableCollectScale;
   camY +=
     vy *
@@ -2853,6 +2913,7 @@ function updateCamera() {
     settingScale *
     voidScale *
     seamineScale *
+    wallScale *
     disableCollectScale;
 
   const lim = getLimits();
@@ -3362,6 +3423,8 @@ function loop(now) {
   }
   seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
+  wallScale += 0.017;
+  if (wallScale > 1) wallScale = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
@@ -3492,7 +3555,7 @@ const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -3610,9 +3673,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
