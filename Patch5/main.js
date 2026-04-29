@@ -2270,7 +2270,8 @@ function drawGrid() {
   entityCanvas.width = entityCanvas.width;
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
-  const floorSet = new Set(floorTiles.map(t => `${t.x},${t.y}`));
+  const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
+  const floorSet = new Set(floorTiles.map(t => key(t.x, t.y)));
   for (const t of floorTiles) {
     if (
       t.x + TILE < visibleX ||
@@ -2310,17 +2311,10 @@ function drawGrid() {
       }
     }
 
-    let left = false, right = false, up = false, down = false;
-    for (const n of floorTiles) {
-      if (n === t) continue;
-
-      if (!left && Math.abs(n.x - (t.x - TILE)) < 1e-3 && Math.abs(n.y - t.y) < 1e-3) left = true;
-      if (!right && Math.abs(n.x - (t.x + TILE)) < 1e-3 && Math.abs(n.y - t.y) < 1e-3) right = true;
-      if (!up && Math.abs(n.y - (t.y - TILE)) < 1e-3 && Math.abs(n.x - t.x) < 1e-3) up = true;
-      if (!down && Math.abs(n.y - (t.y + TILE)) < 1e-3 && Math.abs(n.x - t.x) < 1e-3) down = true;
-
-      if (left && right && up && down) break;
-    }
+    const left = floorSet.has(key(t.x - TILE, t.y));
+    const right = floorSet.has(key(t.x + TILE, t.y));
+    const up = floorSet.has(key(t.x, t.y - TILE));
+    const down = floorSet.has(key(t.x, t.y + TILE));
     const isEdge = !left || !right || !up || !down;
     if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood && isEdge) {
       ctx.fillStyle = showFloor ? (t.deco[4] ? "#800" : "#666") : "#6661";
@@ -2443,21 +2437,13 @@ function drawGrid() {
       } else if (t.wood) {
         const h = TILE / 2;
 
-        // top-left
+        // left
         ctx.fillStyle = showFloor ? "#844" : "#8441";
-        ctx.fillRect(t.x, t.y, h, h);
+        ctx.fillRect(t.x, t.y, h, TILE);
 
-        // top-right
+        // right
         ctx.fillStyle = showFloor ? "#744" : "#7441";
-        ctx.fillRect(t.x + h, t.y, h, h);
-
-        // bottom-left
-        ctx.fillStyle = showFloor ? "#844" : "#8441";
-        ctx.fillRect(t.x, t.y + h, h, h);
-
-        // bottom-right
-        ctx.fillStyle = showFloor ? "#744" : "#7441";
-        ctx.fillRect(t.x + h, t.y + h, h, h);
+        ctx.fillRect(t.x + h, t.y, h, TILE);
       } else if (t.garden) {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
