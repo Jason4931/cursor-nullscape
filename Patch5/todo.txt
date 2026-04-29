@@ -1,0 +1,3 @@
+boost tree generation on garden tile (maybe 0.5)
+ice tile patterns (save momentum for slippery camera movement)
+ice tile spawn rate less after normal and reverse

@@ -2071,7 +2071,8 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 11 ||
         pattern[y][x] === 12 ||
         pattern[y][x] === 13 ||
-        pattern[y][x] === 14
+        pattern[y][x] === 14 ||
+        pattern[y][x] === 15
       ) {
         floorTiles.push({
           x: wx,
@@ -2080,7 +2081,7 @@ function placeSuper(sx, sy, pattern) {
           sy,
           passageGoldPattern: passageGoldPattern > 0,
           diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
-          wood: pattern[y][x] === 11 || pattern[y][x] === 12,
+          wood: pattern[y][x] === 11 || pattern[y][x] === 12 || pattern[y][x] === 15,
           garden: pattern[y][x] === 13,
           wall: pattern[y][x] === 6,
           deco: [
@@ -2101,7 +2102,8 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 3 ||
         pattern[y][x] === 5 ||
         pattern[y][x] === 9 ||
-        pattern[y][x] === 12
+        pattern[y][x] === 12 ||
+        pattern[y][x] === 15
       ) {
         const r = Math.random();
         let type = "gift";
@@ -2158,7 +2160,7 @@ function placeSuper(sx, sy, pattern) {
   for (let y = 0; y < pattern.length; y++) {
     for (let x = 0; x < pattern[0].length; x++) {
       const v = pattern[y][x];
-      if (v === 4 || v === 5 || v === 14) {
+      if (v === 4 || v === 5 || v === 14 || v === 15) {
         coords4or5.push({ x, y });
       }
     }
