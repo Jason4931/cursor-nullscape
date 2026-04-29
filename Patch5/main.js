@@ -2085,10 +2085,10 @@ function placeSuper(sx, sy, pattern) {
           wall: pattern[y][x] === 6,
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
-            Math.random() < 0.05,
+            Math.random() < Math.min(0.1, Math.max(0.01, Number(graphicsSlider.value) * 0.05)),
             Math.random(),
             Math.random(),
-            Math.random() < 0.05,
+            Math.random() < Math.min(0.1, Math.max(0.01, Number(graphicsSlider.value) * 0.05)),
           ],
         });
       }
@@ -2469,278 +2469,317 @@ function drawGrid() {
         // bottom-right
         ctx.fillStyle = showFloor ? "#888" : "#8881";
         ctx.fillRect(t.x + h, t.y + h, h, h);
+      }
+    }
+  }
+  for (const t of floorTiles) {
+    if (
+      t.x + TILE < visibleX ||
+      t.x > visibleX + visibleW ||
+      t.y + TILE < visibleY ||
+      t.y > visibleY + visibleH
+    )
+      continue;
 
-        if (t.deco[0] && t.deco[1] && showFloor) {
-          let variant = 1;
-          if (t.deco[2] > 0.667) variant = 3;
-          else if (t.deco[2] > 0.333) variant = 2;
-          else variant = 1;
+    const cx = t.x + TILE / 2;
+    const cy = t.y + TILE / 2;
 
-          const cx = t.x + TILE / 2;
-          const cy = t.y + TILE / 2;
-          const s = TILE * 0.5;
+    const dx = cx - mouse.x;
+    const dy = cy - mouse.y;
+    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
-          const r = t.deco[3]; // stable random
-          if (r < 0.2) {
-            const drawVase = (ox, oy) => {
-              ctx.fillStyle = "#886655";
-              ctx.beginPath();
-              ctx.ellipse(
-                ox,
-                oy - s * 0.3,
-                s * 0.5,
-                s * 0.2,
-                0,
-                0,
-                Math.PI * 2,
-              );
-              ctx.fill();
+    let corrupted = false;
+    let blocked = false;
 
-              ctx.fillStyle = "#664433";
-              ctx.beginPath();
-              ctx.moveTo(ox - s * 0.5, oy - s * 0.3);
-              ctx.lineTo(ox + s * 0.5, oy - s * 0.3);
-              ctx.lineTo(ox + s * 0.25, oy + s * 0.5);
-              ctx.lineTo(ox - s * 0.25, oy + s * 0.5);
-              ctx.closePath();
-              ctx.fill();
+    for (const z of cleanseZones) {
+      const zx = cx - z.x;
+      const zy = cy - z.y;
+      if (zx * zx + zy * zy < z.r * z.r) {
+        blocked = true;
+        break;
+      }
+    }
 
-              ctx.fillStyle = "#553322";
-              ctx.beginPath();
-              ctx.ellipse(
-                ox,
-                oy + s * 0.5,
-                s * 0.25,
-                s * 0.12,
-                0,
-                0,
-                Math.PI * 2,
-              );
-              ctx.fill();
-            };
+    if (!blocked) {
+      for (const f of fleshPositions) {
+        const ddx = cx - f.x;
+        const ddy = cy - f.y;
+        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          corrupted = true;
+          break;
+        }
+      }
+    }
 
-            if (variant === 1) {
-              drawVase(cx, cy);
-            } else if (variant === 2) {
-              drawVase(cx - TILE * 0.15, cy + TILE * 0.08);
-              drawVase(cx + TILE * 0.15, cy - TILE * 0.08);
-            } else {
-              drawVase(cx, cy - TILE * 0.12);
-              drawVase(cx - TILE * 0.22, cy + TILE * 0.12);
-              drawVase(cx + TILE * 0.22, cy + TILE * 0.06);
-            }
-          } else if (r < 0.4) {
-            const drawBox = (ox, oy) => {
-              const size = s;
+    if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood && t.deco[0] && t.deco[1] && showFloor) {
+      let variant = 1;
+      if (t.deco[2] > 0.667) variant = 3;
+      else if (t.deco[2] > 0.333) variant = 2;
+      else variant = 1;
 
-              ctx.fillStyle = "#775533";
-              ctx.fillRect(ox - size / 2, oy - size / 2, size, size);
+      const cx = t.x + TILE / 2;
+      const cy = t.y + TILE / 2;
+      const s = TILE * 0.5;
 
-              ctx.strokeStyle = "#442200";
-              ctx.lineWidth = 2;
-              ctx.strokeRect(ox - size / 2, oy - size / 2, size, size);
+      const r = t.deco[3]; // stable random
+      if (r < 0.2) {
+        const drawVase = (ox, oy) => {
+          ctx.fillStyle = "#886655";
+          ctx.beginPath();
+          ctx.ellipse(
+            ox,
+            oy - s * 0.3,
+            s * 0.5,
+            s * 0.2,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
 
-              ctx.beginPath();
-              ctx.moveTo(ox - size / 2, oy - size / 2);
-              ctx.lineTo(ox + size / 2, oy + size / 2);
-              ctx.moveTo(ox + size / 2, oy - size / 2);
-              ctx.lineTo(ox - size / 2, oy + size / 2);
-              ctx.stroke();
-            };
+          ctx.fillStyle = "#664433";
+          ctx.beginPath();
+          ctx.moveTo(ox - s * 0.5, oy - s * 0.3);
+          ctx.lineTo(ox + s * 0.5, oy - s * 0.3);
+          ctx.lineTo(ox + s * 0.25, oy + s * 0.5);
+          ctx.lineTo(ox - s * 0.25, oy + s * 0.5);
+          ctx.closePath();
+          ctx.fill();
 
-            if (variant === 1) {
-              drawBox(cx, cy);
-            } else if (variant === 2) {
-              drawBox(cx - TILE * 0.17, cy + TILE * 0.09);
-              drawBox(cx + TILE * 0.17, cy - TILE * 0.09);
-            } else {
-              drawBox(cx, cy - TILE * 0.14);
-              drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
-              drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
-            }
-          } else if (r < 0.6) {
-            const drawPillar = (cx, cy, w, h, d) => {
-              ctx.fillStyle = "#aaa";
-              ctx.beginPath();
-              ctx.moveTo(cx, cy - h); // top peak
-              ctx.lineTo(cx + w, cy - h + d);
-              ctx.lineTo(cx, cy - h + d * 2);
-              ctx.lineTo(cx - w, cy - h + d);
-              ctx.closePath();
-              ctx.fill();
+          ctx.fillStyle = "#553322";
+          ctx.beginPath();
+          ctx.ellipse(
+            ox,
+            oy + s * 0.5,
+            s * 0.25,
+            s * 0.12,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+        };
 
-              ctx.fillStyle = "#666";
-              ctx.beginPath();
-              ctx.moveTo(cx - w, cy - h + d);
-              ctx.lineTo(cx, cy - h + d * 2);
-              ctx.lineTo(cx, cy + d * 2);
-              ctx.lineTo(cx - w, cy + d);
-              ctx.closePath();
-              ctx.fill();
+        if (variant === 1) {
+          drawVase(cx, cy);
+        } else if (variant === 2) {
+          drawVase(cx - TILE * 0.15, cy + TILE * 0.08);
+          drawVase(cx + TILE * 0.15, cy - TILE * 0.08);
+        } else {
+          drawVase(cx, cy - TILE * 0.12);
+          drawVase(cx - TILE * 0.22, cy + TILE * 0.12);
+          drawVase(cx + TILE * 0.22, cy + TILE * 0.06);
+        }
+      } else if (r < 0.4) {
+        const drawBox = (ox, oy) => {
+          const size = s;
 
-              ctx.fillStyle = "#555";
-              ctx.beginPath();
-              ctx.moveTo(cx + w, cy - h + d);
-              ctx.lineTo(cx, cy - h + d * 2);
-              ctx.lineTo(cx, cy + d * 2);
-              ctx.lineTo(cx + w, cy + d);
-              ctx.closePath();
-              ctx.fill();
-            };
+          ctx.fillStyle = "#775533";
+          ctx.fillRect(ox - size / 2, oy - size / 2, size, size);
 
-            drawPillar(
-              cx,
-              cy - TILE * 0.1,
-              TILE * 0.4,
-              TILE * 0.25,
-              TILE * 0.2,
-            );
-            drawPillar(
-              cx,
-              cy - TILE * 0.25,
-              TILE * 0.2,
-              TILE * 1.7,
-              TILE * 0.1,
-            );
-            drawPillar(
-              cx,
-              cy - TILE * 2.1,
-              TILE * 0.4,
-              TILE * 0.25,
-              TILE * 0.2,
-            );
-          } else if (r < 0.8) {
-            ctx.fillStyle = "#4a2b1a";
-            ctx.fillRect(
-              cx - TILE * 0.1,
-              cy - TILE * 0.45,
-              TILE * 0.2,
-              TILE * 0.5,
-            );
+          ctx.strokeStyle = "#442200";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(ox - size / 2, oy - size / 2, size, size);
 
-            ctx.fillStyle = "rgba(0,0,0,0.2)";
-            ctx.beginPath();
-            ctx.ellipse(
-              cx,
-              cy + TILE * 0.1,
-              TILE * 0.4,
-              TILE * 0.2,
-              0,
-              0,
-              Math.PI * 2,
-            );
-            ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(ox - size / 2, oy - size / 2);
+          ctx.lineTo(ox + size / 2, oy + size / 2);
+          ctx.moveTo(ox + size / 2, oy - size / 2);
+          ctx.lineTo(ox - size / 2, oy + size / 2);
+          ctx.stroke();
+        };
 
-            const drawLeaves = (topY, w, y) => {
-              ctx.fillStyle = "#6a0f2a";
-              ctx.beginPath();
-              ctx.moveTo(cx, topY);
-              ctx.lineTo(cx - w, cy - y);
-              ctx.lineTo(cx, cy - y);
-              ctx.closePath();
-              ctx.fill();
+        if (variant === 1) {
+          drawBox(cx, cy);
+        } else if (variant === 2) {
+          drawBox(cx - TILE * 0.17, cy + TILE * 0.09);
+          drawBox(cx + TILE * 0.17, cy - TILE * 0.09);
+        } else {
+          drawBox(cx, cy - TILE * 0.14);
+          drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
+          drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
+        }
+      } else if (r < 0.6) {
+        const drawPillar = (cx, cy, w, h, d) => {
+          ctx.fillStyle = "#aaa";
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - h); // top peak
+          ctx.lineTo(cx + w, cy - h + d);
+          ctx.lineTo(cx, cy - h + d * 2);
+          ctx.lineTo(cx - w, cy - h + d);
+          ctx.closePath();
+          ctx.fill();
 
-              ctx.fillStyle = "#8a2f4a";
-              ctx.beginPath();
-              ctx.moveTo(cx, topY);
-              ctx.lineTo(cx + w, cy - y);
-              ctx.lineTo(cx, cy - y);
-              ctx.closePath();
-              ctx.fill();
-            }
-            drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
-            drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
-            drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
-          } else if (r < 0.9) {
-            const r = TILE * 0.2;
+          ctx.fillStyle = "#666";
+          ctx.beginPath();
+          ctx.moveTo(cx - w, cy - h + d);
+          ctx.lineTo(cx, cy - h + d * 2);
+          ctx.lineTo(cx, cy + d * 2);
+          ctx.lineTo(cx - w, cy + d);
+          ctx.closePath();
+          ctx.fill();
 
-            ctx.fillStyle = "rgba(0,0,0,0.15)";
-            ctx.beginPath();
-            ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
-            ctx.fill();
+          ctx.fillStyle = "#555";
+          ctx.beginPath();
+          ctx.moveTo(cx + w, cy - h + d);
+          ctx.lineTo(cx, cy - h + d * 2);
+          ctx.lineTo(cx, cy + d * 2);
+          ctx.lineTo(cx + w, cy + d);
+          ctx.closePath();
+          ctx.fill();
+        };
 
-            ctx.fillStyle = "#6a0f2a";
+        drawPillar(
+          cx,
+          cy - TILE * 0.1,
+          TILE * 0.4,
+          TILE * 0.25,
+          TILE * 0.2,
+        );
+        drawPillar(
+          cx,
+          cy - TILE * 0.25,
+          TILE * 0.2,
+          TILE * 1.7,
+          TILE * 0.1,
+        );
+        drawPillar(
+          cx,
+          cy - TILE * 2.1,
+          TILE * 0.4,
+          TILE * 0.25,
+          TILE * 0.2,
+        );
+      } else if (r < 0.8) {
+        ctx.fillStyle = "#4a2b1a";
+        ctx.fillRect(
+          cx - TILE * 0.1,
+          cy - TILE * 0.45,
+          TILE * 0.2,
+          TILE * 0.5,
+        );
 
-            ctx.beginPath();
-            ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.beginPath();
+        ctx.ellipse(
+          cx,
+          cy + TILE * 0.1,
+          TILE * 0.4,
+          TILE * 0.2,
+          0,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
-            ctx.fill();
+        const drawLeaves = (topY, w, y) => {
+          ctx.fillStyle = "#6a0f2a";
+          ctx.beginPath();
+          ctx.moveTo(cx, topY);
+          ctx.lineTo(cx - w, cy - y);
+          ctx.lineTo(cx, cy - y);
+          ctx.closePath();
+          ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
-            ctx.fill();
+          ctx.fillStyle = "#8a2f4a";
+          ctx.beginPath();
+          ctx.moveTo(cx, topY);
+          ctx.lineTo(cx + w, cy - y);
+          ctx.lineTo(cx, cy - y);
+          ctx.closePath();
+          ctx.fill();
+        }
+        drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
+        drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
+        drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
+      } else if (r < 0.9) {
+        const r = TILE * 0.2;
 
-            ctx.fillStyle = "#7a1f3a";
+        ctx.fillStyle = "rgba(0,0,0,0.15)";
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.fillStyle = "#6a0f2a";
 
-            ctx.beginPath();
-            ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.fillStyle = "#6a0f2a";
+        ctx.beginPath();
+        ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            ctx.fillStyle = "#774433";
-            ctx.beginPath();
-            ctx.moveTo(cx - s * 0.4, cy + s * 0.2);
-            ctx.lineTo(cx + s * 0.4, cy + s * 0.2);
-            ctx.lineTo(cx + s * 0.25, cy + s * 0.6);
-            ctx.lineTo(cx - s * 0.25, cy + s * 0.6);
-            ctx.closePath();
-            ctx.fill();
+        ctx.fillStyle = "#7a1f3a";
 
-            ctx.fillStyle = "#332211";
-            ctx.beginPath();
-            ctx.ellipse(
-              cx,
-              cy + s * 0.2,
-              s * 0.35,
-              s * 0.12,
-              0,
-              0,
-              Math.PI * 2,
-            );
-            ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.strokeStyle = "#5a5";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(cx, cy + s * 0.2);
-            ctx.lineTo(cx, cy - s * 0.2);
-            ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+        ctx.fill();
 
-            ctx.fillStyle = "#f55";
-            ctx.beginPath();
-            ctx.arc(cx, cy - s * 0.3, s * 0.15, 0, Math.PI * 2);
-            ctx.fill();
+        ctx.fillStyle = "#6a0f2a";
 
-            ctx.fillStyle = "#faa";
-            for (let i = 0; i < 4; i++) {
-              const angle = (i * Math.PI) / 2;
-              ctx.beginPath();
-              ctx.arc(
-                cx + Math.cos(angle) * s * 0.2,
-                cy - s * 0.3 + Math.sin(angle) * s * 0.2,
-                s * 0.08,
-                0,
-                Math.PI * 2,
-              );
-              ctx.fill();
-            }
-          }
+        ctx.beginPath();
+        ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#774433";
+        ctx.beginPath();
+        ctx.moveTo(cx - s * 0.4, cy + s * 0.2);
+        ctx.lineTo(cx + s * 0.4, cy + s * 0.2);
+        ctx.lineTo(cx + s * 0.25, cy + s * 0.6);
+        ctx.lineTo(cx - s * 0.25, cy + s * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = "#332211";
+        ctx.beginPath();
+        ctx.ellipse(
+          cx,
+          cy + s * 0.2,
+          s * 0.35,
+          s * 0.12,
+          0,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+
+        ctx.strokeStyle = "#5a5";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy + s * 0.2);
+        ctx.lineTo(cx, cy - s * 0.2);
+        ctx.stroke();
+
+        ctx.fillStyle = "#f55";
+        ctx.beginPath();
+        ctx.arc(cx, cy - s * 0.3, s * 0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#faa";
+        for (let i = 0; i < 4; i++) {
+          const angle = (i * Math.PI) / 2;
+          ctx.beginPath();
+          ctx.arc(
+            cx + Math.cos(angle) * s * 0.2,
+            cy - s * 0.3 + Math.sin(angle) * s * 0.2,
+            s * 0.08,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
         }
       }
     }
