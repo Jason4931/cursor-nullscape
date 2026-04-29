@@ -2270,6 +2270,7 @@ function drawGrid() {
   entityCanvas.width = entityCanvas.width;
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
+  const floorSet = new Set(floorTiles.map(t => `${t.x},${t.y}`));
   for (const t of floorTiles) {
     if (
       t.x + TILE < visibleX ||
@@ -2309,7 +2310,19 @@ function drawGrid() {
       }
     }
 
-    if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood) {
+    let left = false, right = false, up = false, down = false;
+    for (const n of floorTiles) {
+      if (n === t) continue;
+
+      if (!left && Math.abs(n.x - (t.x - TILE)) < 1e-3 && Math.abs(n.y - t.y) < 1e-3) left = true;
+      if (!right && Math.abs(n.x - (t.x + TILE)) < 1e-3 && Math.abs(n.y - t.y) < 1e-3) right = true;
+      if (!up && Math.abs(n.y - (t.y - TILE)) < 1e-3 && Math.abs(n.x - t.x) < 1e-3) up = true;
+      if (!down && Math.abs(n.y - (t.y + TILE)) < 1e-3 && Math.abs(n.x - t.x) < 1e-3) down = true;
+
+      if (left && right && up && down) break;
+    }
+    const isEdge = !left || !right || !up || !down;
+    if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood && isEdge) {
       ctx.fillStyle = showFloor ? (t.deco[4] ? "#800" : "#666") : "#6661";
       ctx.fillRect(t.x - TILE * 0.1, t.y - TILE * 0.1, TILE * 1.2, TILE * 1.2);
     }
