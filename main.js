@@ -2328,7 +2328,7 @@ function drawGrid() {
 
     if (corrupted) {
       ctx.fillStyle = showFloor
-        ? `rgba(120, 0, 0, ${0.425 + Math.random() * 0.25})`
+        ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
         : `rgba(120, 0, 0, 0.066)`;
       ctx.fillRect(t.x, t.y, TILE, TILE);
     } else {

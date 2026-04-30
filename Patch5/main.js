@@ -1,4 +1,9 @@
-import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
+import {
+  AllPatterns,
+  PATTERNS,
+  TILE_SIZE,
+  changePatterns,
+} from "./patterns.js";
 import {
   createEntityHost,
   updateMouseWorld,
@@ -140,6 +145,8 @@ let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
 let wallScale = 1;
+let iceEffect = false;
+let lastTouchedIce;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
@@ -888,8 +895,9 @@ input.addEventListener("input", () => {
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 8 - 4
-    }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) rotate(${
+    Math.random() * 8 - 4
+  }deg) scale(1.05)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
@@ -1000,7 +1008,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1204,10 +1212,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -1267,7 +1275,15 @@ export function isCursorOnFloor(custom) {
         mouse.y >= t.y &&
         mouse.y < t.y + TILE
       ) {
-        if (t.wall || (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)) wallScale = 0.5;
+        if (
+          t.wall ||
+          (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)
+        )
+          wallScale = 0.5;
+        if (t.ice) {
+          lastTouchedIce = performance.now();
+          iceEffect = true;
+        }
         return true;
       }
     }
@@ -1501,14 +1517,22 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
       const p = left.pattern;
       const pw = p[0].length;
       for (let y = 0; y < h; y++) {
-        if (p[y]?.[pw - 1] === 9 && pat[y][0] === 9) score++;
+        if (
+          (p[y]?.[pw - 1] === 9 || p[y]?.[pw - 1] === 29) &&
+          (pat[y][0] === 9 || pat[y][0] === 29)
+        )
+          score++;
       }
     }
 
     if (right) {
       const p = right.pattern;
       for (let y = 0; y < h; y++) {
-        if (p[y]?.[0] === 9 && pat[y][w - 1] === 9) score++;
+        if (
+          (p[y]?.[0] === 9 || p[y]?.[0] === 29) &&
+          (pat[y][w - 1] === 9 || pat[y][w - 1] === 29)
+        )
+          score++;
       }
     }
 
@@ -1516,14 +1540,23 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
       const p = top.pattern;
       const ph = p.length;
       for (let x = 0; x < w; x++) {
-        if (p[ph - 1]?.[x] === 9 && pat[0][x] === 9) score++;
+        // if (p[ph - 1]?.[x] === 9 && pat[0][x] === 9) score++;
+        if (
+          (p[ph - 1]?.[x] === 9 || p[ph - 1]?.[x] === 29) &&
+          (pat[0][x] === 9 || pat[0][x] === 29)
+        )
+          score++;
       }
     }
 
     if (bot) {
       const p = bot.pattern;
       for (let x = 0; x < w; x++) {
-        if (p[0]?.[x] === 9 && pat[h - 1][x] === 9) score++;
+        if (
+          (p[0]?.[x] === 9 || p[0]?.[x] === 29) &&
+          (pat[h - 1][x] === 9 || pat[h - 1][x] === 29)
+        )
+          score++;
       }
     }
 
@@ -1547,7 +1580,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 function spawnCatalystIntro() {
   SHAKE = true;
-  finalPatterns(true);
+  changePatterns("final");
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
     const r1 = rotateMatrix90(r0);
@@ -1910,6 +1943,14 @@ export function activateProtection() {
 export function activatePassage() {
   lastAltar = "Passage";
   passageGoldPattern += 10;
+  changePatterns();
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
 }
 export function activateEcho() {
   const beforeLastAltar = lastAltar;
@@ -2072,7 +2113,11 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 12 ||
         pattern[y][x] === 13 ||
         pattern[y][x] === 14 ||
-        pattern[y][x] === 15
+        pattern[y][x] === 15 ||
+        pattern[y][x] === 21 ||
+        pattern[y][x] === 22 ||
+        pattern[y][x] === 25 ||
+        pattern[y][x] === 29
       ) {
         floorTiles.push({
           x: wx,
@@ -2081,15 +2126,32 @@ function placeSuper(sx, sy, pattern) {
           sy,
           passageGoldPattern: passageGoldPattern > 0,
           diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
-          wood: pattern[y][x] === 11 || pattern[y][x] === 12 || pattern[y][x] === 15,
+          wood:
+            pattern[y][x] === 11 ||
+            pattern[y][x] === 12 ||
+            pattern[y][x] === 15,
           garden: pattern[y][x] === 13,
           wall: pattern[y][x] === 6,
+          ice:
+            pattern[y][x] === 21 ||
+            pattern[y][x] === 22 ||
+            pattern[y][x] === 25 ||
+            pattern[y][x] === 29,
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
-            Math.random() < Math.min(0.1, Math.max(0.01, Number(graphicsSlider.value) * 0.05)),
+            Math.random() <
+              Math.min(
+                0.1,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+              ) *
+                (pattern[y][x] === 13 ? 5 : 1),
             Math.random(),
             Math.random(),
-            Math.random() < Math.min(0.1, Math.max(0.01, Number(graphicsSlider.value) * 0.05)),
+            Math.random() <
+              Math.min(
+                0.1,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+              ),
           ],
         });
       }
@@ -2103,7 +2165,10 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 5 ||
         pattern[y][x] === 9 ||
         pattern[y][x] === 12 ||
-        pattern[y][x] === 15
+        pattern[y][x] === 15 ||
+        pattern[y][x] === 22 ||
+        pattern[y][x] === 25 ||
+        pattern[y][x] === 29
       ) {
         const r = Math.random();
         let type = "gift";
@@ -2121,17 +2186,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -2160,7 +2225,7 @@ function placeSuper(sx, sy, pattern) {
   for (let y = 0; y < pattern.length; y++) {
     for (let x = 0; x < pattern[0].length; x++) {
       const v = pattern[y][x];
-      if (v === 4 || v === 5 || v === 14 || v === 15) {
+      if (v === 4 || v === 5 || v === 14 || v === 15 || v === 25) {
         coords4or5.push({ x, y });
       }
     }
@@ -2273,7 +2338,7 @@ function drawGrid() {
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
   const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
-  const floorSet = new Set(floorTiles.map(t => key(t.x, t.y)));
+  const floorSet = new Set(floorTiles.map((t) => key(t.x, t.y)));
   for (const t of floorTiles) {
     if (
       t.x + TILE < visibleX ||
@@ -2318,9 +2383,56 @@ function drawGrid() {
     const up = floorSet.has(key(t.x, t.y - TILE));
     const down = floorSet.has(key(t.x, t.y + TILE));
     const isEdge = !left || !right || !up || !down;
-    if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood && isEdge) {
-      ctx.fillStyle = showFloor ? (t.deco[4] ? "#800" : "#666") : "#6661";
+    if (!t.diorite && !t.wood && !t.ice && isEdge) {
+      ctx.fillStyle = showFloor
+        ? corrupted || t.passageGoldPattern || t.deco[4]
+          ? "#800"
+          : "#666"
+        : "#6661";
       ctx.fillRect(t.x - TILE * 0.1, t.y - TILE * 0.1, TILE * 1.2, TILE * 1.2);
+    }
+    if (t.ice) {
+      const h = TILE / 2;
+
+      // top-left
+      // ctx.fillStyle = showFloor ? "#77f" : "#77f1";
+      // ctx.fillRect(t.x - h, t.y - h, h, h);
+      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
+      ctx.fillRect(t.x + h, t.y - h, h, h);
+      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
+      ctx.fillRect(t.x - h, t.y + h, h, h);
+      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
+      ctx.fillRect(t.x + h, t.y + h, h, h);
+
+      // top-right
+      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
+      ctx.fillRect(t.x, t.y - h, h, h);
+      // ctx.fillStyle = showFloor ? "#88f" : "#88f1";
+      // ctx.fillRect(t.x + 2 * h, t.y - h, h, h);
+      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
+      ctx.fillRect(t.x, t.y + h, h, h);
+      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
+      ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
+
+      // bottom-left
+      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
+      ctx.fillRect(t.x - h, t.y, h, h);
+      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
+      ctx.fillRect(t.x + h, t.y, h, h);
+      // ctx.fillStyle = showFloor ? "#87f" : "#87f1";
+      // ctx.fillRect(t.x - h, t.y + 2 * h, h, h);
+      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
+      ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
+
+      // bottom-right
+      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
+      ctx.fillRect(t.x, t.y, h, h);
+      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
+      ctx.fillRect(t.x + 2 * h, t.y, h, h);
+      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
+      ctx.fillRect(t.x, t.y + 2 * h, h, h);
+      // ctx.fillStyle = showFloor ? "#98f" : "#98f1";
+      // ctx.fillRect(t.x + 2 * h, t.y + 2 * h, h, h);
     }
   }
   for (const t of floorTiles) {
@@ -2396,7 +2508,7 @@ function drawGrid() {
 
     if (corrupted) {
       ctx.fillStyle = showFloor
-        ? `rgba(120, 0, 0, ${0.425 + Math.random() * 0.25})`
+        ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
         : `rgba(120, 0, 0, 0.066)`;
       ctx.fillRect(t.x, t.y, TILE, TILE);
     } else {
@@ -2452,6 +2564,7 @@ function drawGrid() {
       } else if (t.wall) {
         ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
         ctx.fillRect(t.x, t.y, TILE, TILE);
+      } else if (t.ice) {
       } else {
         const h = TILE / 2;
 
@@ -2512,7 +2625,14 @@ function drawGrid() {
       }
     }
 
-    if (!corrupted && !t.passageGoldPattern && !t.diorite && !t.wood && t.deco[0] && t.deco[1] && showFloor) {
+    if (
+      !corrupted &&
+      !t.diorite &&
+      !t.wood &&
+      t.deco[0] &&
+      t.deco[1] &&
+      showFloor
+    ) {
       let variant = 1;
       if (t.deco[2] > 0.667) variant = 3;
       else if (t.deco[2] > 0.333) variant = 2;
@@ -2522,20 +2642,13 @@ function drawGrid() {
       const cy = t.y + TILE / 2;
       const s = TILE * 0.5;
 
-      const r = t.deco[3]; // stable random
+      const r = t.garden ? 0.7 : t.deco[3]; // stable random
+
       if (r < 0.2) {
         const drawVase = (ox, oy) => {
           ctx.fillStyle = "#886655";
           ctx.beginPath();
-          ctx.ellipse(
-            ox,
-            oy - s * 0.3,
-            s * 0.5,
-            s * 0.2,
-            0,
-            0,
-            Math.PI * 2,
-          );
+          ctx.ellipse(ox, oy - s * 0.3, s * 0.5, s * 0.2, 0, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.fillStyle = "#664433";
@@ -2549,15 +2662,7 @@ function drawGrid() {
 
           ctx.fillStyle = "#553322";
           ctx.beginPath();
-          ctx.ellipse(
-            ox,
-            oy + s * 0.5,
-            s * 0.25,
-            s * 0.12,
-            0,
-            0,
-            Math.PI * 2,
-          );
+          ctx.ellipse(ox, oy + s * 0.5, s * 0.25, s * 0.12, 0, 0, Math.PI * 2);
           ctx.fill();
         };
 
@@ -2630,35 +2735,12 @@ function drawGrid() {
           ctx.fill();
         };
 
-        drawPillar(
-          cx,
-          cy - TILE * 0.1,
-          TILE * 0.4,
-          TILE * 0.25,
-          TILE * 0.2,
-        );
-        drawPillar(
-          cx,
-          cy - TILE * 0.25,
-          TILE * 0.2,
-          TILE * 1.7,
-          TILE * 0.1,
-        );
-        drawPillar(
-          cx,
-          cy - TILE * 2.1,
-          TILE * 0.4,
-          TILE * 0.25,
-          TILE * 0.2,
-        );
+        drawPillar(cx, cy - TILE * 0.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
+        drawPillar(cx, cy - TILE * 0.25, TILE * 0.2, TILE * 1.7, TILE * 0.1);
+        drawPillar(cx, cy - TILE * 2.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
       } else if (r < 0.8) {
         ctx.fillStyle = "#4a2b1a";
-        ctx.fillRect(
-          cx - TILE * 0.1,
-          cy - TILE * 0.45,
-          TILE * 0.2,
-          TILE * 0.5,
-        );
+        ctx.fillRect(cx - TILE * 0.1, cy - TILE * 0.45, TILE * 0.2, TILE * 0.5);
 
         ctx.fillStyle = "rgba(0,0,0,0.2)";
         ctx.beginPath();
@@ -2689,7 +2771,7 @@ function drawGrid() {
           ctx.lineTo(cx, cy - y);
           ctx.closePath();
           ctx.fill();
-        }
+        };
         drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
         drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
         drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
@@ -2746,15 +2828,7 @@ function drawGrid() {
 
         ctx.fillStyle = "#332211";
         ctx.beginPath();
-        ctx.ellipse(
-          cx,
-          cy + s * 0.2,
-          s * 0.35,
-          s * 0.12,
-          0,
-          0,
-          Math.PI * 2,
-        );
+        ctx.ellipse(cx, cy + s * 0.2, s * 0.35, s * 0.12, 0, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.strokeStyle = "#5a5";
@@ -2924,29 +2998,57 @@ function updateCamera() {
     Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5,
   );
 
+  if (lastTouchedIce && performance.now() - lastTouchedIce > 1000) {
+    lastTouchedIce = null;
+    iceEffect = false;
+  }
+
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.25 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
   isCursorOnFloor();
-  camX +=
-    vx *
-    motionScale *
-    slowScale *
-    settingScale *
-    voidScale *
-    seamineScale *
-    wallScale *
-    disableCollectScale;
-  camY +=
-    vy *
-    motionScale *
-    slowScale *
-    settingScale *
-    voidScale *
-    seamineScale *
-    wallScale *
-    disableCollectScale;
+  if (iceEffect) {
+    camVX +=
+      vx *
+      motionScale *
+      slowScale *
+      settingScale *
+      voidScale *
+      seamineScale *
+      wallScale *
+      disableCollectScale *
+      0.1;
+    camVY +=
+      vy *
+      motionScale *
+      slowScale *
+      settingScale *
+      voidScale *
+      seamineScale *
+      wallScale *
+      disableCollectScale *
+      0.1;
+  } else {
+    camX +=
+      vx *
+      motionScale *
+      slowScale *
+      settingScale *
+      voidScale *
+      seamineScale *
+      wallScale *
+      disableCollectScale;
+    camY +=
+      vy *
+      motionScale *
+      slowScale *
+      settingScale *
+      voidScale *
+      seamineScale *
+      wallScale *
+      disableCollectScale;
+  }
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
@@ -3385,8 +3487,8 @@ function loop(now) {
   // camera smoothing
   camX += camVX;
   camY += camVY;
-  camVX *= 0.88;
-  camVY *= 0.88;
+  camVX *= iceEffect ? 0.96 : 0.88;
+  camVY *= iceEffect ? 0.96 : 0.88;
 
   // lag detection
   const dx = mouse.x - prevMouseWorld.x;
@@ -3587,7 +3689,7 @@ const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -3611,6 +3713,26 @@ setInterval(() => {
     patternsState.delete(key);
   }
 }, 6000);
+setInterval(() => {
+  changePatterns("ice");
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
+  setTimeout(() => {
+    changePatterns();
+    ROTATED_PATTERNS = PATTERNS.map((base) => {
+      const r0 = base;
+      const r1 = rotateMatrix90(r0);
+      const r2 = rotateMatrix90(r1);
+      const r3 = rotateMatrix90(r2);
+      return [r0, r1, r2, r3];
+    });
+  }, 3000);
+}, 60000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
@@ -3629,7 +3751,7 @@ export function onFinalContact() {
   disableCollect = true;
   setTimeout(() => {
     originalVolume = [musicVolume, sfxVolume];
-    finalPatterns(false);
+    changePatterns("normal");
     ROTATED_PATTERNS = PATTERNS.map((base) => {
       const r0 = base;
       const r1 = rotateMatrix90(r0);
@@ -3705,9 +3827,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
