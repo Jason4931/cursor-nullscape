@@ -1,1 +1,2 @@
-grindrails time (boost camera to that direction)
+add natural jumppads (separate from doombringer)
+rework doombringer for natural (includes patch 4)

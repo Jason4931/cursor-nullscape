@@ -2176,8 +2176,12 @@ function destroyPattern(p) {
   patternsState.delete(`${p.sx},${p.sy}`);
 }
 
-let lastMouseX = mouse.x;
-let lastMouseY = mouse.y;
+let lastMouseX;
+let lastMouseY;
+setTimeout(() => {
+  lastMouseX = mouse.x;
+  lastMouseY = mouse.y;
+}, 100);
 let headingX = 1; // default direction (right)
 let headingY = 0;
 

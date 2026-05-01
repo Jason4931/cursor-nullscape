@@ -36,6 +36,7 @@ import { setup as spawnGuardian } from "./Enemies/Guardian.js";
 import { setup as spawnDozer } from "./Enemies/Dozer.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
+import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
@@ -144,6 +145,7 @@ let isSeamineEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
+let grindrailScale = 1;
 let wallScale = 1;
 let iceEffect = false;
 let lastTouchedIce;
@@ -182,6 +184,9 @@ export function setVoidScale(v) {
 }
 export function setSeamineScale(v) {
   seamineScale = v;
+}
+export function setGrindrailScale(v) {
+  grindrailScale = v;
 }
 export function setDeathOpacity(v) {
   deathOpacity = v;
@@ -659,7 +664,8 @@ topLeftInput.addEventListener("input", () => {
   const entity =
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
-    input.toLowerCase() === "seamine";
+    input.toLowerCase() === "seamine" ||
+    input.toLowerCase() === "grindrail";
   if (entity) {
     for (let i = 0; i < spawnCount; i++) {
       if (input.toLowerCase() === "catalyst") {
@@ -668,6 +674,8 @@ topLeftInput.addEventListener("input", () => {
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost);
+      } else if (input.toLowerCase() === "grindrail") {
+        spawnGrindrail(entityHost);
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;
@@ -1822,6 +1830,9 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
+      spawnGrindrail(entityHost);
+      spawnGrindrail(entityHost);
+      spawnGrindrail(entityHost);
     }
     if (pick.unstackable) {
       spawnedUnstackables.add(pick.name);
@@ -2258,8 +2269,12 @@ function destroyPattern(p) {
   patternsState.delete(`${p.sx},${p.sy}`);
 }
 
-let lastMouseX = mouse.x;
-let lastMouseY = mouse.y;
+let lastMouseX;
+let lastMouseY;
+setTimeout(() => {
+  lastMouseX = mouse.x;
+  lastMouseY = mouse.y;
+}, 100);
 let headingX = 1; // default direction (right)
 let headingY = 0;
 
@@ -3016,6 +3031,7 @@ function updateCamera() {
       settingScale *
       voidScale *
       seamineScale *
+      grindrailScale *
       wallScale *
       disableCollectScale *
       0.1;
@@ -3026,6 +3042,7 @@ function updateCamera() {
       settingScale *
       voidScale *
       seamineScale *
+      grindrailScale *
       wallScale *
       disableCollectScale *
       0.1;
@@ -3037,6 +3054,7 @@ function updateCamera() {
       settingScale *
       voidScale *
       seamineScale *
+      grindrailScale *
       wallScale *
       disableCollectScale;
     camY +=
@@ -3046,6 +3064,7 @@ function updateCamera() {
       settingScale *
       voidScale *
       seamineScale *
+      grindrailScale *
       wallScale *
       disableCollectScale;
   }
@@ -3267,6 +3286,9 @@ function updateCamera() {
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
+            spawnGrindrail(entityHost);
+            spawnGrindrail(entityHost);
+            spawnGrindrail(entityHost);
           }
           if (pick.unstackable) {
             spawnedUnstackables.add(pick.name);
@@ -3557,6 +3579,8 @@ function loop(now) {
   }
   seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
+  grindrailScale -= 0.017;
+  if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;
   if (wallScale > 1) wallScale = 1;
   for (const f of [...fleshPositions]) {
