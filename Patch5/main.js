@@ -23,6 +23,7 @@ import { setup as spawnAltarProtection } from "./Enemies/AltarOfProtection.js";
 import { setup as spawnAltarPurification } from "./Enemies/AltarOfPurification.js";
 import { setup as spawnAltarEcho } from "./Enemies/AltarOfEcho.js";
 import { setup as spawnAltarPassage } from "./Enemies/AltarOfPassage.js";
+import { setup as spawnJumpPad } from "./Enemies/JumpPad.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
@@ -153,6 +154,7 @@ let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
+let jumppadActive = false;
 let SHAKE = false;
 let transformAllGift = false;
 let allGold = false;
@@ -1297,6 +1299,16 @@ export function isCursorOnFloor(custom) {
     }
   }
   return false;
+}
+export function jumppadHit(v) {
+  if (v == "get") {
+    return jumppadActive;
+  } else if (v == "set") {
+    jumppadActive = true;
+    setTimeout(() => {
+      jumppadActive = false;
+    }, 200);
+  }
 }
 
 function registerEntitySpawn(name, imageSrc, temp = false) {
@@ -3162,6 +3174,8 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
+          spawnJumpPad(entityHost, 3000);
+          spawnJumpPad(entityHost, 2000);
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
             const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
@@ -3646,7 +3660,7 @@ function loop(now) {
   document.getElementById("spawn-input").style.display === "block"
     ? (document.getElementById("spawn-input-text").style.display = "block")
     : (document.getElementById("spawn-input-text").style.display = "none");
-  document.getElementById("spawn-input-commands").style.opacity -= 0.005;
+  document.getElementById("spawn-input-commands").style.opacity -= 0.003;
   if (disableProgression) {
     if (!firstDisableProgression) {
       cheattimer = 300;
