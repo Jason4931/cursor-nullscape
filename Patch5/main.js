@@ -1080,10 +1080,11 @@ export function stopAllSounds() {
   activeSounds.clear();
 }
 const musicList = [
+  //Volume 1
   {
     start: 100,
-    end: 599,
-    src: "./ASSET/Sound/Music/Kenophobia.mp3",
+    end: 999,
+    src: "./ASSET/Sound/Music/Void_Explorer.ogg",
   },
   {
     start: 100,
@@ -1093,22 +1094,7 @@ const musicList = [
   {
     start: 500,
     end: 999,
-    src: "./ASSET/Sound/Music/Dimension.mp3",
-  },
-  {
-    start: 500,
-    end: 999,
     src: "./ASSET/Sound/Music/Baby_Face.ogg",
-  },
-  {
-    start: 100,
-    end: 999,
-    src: "./ASSET/Sound/Music/A-Delightful-New-Death.mp3",
-  },
-  {
-    start: 100,
-    end: 999,
-    src: "./ASSET/Sound/Music/Void_Explorer.ogg",
   },
   {
     start: 100,
@@ -1122,22 +1108,12 @@ const musicList = [
   },
   {
     start: 1000,
-    end: 1999,
-    src: "./ASSET/Sound/Music/Conga-Line.mp3",
+    end: 2999,
+    src: "./ASSET/Sound/Music/Line_of_Fire.ogg",
   },
   {
-    start: 1000,
-    end: 1999,
-    src: "./ASSET/Sound/Music/Former-Gardens.mp3",
-  },
-  {
-    start: 1000,
-    end: 1999,
-    src: "./ASSET/Sound/Music/Death-Defiance.mp3",
-  },
-  {
-    start: 1000,
-    end: 1999,
+    start: 2000,
+    end: 3099,
     src: "./ASSET/Sound/Music/Conviction_(feat._SPIRIT_GARDEN_).ogg",
   },
   {
@@ -1147,63 +1123,140 @@ const musicList = [
   },
   {
     start: 1000,
-    end: 1999, //+
-    src: "./ASSET/Sound/Music/Line_of_Fire.ogg",
-  },
-  {
-    start: 1000,
-    end: 1999, //+
+    end: 2999,
     src: "./ASSET/Sound/Music/FearOfShadow.ogg",
-  },
-  {
-    start: 1000,
-    end: 1999, //+
-    src: "./ASSET/Sound/Music/AudioInescapable.ogg",
-  },
-  {
-    start: 2000,
-    end: 3999, //+
-    src: "./ASSET/Sound/Music/Void-Breaker.mp3",
-  },
-  {
-    start: 2000,
-    end: 3999, //+
-    src: "./ASSET/Sound/Music/IMPERIAL-ENIGMA.mp3",
-  },
-  {
-    start: 2000,
-    end: 3999, //+
-    src: "./ASSET/Sound/Music/AudioDetermination.ogg",
-  },
-  {
-    start: 2000,
-    end: 3999, //+
-    src: "./ASSET/Sound/Music/AudioTHISWORLDWILLCOLLAPSE.ogg",
-  },
-  {
-    start: 4000,
-    end: 0,
-    src: "./ASSET/Sound/Music/Temporal-Tenacity.mp3",
-  },
-  {
-    start: 4000,
-    end: 0,
-    src: "./ASSET/Sound/Music/DECAY-TRUE.mp3",
-  },
-  {
-    start: 1000,
-    end: 1999,
-    src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
   },
   {
     start: 2000,
     end: 3999,
-    src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
+    src: "./ASSET/Sound/Music/AudioDetermination.ogg",
+  },
+  {
+    start: 1000,
+    end: 2999,
+    src: "./ASSET/Sound/Music/AudioInescapable.ogg",
+  },
+  {
+    start: 3000,
+    end: 4099,
+    src: "./ASSET/Sound/Music/AudioTHISWORLDWILLCOLLAPSE.ogg",
+  },
+  //Volume 2
+  {
+    start: 100,
+    end: 599,
+    src: "./ASSET/Sound/Music/Kenophobia.mp3",
+  },
+  {
+    start: 500,
+    end: 999,
+    src: "./ASSET/Sound/Music/Dimension.mp3",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/A-Delightful-New-Death.mp3",
+  },
+  {
+    start: 1000,
+    end: 2099,
+    src: "./ASSET/Sound/Music/Conga-Line.mp3",
+  },
+  {
+    start: 2000,
+    end: 3099,
+    src: "./ASSET/Sound/Music/Former-Gardens.mp3",
+  },
+  {
+    start: 2000,
+    end: 3099,
+    src: "./ASSET/Sound/Music/Death-Defiance.mp3",
+  },
+  {
+    start: 2000,
+    end: 3999,
+    src: "./ASSET/Sound/Music/Void-Breaker.mp3",
+  },
+  {
+    start: 3000,
+    end: 4999,
+    src: "./ASSET/Sound/Music/IMPERIAL-ENIGMA.mp3",
+  },
+  {
+    start: 3000,
+    end: 4999,
+    src: "./ASSET/Sound/Music/Temporal-Tenacity.mp3",
   },
   {
     start: 4000,
-    end: 0,
+    end: 5099,
+    src: "./ASSET/Sound/Music/DECAY-TRUE.mp3",
+  },
+  {
+    start: 1500,
+    end: 2999,
     src: "./ASSET/Sound/Music/Find-your-Flame.mp3",
+  },
+  //Volume 3
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Checkmate.mp3",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Domasp's_Gift.mp3",
+  },
+  {
+    start: 100,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Self_Destruct.mp3",
+  },
+  {
+    start: 100,
+    end: 999,
+    src: "./ASSET/Sound/Music/Inter-Continental_Ballistic_Missile.mp3",
+  },
+  {
+    start: 1000,
+    end: 1999,
+    src: "./ASSET/Sound/Music/Disruption_and_Dissonance.mp3",
+  },
+  {
+    start: 1000,
+    end: 2999,
+    src: "./ASSET/Sound/Music/Vein_Blood.mp3",
+  },
+  {
+    start: 1000,
+    end: 2999,
+    src: "./ASSET/Sound/Music/Monolith.mp3",
+  },
+  {
+    start: 3000,
+    end: 4099,
+    src: "./ASSET/Sound/Music/Cognition.mp3",
+  },
+  {
+    start: 3000,
+    end: 4099,
+    src: "./ASSET/Sound/Music/Won-t-you-hear-my-Symphony.mp3",
+  },
+  {
+    start: 3000,
+    end: 4099,
+    src: "./ASSET/Sound/Music/Aerodynamics.mp3",
+  },
+  {
+    start: 5000,
+    end: 0,
+    src: "./ASSET/Sound/Music/Insurmountable_Abyss.mp3",
+  },
+  {
+    start: 3000,
+    end: 4099,
+    src: "./ASSET/Sound/Music/It_Doesn't_End_Here.mp3",
   },
 ];
 let lobbyMusic = null;
@@ -3425,10 +3478,13 @@ function loop(now) {
 
   // music
   if (!lobbyMusic) {
+    let rand = Math.random();
     lobbyMusic = playSound(
-      Math.random() < 0.6
-        ? "./ASSET/Sound/Music/Your_New_Prision.mp3"
-        : "./ASSET/Sound/Music/Nullscape.ogg",
+      rand < 0.333
+        ? "./ASSET/Sound/Music/Voidbound.mp3"
+        : rand < 0.667
+          ? "./ASSET/Sound/Music/Your_New_Prision.mp3"
+          : "./ASSET/Sound/Music/Nullscape.ogg",
       1,
       { start: 0, end: 1 },
       true,
@@ -3769,7 +3825,7 @@ setInterval(() => {
       const r3 = rotateMatrix90(r2);
       return [r0, r1, r2, r3];
     });
-  }, 3000);
+  }, 6000);
 }, 60000);
 
 let originalVolume = [0, 0];
