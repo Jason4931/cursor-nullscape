@@ -445,11 +445,17 @@ export function death(name = "Unknown", color = "#f70000") {
     setTimeout(() => {
       stopAllSounds();
     }, 1000);
-    setTimeout(() => {
+    if (localStorage.getItem("boyquiet")) {
       retry.style.opacity = "1";
       retry.style.pointerEvents = "auto";
       retry.onclick = () => location.reload();
-    }, 5000);
+    } else {
+      setTimeout(() => {
+        retry.style.opacity = "1";
+        retry.style.pointerEvents = "auto";
+        retry.onclick = () => location.reload();
+      }, 5000);
+    }
   }, 200);
   setStars();
 }

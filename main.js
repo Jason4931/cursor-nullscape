@@ -897,7 +897,7 @@ input.addEventListener("input", () => {
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
     img.style.transform = "translate(-50%, -50%) rotate(0deg) scale(1)";
-  }, 30);
+  }, 10);
 });
 
 /* ===== REGEN THROTTLE ===== */
@@ -1790,6 +1790,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
+      spawnJumpPad(entityHost, 3000);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
@@ -2656,7 +2657,6 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
-          spawnJumpPad(entityHost, 3000);
           spawnJumpPad(entityHost, 2000);
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
@@ -2779,6 +2779,7 @@ function updateCamera() {
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
+            spawnJumpPad(entityHost, 3000);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);

@@ -143,6 +143,7 @@ let lastEntitySpawnAt = 0;
 let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
+let isIceTileEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
@@ -822,6 +823,12 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "suicide") {
+    death();
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   for (const altar of altars) {
     if (input === altar.name) {
       altar.activate();
@@ -890,29 +897,156 @@ const img = document.getElementById("death-image");
 let wobbleTimer;
 input.addEventListener("input", () => {
   const value = input.value.toLowerCase();
-  const target = "shutup";
 
-  if (target.startsWith(value) && value.length > 0) {
+  const target = [
+    {
+      text: "shutup",
+      activate: () => {
+        location.reload();
+      },
+    },
+    {
+      text: "football",
+      activate: () => {
+        img.src = "./ASSET/Misc/Football.png";
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      },
+    },
+    {
+      text: "pondererisbackforblood",
+      activate: () => {
+        img.src = "./ASSET/Enemies/Ponderer.png";
+        localStorage.setItem("enable-ponderer", "true");
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      },
+    },
+    {
+      text: "yippee",
+      activate: () => {
+        img.style.transition = "transform 0.15s cubic-bezier(0, 0, 0.4, 1)";
+        img.style.transform = "translate(-50%, -50%) translateY(-200px)";
+        setTimeout(() => {
+          img.style.transition = "transform 0.15s cubic-bezier(0.4, 0, 1, 1)";
+          img.style.transform = "translate(-50%, -50%) translateY(0)";
+        }, 150);
+        let count = 0;
+        let jump = setInterval(() => {
+          count++;
+          if (count >= 4) {
+            clearInterval(jump);
+            return;
+          }
+          img.style.transition = "transform 0.15s cubic-bezier(0, 0, 0.4, 1)";
+          img.style.transform = "translate(-50%, -50%) translateY(-200px)";
+          setTimeout(() => {
+            img.style.transition = "transform 0.15s cubic-bezier(0.4, 0, 1, 1)";
+            img.style.transform = "translate(-50%, -50%) translateY(0)";
+          }, 150);
+        }, 300);
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      },
+    },
+    {
+      text: "explode",
+      activate: () => {
+        img.style.transition = "none";
+        img.style.transform = "translate(-50%, -50%) rotate(60deg)";
+        setTimeout(() => {
+          img.style.transition = "transform 0.25s ease-out";
+          img.style.transform =
+            "translate(-50%, -50%) rotate(60deg) translateY(-100vw)";
+        }, 10);
+        const clone = img.cloneNode(true);
+        clone.src = "./ASSET/Misc/Explode.png";
+        clone.style.transition = "none";
+        clone.style.transform = "translate(-50%, -50%) rotate(0deg) scale(1.3)";
+        clone.style.opacity = "1";
+        img.parentNode.insertBefore(clone, img.nextSibling);
+        requestAnimationFrame(() => {
+          clone.style.transition = "all 0.4s ease-out";
+          clone.style.transform =
+            "translate(-50%, -50%) rotate(360deg) scale(1.3)";
+          clone.style.opacity = "0";
+        });
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+      },
+    },
+    {
+      text: "minesweeper",
+      activate: () => {
+        window.open("https://minesweeper.online/start/1", "_blank");
+        location.reload();
+      },
+    },
+    {
+      text: "mminesweeper",
+      activate: () => {
+        window.open("https://minesweeper.online/start/2", "_blank");
+        location.reload();
+      },
+    },
+    {
+      text: "mmminesweeper",
+      activate: () => {
+        window.open("https://minesweeper.online/start/3", "_blank");
+        location.reload();
+      },
+    },
+    {
+      text: "telefragger",
+      activate: () => {
+        img.src = "./ASSET/Misc/Telefragger.gif";
+        setTimeout(() => {
+          location.reload();
+        }, 22000);
+      },
+    },
+    {
+      text: "boyquiet",
+      activate: () => {
+        localStorage.setItem("boyquiet", "true");
+        location.reload();
+      },
+    },
+  ];
+
+  const match = target.find((t) => t.text.startsWith(value));
+
+  if (match && value.length > 0) {
     input.style.color = "lime";
   } else {
     input.style.color = "";
   }
 
-  if (input.value.toLowerCase() === target) {
-    location.reload();
+  const exact = target.find((t) => t.text === value);
+  if (exact) {
+    exact.activate();
+    input.readOnly = true;
   }
+});
+let clickedRefresh = 0;
+img.addEventListener("click", () => {
+  clickedRefresh++;
 
   clearTimeout(wobbleTimer);
 
   img.style.transition = "none";
-  img.style.transform = `translate(-50%, -50%) rotate(${
-    Math.random() * 8 - 4
-  }deg) scale(1.05)`;
+  img.style.transform = `translate(-50%, -50%) scale(0.95)`;
 
   wobbleTimer = setTimeout(() => {
     img.style.transition = "transform 0.5s ease-out";
-    img.style.transform = "translate(-50%, -50%) rotate(0deg) scale(1)";
-  }, 30);
+    img.style.transform = "translate(-50%, -50%) scale(1)";
+  }, 10);
+
+  if (clickedRefresh >= 2) setTimeout(location.reload(), 200);
 });
 
 /* ===== REGEN THROTTLE ===== */
@@ -1890,8 +2024,50 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       name = pick.name;
       registerEntitySpawn(pick.name, pick.src, temp);
     }
+    if (collectedCount >= 800 && !isIceTileEnabled) {
+      isIceTileEnabled = true;
+      changePatterns("ice");
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
+      setTimeout(() => {
+        changePatterns();
+        ROTATED_PATTERNS = PATTERNS.map((base) => {
+          const r0 = base;
+          const r1 = rotateMatrix90(r0);
+          const r2 = rotateMatrix90(r1);
+          const r3 = rotateMatrix90(r2);
+          return [r0, r1, r2, r3];
+        });
+      }, 6000);
+      setInterval(() => {
+        changePatterns("ice");
+        ROTATED_PATTERNS = PATTERNS.map((base) => {
+          const r0 = base;
+          const r1 = rotateMatrix90(r0);
+          const r2 = rotateMatrix90(r1);
+          const r3 = rotateMatrix90(r2);
+          return [r0, r1, r2, r3];
+        });
+        setTimeout(() => {
+          changePatterns();
+          ROTATED_PATTERNS = PATTERNS.map((base) => {
+            const r0 = base;
+            const r1 = rotateMatrix90(r0);
+            const r2 = rotateMatrix90(r1);
+            const r3 = rotateMatrix90(r2);
+            return [r0, r1, r2, r3];
+          });
+        }, 6000);
+      }, 60000);
+    }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
+      spawnJumpPad(entityHost, 3000);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
@@ -3227,7 +3403,6 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid);
-          spawnJumpPad(entityHost, 3000);
           spawnJumpPad(entityHost, 2000);
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
@@ -3348,8 +3523,50 @@ function updateCamera() {
             trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
+          if (collectedCount >= 800 && !isIceTileEnabled) {
+            isIceTileEnabled = true;
+            changePatterns("ice");
+            ROTATED_PATTERNS = PATTERNS.map((base) => {
+              const r0 = base;
+              const r1 = rotateMatrix90(r0);
+              const r2 = rotateMatrix90(r1);
+              const r3 = rotateMatrix90(r2);
+              return [r0, r1, r2, r3];
+            });
+            setTimeout(() => {
+              changePatterns();
+              ROTATED_PATTERNS = PATTERNS.map((base) => {
+                const r0 = base;
+                const r1 = rotateMatrix90(r0);
+                const r2 = rotateMatrix90(r1);
+                const r3 = rotateMatrix90(r2);
+                return [r0, r1, r2, r3];
+              });
+            }, 6000);
+            setInterval(() => {
+              changePatterns("ice");
+              ROTATED_PATTERNS = PATTERNS.map((base) => {
+                const r0 = base;
+                const r1 = rotateMatrix90(r0);
+                const r2 = rotateMatrix90(r1);
+                const r3 = rotateMatrix90(r2);
+                return [r0, r1, r2, r3];
+              });
+              setTimeout(() => {
+                changePatterns();
+                ROTATED_PATTERNS = PATTERNS.map((base) => {
+                  const r0 = base;
+                  const r1 = rotateMatrix90(r0);
+                  const r2 = rotateMatrix90(r1);
+                  const r3 = rotateMatrix90(r2);
+                  return [r0, r1, r2, r3];
+                });
+              }, 6000);
+            }, 60000);
+          }
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
+            spawnJumpPad(entityHost, 3000);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
@@ -3807,26 +4024,6 @@ setInterval(() => {
     patternsState.delete(key);
   }
 }, 6000);
-setInterval(() => {
-  changePatterns("ice");
-  ROTATED_PATTERNS = PATTERNS.map((base) => {
-    const r0 = base;
-    const r1 = rotateMatrix90(r0);
-    const r2 = rotateMatrix90(r1);
-    const r3 = rotateMatrix90(r2);
-    return [r0, r1, r2, r3];
-  });
-  setTimeout(() => {
-    changePatterns();
-    ROTATED_PATTERNS = PATTERNS.map((base) => {
-      const r0 = base;
-      const r1 = rotateMatrix90(r0);
-      const r2 = rotateMatrix90(r1);
-      const r3 = rotateMatrix90(r2);
-      return [r0, r1, r2, r3];
-    });
-  }, 6000);
-}, 60000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
