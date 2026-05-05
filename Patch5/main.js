@@ -1004,6 +1004,7 @@ input.addEventListener("input", () => {
       text: "telefragger",
       activate: () => {
         img.src = "./ASSET/Misc/Telefragger.gif";
+        img.style.transform = "translate(-50%, -50%) scale(1.25)";
         setTimeout(() => {
           location.reload();
         }, 22000);
