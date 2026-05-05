@@ -3202,6 +3202,10 @@ if (isMobile) {
 const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
+  if (!panelOpen) {
+    panelOpen = !panelOpen;
+    panel.classList.toggle("open", panelOpen);
+  }
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(() => {});
   }
