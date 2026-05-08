@@ -13,8 +13,8 @@ export function setup(host, hardMode) {
 
     radius: 1200,
 
-    timer: 8,
-    maxTimer: 8,
+    timer: 20,
+    maxTimer: 20,
 
     decayRate: 0.95,
     recoverRate: hardMode ? 0.525 : 0.7,

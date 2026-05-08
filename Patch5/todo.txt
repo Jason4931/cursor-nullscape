@@ -1,11 +1,32 @@
 HIGHRISE TOWER -> how the fuck do i do this [lvl 18]
 
-will probably start entity reworks
-ponderer is actually 20s solo
+actually starting entity reworks
 mart merge
 guardian agro on passage
-voidbound guardian absolute insane rework
-also holy scrapmaw
-and honorable kookoo rework
 nil kindof nerfed a little
-few redesign, actually many redesign
+voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
+33% chance for operator becoming voidbound operator
+
+x bell
+x baby
+x husk
+x icbm
+x mart
+x springer
+x flesh
+x nilW
+x operator
+x guardian
+x telefragger
+x kolona
+x voidbound baby
+x cadence
+x voidbreaker
+x voidbound guardian
+x scrapmaw
+x random
+x void implosion
+x oblivion
+x razorbloom
+x voidbound operator
+v ponderer
