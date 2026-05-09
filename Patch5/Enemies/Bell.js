@@ -88,6 +88,8 @@ export function setup(host, hardMode, immunebell) {
         playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
         setTimeout(() => {
           death("Bell");
+          death("Bell");
+          death("Bell");
         }, 1000);
       }
       cleanseZones.push({
