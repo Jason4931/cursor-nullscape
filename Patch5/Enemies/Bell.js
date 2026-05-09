@@ -37,6 +37,7 @@ export function setup(host, hardMode, immunebell) {
     hitActive: false,
     wasHovering: false,
 
+    bellidleSound: false,
     bellteleportstartsoundSound: false,
     bellteleportendsoundSound: false,
   };
@@ -117,7 +118,17 @@ export function setup(host, hardMode, immunebell) {
       state.initialized = true;
       playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
     }
-
+    if (!state.bellidleSound) {
+      state.bellidleSound = playSound(
+        `./ASSET/Sound/Enemies/Bell/Bell_Idle.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        () => {
+          state.bellidleSound = null;
+        },
+      );
+    }
     state.timer += dt;
 
     if (state.phase === "appear") {
