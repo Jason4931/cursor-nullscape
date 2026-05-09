@@ -87,8 +87,7 @@ export function setup(host, hardMode, immunebell) {
         playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
         playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
         setTimeout(() => {
-          death("Bell");
-          death("Bell");
+          toggleBellLeniency(false);
           death("Bell");
         }, 1000);
       }
