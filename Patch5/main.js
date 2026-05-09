@@ -176,6 +176,7 @@ export let beaconed = false;
 export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
 export let voidbreakerActive;
+export let bellHit = { count: 0 };
 export function setVoidbreakerActive(v) {
   voidbreakerActive = v;
 }
@@ -203,7 +204,7 @@ const ENTITY_POOL = [
     spawn: () => spawnBell(entityHost, hardMode, immunebell),
     start: 0,
     src: "./ASSET/Enemies/Bell.png",
-    desc: "A mostly harmless bell. Rings on contact and cleanses flesh.",
+    desc: "A mostly harmless bell; rings on contact and cleanses flesh.",
   },
   {
     name: "Mart",
@@ -3927,6 +3928,24 @@ function loop(now) {
 
     ctx.restore();
   }
+  if (bellHit.count >= 3) {
+    const tilerand = TILE * (0.5 + Math.random() * 0.5);
+    const bellg = ctx.createRadialGradient(
+      mouse.x,
+      mouse.y,
+      0,
+      mouse.x,
+      mouse.y,
+      tilerand,
+    );
+    bellg.addColorStop(0, "#fff0");
+    bellg.addColorStop(0.99, "#fff0");
+    bellg.addColorStop(1, "#fff");
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, tilerand, 0, Math.PI * 2);
+    ctx.fillStyle = bellg;
+    ctx.fill();
+  }
 
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
@@ -4029,6 +4048,12 @@ setInterval(() => {
     patternsState.delete(key);
   }
 }, 6000);
+setInterval(() => {
+  if (bellHit.count <= 2) {
+    bellHit.count -= 1;
+    if (bellHit.count < 0) bellHit.count = 0;
+  }
+}, 10000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {

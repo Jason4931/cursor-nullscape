@@ -1,5 +1,12 @@
-import { mouse, toggleBellLeniency } from "../entityHost.js";
-import { playSound, cleanseZones, setSlowness, TILE } from "../main.js";
+import { death, mouse, toggleBellLeniency } from "../entityHost.js";
+import {
+  playSound,
+  cleanseZones,
+  setSlowness,
+  TILE,
+  bellHit,
+  moveCamera,
+} from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Bell.png";
@@ -60,9 +67,28 @@ export function setup(host, hardMode, immunebell) {
 
     if (hovering && !state.wasHovering && !state.hitActive) {
       state.hitActive = true;
-      playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
+      moveCamera(0, 50);
       toggleBellLeniency(true);
       state.hitTimer = 0;
+      bellHit.count += 1;
+      if (bellHit.count == 1) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
+      } else if (bellHit.count == 2) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_2.ogg");
+      } else if (bellHit.count == 3) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_3.ogg");
+        playSound("./ASSET/Sound/Enemies/Bell/Overtuned.ogg");
+        setTimeout(() => {
+          playSound("./ASSET/Sound/Enemies/Bell/Overtuned_Clear.ogg");
+          bellHit.count = 2;
+        }, 27000);
+      } else if (bellHit.count >= 4) {
+        playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
+        playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
+        setTimeout(() => {
+          death("Bell");
+        }, 1000);
+      }
       cleanseZones.push({
         x: state.x,
         y: state.y,
@@ -89,29 +115,23 @@ export function setup(host, hardMode, immunebell) {
         teleport();
       }, 100);
       state.initialized = true;
-      playSound(
-        "./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav",
-        hardMode ? 2 : 1,
-      );
+      playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
     }
 
     state.timer += dt;
 
     if (state.phase === "appear") {
-      if (state.timer <= (hardMode ? 0.25 : 0.5)) {
-        const t = state.timer / (hardMode ? 0.25 : 0.5);
+      if (state.timer <= 0.5) {
+        const t = state.timer / 0.5;
         state.circleScale = easeOut(t);
       } else {
-        const t =
-          (state.timer - (hardMode ? 0.25 : 0.5)) / (hardMode ? 0.25 : 0.5);
-        state.circleScale = (hardMode ? 0.5 : 1) * (1 - easeIn(t));
+        const t = (state.timer - 0.5) / 0.5;
+        state.circleScale = 1 * (1 - easeIn(t));
       }
 
-      state.bellScale = easeOut(
-        Math.min(state.timer / (hardMode ? 0.5 : 1), 1),
-      );
+      state.bellScale = easeOut(Math.min(state.timer / 1, 1));
 
-      if (state.timer >= (hardMode ? 0.5 : 1)) {
+      if (state.timer >= 1) {
         state.timer = 0;
         state.circleScale = 0;
         state.phase = "wait";
@@ -127,47 +147,53 @@ export function setup(host, hardMode, immunebell) {
         state.phase = "disappear";
       }
     } else if (state.phase === "disappear") {
-      if (state.timer <= (hardMode ? 0.25 : 0.5)) {
-        const t = state.timer / (hardMode ? 0.25 : 0.5);
+      if (state.timer <= 0.5) {
+        const t = state.timer / 0.5;
         state.circleScale = easeOut(t);
       } else {
-        const t =
-          (state.timer - (hardMode ? 0.25 : 0.5)) / (hardMode ? 0.25 : 0.5);
-        state.circleScale = (hardMode ? 0.5 : 1) * (1 - easeIn(t));
+        const t = (state.timer - 0.5) / 0.5;
+        state.circleScale = 1 * (1 - easeIn(t));
       }
 
-      state.bellScale =
-        1 - easeIn(Math.min(state.timer / (hardMode ? 0.5 : 1), 1));
+      state.bellScale = 1 - easeIn(Math.min(state.timer / 1), 1);
 
       if (
-        state.timer >= (hardMode ? 0.1 : 0.2) &&
-        state.timer <= (hardMode ? 0.2 : 0.3) &&
+        state.timer >= 0.2 &&
+        state.timer <= 0.3 &&
         !state.bellteleportstartsoundSound
       ) {
-        playSound(
-          "./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav",
-          hardMode ? 2 : 1,
-        );
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
         state.bellteleportstartsoundSound = true;
       }
       if (
-        state.timer >= (hardMode ? 0.2 : 0.4) &&
-        state.timer <= (hardMode ? 0.3 : 0.5) &&
+        hardMode &&
+        state.timer >= 0.4 &&
+        state.timer <= 0.5 &&
         !state.bellteleportendsoundSound
       ) {
-        playSound(
-          "./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav",
-          hardMode ? 2 : 1,
-        );
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav");
         state.bellteleportendsoundSound = true;
       }
-      if (state.timer >= (hardMode ? 0.5 : 1)) {
+      if (state.timer >= 1) {
         state.timer = 0;
         state.circleScale = 0;
         teleport();
-        state.phase = "appear";
+        state.phase = hardMode ? "appear" : "delay";
         state.bellteleportstartsoundSound = false;
         state.bellteleportendsoundSound = false;
+      }
+    } else if (state.phase === "delay") {
+      if (
+        state.timer >= 0.4 &&
+        state.timer <= 0.5 &&
+        !state.bellteleportendsoundSound
+      ) {
+        playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_End_Sound.wav");
+        state.bellteleportendsoundSound = true;
+      }
+      if (state.timer >= 1) {
+        state.timer = 0;
+        state.phase = "appear";
       }
     }
   }

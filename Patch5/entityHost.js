@@ -76,6 +76,13 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 }
 
 const DEATH_MESSAGES = {
+  Bell: [
+    "You couldn't handle the power... of MUSIC!",
+    "You reverberated.",
+    "You hear the bells.",
+    "You... Please... leave the bell alone...",
+    "You rang the bell too much.",
+  ],
   Mart: [
     "You something Mart something dead.",
     "You are Dead (probably.)",

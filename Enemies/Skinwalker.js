@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, soundStopped } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Skinwalker.png";
@@ -24,7 +24,9 @@ export function setup(host, stack, hardMode) {
   };
 
   function pickDelay() {
-    state.delayTarget = hardMode ? (0.75 + Math.random() + stack * 1.25) : (2 + Math.random() + stack * 2.5);
+    state.delayTarget = hardMode
+      ? 0.75 + Math.random() + stack * 1.25
+      : 2 + Math.random() + stack * 2.5;
   }
 
   function update(dt) {
@@ -36,9 +38,10 @@ export function setup(host, stack, hardMode) {
       pickDelay();
       state.delay = state.delayTarget;
       state.initialized = true;
-      playSound(
-        "./ASSET/Sound/Enemies/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
-      );
+      if (!soundStopped)
+        playSound(
+          "./ASSET/Sound/Enemies/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
+        );
     }
 
     state.history.push({
@@ -104,15 +107,16 @@ export function setup(host, stack, hardMode) {
     const sounddist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
     if (sounddist <= 500) {
       if (!state.sound)
-        state.sound = playSound(
-          `./ASSET/Sound/Enemies/Skinwalker/Skinwalker.ogg`,
-          undefined,
-          undefined,
-          undefined,
-          () => {
-            state.sound = null;
-          },
-        );
+        if (!soundStopped)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Skinwalker/Skinwalker.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
     } else {
       if (state.sound) {
         state.sound();

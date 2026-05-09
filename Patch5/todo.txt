@@ -7,20 +7,21 @@ nil kindof nerfed a little
 voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
-x bell
+v bell
 x baby
 x husk
 x icbm
 x mart
 x springer
 x flesh
-x nilW
+x nil
 x operator
 x guardian
 x telefragger
 x kolona
 x voidbound baby
 x cadence
+x sigil
 x voidbreaker
 x voidbound guardian
 x scrapmaw

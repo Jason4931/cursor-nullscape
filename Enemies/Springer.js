@@ -118,7 +118,7 @@ export function setup(host, hardMode) {
       const cy = mouse.y - state.ringCenterY;
       const dist = Math.hypot(cx, cy);
 
-      const thickness = 200;
+      const thickness = 25;
 
       const inner = ringRadius - thickness;
       const outer = ringRadius;
