@@ -8,8 +8,8 @@ voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
 v bell
-x baby
-x husk
+v baby
+v husk
 x icbm
 x mart
 x springer

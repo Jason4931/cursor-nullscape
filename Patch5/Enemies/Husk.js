@@ -22,12 +22,15 @@ export function setup(host, stack, hardMode) {
 
     history: [],
     historyLimit: 20 * 60,
+
+    pairOffset: 20,
+    dirX: 1,
+    dirY: 0,
   };
 
   function pickDelay() {
     state.delayTarget = 0.7 + Math.random() + stack * 1.2;
   }
-  //double length on hard mode
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
@@ -40,7 +43,7 @@ export function setup(host, stack, hardMode) {
       state.initialized = true;
       if (!soundStopped)
         playSound(
-          "./ASSET/Sound/Husk/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
+          "./ASSET/Sound/Enemies/Husk/Skinwalker_-_OhNoSkinwalker_v2.ogg",
         );
     }
 
@@ -83,6 +86,8 @@ export function setup(host, stack, hardMode) {
     if (dist > 0.001) {
       dx /= dist;
       dy /= dist;
+      state.dirX = dx;
+      state.dirY = dy;
 
       const move = 10000 * dt;
 
@@ -95,17 +100,33 @@ export function setup(host, stack, hardMode) {
       }
     }
 
-    const cx = mouse.x - state.x;
-    const cy = mouse.y - state.y;
-    const cdist = Math.hypot(cx, cy);
+    const px = -state.dirY;
+    const py = state.dirX;
+    const positions = hardMode
+      ? [
+          {
+            x: state.x + px * state.pairOffset,
+            y: state.y + py * state.pairOffset,
+          },
+          {
+            x: state.x - px * state.pairOffset,
+            y: state.y - py * state.pairOffset,
+          },
+        ]
+      : [{ x: state.x, y: state.y }];
+    for (const p of positions) {
+      const cx = mouse.x - p.x;
+      const cy = mouse.y - p.y;
+      const cdist = Math.hypot(cx, cy);
 
-    if (cdist <= state.size * 0.2) {
-      if (!state.deathSound) {
-        playSound(`./ASSET/Sound/Enemies/Husk/Husk_Kill.ogg`);
-        state.deathSound = true;
+      if (cdist <= state.size * 0.2) {
+        if (!state.deathSound) {
+          playSound(`./ASSET/Sound/Enemies/Husk/Husk_Kill.ogg`);
+          state.deathSound = true;
+        }
+        death("Husk");
+        return;
       }
-      death("Husk");
-      return;
     }
 
     const sounddist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
@@ -135,13 +156,29 @@ export function setup(host, stack, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    ctx.drawImage(
-      enemy,
-      Math.round(state.x - state.size / 2),
-      Math.round(state.y - state.size / 2),
-      Math.round(state.size),
-      Math.round(state.size),
-    );
+    const px = -state.dirY;
+    const py = state.dirX;
+    const positions = hardMode
+      ? [
+          {
+            x: state.x + px * state.pairOffset,
+            y: state.y + py * state.pairOffset,
+          },
+          {
+            x: state.x - px * state.pairOffset,
+            y: state.y - py * state.pairOffset,
+          },
+        ]
+      : [{ x: state.x, y: state.y }];
+    for (const p of positions) {
+      ctx.drawImage(
+        enemy,
+        Math.round(p.x - state.size / 2),
+        Math.round(p.y - state.size / 2),
+        Math.round(state.size),
+        Math.round(state.size),
+      );
+    }
 
     ctx.restore();
   }
