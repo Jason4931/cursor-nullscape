@@ -23,7 +23,7 @@ export function setup(host, stack, hardMode) {
     history: [],
     historyLimit: 20 * 60,
 
-    pairOffset: 20,
+    pairOffset: 25,
     dirX: 1,
     dirY: 0,
   };
