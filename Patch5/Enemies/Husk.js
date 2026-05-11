@@ -2,7 +2,7 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, soundStopped } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Skinwalker.png";
+enemy.src = "./ASSET/Enemies/Husk.png";
 
 export function setup(host, stack, hardMode) {
   const state = {
@@ -18,16 +18,16 @@ export function setup(host, stack, hardMode) {
     delay: 0,
     delayTarget: 0,
     delayTimer: 0,
+    deathSound: false,
 
     history: [],
     historyLimit: 20 * 60,
   };
 
   function pickDelay() {
-    state.delayTarget = hardMode
-      ? 0.75 + Math.random() + stack * 1.25
-      : 2 + Math.random() + stack * 2.5;
+    state.delayTarget = 0.7 + Math.random() + stack * 1.2;
   }
+  //double length on hard mode
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
@@ -40,7 +40,7 @@ export function setup(host, stack, hardMode) {
       state.initialized = true;
       if (!soundStopped)
         playSound(
-          "./ASSET/Sound/Enemies/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
+          "./ASSET/Sound/Husk/Skinwalker/Skinwalker_-_OhNoSkinwalker_v2.ogg",
         );
     }
 
@@ -100,7 +100,11 @@ export function setup(host, stack, hardMode) {
     const cdist = Math.hypot(cx, cy);
 
     if (cdist <= state.size * 0.2) {
-      death("Skinwalker");
+      if (!state.deathSound) {
+        playSound(`./ASSET/Sound/Enemies/Husk/Husk_Kill.ogg`);
+        state.deathSound = true;
+      }
+      death("Husk");
       return;
     }
 
@@ -109,7 +113,7 @@ export function setup(host, stack, hardMode) {
       if (!state.sound)
         if (!soundStopped)
           state.sound = playSound(
-            `./ASSET/Sound/Enemies/Skinwalker/Skinwalker.ogg`,
+            `./ASSET/Sound/Enemies/Husk/Skinwalker.ogg`,
             undefined,
             undefined,
             undefined,

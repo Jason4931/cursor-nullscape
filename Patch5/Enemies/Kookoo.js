@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound, slowness } from "../main.js";
+import { ability, getCameraPos, playSound, slowness } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Kookoo.png";
@@ -19,8 +19,6 @@ export function setup(host) {
 
     screenX: 0,
     screenY: 0,
-    strikeMouseX: 0,
-    strikeMouseY: 0,
     deathStrike: true,
 
     lastSecond: -1,
@@ -37,7 +35,6 @@ export function setup(host) {
   const RING_RADIUS = 60;
   const INTRO_TIME = 2;
   const STRIKE_TIME = 1;
-  const STRIKE_RADIUS = 210;
 
   function resetIntro() {
     state.phase = "intro";
@@ -103,9 +100,6 @@ export function setup(host) {
           state.phase = "strike";
           state.timer = STRIKE_TIME;
           state.showEntity = false;
-
-          state.strikeMouseX = mouse._clientX;
-          state.strikeMouseY = mouse._clientY;
         }
         break;
       }
@@ -120,9 +114,7 @@ export function setup(host) {
           }
         }
 
-        const dx = mouse._clientX - state.strikeMouseX;
-        const dy = mouse._clientY - state.strikeMouseY;
-        if (dx * dx + dy * dy > STRIKE_RADIUS * STRIKE_RADIUS) {
+        if (ability) {
           state.deathStrike = false;
         }
 
@@ -130,7 +122,10 @@ export function setup(host) {
           if (state.deathStrike) {
             death("Kookoo");
             if (!state.deathsound) {
-              playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Died.wav", 1, { start: 0.2, end: 1 });
+              playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Died.wav", 1, {
+                start: 0.2,
+                end: 1,
+              });
               state.deathsound = true;
             }
           }

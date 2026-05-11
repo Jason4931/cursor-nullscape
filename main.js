@@ -161,6 +161,8 @@ let skinwalkerCount = 0;
 let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+export let ability = false;
+let abilityCooldown = 0;
 export let beaconed = false;
 export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
@@ -286,7 +288,7 @@ const ENTITY_POOL = [
     start: 800,
     src: "./ASSET/Enemies/Kookoo.png",
     unstackable: true,
-    desc: "Dash your cursor right after it hits the number that was shown at the start.",
+    desc: "Use your ability right after it hits the number that was shown at the start.",
   },
   {
     name: "VoidImplosions",
@@ -625,6 +627,16 @@ window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
     panelOpen = !panelOpen;
     panel.classList.toggle("open", panelOpen);
+  }
+  if (
+    (e.key.toLowerCase() === "e" || e.key.toLowerCase() === "r") &&
+    abilityCooldown == 0
+  ) {
+    ability = true;
+    abilityCooldown = 150;
+    setTimeout(() => {
+      ability = false;
+    }, 500);
   }
 });
 let disableProgression = false;
@@ -3073,9 +3085,44 @@ function loop(now) {
   }
   seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
+  abilityCooldown--;
+  if (abilityCooldown < 0) abilityCooldown = 0;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
+
+  const cam = getCameraPos();
+  const screenX = cam.x;
+  const screenY = cam.y;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  function drawCooldownBar(x, y, width, height, cooldown) {
+    ctx.save();
+    const percent = Math.max(0, Math.min(cooldown / 150, 1));
+    ctx.globalAlpha = 0.6;
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, width, height);
+    const fillWidth = width * percent;
+    const centerX = x + width / 2;
+    ctx.fillStyle = "white";
+    ctx.fillRect(
+      centerX - fillWidth / 2,
+      y + height * 0.125,
+      fillWidth,
+      height * 0.75,
+    );
+    ctx.restore();
+  }
+  if (abilityCooldown > 0)
+    drawCooldownBar(
+      screenX + w * 0.25,
+      screenY + h - 40,
+      w * 0.5,
+      20,
+      150 - abilityCooldown,
+    );
 
   //holy beacon
   if (collectedCount >= (hardMode ? 11000 : 5500) && !transformAllGift) {
@@ -3087,12 +3134,6 @@ function loop(now) {
       }
     });
   }
-
-  const cam = getCameraPos();
-  const screenX = cam.x;
-  const screenY = cam.y;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
 
   //deathglow
   if (deathOpacity > 0) {

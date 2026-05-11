@@ -25,8 +25,8 @@ export function setup(host, stack, hardMode) {
 
   function pickDelay() {
     state.delayTarget = hardMode
-      ? 0.75 + Math.random() + stack * 1.25
-      : 2 + Math.random() + stack * 2.5;
+      ? 0.1 + Math.random() + stack * 0.6
+      : 0.7 + Math.random() + stack * 1.2;
   }
 
   function update(dt) {

@@ -28,7 +28,7 @@ import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
 import { setup as spawnICBM } from "./Enemies/ICBM.js";
-import { setup as spawnSkinwalker } from "./Enemies/Skinwalker.js";
+import { setup as spawnHusk } from "./Enemies/Husk.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
@@ -168,10 +168,12 @@ let immunebell = false;
 let deathOpacity = 0;
 let lastCursorInfectAt = 0;
 let sorrowActive = false;
-let skinwalkerCount = 0;
+let huskCount = 0;
 let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+export let ability = false;
+let abilityCooldown = 0;
 export let beaconed = false;
 export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
@@ -228,10 +230,10 @@ const ENTITY_POOL = [
     desc: "Highly explosive, stay out of the blast.",
   },
   {
-    name: "Skinwalker",
-    spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++, hardMode),
+    name: "Husk",
+    spawn: () => spawnHusk(entityHost, huskCount++, hardMode),
     start: 0,
-    src: "./ASSET/Enemies/Skinwalker.png",
+    src: "./ASSET/Enemies/Husk.png",
     desc: "Mimics your every movement.",
   },
   {
@@ -301,7 +303,7 @@ const ENTITY_POOL = [
     start: 800,
     src: "./ASSET/Enemies/Kookoo.png",
     unstackable: true,
-    desc: "Dash your cursor right after it hits the number that was shown at the start.",
+    desc: "Use your ability right after it hits the number that was shown at the start.",
   },
   {
     name: "VoidImplosions",
@@ -640,6 +642,16 @@ window.addEventListener("keydown", (e) => {
     panelOpen = !panelOpen;
     panel.classList.toggle("open", panelOpen);
   }
+  if (
+    (e.key.toLowerCase() === "e" || e.key.toLowerCase() === "r") &&
+    abilityCooldown == 0
+  ) {
+    ability = true;
+    abilityCooldown = 150;
+    setTimeout(() => {
+      ability = false;
+    }, 500);
+  }
 });
 let disableProgression = false;
 let firstDisableProgression = false;
@@ -767,7 +779,7 @@ topLeftInput.addEventListener("input", () => {
     spawnMart(entityHost, hardMode);
     spawnBaby(entityHost, hardMode);
     spawnICBM(entityHost, hardMode);
-    spawnSkinwalker(entityHost, skinwalkerCount++, hardMode);
+    spawnHusk(entityHost, huskCount++, hardMode);
     spawnSpringer(entityHost, hardMode);
     spawnFlesh(entityHost, hardMode);
     spawnNIL(entityHost);
@@ -789,7 +801,7 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
     registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
     registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
-    registerEntitySpawn("Skinwalker", "./ASSET/Enemies/Skinwalker.png");
+    registerEntitySpawn("Husk", "./ASSET/Enemies/Husk.png");
     registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
     registerEntitySpawn("Flesh", "./ASSET/Enemies/Flesh.png");
     registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
@@ -3868,6 +3880,8 @@ function loop(now) {
   }
   seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
+  abilityCooldown--;
+  if (abilityCooldown < 0) abilityCooldown = 0;
   grindrailScale -= 0.017;
   if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;
@@ -3875,6 +3889,39 @@ function loop(now) {
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
+
+  const cam = getCameraPos();
+  const screenX = cam.x;
+  const screenY = cam.y;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  function drawCooldownBar(x, y, width, height, cooldown) {
+    ctx.save();
+    const percent = Math.max(0, Math.min(cooldown / 150, 1));
+    ctx.globalAlpha = 0.6;
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, width, height);
+    const fillWidth = width * percent;
+    const centerX = x + width / 2;
+    ctx.fillStyle = "white";
+    ctx.fillRect(
+      centerX - fillWidth / 2,
+      y + height * 0.125,
+      fillWidth,
+      height * 0.75,
+    );
+    ctx.restore();
+  }
+  if (abilityCooldown > 0)
+    drawCooldownBar(
+      screenX + w * 0.25,
+      screenY + h - 40,
+      w * 0.5,
+      20,
+      150 - abilityCooldown,
+    );
 
   //holy beacon
   if (collectedCount >= (hardMode ? 11000 : 5500) && !transformAllGift) {
@@ -3886,12 +3933,6 @@ function loop(now) {
       }
     });
   }
-
-  const cam = getCameraPos();
-  const screenX = cam.x;
-  const screenY = cam.y;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
 
   //deathglow
   if (deathOpacity > 0) {

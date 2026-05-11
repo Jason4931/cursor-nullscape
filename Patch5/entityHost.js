@@ -14,6 +14,7 @@ import {
   stopAllSounds,
   TILE,
   setDeathOpacity,
+  ability,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -119,17 +120,17 @@ const DEATH_MESSAGES = {
     "You are out of this world!",
     "You ended being nothing more then ICBM target practice.",
   ],
-  Skinwalker: [
-    "You were AFK and got promptly punished by Skinwalker.",
-    "You forgot Skinwalker was active.",
-    "You ran into Skinwalker while trying to survive.",
-    "Skinwalker killed you just by copying your moves.",
+  Husk: [
+    "You were AFK and got promptly punished by Husk.",
+    "You forgot Husk was active.",
+    "You ran into Husk while trying to survive.",
+    "Husk killed you just by copying your moves.",
     "You died. Consider not dying next time.",
-    "You couldn't dodge Skinwalker.",
-    "Skinwalker killed you without doing anything.",
-    "You died at the hands of Skinwalker.",
-    "You ran into Skinwalker.",
-    "Avoiding the Skinwalker proved beyond your abilities.",
+    "You couldn't dodge Husk.",
+    "Husk killed you without doing anything.",
+    "You died at the hands of Husk.",
+    "You ran into Husk.",
+    "Avoiding the Husk proved beyond your abilities.",
   ],
   Springer: [
     "You? Checkmate.",
@@ -388,7 +389,7 @@ export function toggleTripmineLeniency(state) {
   else if (typeof state === "boolean") tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
-  if (dies || immortality || springerImmortality) return;
+  if (dies || immortality || springerImmortality || ability) return;
   if (!toggleDeath) {
     setDeathOpacity(1);
     return;
