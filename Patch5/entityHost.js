@@ -15,6 +15,7 @@ import {
   TILE,
   setDeathOpacity,
   ability,
+  setParried,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -389,7 +390,11 @@ export function toggleTripmineLeniency(state) {
   else if (typeof state === "boolean") tripmineLeniency = state;
 }
 export function death(name = "Unknown", color = "#f70000") {
-  if (dies || immortality || springerImmortality || ability) return;
+  if (dies || immortality || springerImmortality) return;
+  if (ability) {
+    setParried(true);
+    return;
+  }
   if (!toggleDeath) {
     setDeathOpacity(1);
     return;

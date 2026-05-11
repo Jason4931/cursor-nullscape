@@ -174,6 +174,8 @@ const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
 let abilityCooldown = 0;
+let parried = false;
+let soundParry = false;
 export let beaconed = false;
 export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
@@ -187,6 +189,9 @@ export function setSorrowActive(v) {
 }
 export function setVoidScale(v) {
   voidScale = v;
+}
+export function setParried(v) {
+  parried = v;
 }
 export function setSeamineScale(v) {
   seamineScale = v;
@@ -393,6 +398,7 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
+let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
 let enablePonderer =
   JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
 let accurateCursor =
@@ -415,6 +421,7 @@ document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
+document.getElementById("toggle-parry").checked = parry;
 document.getElementById("toggle-enable-ponderer").checked = enablePonderer;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("sfx-volume").value = sfxVolume;
@@ -482,6 +489,9 @@ toggle("toggle-tripmine-hell", (v) => {
 });
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
+});
+toggle("toggle-parry", (v) => {
+  parry = v;
 });
 toggle("toggle-enable-ponderer", (v) => {
   enablePonderer = v;
@@ -553,6 +563,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
+  localStorage.removeItem("parry");
   localStorage.removeItem("enable-ponderer");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
@@ -568,6 +579,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   tripmineHell = false;
   enableVoid = true;
+  parry = false;
   enablePonderer = true;
   accurateCursor = false;
   sfxVolume = 50;
@@ -582,6 +594,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-enable-void").checked = true;
+  document.getElementById("toggle-parry").checked = false;
   document.getElementById("toggle-enable-ponderer").checked = true;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
@@ -3922,6 +3935,23 @@ function loop(now) {
       20,
       150 - abilityCooldown,
     );
+  if (parried && parry) {
+    if (!soundParry) {
+      soundParry = true;
+      playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
+      setTimeout(() => {
+        parried = false;
+        soundParry = false;
+      }, 500);
+    }
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.drawImage(ctx.canvas, 0, 0);
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = "white";
+    ctx.fillRect(screenX, screenY, w, h);
+    ctx.restore();
+  }
 
   //holy beacon
   if (collectedCount >= (hardMode ? 11000 : 5500) && !transformAllGift) {
