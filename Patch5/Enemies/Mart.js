@@ -108,7 +108,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
     state.y += (dy + wy) * state.speed * dt;
 
     if (!soundStopped) {
-      if (dist <= 500) {
+      if (dist <= 500 * (0.6 + stack * 0.4)) {
         if (!state.sound)
           state.sound = playSound(
             `./ASSET/Sound/Enemies/Mart/Mart_Ambience.ogg`,

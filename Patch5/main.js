@@ -3988,7 +3988,8 @@ function loop(now) {
       const dy = a.state.y - b.state.y;
       const dist = Math.hypot(dx, dy);
 
-      const mergeDist = a.state.size;
+      const maxStack = Math.max(a.state._stack, b.state._stack);
+      const mergeDist = (0.6 + Math.sqrt(maxStack) * 0.4) * 75;
       if (dist <= mergeDist) {
         toRemove.add(a);
         toRemove.add(b);
@@ -4004,6 +4005,7 @@ function loop(now) {
     martStack = martStack.filter((e) => !toRemove.has(e));
   });
   toSpawn.forEach(([stack, pos]) => {
+    playSound(`./ASSET/Sound/Enemies/Mart/Mart_Merge.ogg`);
     spawnMart(entityHost, hardMode, stack, pos);
   });
 
