@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound, soundStopped } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Mart.png";
@@ -21,6 +22,7 @@ export function setup(host, hardMode) {
     randomDirX: 0,
     randomDirY: 0,
 
+    sound: null,
     wobbleTime: 0,
     _targetDuration: 9 + Math.random(),
   };
@@ -93,6 +95,31 @@ export function setup(host, hardMode) {
 
     state.x += (dx + wx) * state.speed * dt;
     state.y += (dy + wy) * state.speed * dt;
+
+    if (!soundStopped) {
+      if (dist <= 500) {
+        if (!state.sound)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Mart/Mart_Ambience.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
   }
 
   function draw(ctx) {

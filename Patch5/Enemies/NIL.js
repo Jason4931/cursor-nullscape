@@ -87,7 +87,8 @@ export function setup(host, deafMode) {
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
         if (Math.hypot(dx0, dy0) <= state.size * 0.4) {
-          if (!soundStopped) playSound("./ASSET/Sound/Enemies/NIL/Nil-kill.mp3");
+          if (!soundStopped)
+            playSound("./ASSET/Sound/Enemies/NIL/Nil-kill.mp3");
           death("NIL");
           return;
         }
@@ -182,11 +183,20 @@ export function setup(host, deafMode) {
           state.sound = null;
         }
       }
+    } else {
+      state.soundState = 0;
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
     }
 
     if (dist <= 220) {
       state.attacking = true;
-      if (!soundStopped) playSound(`./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3?t=${Math.floor(Date.now() / 60000)}`);
+      if (!soundStopped)
+        playSound(
+          `./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3?t=${Math.floor(Date.now() / 60000)}`,
+        );
       state.attackTimer = 0;
 
       const adx = mouse.x - state.x;

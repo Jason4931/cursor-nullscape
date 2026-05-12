@@ -105,9 +105,9 @@ export function setup(host, stack, hardMode) {
     }
 
     const sounddist = Math.hypot(mouse.x - state.x, mouse.y - state.y);
-    if (sounddist <= 500) {
-      if (!state.sound)
-        if (!soundStopped)
+    if (!soundStopped) {
+      if (sounddist <= 500) {
+        if (!state.sound)
           state.sound = playSound(
             `./ASSET/Sound/Enemies/Skinwalker/Skinwalker.ogg`,
             undefined,
@@ -117,6 +117,12 @@ export function setup(host, stack, hardMode) {
               state.sound = null;
             },
           );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
     } else {
       if (state.sound) {
         state.sound();

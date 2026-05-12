@@ -3,6 +3,8 @@ import { playSound } from "../main.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
+const marker = new Image();
+marker.src = "./ASSET/Misc/ICBMMarker.png";
 
 export function setup(host, hardMode) {
   const state = {
@@ -24,6 +26,7 @@ export function setup(host, hardMode) {
 
     lockPosX: 0,
     lockPosY: 0,
+    markerRotation: 0,
 
     initialized: false,
 
@@ -58,6 +61,7 @@ export function setup(host, hardMode) {
     state.timer += dt;
 
     if (state.phase === "lock") {
+      state.markerRotation -= dt * 4;
       if (hardMode && state.timer >= 0.1) {
         const predictionMultiplier = 1;
         const predictedX = mouse.x + state.velocityX * predictionMultiplier;
@@ -84,6 +88,9 @@ export function setup(host, hardMode) {
       }
 
       if (state.timer >= state.lockDuration) {
+        const fullTurn = Math.PI * 2;
+        state.markerRotation =
+          Math.ceil(state.markerRotation / fullTurn) * fullTurn;
         state.timer = 0;
         state.phase = "deploy";
         state.icbmstrikeSound = false;
@@ -151,32 +158,17 @@ export function setup(host, hardMode) {
         state.phase === "idle") &&
       state.circleOpacity >= 0
     ) {
-      const grad = ctx.createRadialGradient(
-        Math.round(state.lockPosX),
-        Math.round(state.lockPosY),
-        0,
-        Math.round(state.lockPosX),
-        Math.round(state.lockPosY),
-        Math.round(state.circleRadius),
-      );
-      grad.addColorStop(
-        0,
-        state.phase === "idle"
-          ? `rgba(255,0,0,${state.circleOpacity})`
-          : `rgba(255,0,0,0)`,
-      );
-      grad.addColorStop(1, `rgba(255,0,0,${state.circleOpacity})`);
-      ctx.fillStyle = grad;
+      ctx.save();
+      ctx.globalAlpha = state.circleOpacity;
 
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(state.lockPosX),
-        Math.round(state.lockPosY),
-        Math.round(state.circleRadius),
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
+      ctx.translate(Math.round(state.lockPosX), Math.round(state.lockPosY));
+
+      ctx.rotate(state.markerRotation);
+
+      const size = Math.round(state.circleRadius * 2);
+      ctx.drawImage(marker, -size / 2, -size / 2, size, size);
+
+      ctx.restore();
     }
 
     if (state.phase === "deploy" || state.phase === "idle") {

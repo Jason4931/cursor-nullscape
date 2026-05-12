@@ -10,8 +10,8 @@ voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 v bell
 v baby
 v husk
-x icbm
-x mart
+v icbm
+v mart
 x springer
 x flesh
 x nil

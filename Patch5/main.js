@@ -181,6 +181,14 @@ export let despawnCatalyst = false;
 export let voidbreakerCount = 0;
 export let voidbreakerActive;
 export let bellHit = { count: 0 };
+let martStack = [];
+export function MartStack(act, v) {
+  if (act == "get") {
+    return martStack;
+  } else if (act == "set") {
+    martStack = v;
+  }
+}
 export function setVoidbreakerActive(v) {
   voidbreakerActive = v;
 }
@@ -215,7 +223,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Mart",
-    spawn: () => spawnMart(entityHost, hardMode),
+    spawn: () => spawnMart(entityHost, hardMode, 1),
     start: 0,
     src: "./ASSET/Enemies/Mart.png",
     desc: "I am Mart! The waterimp!",
@@ -789,7 +797,7 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "oneofeach") {
     spawnBell(entityHost, hardMode, immunebell);
-    spawnMart(entityHost, hardMode);
+    spawnMart(entityHost, hardMode, 1);
     spawnBaby(entityHost, hardMode);
     spawnICBM(entityHost, hardMode);
     spawnHusk(entityHost, huskCount++, hardMode);
@@ -3963,6 +3971,41 @@ function loop(now) {
       }
     });
   }
+
+  //mart merge
+  const toRemove = new Set();
+  const toSpawn = [];
+  // console.log(martStack);
+
+  for (let i = 0; i < martStack.length; i++) {
+    for (let j = i + 1; j < martStack.length; j++) {
+      const a = martStack[i];
+      const b = martStack[j];
+
+      if (toRemove.has(a) || toRemove.has(b)) continue;
+
+      const dx = a.state.x - b.state.x;
+      const dy = a.state.y - b.state.y;
+      const dist = Math.hypot(dx, dy);
+
+      const mergeDist = a.state.size;
+      if (dist <= mergeDist) {
+        toRemove.add(a);
+        toRemove.add(b);
+
+        const newStack = (a.state._stack || 1) + (b.state._stack || 1);
+
+        toSpawn.push([newStack, { x: a.state.x, y: a.state.y }]);
+      }
+    }
+  }
+  toRemove.forEach((e) => {
+    e.unregister();
+    martStack = martStack.filter((e) => !toRemove.has(e));
+  });
+  toSpawn.forEach(([stack, pos]) => {
+    spawnMart(entityHost, hardMode, stack, pos);
+  });
 
   //deathglow
   if (deathOpacity > 0) {

@@ -1,17 +1,19 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound, soundStopped, MartStack } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Mart.png";
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
     opacity: 1,
 
     x: 0,
     y: 0,
 
-    size: 75,
-    speed: hardMode ? 80 : 40,
+    size: (0.6 + stack * 0.4) * 75,
+    speed: (0.6 + stack * 0.4) * (hardMode ? 80 : 40),
+    _stack: stack,
 
     initialized: false,
 
@@ -21,26 +23,37 @@ export function setup(host, hardMode) {
     randomDirX: 0,
     randomDirY: 0,
 
+    sound: null,
     wobbleTime: 0,
+    ovalRotation: 0,
     _targetDuration: 9 + Math.random(),
   };
+
+  const entry = { state, unregister: null };
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     if (!state.initialized) {
-      const cx = host.canvas.width / 2;
-      const cy = host.canvas.height / 2;
+      if (position) {
+        state.x = position.x;
+        state.y = position.y;
+      } else {
+        const cx = host.canvas.width / 2;
+        const cy = host.canvas.height / 2;
 
-      const r = Math.random() * 400;
-      const a = Math.random() * Math.PI * 2;
+        const r = Math.random() * 400;
+        const a = Math.random() * Math.PI * 2;
 
-      state.x = cx + Math.cos(a) * r;
-      state.y = cy + Math.sin(a) * r;
-
+        state.x = cx + Math.cos(a) * r;
+        state.y = cy + Math.sin(a) * r;
+      }
       state.initialized = true;
     }
 
+    if (stack >= 6) {
+      state.ovalRotation += dt * 2;
+    }
     state.modeTimer += dt;
     state.wobbleTime += dt;
 
@@ -93,6 +106,31 @@ export function setup(host, hardMode) {
 
     state.x += (dx + wx) * state.speed * dt;
     state.y += (dy + wy) * state.speed * dt;
+
+    if (!soundStopped) {
+      if (dist <= 500) {
+        if (!state.sound)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Mart/Mart_Ambience.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
   }
 
   function draw(ctx) {
@@ -100,6 +138,26 @@ export function setup(host, hardMode) {
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
+
+    if (stack >= 6) {
+      ctx.save();
+
+      ctx.translate(Math.round(state.x), Math.round(state.y));
+
+      ctx.rotate(state.ovalRotation);
+
+      const w = state.size * 0.8;
+      const h = state.size;
+
+      ctx.beginPath();
+      ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2);
+
+      ctx.strokeStyle = "rgba(67,174,255,0.8)";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.restore();
+    }
 
     ctx.drawImage(
       enemy,
@@ -113,5 +171,15 @@ export function setup(host, hardMode) {
   }
 
   const unregister = host.register({ update, draw });
-  return unregister;
+  entry.unregister = unregister;
+
+  const list = MartStack("get");
+  list.push(entry);
+  MartStack("set", list);
+
+  return () => {
+    const list = MartStack("get").filter((e) => e !== entry);
+    MartStack("set", list);
+    unregister();
+  };
 }
