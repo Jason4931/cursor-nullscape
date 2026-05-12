@@ -143,18 +143,25 @@ export function setup(host, hardMode, stack = 1, position = null) {
       ctx.save();
 
       ctx.translate(Math.round(state.x), Math.round(state.y));
-
       ctx.rotate(state.ovalRotation);
 
       const w = state.size * 0.8;
       const h = state.size;
 
+      const grad = ctx.createRadialGradient(
+        0, 0, 0,
+        0, 0, Math.max(w, h) / 2
+      );
+
+      grad.addColorStop(0, "rgba(67,174,255,0)");
+      grad.addColorStop(0.5, "rgba(67,174,255,0)");
+      grad.addColorStop(1, "rgba(67,174,255,0.75)");
+
       ctx.beginPath();
       ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2);
 
-      ctx.strokeStyle = "rgba(67,174,255,0.8)";
-      ctx.lineWidth = 3;
-      ctx.stroke();
+      ctx.fillStyle = grad;
+      ctx.fill();
 
       ctx.restore();
     }
