@@ -19,6 +19,7 @@ export function setup(host, hardMode) {
     idleDuration: 5,
     idleGrowTime: 3,
     ringMaxRadius: hardMode ? 1500 : 1000,
+    innerRingDist: 100,
     flashAlpha: 0,
 
     exitDuration: 2.4,
@@ -119,11 +120,24 @@ export function setup(host, hardMode) {
       const dist = Math.hypot(cx, cy);
 
       const thickness = 25;
+      let insideRing = false;
 
-      const inner = ringRadius - thickness;
-      const outer = ringRadius;
+      if (state.timer < state.idleGrowTime) {
+        const inner = ringRadius - thickness;
+        const outer = ringRadius;
 
-      const insideRing = dist >= inner && dist <= outer;
+        insideRing = dist >= inner && dist <= outer;
+
+        if (hardMode) {
+          const innerRingRadius = ringRadius - state.innerRingDist;
+          const innerInner = innerRingRadius - thickness * 8;
+          const innerOuter = innerRingRadius;
+          const insideInnerRing = dist >= innerInner && dist <= innerOuter;
+          if (insideInnerRing) {
+            death("Springer");
+          }
+        }
+      }
 
       if (insideRing && !state.wasInsideRing) {
         const power01 = clamp(1 - growT, 0, 1);
@@ -245,24 +259,59 @@ export function setup(host, hardMode) {
         Math.round(state.ringCenterY),
       );
 
-      const grad = ctx.createRadialGradient(
-        0,
-        0,
-        Math.round(Math.max(0, radius - thickness)),
-        0,
-        0,
-        Math.round(radius),
-      );
+      const layers = 5;
+      const baseAlpha = (1 - growT) * 0.3; // ~10% like you wanted
 
-      grad.addColorStop(0, `rgba(255,255,255,0)`);
-      grad.addColorStop(0.7, `rgba(255,255,255,0)`);
-      grad.addColorStop(0.71, `rgba(255,255,255,${alpha})`);
-      grad.addColorStop(1, `rgba(255,255,255,${alpha})`);
+      for (let l = 0; l < layers; l++) {
+        const offset = l * 6;
+        const waveAmp = 6 + l * 1.5;
+        const waveFreq = 6;
 
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(0, 0, Math.round(radius), 0, Math.PI * 2);
-      ctx.fill();
+        const r = radius - offset;
+
+        ctx.beginPath();
+
+        for (let a = 0; a <= Math.PI * 2 + 0.1; a += 0.1) {
+          const wave = Math.sin(a * waveFreq + state.timer * 4 + l) * waveAmp;
+
+          const rr = r + wave;
+
+          const x = Math.cos(a) * rr;
+          const y = Math.sin(a) * rr;
+
+          if (a === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        ctx.closePath();
+
+        ctx.strokeStyle = `rgba(255,255,255,${baseAlpha})`;
+        ctx.lineWidth = 20;
+        ctx.stroke();
+      }
+
+      if (hardMode) {
+        const innerRadius = Math.max(0, radius - state.innerRingDist);
+
+        const grad2 = ctx.createRadialGradient(
+          0,
+          0,
+          Math.round(Math.max(0, innerRadius - thickness)),
+          0,
+          0,
+          Math.round(innerRadius),
+        );
+
+        grad2.addColorStop(0, `rgba(255,0,0,0)`);
+        grad2.addColorStop(0.7, `rgba(255,0,0,0)`);
+        grad2.addColorStop(0.71, `rgba(255,0,0,${alpha})`);
+        grad2.addColorStop(1, `rgba(255,0,0,${alpha})`);
+
+        ctx.fillStyle = grad2;
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.round(innerRadius), 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.restore();
     }

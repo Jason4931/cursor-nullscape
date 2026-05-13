@@ -119,11 +119,14 @@ export function setup(host, hardMode) {
       const dist = Math.hypot(cx, cy);
 
       const thickness = 25;
+      let insideRing = false;
 
-      const inner = ringRadius - thickness;
-      const outer = ringRadius;
+      if (state.timer < state.idleGrowTime) {
+        const inner = ringRadius - thickness;
+        const outer = ringRadius;
 
-      const insideRing = dist >= inner && dist <= outer;
+        insideRing = dist >= inner && dist <= outer;
+      }
 
       if (insideRing && !state.wasInsideRing) {
         const power01 = clamp(1 - growT, 0, 1);
