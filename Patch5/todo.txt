@@ -12,8 +12,8 @@ v baby
 v husk
 v icbm
 v mart
-x springer
-x flesh
+v springer
+v flesh
 x nil
 x operator
 x guardian

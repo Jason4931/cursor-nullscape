@@ -643,7 +643,8 @@ window.addEventListener("keydown", (e) => {
   }
   if (
     (e.key.toLowerCase() === "e" || e.key.toLowerCase() === "r") &&
-    abilityCooldown == 0
+    abilityCooldown == 0 &&
+    !slowness
   ) {
     ability = true;
     abilityCooldown = 150;
