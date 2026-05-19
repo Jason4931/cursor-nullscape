@@ -8,12 +8,26 @@ import {
   moveCamera,
 } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Bell.png";
+const Bell_New_Idle_Animated = [];
+for (let i = 1; i <= 35; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Bell/Bell_New_Idle_Animated/Layer ${i}.png`;
+  Bell_New_Idle_Animated.push(img);
+}
+const Bell_Ring_Anim = [];
+for (let i = 1; i <= 24; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Bell/Bell_Ring_Anim/Layer ${i}.png`;
+  Bell_Ring_Anim.push(img);
+}
 
 export function setup(host, hardMode, immunebell) {
   const state = {
     opacity: 1,
+    layers: Bell_New_Idle_Animated,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false],
 
     x: 0,
     y: 0,
@@ -24,8 +38,6 @@ export function setup(host, hardMode, immunebell) {
     size: 100,
     bellScale: 0,
     circleScale: 0,
-    rotation: 0,
-    rotationTime: 0,
 
     phase: "appear",
     timer: 0,
@@ -57,9 +69,9 @@ export function setup(host, hardMode, immunebell) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    state.rotationTime += dt;
-
-    state.rotation = Math.sin(state.rotationTime * 1.2) * 0.15;
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     const half = (state.size * state.bellScale) / 2;
     const dx = mouse.x - state.x;
@@ -104,10 +116,22 @@ export function setup(host, hardMode, immunebell) {
 
     if (state.hitActive) {
       state.hitTimer += dt;
+      if (!state.layerChange[0]) {
+        state.layers = Bell_Ring_Anim;
+        state.layer = state.layers.length;
+        state.layerChange[0] = true;
+      }
+      if (state.hitTimer >= 1.2 && !state.layerChange[1]) {
+        state.layers = Bell_New_Idle_Animated;
+        state.layer = state.layers.length;
+        state.layerChange[1] = true;
+      }
       if (state.hitTimer >= state.hitCooldown) {
         state.hitActive = false;
         setTimeout(() => {
           toggleBellLeniency(false);
+          state.layerChange[0] = false;
+          state.layerChange[1] = false;
         }, 1000);
       }
     }
@@ -233,8 +257,7 @@ export function setup(host, hardMode, immunebell) {
       const s = Math.round(state.size * state.bellScale);
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.rotate(state.rotation);
-      ctx.drawImage(enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
+      ctx.drawImage(state.enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
       ctx.restore();
     }
 

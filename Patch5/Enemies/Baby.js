@@ -1,12 +1,38 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Baby.png";
+const Babyidle = [];
+for (let i = 1; i <= 8; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Baby/Babyidle/Layer ${i}.png`;
+  Babyidle.push(img);
+}
+const BabyLockOnTarget = [];
+for (let i = 1; i <= 15; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Baby/BabyLockOnTarget/Layer ${i}.png`;
+  BabyLockOnTarget.push(img);
+}
+const Babytransition = [];
+for (let i = 1; i <= 4; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Baby/Babytransition/Layer ${i}.png`;
+  Babytransition.push(img);
+}
+const Babycharge = [];
+for (let i = 1; i <= 13; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Baby/Babycharge/Layer ${i}.png`;
+  Babycharge.push(img);
+}
 
 export function setup(host, hardMode) {
   const state = {
     opacity: 1,
+    layers: Babyidle,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false, false, false, false],
 
     x: 0,
     y: 0,
@@ -55,9 +81,18 @@ export function setup(host, hardMode) {
       state.initialized = true;
     }
 
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
+
     state.timer += dt;
 
     if (state.state === "idle") {
+      if (!state.layerChange[0]) {
+        state.layers = Babyidle;
+        state.layer = state.layers.length;
+        state.layerChange[0] = true;
+      }
       if (state.timer >= 0.75) {
         state.timer = 0;
         state.state = "indicator";
@@ -71,6 +106,11 @@ export function setup(host, hardMode) {
         state.dirY = dy / d;
       }
     } else if (state.state === "indicator") {
+      if (!state.layerChange[1]) {
+        state.layers = BabyLockOnTarget;
+        state.layer = state.layers.length;
+        state.layerChange[1] = true;
+      }
       if (state.timer >= 0.75) {
         state.timer = 0;
         state.state = "charging";
@@ -103,7 +143,26 @@ export function setup(host, hardMode) {
         }
       }
     } else if (state.state === "charging") {
+      if (!state.layerChange[2]) {
+        state.layers = Babytransition;
+        state.layer = state.layers.length;
+        state.layerChange[2] = true;
+      }
       state.chargeTime += dt;
+      if (state.chargeTime >= 0.2 && !state.layerChange[3]) {
+        state.layers = Babycharge;
+        state.layer = state.layers.length;
+        state.layerChange[3] = true;
+      }
+      if (
+        !hardMode &&
+        state.chargeTime >= state.chargeDuration - 0.2 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Babytransition;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime / state.chargeDuration;
       if (t > 1) t = 1;
@@ -133,10 +192,24 @@ export function setup(host, hardMode) {
 
           state.chargeTime2 = 0;
           state.chargeDuration2 = 0.75 + Math.random();
+        } else {
+          state.layerChange[0] = false;
+          state.layerChange[1] = false;
+          state.layerChange[2] = false;
+          state.layerChange[3] = false;
+          state.layerChange[4] = false;
         }
       }
     } else if (state.state === "charging2") {
       state.chargeTime2 += dt;
+      if (
+        state.chargeTime2 >= state.chargeDuration2 - 0.2 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Babytransition;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime2 / state.chargeDuration2;
       if (t > 1) t = 1;
@@ -157,6 +230,11 @@ export function setup(host, hardMode) {
       if (t >= 1) {
         state.state = "idle";
         state.timer = 0;
+        state.layerChange[0] = false;
+        state.layerChange[1] = false;
+        state.layerChange[2] = false;
+        state.layerChange[3] = false;
+        state.layerChange[4] = false;
       }
     }
   }
@@ -215,28 +293,10 @@ export function setup(host, hardMode) {
       }
     }
 
-    const jitter =
-      state.state === "charging" || state.state === "charging2"
-        ? 2
-        : state.state === "indicator"
-          ? 1
-          : 0.5;
-    const rotJitter =
-      state.state === "charging" || state.state === "charging2"
-        ? 0.16
-        : state.state === "indicator"
-          ? 0.08
-          : 0.04;
-
-    const drawX = Math.round(state.x + (Math.random() - 0.5) * jitter * 2);
-    const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
-    const rot = (Math.random() - 0.5) * rotJitter * 2;
-
     ctx.save();
-    ctx.translate(drawX, drawY);
-    ctx.rotate(rot);
+    ctx.translate(Math.round(state.x), Math.round(state.y));
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(-state.size / 2),
       Math.round(-state.size / 2),
       Math.round(state.size),

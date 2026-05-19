@@ -232,7 +232,7 @@ const ENTITY_POOL = [
     name: "Baby",
     spawn: () => spawnBaby(entityHost, hardMode),
     start: 0,
-    src: "./ASSET/Enemies/BabyIcon.png",
+    src: "./ASSET/Enemies/Baby.png",
     desc: "Dashes in a straight line towards you.",
   },
   {
@@ -821,7 +821,7 @@ topLeftInput.addEventListener("input", () => {
     spawnCatalystIntro();
     registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
     registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
-    registerEntitySpawn("Baby", "./ASSET/Enemies/BabyIcon.png");
+    registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
     registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
     registerEntitySpawn("Husk", "./ASSET/Enemies/Husk.png");
     registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");

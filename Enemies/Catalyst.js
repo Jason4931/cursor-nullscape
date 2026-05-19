@@ -9,7 +9,6 @@ import {
 
 const layers = [];
 for (let i = 1; i <= 8; i++) {
-  1;
   const img = new Image();
   img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
   layers.push(img);
