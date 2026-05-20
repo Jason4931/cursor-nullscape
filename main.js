@@ -3205,12 +3205,13 @@ function loop(now) {
 
   //tips
   if (
-    tipstimer > 0 && localStorage.getItem("highest-level-reached")
+    tipstimer > 0 &&
+    (localStorage.getItem("highest-level-reached")
       ? parseInt(
           localStorage.getItem("highest-level-reached").split(" ")[1],
           10,
         ) < 10
-      : true
+      : true)
   ) {
     tipstimer--;
     ctx.save();
