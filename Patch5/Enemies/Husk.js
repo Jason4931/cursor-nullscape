@@ -1,12 +1,28 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound, soundStopped } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Husk.png";
+const Huskback = [new Image()];
+Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
+const Huskfront = [new Image()];
+Huskfront[0].src = "./ASSET/Enemies/Husk/Husk-front.png";
+const Huskright = [new Image()];
+Huskright[0].src = "./ASSET/Enemies/Husk/Husk-right.png";
+const Huskleft = [new Image()];
+Huskleft[0].src = "./ASSET/Enemies/Husk/Husk-left.png";
+const Huskspawn = [];
+for (let i = 1; i <= 2; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Husk/Huskspawn/Layer ${i}.png`;
+  Huskspawn.push(img);
+}
 
 export function setup(host, stack, hardMode) {
   const state = {
     opacity: 1,
+    layers: Huskspawn,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false, false, false],
 
     x: 0,
     y: 0,
@@ -14,6 +30,7 @@ export function setup(host, stack, hardMode) {
     size: 50,
 
     initialized: false,
+    whiteInit: false,
 
     delay: 0,
     delayTarget: 0,
@@ -46,6 +63,10 @@ export function setup(host, stack, hardMode) {
           "./ASSET/Sound/Enemies/Husk/Skinwalker_-_OhNoSkinwalker_v2.ogg",
         );
     }
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     state.history.push({
       x: mouse.x,
@@ -84,11 +105,53 @@ export function setup(host, stack, hardMode) {
     const dist = Math.hypot(dx, dy);
 
     if (dist > 0.001) {
+      if (!state.whiteInit) state.whiteInit = true;
       dx /= dist;
       dy /= dist;
       state.dirX = dx;
       state.dirY = dy;
 
+      if (Math.abs(state.dirX) > Math.abs(state.dirY)) {
+        if (state.dirX > 0) {
+          if (!state.layerChange[1]) {
+            state.layers = Huskright;
+            state.layer = state.layers.length;
+            state.layerChange[0] = false;
+            state.layerChange[1] = true;
+            state.layerChange[2] = false;
+            state.layerChange[3] = false;
+          }
+        } else {
+          if (!state.layerChange[2]) {
+            state.layers = Huskleft;
+            state.layer = state.layers.length;
+            state.layerChange[0] = false;
+            state.layerChange[1] = false;
+            state.layerChange[2] = true;
+            state.layerChange[3] = false;
+          }
+        }
+      } else {
+        if (state.dirY > 0) {
+          if (!state.layerChange[0]) {
+            state.layers = Huskfront;
+            state.layer = state.layers.length;
+            state.layerChange[0] = true;
+            state.layerChange[1] = false;
+            state.layerChange[2] = false;
+            state.layerChange[3] = false;
+          }
+        } else {
+          if (!state.layerChange[3]) {
+            state.layers = Huskback;
+            state.layer = state.layers.length;
+            state.layerChange[0] = false;
+            state.layerChange[1] = false;
+            state.layerChange[2] = false;
+            state.layerChange[3] = true;
+          }
+        }
+      }
       const move = 10000 * dt;
 
       if (dist <= move) {
@@ -107,6 +170,10 @@ export function setup(host, stack, hardMode) {
           {
             x: state.x + px * state.pairOffset,
             y: state.y + py * state.pairOffset,
+          },
+          {
+            x: state.x,
+            y: state.y,
           },
           {
             x: state.x - px * state.pairOffset,
@@ -177,13 +244,44 @@ export function setup(host, stack, hardMode) {
         ]
       : [{ x: state.x, y: state.y }];
     for (const p of positions) {
-      ctx.drawImage(
-        enemy,
-        Math.round(p.x - state.size / 2),
-        Math.round(p.y - state.size / 2),
-        Math.round(state.size),
-        Math.round(state.size),
-      );
+      if (!state.whiteInit) {
+        const grad = ctx.createRadialGradient(
+          Math.round(p.x),
+          Math.round(p.y),
+          0,
+          Math.round(p.x),
+          Math.round(p.y),
+          state.size,
+        );
+
+        grad.addColorStop(0, "rgba(255,255,255,0.8)");
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.beginPath();
+        ctx.arc(Math.round(p.x), Math.round(p.y), state.size, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        const height = state.size;
+        const width = state.size;
+        ctx.drawImage(
+          state.enemy,
+          Math.round(p.x - width / 2),
+          Math.round(p.y - height / 2),
+          width,
+          height,
+        );
+      } else {
+        const height = state.size * 1.2;
+        const width = state.size * (2 / 3) * 1.2;
+        ctx.drawImage(
+          state.enemy,
+          Math.round(p.x - width / 2),
+          Math.round(p.y - height / 2),
+          width,
+          height,
+        );
+      }
     }
 
     ctx.restore();
