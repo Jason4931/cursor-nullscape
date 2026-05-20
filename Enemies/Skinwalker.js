@@ -14,6 +14,7 @@ export function setup(host, stack, hardMode) {
     size: 50,
 
     initialized: false,
+    whiteInit: false,
 
     delay: 0,
     delayTarget: 0,
@@ -81,6 +82,7 @@ export function setup(host, stack, hardMode) {
     const dist = Math.hypot(dx, dy);
 
     if (dist > 0.001) {
+      if (!state.whiteInit) state.whiteInit = true;
       dx /= dist;
       dy /= dist;
 
@@ -137,6 +139,53 @@ export function setup(host, stack, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
+    if (!state.whiteInit) {
+      const grad = ctx.createRadialGradient(
+        Math.round(state.x),
+        Math.round(state.y),
+        0,
+        Math.round(state.x),
+        Math.round(state.y),
+        state.size,
+      );
+
+      grad.addColorStop(0, "rgba(255,255,255,0.75)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        state.size,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = grad;
+      ctx.fill();
+    } else {
+      const grad = ctx.createRadialGradient(
+        Math.round(state.x),
+        Math.round(state.y),
+        0,
+        Math.round(state.x),
+        Math.round(state.y),
+        state.size * 0.75,
+      );
+
+      grad.addColorStop(0, "rgba(255,255,255,0.1)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.x),
+        Math.round(state.y),
+        state.size * 0.75,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
     ctx.drawImage(
       enemy,
       Math.round(state.x - state.size / 2),

@@ -254,7 +254,7 @@ export function setup(host, stack, hardMode) {
           state.size,
         );
 
-        grad.addColorStop(0, "rgba(255,255,255,0.8)");
+        grad.addColorStop(0, "rgba(255,255,255,0.75)");
         grad.addColorStop(1, "rgba(255,255,255,0)");
 
         ctx.beginPath();
@@ -272,8 +272,31 @@ export function setup(host, stack, hardMode) {
           height,
         );
       } else {
-        const height = state.size * 1.2;
-        const width = state.size * (2 / 3) * 1.2;
+        const grad = ctx.createRadialGradient(
+          Math.round(p.x),
+          Math.round(p.y),
+          0,
+          Math.round(p.x),
+          Math.round(p.y),
+          state.size * 0.75,
+        );
+
+        grad.addColorStop(0, "rgba(255,255,255,0.1)");
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(p.x),
+          Math.round(p.y),
+          state.size * 0.75,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        const height = state.size * 1.25;
+        const width = state.size * (2 / 3) * 1.25;
         ctx.drawImage(
           state.enemy,
           Math.round(p.x - width / 2),
