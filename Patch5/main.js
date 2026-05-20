@@ -4071,7 +4071,7 @@ function loop(now) {
       ? parseInt(
           localStorage.getItem("highest-level-reached").split(" ")[1],
           10,
-        ) < 5
+        ) < 10
       : true
   ) {
     tipstimer--;
