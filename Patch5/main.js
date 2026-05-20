@@ -678,6 +678,7 @@ window.addEventListener("keydown", (e) => {
 let disableProgression = false;
 let firstDisableProgression = false;
 let cheattimer = 0;
+let tipstimer = 0;
 const altars = [
   { name: "chance", activate: () => activateChance() },
   { name: "echo", activate: () => activateEcho() },
@@ -4064,6 +4065,83 @@ function loop(now) {
     ctx.fill();
   }
 
+  //tips
+  if (
+    tipstimer > 0 && localStorage.getItem("highest-level-reached")
+      ? parseInt(
+          localStorage.getItem("highest-level-reached").split(" ")[1],
+          10,
+        ) < 5
+      : true
+  ) {
+    tipstimer--;
+    ctx.save();
+
+    const boxHeight = 100;
+
+    const boxX = cam.x + w * 0.25;
+    const boxY = cam.y + h - boxHeight * 1.5;
+
+    let text;
+    let text2;
+    let color = "#0a3cff";
+    if (tipstimer > 726) {
+      text = "Use your cursor to move around.";
+      if (tipstimer > 898) color = "#ff0a0a";
+      if (tipstimer < 897 && tipstimer > 895) color = "#ff0a0a";
+    } else if (tipstimer > 552) {
+      text = "Hold SHIFT or CTRL to slow down movement.";
+      text2 = "Alternatively use Reduced motion option.";
+      if (tipstimer > 724) color = "#ff0a0a";
+      if (tipstimer < 723 && tipstimer > 721) color = "#ff0a0a";
+    } else if (tipstimer > 378) {
+      text = "Collect the gifts you see scattered across the map.";
+      text2 = "Enemies will appear soon.";
+      if (tipstimer > 550) color = "#ff0a0a";
+      if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
+    } else if (tipstimer > 204) {
+      text = "Press E or R to parry a death.";
+      text2 = "Use your ability wisely.";
+      if (tipstimer > 376) color = "#ff0a0a";
+      if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
+    } else if (tipstimer > 30) {
+      text = "Hover to the enemy icon above to avoid death.";
+      text2 = "Press M to open/close the topbar.";
+      if (tipstimer > 202) color = "#ff0a0a";
+      if (tipstimer < 201 && tipstimer > 199) color = "#ff0a0a";
+    } else {
+      text = "Goodluck.";
+      if (tipstimer > 28) color = "#ff0a0a";
+      if (tipstimer < 27 && tipstimer > 25) color = "#ff0a0a";
+    }
+
+    ctx.globalAlpha = tipstimer > 30 ? 1 : tipstimer / 30;
+
+    ctx.fillStyle = `${color}80`;
+    ctx.fillRect(boxX, boxY, w * 0.5, boxHeight);
+    ctx.strokeStyle = color;
+    ctx.strokeRect(boxX, boxY, w * 0.5, boxHeight);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+
+    ctx.font = "20px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff";
+    if (!text2) {
+      ctx.strokeText(text, boxX + w * 0.25, boxY + boxHeight / 2);
+      ctx.fillText(text, boxX + w * 0.25, boxY + boxHeight / 2);
+    } else {
+      ctx.strokeText(text, boxX + w * 0.25, boxY + boxHeight / 2 - 10);
+      ctx.fillText(text, boxX + w * 0.25, boxY + boxHeight / 2 - 10);
+      ctx.strokeText(text2, boxX + w * 0.25, boxY + boxHeight / 2 + 20);
+      ctx.fillText(text2, boxX + w * 0.25, boxY + boxHeight / 2 + 20);
+    }
+
+    ctx.restore();
+  }
+
   //cheat
   const zoom = window.outerWidth / window.document.documentElement.clientWidth;
   if ((zoom > 1.25 || zoom < 0.75) && cheatDetector) disableProgression = true;
@@ -4145,6 +4223,7 @@ const unlock = () => {
   }
   if (windowClicked) return;
   windowClicked = true;
+  tipstimer = 900;
   loop();
 };
 window.addEventListener("click", unlock);
