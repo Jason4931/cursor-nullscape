@@ -1,12 +1,28 @@
 import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Springer.png";
+const Springerback = new Image();
+Springerback.src = "./ASSET/Enemies/Springer/Springer-back.png";
+const Springerfront = new Image();
+Springerfront.src = "./ASSET/Enemies/Springer/Springer-front.png";
+const Springerright = new Image();
+Springerright.src = "./ASSET/Enemies/Springer/Springer-right.png";
+const Springerleft = new Image();
+Springerleft.src = "./ASSET/Enemies/Springer/Springer-left.png";
+const Springerbackglow = new Image();
+Springerbackglow.src = "./ASSET/Enemies/Springer/Springer-back-glow.png";
+const Springerfrontglow = new Image();
+Springerfrontglow.src = "./ASSET/Enemies/Springer/Springer-front-glow.png";
+const Springerrightglow = new Image();
+Springerrightglow.src = "./ASSET/Enemies/Springer/Springer-right-glow.png";
+const Springerleftglow = new Image();
+Springerleftglow.src = "./ASSET/Enemies/Springer/Springer-left-glow.png";
 
 export function setup(host, hardMode) {
   const state = {
     opacity: 1,
+    enemy: Springerleft,
+    enemyGlow: Springerleftglow,
 
     size: 100,
 
@@ -69,6 +85,20 @@ export function setup(host, hardMode) {
     state.spriteAlpha = 0;
     state.phase = "landing";
     state.wasInsideRing = false;
+    const randDir = Math.random();
+    if (randDir < 0.2) {
+      state.enemy = Springerback;
+      state.enemyGlow = Springerbackglow;
+    } else if (randDir < 0.4) {
+      state.enemy = Springerfront;
+      state.enemyGlow = Springerfrontglow;
+    } else if (randDir < 0.7) {
+      state.enemy = Springerright;
+      state.enemyGlow = Springerrightglow;
+    } else {
+      state.enemy = Springerleft;
+      state.enemyGlow = Springerleftglow;
+    }
 
     playSound("./ASSET/Sound/Enemies/Springer/Springer_-_LockOn.ogg");
   }
@@ -220,8 +250,8 @@ export function setup(host, hardMode) {
       );
       ctx.fill("evenodd");
 
-      const markW = 8;
-      const markH = 28;
+      const markW = 14;
+      const markH = 40;
       const rot = state.timer * 1.5;
 
       ctx.save();
@@ -235,12 +265,13 @@ export function setup(host, hardMode) {
       for (let i = 0; i < 4; i++) {
         ctx.save();
         ctx.rotate((Math.PI / 2) * i);
-        ctx.fillRect(
-          Math.round(-markW / 2),
-          Math.round(-outerR - markH / 2),
-          markW,
-          markH,
-        );
+        ctx.beginPath();
+        ctx.moveTo(0, -markH / 2 - outerR);
+        ctx.lineTo(markW / 2, -outerR);
+        ctx.lineTo(0, markH / 2 - outerR);
+        ctx.lineTo(-markW / 2, -outerR);
+        ctx.closePath();
+        ctx.fill();
         ctx.restore();
       }
 
@@ -329,43 +360,49 @@ export function setup(host, hardMode) {
         const cx = Math.round(state.ringCenterX);
         const cy = Math.round(state.ringCenterY - state.size / 3);
 
-        const s1 = Math.round(s * 1.05);
-        ctx.drawImage(
-          enemy,
-          Math.round(cx - (s1 * 1.035) / 2),
-          Math.round(cy - (s1 * 0.95) / 2),
-          Math.round(s1 * 1.025),
-          Math.round(s1 * 0.95),
-        );
+        const height = s * 1.5 * 1.05;
+        const width = s * 1.05;
+        const spriteY =
+          state.ringCenterY -
+          height / 2 -
+          state.size / 3 -
+          (state.phase === "landing"
+            ? Math.round((state.landingDuration - state.timer) * 20)
+            : state.phase === "exit"
+              ? Math.round(state.timer * 10)
+              : 0) -
+          20;
 
-        const s2 = Math.round(s * 1.1);
         ctx.drawImage(
-          enemy,
-          Math.round(cx - (s2 * 1.035) / 2),
-          Math.round(cy - (s2 * 0.95) / 2),
-          Math.round(s2 * 1.025),
-          Math.round(s2 * 0.95),
+          state.enemyGlow,
+          Math.round(state.ringCenterX - width / 2),
+          Math.round(spriteY),
+          Math.round(width),
+          Math.round(height),
         );
 
         ctx.restore();
       }
 
+      const height = s * 1.5;
+      const width = s;
       const spriteY =
         state.ringCenterY -
-        s / 2 -
+        height / 2 -
         state.size / 3 -
         (state.phase === "landing"
           ? Math.round((state.landingDuration - state.timer) * 20)
           : state.phase === "exit"
             ? Math.round(state.timer * 10)
-            : 0);
+            : 0) -
+        20;
 
       ctx.drawImage(
-        enemy,
-        Math.round(state.ringCenterX - s / 2),
+        state.enemy,
+        Math.round(state.ringCenterX - width / 2),
         Math.round(spriteY),
-        s,
-        s,
+        Math.round(width),
+        Math.round(height),
       );
 
       ctx.restore();

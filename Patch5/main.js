@@ -239,7 +239,7 @@ const ENTITY_POOL = [
     name: "ICBM",
     spawn: () => spawnICBM(entityHost, hardMode),
     start: 0,
-    src: "./ASSET/Enemies/ICBM.png",
+    src: "./ASSET/Enemies/ICBMIcon.png",
     desc: "Highly explosive, stay out of the blast.",
   },
   {
@@ -260,7 +260,7 @@ const ENTITY_POOL = [
     name: "Flesh",
     spawn: () => spawnFlesh(entityHost, hardMode),
     start: 500,
-    src: "./ASSET/Enemies/Flesh.png",
+    src: "./ASSET/Enemies/FleshIcon.png",
     desc: "Infects nearby tiles, hinders ability usage for a short duration.",
   },
   {
@@ -823,10 +823,10 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
     registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
     registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
-    registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
+    registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBMIcon.png");
     registerEntitySpawn("Husk", "./ASSET/Enemies/Husk.png");
     registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
-    registerEntitySpawn("Flesh", "./ASSET/Enemies/Flesh.png");
+    registerEntitySpawn("Flesh", "./ASSET/Enemies/FleshIcon.png");
     registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
     registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
     registerEntitySpawn("Dozer", "./ASSET/Enemies/Dozer.png");

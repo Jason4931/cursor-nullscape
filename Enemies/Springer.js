@@ -209,8 +209,8 @@ export function setup(host, hardMode) {
       );
       ctx.fill("evenodd");
 
-      const markW = 8;
-      const markH = 28;
+      const markW = 14;
+      const markH = 40;
       const rot = state.timer * 1.5;
 
       ctx.save();
@@ -224,12 +224,13 @@ export function setup(host, hardMode) {
       for (let i = 0; i < 4; i++) {
         ctx.save();
         ctx.rotate((Math.PI / 2) * i);
-        ctx.fillRect(
-          Math.round(-markW / 2),
-          Math.round(-outerR - markH / 2),
-          markW,
-          markH,
-        );
+        ctx.beginPath();
+        ctx.moveTo(0, -markH / 2 - outerR);
+        ctx.lineTo(markW / 2, -outerR);
+        ctx.lineTo(0, markH / 2 - outerR);
+        ctx.lineTo(-markW / 2, -outerR);
+        ctx.closePath();
+        ctx.fill();
         ctx.restore();
       }
 

@@ -87,7 +87,7 @@ export function setup(host, hardMode) {
         state.timer = 0;
         state.phase = "deploy";
         state.icbmstrikeSound = false;
-        state.startY = state.lockPosY - 100;
+        state.startY = state.lockPosY - 125;
         state.y = state.startY;
       }
     } else if (state.phase === "deploy") {

@@ -11,7 +11,7 @@ export function setup(host, hardMode) {
     opacity: 0,
     x: 0,
     y: 0,
-    size: 100,
+    size: 125,
     currentSize: 100,
     circleRadius: 40,
     maxCircleRadius: 210,
@@ -94,7 +94,7 @@ export function setup(host, hardMode) {
         state.timer = 0;
         state.phase = "deploy";
         state.icbmstrikeSound = false;
-        state.startY = state.lockPosY - 100;
+        state.startY = state.lockPosY - 125;
         state.y = state.startY;
       }
     } else if (state.phase === "deploy") {
@@ -119,7 +119,7 @@ export function setup(host, hardMode) {
       state.y = state.startY + (state.lockPosY - state.startY) * easeIn(t);
       state.opacity = easeIn(missileT);
       state.currentSize = state.size * (2 - easeIn(missileT));
-      state.rotation = -15 + -90 * (1 - easeOut(missileT));
+      state.rotation = -90 * (1 - easeOut(missileT));
 
       if (state.timer >= state.deployDuration) {
         const dx = mouse.x - state.lockPosX;

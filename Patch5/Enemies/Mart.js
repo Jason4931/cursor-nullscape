@@ -1,12 +1,19 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound, soundStopped, MartStack } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Mart.png";
+const Mart = [];
+for (let i = 1; i <= 24; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Mart/Layer ${i}.png`;
+  Mart.push(img);
+}
 
 export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
     opacity: 1,
+    layers: Mart,
+    enemy: null,
+    layer: 0,
 
     x: 0,
     y: 0,
@@ -50,6 +57,10 @@ export function setup(host, hardMode, stack = 1, position = null) {
       }
       state.initialized = true;
     }
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     if (stack >= 6) {
       state.ovalRotation += dt * 2;
@@ -148,10 +159,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
       const w = state.size * 0.8;
       const h = state.size;
 
-      const grad = ctx.createRadialGradient(
-        0, 0, 0,
-        0, 0, Math.max(w, h) / 2
-      );
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(w, h) / 2);
 
       grad.addColorStop(0, "rgba(67,174,255,0)");
       grad.addColorStop(0.5, "rgba(67,174,255,0)");
@@ -167,7 +175,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
     }
 
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),
