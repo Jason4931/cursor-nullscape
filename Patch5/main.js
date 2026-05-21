@@ -4073,7 +4073,8 @@ function loop(now) {
           localStorage.getItem("highest-level-reached").split(" ")[1],
           10,
         ) < 10
-      : true)
+      : true) &&
+    !disableProgression
   ) {
     tipstimer--;
     ctx.save();
