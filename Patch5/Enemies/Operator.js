@@ -171,7 +171,6 @@ export function setup(host, hardMode) {
       state.x = targetX;
       state.y = startY + (targetY - startY) * e;
       if (state.timer >= state.disableDuration) {
-        state.opacity = 1;
         enterIdle();
       }
     }
