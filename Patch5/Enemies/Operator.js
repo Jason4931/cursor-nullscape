@@ -160,14 +160,14 @@ export function setup(host, hardMode) {
     } else if (state.phase === "disable") {
       const cam = getCameraPos();
       const targetX = cam.x + window.innerWidth / 4;
-      const targetY = cam.y + window.innerHeight / 2 + 150;
+      const targetY = cam.y + window.innerHeight / 2 + 50;
 
       const t = Math.min(state.timer / state.disableDuration, 1);
       const e = easeIn(t);
 
       state.opacity = 1 - e;
 
-      const startY = targetY - 150;
+      const startY = targetY - 50;
       state.x = targetX;
       state.y = startY + (targetY - startY) * e;
       if (state.timer >= state.disableDuration) {
