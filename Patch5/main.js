@@ -34,7 +34,7 @@ import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { setup as spawnNIL } from "./Enemies/NIL.js";
 import { setup as spawnGuardian } from "./Enemies/Guardian.js";
-import { setup as spawnDozer } from "./Enemies/Dozer.js";
+import { setup as spawnOperator } from "./Enemies/Operator.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
@@ -267,7 +267,7 @@ const ENTITY_POOL = [
     name: "NIL",
     spawn: () => spawnNIL(entityHost, deafMode),
     start: 500,
-    src: "./ASSET/Enemies/NIL.png",
+    src: "./ASSET/Enemies/NILIcon.png",
     desc: "<0>",
   },
   {
@@ -278,12 +278,12 @@ const ENTITY_POOL = [
     desc: "Fires a volley of bullets.",
   },
   {
-    name: "Dozer",
-    spawn: () => spawnDozer(entityHost, hardMode),
+    name: "Operator",
+    spawn: () => spawnOperator(entityHost, hardMode),
     start: 500,
-    src: "./ASSET/Enemies/Dozer.png",
+    src: "./ASSET/Enemies/Operator.png",
     unstackable: true,
-    desc: "Let go of all movements before its eyes open: the earlier you stop, the earlier it triggers.",
+    desc: "Stand still briefly, before it wakes.",
   },
   {
     name: "Telefragger",
@@ -807,7 +807,7 @@ topLeftInput.addEventListener("input", () => {
     spawnFlesh(entityHost, hardMode);
     spawnNIL(entityHost);
     spawnGuardian(entityHost, hardMode);
-    spawnDozer(entityHost, hardMode);
+    spawnOperator(entityHost, hardMode);
     spawnTelefragger(entityHost, hardMode, deafMode);
     spawnKookoo(entityHost);
     spawnVoidImplosions(entityHost);
@@ -827,9 +827,9 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Husk", "./ASSET/Enemies/Husk.png");
     registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
     registerEntitySpawn("Flesh", "./ASSET/Enemies/FleshIcon.png");
-    registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
+    registerEntitySpawn("NIL", "./ASSET/Enemies/NILIcon.png");
     registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
-    registerEntitySpawn("Dozer", "./ASSET/Enemies/Dozer.png");
+    registerEntitySpawn("Operator", "./ASSET/Enemies/Operator.png");
     registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
     registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
     registerEntitySpawn("VoidImplosions", "./ASSET/Curses/VoidImplosions.png");

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound } from "../main.js";
+import { getCameraPos, playSound, ability } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Dozer.png";
@@ -13,6 +13,9 @@ export function setup(host, hardMode) {
 
     idleDuration: 14 + Math.random(),
     watchDuration: hardMode ? 2 : 6,
+    idleSound: null,
+
+    abilityLongerCooldown: 0,
 
     x: 0,
     y: 0,
@@ -34,6 +37,7 @@ export function setup(host, hardMode) {
     state.phase = "idle";
     state.timer = 0;
     state.idleDuration = 14 + Math.random();
+    if (state.idleSound) state.idleSound();
   }
 
   enterIdle();
@@ -42,6 +46,11 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
+    if (ability) {
+      state.abilityLongerCooldown = 30;
+    } else {
+      if (state.abilityLongerCooldown > 0) state.abilityLongerCooldown--;
+    }
 
     if (state.phase === "idle") {
       if (state.timer >= state.idleDuration) {
@@ -51,6 +60,9 @@ export function setup(host, hardMode) {
 
         state.lastMouseX = mouse._clientX;
         state.lastMouseY = mouse._clientY;
+        state.idleSound = playSound(
+          "./ASSET/Sound/Enemies/Dozer/DozerIdle.ogg",
+        );
       }
     } else if (state.phase === "watch") {
       const cam = getCameraPos();
@@ -60,7 +72,6 @@ export function setup(host, hardMode) {
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25) {
         state.jitterTimer = 0;
-        playSound("./ASSET/Sound/Enemies/Dozer/DozerTick.wav");
 
         state.jitterX = (Math.random() - 0.5) * 7.5;
         state.jitterY = (Math.random() - 0.5) * 7.5;
@@ -72,7 +83,10 @@ export function setup(host, hardMode) {
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
-        if (state.stillTimer >= (hardMode ? 0.5 : 0.25)) {
+        if (
+          state.stillTimer >= (hardMode ? 0.5 : 0.25) &&
+          state.abilityLongerCooldown == 0
+        ) {
           enterIdle();
           return;
         }

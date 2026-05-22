@@ -191,6 +191,15 @@ export function setup(host, deafMode) {
       }
     }
 
+    if (!state.attacking) {
+      if (dist <= 500) {
+        const t = 1 - dist / 500;
+        state.opacity = 0.1 + t * (0.4 - 0.1);
+      } else {
+        state.opacity = 0.1;
+      }
+    }
+
     if (dist <= 220) {
       state.attacking = true;
       if (!soundStopped)

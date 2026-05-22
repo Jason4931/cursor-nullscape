@@ -189,8 +189,8 @@ const DEATH_MESSAGES = {
     "You held your head too high.",
     "You forgot to bow.",
     "Will you wake up tomorrow?",
-    "Wakey wakey, you!",
-    "Don't bother you, you are having a good rest.",
+    "Wakey wakey!",
+    "Don't bother, you are having a good rest.",
     "You aren't waking up.",
     "You dozed off.",
     "You somehow can't see the big yellow dude in the middle of their screen.",
@@ -203,7 +203,7 @@ const DEATH_MESSAGES = {
     "You dived into Telefragger's loving arms.",
     "You were killed by unfair game design.",
     "You tried to escape the nullscape, but Telefragger put a stop to it.",
-    "Man, this telefragger guy is so annoying! Right, you?",
+    "Man, this telefragger guy is so annoying! Right?",
     "You died to Telefragger.",
     "Telefragger successfully killed you.",
     "You failed to remember that Telefragger existed.",
@@ -227,8 +227,8 @@ const DEATH_MESSAGES = {
     "You forgot how to use their ability.",
     "You forgot what time it was.",
     "You clicked on a random popup.",
-    "Really, you? Thats the number one rule of the internet!",
-    "Forgetting something, you?",
+    "Really? Thats the number one rule of the internet!",
+    "Forgetting something?",
     "Someone else can count better than you.",
   ],
   VoidImplosions: [
@@ -384,7 +384,7 @@ export function toggleTripmineLeniency(state) {
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies || immortality || springerImmortality) return;
-  if (ability) {
+  if (ability && name != "Dozer") {
     setParried(true);
     return;
   }

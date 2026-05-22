@@ -14,8 +14,8 @@ v icbm
 v mart
 v springer
 v flesh
-x nil
-x operator
+v nil
+v operator
 x guardian
 x telefragger
 x kolona
@@ -31,3 +31,9 @@ x oblivion
 x razorbloom
 x voidbound operator
 v ponderer
+x fear/visage
+x drain?
+x hazard chaos???
+
+x catalyst audios
+x celestial
