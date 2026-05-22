@@ -125,7 +125,8 @@ export function setup(host, hardMode) {
         state.stillTimer += dt;
         if (
           state.stillTimer >= (hardMode ? 0.5 : 0.25) &&
-          state.abilityLongerCooldown == 0
+          state.abilityLongerCooldown == 0 &&
+          !state.death
         ) {
           state.phase = "disable";
           state.timer = 0;
