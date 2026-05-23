@@ -57,7 +57,7 @@ export function setup(host, hardMode) {
     state.mode = "shoot";
     state.timer = 0;
     state.shotsFired = 0;
-    state.shootDuration = hardMode ? 0.5 + Math.random() : 1 + Math.random();
+    state.shootDuration = 1 + Math.random();
   }
 
   function startIdle() {
@@ -74,11 +74,11 @@ export function setup(host, hardMode) {
     const dy = mouse.y - state.y;
     const len = Math.hypot(dx, dy) || 1;
 
-    const speed = 630;
+    const speed = hardMode ? 945 : 630;
 
     state.pellets.push({
       x: state.x,
-      y: state.y,
+      y: state.y + 20,
       vx: (dx / len) * speed,
       vy: (dy / len) * speed,
       born: performance.now(),

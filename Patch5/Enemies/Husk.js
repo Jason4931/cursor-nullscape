@@ -38,7 +38,6 @@ export function setup(host, stack, hardMode) {
     deathSound: false,
 
     history: [],
-    historyLimit: 20 * 60,
 
     pairOffset: 25,
     dirX: 1,
@@ -73,10 +72,6 @@ export function setup(host, stack, hardMode) {
       y: mouse.y,
       t: performance.now(),
     });
-
-    while (state.history.length > state.historyLimit) {
-      state.history.shift();
-    }
 
     state.delayTimer += dt;
     if (state.delayTimer >= 1) {

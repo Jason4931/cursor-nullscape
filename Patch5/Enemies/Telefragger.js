@@ -1,12 +1,17 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Telefragger.png";
+const Telefragger = [];
+for (let i = 1; i <= 2; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Telefragger/Layer ${i}.png`;
+  Telefragger.push(img);
+}
 
 export function setup(host, hardMode, deafMode) {
   const state = {
     opacity: 1,
+    enemy: null,
 
     x: 0,
     y: 0,
@@ -31,12 +36,48 @@ export function setup(host, hardMode, deafMode) {
     flashAngle: 0,
 
     ripplePhase: 0,
+    walkSound: false,
+    walkSoundTimer: 0,
 
     teleportSound: false,
   };
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    state.enemy = Telefragger[0];
+    state.walkSoundTimer += dt;
+
+    if (state.walkSoundTimer < 0.6) {
+      state.enemy = Telefragger[0];
+    } else if (state.walkSoundTimer >= 0.6 && state.walkSoundTimer < 1.2) {
+      state.enemy = Telefragger[1];
+    } else if (state.walkSoundTimer >= 1.2 && state.walkSoundTimer < 1.8) {
+      state.enemy = Telefragger[0];
+    } else if (state.walkSoundTimer >= 1.8 && state.walkSoundTimer < 2.4) {
+      state.layer = 1;
+      state.enemy = Telefragger[1];
+    } else if (state.walkSoundTimer >= 2.4) {
+      state.walkSoundTimer = 0;
+      if (state.walkSound) state.walkSound();
+      state.walkSound = false;
+    }
+    const dx = mouse.x - state.x;
+    const dy = mouse.y - state.y;
+    const dist = Math.hypot(dx, dy);
+    if (!state.walkSound && dist <= 500) {
+      state.walkSound = playSound(
+        "./ASSET/Sound/Enemies/Telefragger/Telefragger_Walk_Patch5.ogg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true,
+      );
+    } else if (state.walkSound && dist > 500) {
+      state.walkSound();
+      state.walkSound = false;
+    }
 
     if (Number.isFinite(state.prevMouseX)) {
       const dxm = mouse.x - state.prevMouseX;
@@ -59,9 +100,6 @@ export function setup(host, hardMode, deafMode) {
 
     state.prevMouseX = mouse.x;
     state.prevMouseY = mouse.y;
-
-    const dx = mouse.x - state.x;
-    const dy = mouse.y - state.y;
 
     let angle = Math.atan2(dy, dx) + Math.PI;
 
@@ -100,7 +138,6 @@ export function setup(host, hardMode, deafMode) {
       );
       state.teleportSound = true;
     }
-    const dist = Math.hypot(dx, dy);
     if (dist > 1) {
       state.x += (dx / dist) * state.speed * dt;
       state.y += (dy / dist) * state.speed * dt;
@@ -160,7 +197,7 @@ export function setup(host, hardMode, deafMode) {
     const trailRadius = Math.round(
       state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
     );
-    ctx.globalAlpha = 0.15;
+    ctx.globalAlpha = 0.01;
     ctx.fillStyle = "#9fdfff";
     ctx.beginPath();
     ctx.arc(
@@ -210,9 +247,9 @@ export function setup(host, hardMode, deafMode) {
     ctx.rotate(state.facingAngle);
     ctx.scale(state.flipX, -1);
 
-    const size = Math.round(state.size);
+    const size = Math.round(state.size * 0.8);
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(-size / 2),
       Math.round(-size / 2),
       size,

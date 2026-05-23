@@ -683,7 +683,13 @@ topLeftInput.addEventListener("input", () => {
     input.toLowerCase() === "catalyst" ||
     input.toLowerCase() === "seamine";
   if (entity) {
-    for (let i = 0; i < spawnCount; i++) {
+    let spawned = 0;
+    const interval = setInterval(() => {
+      if (spawned >= spawnCount) {
+        clearInterval(interval);
+        return;
+      }
+      spawned++;
       if (input.toLowerCase() === "catalyst") {
         spawnCatalyst(entityHost);
         spawnCatalystIntro();
@@ -708,7 +714,7 @@ topLeftInput.addEventListener("input", () => {
         entity.spawn();
         registerEntitySpawn(entity.name, entity.src);
       }
-    }
+    }, 200);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();

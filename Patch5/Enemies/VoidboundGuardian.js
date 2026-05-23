@@ -82,7 +82,7 @@ export function setup(host, hardMode) {
 
     state.pellets.push({
       x: state.x,
-      y: state.y,
+      y: state.y + 20,
       vx: (dx / len) * speed,
       vy: (dy / len) * speed,
       born: performance.now(),

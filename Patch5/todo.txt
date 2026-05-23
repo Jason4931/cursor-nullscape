@@ -16,8 +16,8 @@ v springer
 v flesh
 v nil
 v operator
-x guardian
-x telefragger
+v guardian
+v telefragger
 x kolona
 x voidbound baby
 x cadence

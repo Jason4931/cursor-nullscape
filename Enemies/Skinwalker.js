@@ -21,7 +21,6 @@ export function setup(host, stack, hardMode) {
     delayTimer: 0,
 
     history: [],
-    historyLimit: 20 * 60,
   };
 
   function pickDelay() {
@@ -50,10 +49,6 @@ export function setup(host, stack, hardMode) {
       y: mouse.y,
       t: performance.now(),
     });
-
-    while (state.history.length > state.historyLimit) {
-      state.history.shift();
-    }
 
     state.delayTimer += dt;
     if (state.delayTimer >= 1) {

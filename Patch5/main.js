@@ -159,7 +159,7 @@ let jumppadActive = false;
 let SHAKE = false;
 let transformAllGift = false;
 let allGold = false;
-let passageGoldPattern = 0;
+export let passageGoldPattern = 0;
 let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
@@ -706,15 +706,19 @@ topLeftInput.addEventListener("input", () => {
     input.toLowerCase() === "seamine" ||
     input.toLowerCase() === "grindrail";
   if (entity) {
-    for (let i = 0; i < spawnCount; i++) {
+    let spawned = 0;
+    const interval = setInterval(() => {
+      if (spawned >= spawnCount) {
+        clearInterval(interval);
+        return;
+      }
+      spawned++;
       if (input.toLowerCase() === "catalyst") {
         spawnCatalyst(entityHost);
         spawnCatalystIntro();
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost);
-      } else if (input.toLowerCase() === "grindrail") {
-        spawnGrindrail(entityHost);
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;
@@ -733,7 +737,7 @@ topLeftInput.addEventListener("input", () => {
         entity.spawn();
         registerEntitySpawn(entity.name, entity.src);
       }
-    }
+    }, 200);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
