@@ -71,7 +71,7 @@ export function setup(host, hardMode) {
 
   function firePellet() {
     const dx = mouse.x - state.x;
-    const dy = mouse.y - state.y;
+    const dy = mouse.y - state.y - 20;
     const len = Math.hypot(dx, dy) || 1;
 
     const speed = hardMode ? 945 : 630;
