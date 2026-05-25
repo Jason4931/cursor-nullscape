@@ -3306,6 +3306,7 @@ function updateCamera() {
   const slowScale = slowness ? 0.25 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
+  const extremeScale = hardMode ? 0.5 : 1;
   isCursorOnFloor();
   if (iceEffect) {
     camVX +=
@@ -3318,6 +3319,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      extremeScale *
       0.1;
     camVY +=
       vy *
@@ -3329,6 +3331,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      extremeScale *
       0.1;
   } else {
     camX +=
@@ -3340,7 +3343,8 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
-      disableCollectScale;
+      disableCollectScale *
+      extremeScale;
     camY +=
       vy *
       motionScale *
@@ -3350,7 +3354,8 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
-      disableCollectScale;
+      disableCollectScale *
+      extremeScale;
   }
 
   const lim = getLimits();
