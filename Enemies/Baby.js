@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound } from "../main.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Baby.png";
