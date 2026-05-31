@@ -270,6 +270,7 @@ const ENTITY_POOL = [
     spawn: () => spawnNIL(entityHost, deafMode),
     start: 500,
     src: "./ASSET/Enemies/NILIcon.png",
+    rare: true,
     desc: "<0>",
   },
   {
@@ -409,8 +410,6 @@ let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
 let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
-let enablePonderer =
-  JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
 let sfxVolume = localStorage.getItem("sfxVolume")
@@ -432,7 +431,6 @@ document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
 document.getElementById("toggle-parry").checked = parry;
-document.getElementById("toggle-enable-ponderer").checked = enablePonderer;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("sfx-volume").value = sfxVolume;
 document.getElementById("music-volume").value = musicVolume;
@@ -503,9 +501,6 @@ toggle("toggle-enable-void", (v) => {
 toggle("toggle-parry", (v) => {
   parry = v;
 });
-toggle("toggle-enable-ponderer", (v) => {
-  enablePonderer = v;
-});
 toggle("toggle-accurate-cursor", (v) => {
   accurateCursor = v;
   if (accurateCursor) {
@@ -574,7 +569,6 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
   localStorage.removeItem("parry");
-  localStorage.removeItem("enable-ponderer");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
   localStorage.setItem("sfxVolume", "50");
@@ -590,7 +584,6 @@ document.getElementById("reset-settings").onclick = () => {
   tripmineHell = false;
   enableVoid = true;
   parry = false;
-  enablePonderer = true;
   accurateCursor = false;
   sfxVolume = 50;
   musicVolume = 30;
@@ -605,7 +598,6 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-enable-void").checked = true;
   document.getElementById("toggle-parry").checked = false;
-  document.getElementById("toggle-enable-ponderer").checked = true;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
   document.getElementById("music-volume").value = 30;
@@ -724,7 +716,6 @@ topLeftInput.addEventListener("input", () => {
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;
-          if (!enablePonderer && e.name === "Ponderer") return false;
           if (collectedCount < e.start) return false;
           if (e.unstackable) return false;
           return true;
@@ -960,7 +951,6 @@ input.addEventListener("input", () => {
       text: "pondererisbackforblood",
       activate: () => {
         img.src = "./ASSET/Enemies/Ponderer.png";
-        localStorage.setItem("enable-ponderer", "true");
         setTimeout(() => {
           location.reload();
         }, 2000);
@@ -1195,7 +1185,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
 
     const stopAt = () => {
       if (stopped) return;
@@ -1452,10 +1442,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-        if (actualCollectedCount < m.start) return false;
-        if (m.end !== 0 && actualCollectedCount > m.end) return false;
-        return true;
-      });
+      if (actualCollectedCount < m.start) return false;
+      if (m.end !== 0 && actualCollectedCount > m.end) return false;
+      return true;
+    });
 
   if (pool.length === 0) return;
 
@@ -1932,9 +1922,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
               continue;
             }
           }
-          if (!enablePonderer && pick.name === "Ponderer") continue;
-          if (casualMode && (pick.name === "Kookoo" || pick.name === "Cadence"))
-            continue;
           lastEntityPicked = pick.name;
           pickedOnce.add(pick.name);
           break;
@@ -1944,7 +1931,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (pick.name === "Random") {
       const randUnlocked = ENTITY_POOL.filter((e) => {
         if (e.name === "Random") return false;
-        if (!enablePonderer && e.name === "Ponderer") return false;
         if (collectedCount < e.start) return false;
         if (e.unstackable) return false;
         return true;
@@ -2435,18 +2421,18 @@ function placeSuper(sx, sy, pattern) {
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
-              Math.min(
-                0.1,
-                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
-              ) *
-                (pattern[y][x] === 13 ? 5 : 1),
+            Math.min(
+              0.1,
+              Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+            ) *
+            (pattern[y][x] === 13 ? 5 : 1),
             Math.random(),
             Math.random(),
             Math.random() <
-              Math.min(
-                0.1,
-                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
-              ),
+            Math.min(
+              0.1,
+              Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+            ),
           ],
         });
       }
@@ -2481,17 +2467,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 500)
-                    : 0.00025 * (collectedCount - 500),
-                  0.5, // 0-50%
-                )
+                hardMode
+                  ? 0.000125 * (collectedCount - 500)
+                  : 0.00025 * (collectedCount - 500),
+                0.5, // 0-50%
+              )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 500)
-                    : 0.0001 * (collectedCount - 500),
-                  0.1, // 0-10%
-                ))
+                hardMode
+                  ? 0.00005 * (collectedCount - 500)
+                  : 0.0001 * (collectedCount - 500),
+                0.1, // 0-10%
+              ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -3537,12 +3523,6 @@ function updateCamera() {
                     continue;
                   }
                 }
-                if (!enablePonderer && pick.name === "Ponderer") continue;
-                if (
-                  casualMode &&
-                  (pick.name === "Kookoo" || pick.name === "Cadence")
-                )
-                  continue;
                 lastEntityPicked = pick.name;
                 pickedOnce.add(pick.name);
                 break;
@@ -3552,7 +3532,6 @@ function updateCamera() {
           if (pick.name === "Random") {
             const randUnlocked = ENTITY_POOL.filter((e) => {
               if (e.name === "Random") return false;
-              if (!enablePonderer && e.name === "Ponderer") return false;
               if (collectedCount < e.start) return false;
               if (e.unstackable) return false;
               return true;
@@ -4081,9 +4060,9 @@ function loop(now) {
     tipstimer > 0 &&
     (localStorage.getItem("highest-level-reached")
       ? parseInt(
-          localStorage.getItem("highest-level-reached").split(" ")[1],
-          10,
-        ) < 10
+        localStorage.getItem("highest-level-reached").split(" ")[1],
+        10,
+      ) < 10
       : true) &&
     !disableProgression
   ) {
@@ -4232,7 +4211,7 @@ const unlock = () => {
     panel.classList.toggle("open", panelOpen);
   }
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
+    document.documentElement.requestFullscreen().catch(() => { });
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -4366,9 +4345,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-          localStorage.getItem("highest-level-reached").split(" ")[0],
-          10,
-        )
+        localStorage.getItem("highest-level-reached").split(" ")[0],
+        10,
+      )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(

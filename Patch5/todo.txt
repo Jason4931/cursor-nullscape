@@ -14,7 +14,6 @@ vx icbm
 vx mart
 vx springer
 vx flesh
-vx nil
 vx operator
 vx guardian
 vx telefragger
@@ -30,11 +29,16 @@ x void implosion
 x oblivion
 x razorbloom
 x voidbound operator
+rare
 x ponderer
+vx nil (not rare yet - considered separate from new nil)
 x quartz
 x fear/visage
-x drain?
+x locust/belchboy
+x serverstoragebaby (3x big baby)
+x big springer (2-3x)
+
 x hazard - highrise
 
-x catalyst audios
+x catalyst
 x celestial
