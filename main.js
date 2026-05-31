@@ -3385,11 +3385,20 @@ setInterval(() => {
       break;
     }
   }
-  const first = patternsState.entries().next();
-  if (!first.done) {
-    const [key, p] = first.value;
-    destroyPattern(p);
-    patternsState.delete(key);
+  const viewX = -camX;
+  const viewY = -camY;
+  const viewW = window.innerWidth;
+  const viewH = window.innerHeight;
+  function isOutside(x, y) {
+    return x < viewX || x > viewX + viewW || y < viewY || y > viewY + viewH;
+  }
+  for (const [key, p] of patternsState) {
+    const c = patternCenter(p.sx, p.sy);
+    if (isOutside(c.x, c.y)) {
+      destroyPattern(p);
+      patternsState.delete(key);
+      break;
+    }
   }
 }, 6000);
 

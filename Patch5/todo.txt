@@ -7,19 +7,19 @@ nil kindof nerfed a little
 voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
-v bell
-v baby
-v husk
-v icbm
-v mart
-v springer
-v flesh
-v nil
-v operator
-v guardian
-v telefragger
+vx bell
+vx baby
+vx husk
+vx icbm
+vx mart
+vx springer
+vx flesh
+vx nil
+vx operator
+vx guardian
+vx telefragger
 x kolona
-x voidbound baby
+vx voidbound baby
 x cadence
 x sigil
 x voidbreaker
@@ -30,10 +30,11 @@ x void implosion
 x oblivion
 x razorbloom
 x voidbound operator
-v ponderer
+x ponderer
+x quartz
 x fear/visage
 x drain?
-x hazard chaos???
+x hazard - highrise
 
 x catalyst audios
 x celestial
