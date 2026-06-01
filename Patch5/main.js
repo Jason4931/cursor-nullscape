@@ -390,6 +390,69 @@ const ENTITY_POOL = [
     desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
   },
 ];
+const ProgressionEvents = [
+  {
+    level: 5,
+    title: "You feel a sense of dread...",
+    desc: "Tripmines begin to appear.",
+    normalOnly: true,
+  },
+  {
+    level: 6,
+    title: "The humidity rises...",
+    desc: "All Marts have their default size increased.",
+    activate: () => {}, //all mart 2x size (default size = 2)
+  },
+  {
+    level: 8,
+    title: "The air around you begins to freeze...",
+    desc: "Ice tiles can now appear.",
+  },
+  {
+    level: 10,
+    title: "Steel fills the air...",
+    desc: "Grindrails begin to appear.",
+    title2: "More familiar remnants make their way here...",
+    desc2: "Seamines begin to appear.",
+  },
+  {
+    level: 14,
+    title: "A sickly sweet odor fills the air, the hivemind grows stronger...",
+    desc: "Flesh has further range.",
+    activate: () => {}, //flesh range 2x ((TILE * 6) ** 2)
+  },
+  {
+    level: 16,
+    title: "The sound of sirens blaring pierce your ears...",
+    desc: "More ICBMs now appear.",
+    activate: () => {}, //spawn 5 icbm (timed separately)
+  },
+  {
+    level: 18,
+    // title: "The smell of metal and smoke lingers...",
+    // desc: "Highrise towers begin to appear.",
+    title: "The humidity rises...",
+    desc: "Marts will grow in size.",
+    activate: () => {}, //all mart +1 size per 60s (and first activate)
+  },
+  {
+    level: 20,
+    title: "The ground beneath you rumbles...",
+    desc: "More Springers now appear.",
+    activate: () => {}, //spawn 5 springer (timed separately)
+  },
+  {
+    level: 25,
+    title: "The sound of footsteps echoes behind you...",
+    desc: "More Husks join the congaline.",
+    activate: () => {}, //spawn 5 husk
+  },
+  {
+    level: 50,
+    title: "Your body tenses up, the end is nearing...",
+    desc: "Enemies appear more often...",
+  },
+];
 
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
@@ -1185,7 +1248,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1442,10 +1505,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -2421,18 +2484,18 @@ function placeSuper(sx, sy, pattern) {
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
-            Math.min(
-              0.1,
-              Math.max(0.01, Number(graphicsSlider.value) * 0.05),
-            ) *
-            (pattern[y][x] === 13 ? 5 : 1),
+              Math.min(
+                0.1,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+              ) *
+                (pattern[y][x] === 13 ? 5 : 1),
             Math.random(),
             Math.random(),
             Math.random() <
-            Math.min(
-              0.1,
-              Math.max(0.01, Number(graphicsSlider.value) * 0.05),
-            ),
+              Math.min(
+                0.1,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+              ),
           ],
         });
       }
@@ -2467,17 +2530,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -3289,10 +3352,10 @@ function updateCamera() {
   }
 
   const motionScale = reducedMotion ? 0.5 : 1;
-  const slowScale = slowness ? 0.25 : 1;
+  const slowScale = slowness ? 0.333 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
-  const extremeScale = hardMode ? 0.5 : 1;
+  const extremeScale = hardMode ? 0.667 : 1;
   isCursorOnFloor();
   if (iceEffect) {
     camVX +=
@@ -4060,9 +4123,9 @@ function loop(now) {
     tipstimer > 0 &&
     (localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[1],
-        10,
-      ) < 10
+          localStorage.getItem("highest-level-reached").split(" ")[1],
+          10,
+        ) < 10
       : true) &&
     !disableProgression
   ) {
@@ -4211,7 +4274,7 @@ const unlock = () => {
     panel.classList.toggle("open", panelOpen);
   }
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -4345,9 +4408,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(

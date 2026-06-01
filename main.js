@@ -2579,7 +2579,7 @@ function updateCamera() {
   );
 
   const motionScale = reducedMotion ? 0.5 : 1;
-  const slowScale = slowness ? 0.25 : 1;
+  const slowScale = slowness ? 0.333 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
   camX +=

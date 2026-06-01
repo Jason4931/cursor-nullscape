@@ -7,6 +7,8 @@ nil kindof nerfed a little
 voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
+mart merge clamp please
+
 vx bell
 vx baby
 vx husk
@@ -31,7 +33,7 @@ x razorbloom
 x voidbound operator
 rare
 x ponderer
-vx nil (not rare yet - considered separate from new nil)
+vx nil (considered separate from new nil)
 x quartz
 x fear/visage
 x locust/belchboy
