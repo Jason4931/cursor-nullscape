@@ -4030,7 +4030,6 @@ function loop(now) {
   //mart merge
   const toRemove = new Set();
   const toSpawn = [];
-  // console.log(martStack);
 
   for (let i = 0; i < martStack.length; i++) {
     for (let j = i + 1; j < martStack.length; j++) {
@@ -4045,11 +4044,10 @@ function loop(now) {
 
       const maxStack = Math.max(a.state._stack, b.state._stack);
       const mergeDist = (0.6 + Math.sqrt(maxStack) * 0.4) * 75;
-      if (dist <= mergeDist) {
+      const newStack = (a.state._stack || 1) + (b.state._stack || 1);
+      if (dist <= mergeDist && newStack <= 10) {
         toRemove.add(a);
         toRemove.add(b);
-
-        const newStack = (a.state._stack || 1) + (b.state._stack || 1);
 
         toSpawn.push([newStack, { x: a.state.x, y: a.state.y }]);
       }
