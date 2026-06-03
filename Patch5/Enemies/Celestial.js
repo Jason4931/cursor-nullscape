@@ -2,36 +2,36 @@ import { death, mouse } from "../entityHost.js";
 
 export function setup(host) {
   const loopPattern = [
-    {
-      duration: 6,
-      update: updateFall,
-      draw: drawFall,
-      enter: enterFall,
-    },
+    // {
+    //   duration: 6,
+    //   update: updateFall,
+    //   draw: drawFall,
+    //   enter: enterFall,
+    // },
     // {
     //   duration: 3,
     //   update: updateImplosion,
     //   draw: drawImplosion,
     //   enter: enterImplosion,
     // },
-    {
-      duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      enter: enterPizzaCutter,
-    },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      enter: enterCrumble,
-    },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      enter: enterCease,
-    },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   enter: enterPizzaCutter,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   enter: enterCrumble,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   enter: enterCease,
+    // },
     {
       duration: 22,
       update: updateDeathInBloom,
@@ -669,7 +669,7 @@ export function setup(host) {
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: 500,
+    w: 625,
     active: false,
     particles: [],
     pTimer: 0,
@@ -682,7 +682,7 @@ export function setup(host) {
 
     s.cx = mouse.x + (Math.random() - 0.5) * 1000;
     s.cy = mouse.y + (Math.random() - 0.5) * 1000;
-    s.w = 500;
+    s.w = 625;
 
     s.ex = mouse.x;
     s.ey = mouse.y;
@@ -798,7 +798,7 @@ export function setup(host) {
     s.particles = s.particles.filter((p) => p.active);
 
     if (s.t >= 5 && s.t < 21) {
-      s.w = Math.random() * 50 + 450;
+      s.w = Math.random() * 50 + 575;
     }
     if (s.t >= 21) {
       s.w -= dt * 1000;
