@@ -2,36 +2,36 @@ import { death, mouse } from "../entityHost.js";
 
 export function setup(host) {
   const loopPattern = [
-    // {
-    //   duration: 6,
-    //   update: updateFall,
-    //   draw: drawFall,
-    //   enter: enterFall,
-    // },
+    {
+      duration: 6,
+      update: updateFall,
+      draw: drawFall,
+      enter: enterFall,
+    },
     // {
     //   duration: 3,
     //   update: updateImplosion,
     //   draw: drawImplosion,
     //   enter: enterImplosion,
     // },
-    // {
-    //   duration: 9,
-    //   update: updatePizzaCutter,
-    //   draw: drawPizzaCutter,
-    //   enter: enterPizzaCutter,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateCrumble,
-    //   draw: drawCrumble,
-    //   enter: enterCrumble,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateCease,
-    //   draw: drawCease,
-    //   enter: enterCease,
-    // },
+    {
+      duration: 9,
+      update: updatePizzaCutter,
+      draw: drawPizzaCutter,
+      enter: enterPizzaCutter,
+    },
+    {
+      duration: 3,
+      update: updateCrumble,
+      draw: drawCrumble,
+      enter: enterCrumble,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      enter: enterCease,
+    },
     {
       duration: 22,
       update: updateDeathInBloom,
