@@ -49,6 +49,7 @@ import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js"
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
+import { setup as spawnCelestial } from "./Enemies/Celestial.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
@@ -388,6 +389,13 @@ const ENTITY_POOL = [
     start: 1000000000,
     src: "./ASSET/Enemies/CatalystIcon.png",
     desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
+  },
+  {
+    name: "Celestial",
+    spawn: () => spawnCelestial(entityHost),
+    start: 1000000000,
+    src: "./ASSET/Enemies/CatalystIcon.png",
+    desc: "YOU SHALL WILT IN THIS DANCE WITH ME.",
   },
 ];
 const ProgressionEvents = [
