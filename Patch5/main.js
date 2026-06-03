@@ -395,7 +395,12 @@ const ProgressionEvents = [
     level: 5,
     title: "You feel a sense of dread...",
     desc: "Tripmines begin to appear.",
-    normalOnly: true,
+    title2: "The air around you begins to freeze...",
+    desc2: "Ice tiles can now appear.",
+    mode: [
+      [false, true, true],
+      [false, false, true],
+    ],
   },
   {
     level: 6,
@@ -407,6 +412,10 @@ const ProgressionEvents = [
     level: 8,
     title: "The air around you begins to freeze...",
     desc: "Ice tiles can now appear.",
+    mode: [
+      [true, true, false],
+      [false, false, false],
+    ],
   },
   {
     level: 10,
@@ -3487,7 +3496,9 @@ function updateCamera() {
       }
 
       if (
-        Math.floor(collectedCount / 100) > Math.floor(lastEntitySpawnAt / 100)
+        Math.floor(collectedCount / 100) >
+          Math.floor(lastEntitySpawnAt / 100) ||
+        (!hardMode && collectedCount >= 50 && lastEntitySpawnAt < 50)
       ) {
         lastEntitySpawnAt = collectedCount;
 
@@ -4312,6 +4323,16 @@ setInterval(() => {
     if (bellHit.count < 0) bellHit.count = 0;
   }
 }, 10000);
+setInterval(() => {
+  const basicEnemies = ENTITY_POOL.filter((e) => {
+    if (e.start != 0) return false;
+    return true;
+  });
+  if (basicEnemies.length > 0) {
+    const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
+    pick.spawn();
+  }
+}, 60000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {

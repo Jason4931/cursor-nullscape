@@ -3401,6 +3401,16 @@ setInterval(() => {
     }
   }
 }, 6000);
+setInterval(() => {
+  const basicEnemies = ENTITY_POOL.filter((e) => {
+    if (e.start != 0) return false;
+    return true;
+  });
+  if (basicEnemies.length > 0) {
+    const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
+    pick.spawn();
+  }
+}, 60000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
