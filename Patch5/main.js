@@ -454,12 +454,12 @@ const ProgressionEvents = [
     level: 25,
     title: "The sound of footsteps echoes behind you...",
     desc: "More Husks join the congaline.",
-    activate: () => {}, //spawn 5 husk
+    activate: () => {}, //spawn 5 husk (timed little separately)
   },
   {
     level: 50,
     title: "Your body tenses up, the end is nearing...",
-    desc: "Enemies appear more often...",
+    desc: "Enemies appear more often...", //(1), |0, 1, 1|, ...
   },
 ];
 
@@ -4288,6 +4288,16 @@ const unlock = () => {
   if (windowClicked) return;
   windowClicked = true;
   tipstimer = 900;
+  setInterval(() => {
+    const basicEnemies = ENTITY_POOL.filter((e) => {
+      if (e.start != 0) return false;
+      return true;
+    });
+    if (basicEnemies.length > 0) {
+      const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
+      pick.spawn();
+    }
+  }, 60000);
   loop();
 };
 window.addEventListener("click", unlock);
@@ -4323,16 +4333,6 @@ setInterval(() => {
     if (bellHit.count < 0) bellHit.count = 0;
   }
 }, 10000);
-setInterval(() => {
-  const basicEnemies = ENTITY_POOL.filter((e) => {
-    if (e.start != 0) return false;
-    return true;
-  });
-  if (basicEnemies.length > 0) {
-    const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
-    pick.spawn();
-  }
-}, 60000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
