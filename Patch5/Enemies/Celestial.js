@@ -521,7 +521,7 @@ export function setup(host) {
           ctx.stroke();
         } else if (i < 4) {
           ctx.globalAlpha =
-            s.t < 0.5 && statePizzaCutter.cycle == 0 ? s.t * 1.5 : 0.75;
+            s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
 
           const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
           grad.addColorStop(0, "rgba(255,0,255,0)");
@@ -999,7 +999,7 @@ export function setup(host) {
     for (const p of s.particles) {
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 0.8 : 0.2) * (s.t < 0.5 ? s.t * 2 : 1);
+      ctx.globalAlpha = (s.t > 5 ? 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
       ctx.strokeStyle = "magenta";
       ctx.lineWidth = 18;
@@ -1019,10 +1019,10 @@ export function setup(host) {
     const isLethal = s.t >= 5;
 
     if (!isLethal) {
-      ctx.globalAlpha = 0.25 * (s.t < 0.5 ? s.t * 2 : 1);
+      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "magenta";
     } else {
-      ctx.globalAlpha = 1 * (s.t < 0.5 ? s.t * 2 : 1);
+      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
       ctx.strokeStyle = "magenta";
       ctx.lineWidth = 18 * (Math.random() + 2);
@@ -1040,7 +1040,7 @@ export function setup(host) {
     ctx.save();
     ctx.globalAlpha =
       (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
-      (s.t < 0.5 ? s.t * 2 : 1);
+      (s.t < 0.25 ? s.t * 4 : 1);
 
     let grad = ctx.createLinearGradient(
       0,
@@ -1069,14 +1069,14 @@ export function setup(host) {
     ctx.restore();
 
     ctx.save();
-    ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.5 ? s.t * 2 : 1);
+    ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
     ctx.fillStyle = "magenta";
     const w = s.w * (Math.random() + 1);
     ctx.fillRect(0, -w / 2, s.len, w);
     ctx.restore();
     ctx.fillRect(0, -s.w / 2, s.len, s.w);
     if (isLethal) {
-      ctx.globalAlpha = 0.1 * (s.t < 0.5 ? s.t * 2 : 1);
+      ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "magenta";
       ctx.rotate(Math.PI);
       ctx.fillRect(0, -s.w / 2, s.len, s.w);
@@ -1087,7 +1087,7 @@ export function setup(host) {
       ctx.save();
 
       ctx.globalAlpha =
-        (s.t > 5 ? Math.random * 0.8 : 0.2) * (s.t < 0.5 ? s.t * 2 : 1);
+        (s.t > 5 ? Math.random * 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "black";
 
       ctx.beginPath();
