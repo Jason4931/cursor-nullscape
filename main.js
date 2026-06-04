@@ -2602,6 +2602,7 @@ function updateCamera() {
   const slowScale = slowness ? 0.333 : 1;
   const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
+  const ultrafastScale = ultrafastmode ? 3 : 1;
   camX +=
     vx *
     motionScale *
@@ -2609,7 +2610,8 @@ function updateCamera() {
     settingScale *
     voidScale *
     seamineScale *
-    disableCollectScale;
+    disableCollectScale *
+    ultrafastScale;
   camY +=
     vy *
     motionScale *
@@ -2617,7 +2619,8 @@ function updateCamera() {
     settingScale *
     voidScale *
     seamineScale *
-    disableCollectScale;
+    disableCollectScale *
+    ultrafastScale;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
