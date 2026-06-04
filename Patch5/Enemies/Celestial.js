@@ -3,29 +3,41 @@ import { death, mouse } from "../entityHost.js";
 export function setup(host) {
   const loopPattern = [
     {
-      duration: 6,
+      duration: 5.5,
       update: updateFall,
       draw: drawFall,
       enter: enterFall,
     },
-    // {
-    //   duration: 3,
-    //   update: updateImplosion,
-    //   draw: drawImplosion,
-    //   enter: enterImplosion,
-    // },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      enter: enterImplosion,
+    },
     {
       duration: 9,
       update: updatePizzaCutter,
       draw: drawPizzaCutter,
       enter: enterPizzaCutter,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   enter: enterFutile,
+    // },
     {
       duration: 3,
       update: updateCrumble,
       draw: drawCrumble,
       enter: enterCrumble,
     },
+    // {
+    //   duration: 9,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   enter: enterBitter,
+    // },
     {
       duration: 3,
       update: updateCease,
@@ -65,6 +77,22 @@ export function setup(host) {
       armTime,
     };
   }
+  function spawnImplosionCircle() {
+    const angle = Math.random() * Math.PI * 2;
+
+    const x = mouse.x + Math.cos(angle) * 700;
+    const y = mouse.y + Math.sin(angle) * 700;
+
+    return {
+      x,
+      y,
+      t: 0,
+      r: 0,
+      targetR: 200,
+      active: true,
+      phase: 0,
+    };
+  }
   function spawnCircle() {
     const angle = Math.random() * Math.PI * 2;
     const dist = Math.random() * 1000;
@@ -88,8 +116,17 @@ export function setup(host) {
     };
   }
   let lastPizzaAngle = Math.random() * Math.PI * 2;
+  let lastPizzaDir = Math.random() < 0.5 ? 1 : -1;
   function spawnPizza() {
-    const dir = Math.random() < 0.5 ? 1 : -1;
+    const dir =
+      lastPizzaDir >= 0
+        ? Math.random() < 0.333
+          ? 1
+          : -1
+        : Math.random() < 0.333
+          ? -1
+          : 1;
+    lastPizzaDir = dir;
     const rand = Math.random() * 0.7 + 0.3;
     const jitter = ((Math.random() < 0.5 ? rand : -rand) * Math.PI) / 6;
     const base = lastPizzaAngle + jitter;
@@ -100,7 +137,7 @@ export function setup(host) {
       y: statePizzaCutter.cy,
       t: 0,
       dir,
-      startAngle: base + (Math.random() < 0.5 ? Math.PI : -Math.PI),
+      startAngle: base + (Math.random() < 0.5 ? Math.PI : -Math.PI) * 2,
       targetAngle: base,
       active: true,
       offset: 0,
@@ -111,23 +148,36 @@ export function setup(host) {
     beams: [],
     timer: 0,
     cycle: 0,
+    prevMx: 0,
+    prevMy: 0,
   };
   function enterFall() {
     stateFall.beams = [];
     stateFall.timer = 0;
     stateFall.cycle = 0;
+    stateFall.prevMx = mouse.x;
+    stateFall.prevMy = mouse.y;
   }
   function updateFall(dt) {
+    const mvx = mouse.x - stateFall.prevMx;
+    const mvy = mouse.y - stateFall.prevMy;
+
+    stateFall.prevMx = mouse.x;
+    stateFall.prevMy = mouse.y;
+
+    const px = mouse.x + mvx;
+    const py = mouse.y + mvy;
+
     if (stateFall.timer === 0) {
       if (stateFall.cycle === 3) {
         const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 6;
 
-        stateFall.beams.push(spawnBeam(mouse.x, mouse.y, base, 1.5));
-        stateFall.beams.push(spawnBeam(mouse.x, mouse.y, base - spread, 1.5));
-        stateFall.beams.push(spawnBeam(mouse.x, mouse.y, base + spread, 1.5));
+        stateFall.beams.push(spawnBeam(px, py, base, 1.5));
+        stateFall.beams.push(spawnBeam(px, py, base - spread, 1.5));
+        stateFall.beams.push(spawnBeam(px, py, base + spread, 1.5));
       } else if (stateFall.cycle < 3) {
-        stateFall.beams.push(spawnBeam(mouse.x, mouse.y, undefined, 1));
+        stateFall.beams.push(spawnBeam(px, py, undefined, 1));
       }
     }
 
@@ -232,10 +282,142 @@ export function setup(host) {
     }
   }
 
-  const stateImplosion = {};
-  function enterImplosion() {}
-  function updateImplosion(dt) {}
-  function drawImplosion(ctx) {}
+  const stateImplosion = {
+    circles: [],
+    spawnTimer: 0,
+    spawned: 0,
+  };
+  function enterImplosion() {
+    stateImplosion.circles = [];
+    stateImplosion.spawnTimer = 0;
+    stateImplosion.spawned = 0;
+  }
+  function updateImplosion(dt) {
+    const s = stateImplosion;
+
+    s.spawnTimer += dt;
+
+    const interval = 1.5 / 20;
+    while (s.spawnTimer >= interval && s.spawned < 20) {
+      s.spawnTimer -= interval;
+      s.spawned++;
+      s.circles.push(spawnImplosionCircle());
+    }
+
+    for (const c of s.circles) {
+      c.t += dt;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.0) {
+        const p = (c.t - 0.25) / 0.75;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        c.phase = 2;
+        c.r -= dt * 600;
+        if (c.r <= 0) c.active = false;
+      }
+
+      if (c.phase === 2) {
+        const dx = mouse.x - c.x;
+        const dy = mouse.y - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          death("Celestial");
+        }
+      }
+    }
+
+    s.circles = s.circles.filter((c) => c.active);
+  }
+  function drawImplosion(ctx) {
+    const s = stateImplosion;
+
+    for (const c of s.circles) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      if (c.phase < 2) {
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+        ctx.stroke();
+      } else {
+        const spikes = 6;
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.rotate(c.r);
+        ctx.beginPath();
+        for (let i = 0; i < spikes; i++) {
+          const a = (i / spikes) * Math.PI * 2;
+          const r1 = c.r * 0.5;
+          const r2 = c.r * 1.5;
+
+          const x1 = Math.cos(a) * r1;
+          const y1 = Math.sin(a) * r1;
+
+          const x2 = Math.cos(a + Math.PI / spikes) * r2;
+          const y2 = Math.sin(a + Math.PI / spikes) * r2;
+
+          if (i === 0) ctx.moveTo(x1, y1);
+          else ctx.lineTo(x1, y1);
+
+          ctx.lineTo(x2, y2);
+        }
+        ctx.closePath();
+
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      if (c.phase < 2) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        const spikes = 6;
+
+        ctx.fillStyle = "black";
+
+        ctx.rotate(c.r);
+        ctx.beginPath();
+        for (let i = 0; i < spikes; i++) {
+          const a = (i / spikes) * Math.PI * 2;
+          const r1 = c.r * 0.5;
+          const r2 = c.r * 1.5;
+
+          const x1 = Math.cos(a) * r1;
+          const y1 = Math.sin(a) * r1;
+
+          const x2 = Math.cos(a + Math.PI / spikes) * r2;
+          const y2 = Math.sin(a + Math.PI / spikes) * r2;
+
+          if (i === 0) ctx.moveTo(x1, y1);
+          else ctx.lineTo(x1, y1);
+
+          ctx.lineTo(x2, y2);
+        }
+        ctx.closePath();
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
 
   const statePizzaCutter = {
     spokes: [],
@@ -251,8 +433,8 @@ export function setup(host) {
     statePizzaCutter.t = 0;
     statePizzaCutter.cycle = 0;
     statePizzaCutter.spawned = false;
-    statePizzaCutter.cx = mouse.x + (Math.random() - 0.5) * 1000;
-    statePizzaCutter.cy = mouse.y + (Math.random() - 0.5) * 1000;
+    statePizzaCutter.cx = mouse.x + (Math.random() - 0.5) * 2000;
+    statePizzaCutter.cy = mouse.y + (Math.random() - 0.5) * 2000;
     statePizzaCutter.initialized = true;
   }
   function updatePizzaCutter(dt) {
@@ -296,7 +478,7 @@ export function setup(host) {
         }
       }
       if (s.t >= 2.5) {
-        s.offset += dt * 5000;
+        s.offset += dt * (statePizzaCutter.cycle >= 4 ? 10000 : 5000);
       }
       if (s.t > 3) {
         s.active = false;
@@ -334,7 +516,8 @@ export function setup(host) {
           ctx.rect(s.offset, -w / 2, len, w);
           ctx.stroke();
         } else if (i < 4) {
-          ctx.globalAlpha = s.t < 0.5 ? s.t * 1.5 : 0.75;
+          ctx.globalAlpha =
+            s.t < 0.5 && statePizzaCutter.cycle == 0 ? s.t * 1.5 : 0.75;
 
           const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
           grad.addColorStop(0, "rgba(255,0,255,0)");
@@ -680,8 +863,8 @@ export function setup(host) {
     s.t = 0;
     s.active = true;
 
-    s.cx = mouse.x + (Math.random() - 0.5) * 1000;
-    s.cy = mouse.y + (Math.random() - 0.5) * 1000;
+    s.cx = mouse.x + (Math.random() - 0.5) * 2000;
+    s.cy = mouse.y + (Math.random() - 0.5) * 2000;
     s.w = 625;
 
     s.ex = mouse.x;
