@@ -164,6 +164,7 @@ let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
+export let slowmode = false;
 let abilityCooldown = 0;
 let parried = false;
 let soundParry = false;
@@ -838,6 +839,18 @@ topLeftInput.addEventListener("input", () => {
       spawnGlitch(entityHost, true);
       if (i >= 10) clearInterval(interval);
     }, 100);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "suicide") {
+    death();
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "slowmode") {
+    slowmode = !slowmode;
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();

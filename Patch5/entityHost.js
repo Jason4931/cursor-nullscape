@@ -16,6 +16,7 @@ import {
   setDeathOpacity,
   ability,
   setParried,
+  slowmode,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -48,7 +49,7 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 
   function update(dt) {
     for (const e of [...entities]) {
-      e.update?.(dt);
+      e.update?.(dt * (slowmode ? 0.5 : 1));
     }
   }
 
