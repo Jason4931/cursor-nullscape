@@ -396,7 +396,7 @@ const ENTITY_POOL = [
     name: "Celestial",
     spawn: () => spawnCelestial(entityHost),
     start: 1000000000,
-    src: "./ASSET/Enemies/CatalystIcon.png",
+    src: "./ASSET/Enemies/Celestial.png",
     desc: "YOU SHALL WILT IN THIS DANCE WITH ME.",
   },
 ];
