@@ -177,6 +177,7 @@ const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
 export let slowmode = false;
+export let ultrafastmode = false;
 let abilityCooldown = 0;
 let parried = false;
 let soundParry = false;
@@ -945,6 +946,12 @@ topLeftInput.addEventListener("input", () => {
   }
   if (input === "slowmode") {
     slowmode = !slowmode;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "ultrafastmode") {
+    ultrafastmode = !ultrafastmode;
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();

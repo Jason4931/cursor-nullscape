@@ -17,6 +17,7 @@ import {
   ability,
   setParried,
   slowmode,
+  ultrafastmode,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -49,7 +50,7 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 
   function update(dt) {
     for (const e of [...entities]) {
-      e.update?.(dt * (slowmode ? 0.5 : 1));
+      e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
     }
   }
 
