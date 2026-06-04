@@ -91,6 +91,7 @@ export function setup(host) {
       targetR: 200,
       active: true,
       phase: 0,
+      opacity: 0,
     };
   }
   function spawnCircle() {
@@ -306,6 +307,7 @@ export function setup(host) {
 
     for (const c of s.circles) {
       c.t += dt;
+      c.opacity += dt * 4;
 
       if (c.t < 0.25) {
         c.r = 5;
@@ -339,6 +341,7 @@ export function setup(host) {
 
     for (const c of s.circles) {
       ctx.save();
+      ctx.globalAlpha = c.opacity;
       ctx.translate(c.x, c.y);
 
       if (c.phase < 2) {
@@ -380,6 +383,7 @@ export function setup(host) {
     }
     for (const c of s.circles) {
       ctx.save();
+      ctx.globalAlpha = c.opacity;
       ctx.translate(c.x, c.y);
 
       if (c.phase < 2) {
