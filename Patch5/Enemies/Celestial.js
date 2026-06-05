@@ -253,11 +253,13 @@ export function setup(host) {
       ctx.lineWidth = 18;
 
       ctx.shadowColor = "magenta";
-      ctx.shadowBlur = 100;
+      ctx.shadowBlur = 75;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
 
       ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
+
+      ctx.strokeStyle = "transparent";
 
       ctx.restore();
     }
@@ -359,6 +361,7 @@ export function setup(host) {
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
         ctx.stroke();
+        ctx.strokeStyle = "transparent";
       } else {
         const spikes = 6;
 
@@ -391,6 +394,8 @@ export function setup(host) {
         ctx.shadowOffsetY = 0;
 
         ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
       }
 
       ctx.restore();
@@ -472,7 +477,7 @@ export function setup(host) {
 
       if (s.t >= 2 && s.t < 2.5) {
         const len = 20000;
-        const w = 100;
+        const w = 90;
 
         for (let i = 0; i < 8; i++) {
           const angle = s.angle + i * (Math.PI / 4);
@@ -523,7 +528,7 @@ export function setup(host) {
       for (let i = 0; i < 8; i++) {
         ctx.rotate(Math.PI / 4);
 
-        const w = 100;
+        const w = isLethal ? 90 : 100;
         const len = 20000;
 
         if (isLethal) {
@@ -531,13 +536,15 @@ export function setup(host) {
           ctx.lineWidth = 18;
 
           ctx.shadowColor = "magenta";
-          ctx.shadowBlur = 100;
+          ctx.shadowBlur = 75;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
 
           ctx.beginPath();
           ctx.rect(s.offset, -w / 2, len, w);
           ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
         } else if (i < 4) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
@@ -566,7 +573,7 @@ export function setup(host) {
       for (let i = 0; i < 8; i++) {
         ctx.rotate(Math.PI / 4);
 
-        const w = 100;
+        const w = 90;
         const len = 20000;
 
         if (isLethal) {
@@ -640,13 +647,15 @@ export function setup(host) {
         ctx.lineWidth = 18;
 
         ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
+        ctx.shadowBlur = 75;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
       }
 
       ctx.restore();
@@ -810,11 +819,13 @@ export function setup(host) {
       ctx.lineWidth = 18;
 
       ctx.shadowColor = "magenta";
-      ctx.shadowBlur = 100;
+      ctx.shadowBlur = 75;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
 
       ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
+
+      ctx.strokeStyle = "transparent";
 
       ctx.restore();
     }
@@ -842,13 +853,16 @@ export function setup(host) {
         ctx.lineWidth = 18;
 
         ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
+        ctx.shadowBlur = 75;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+
         ctx.fill();
       }
 
