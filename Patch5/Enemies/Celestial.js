@@ -2,63 +2,63 @@ import { death, mouse } from "../entityHost.js";
 
 export function setup(host) {
   const loopPattern = [
-    {
-      duration: 5.5,
-      update: updateFall,
-      draw: drawFall,
-      enter: enterFall,
-    },
+    // {
+    //   duration: 5.5,
+    //   update: updateFall,
+    //   draw: drawFall,
+    //   enter: enterFall,
+    // },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
       enter: enterImplosion,
     },
-    {
-      duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      enter: enterPizzaCutter,
-    },
-    // {
-    //   duration: 13,
-    //   update: updateFutile,
-    //   draw: drawFutile,
-    //   enter: enterFutile,
-    // },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      enter: enterCrumble,
-    },
     // {
     //   duration: 9,
-    //   update: updateBitter,
-    //   draw: drawBitter,
-    //   enter: enterBitter,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   enter: enterPizzaCutter,
     // },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      enter: enterCease,
-    },
-    {
-      duration: 22,
-      update: updateDeathInBloom,
-      draw: drawDeathInBloom,
-      enter: enterDeathInBloom,
-    },
+    // // {
+    // //   duration: 13,
+    // //   update: updateFutile,
+    // //   draw: drawFutile,
+    // //   enter: enterFutile,
+    // // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   enter: enterCrumble,
+    // },
+    // // {
+    // //   duration: 9,
+    // //   update: updateBitter,
+    // //   draw: drawBitter,
+    // //   enter: enterBitter,
+    // // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   enter: enterCease,
+    // },
+    // {
+    //   duration: 22,
+    //   update: updateDeathInBloom,
+    //   draw: drawDeathInBloom,
+    //   enter: enterDeathInBloom,
+    // },
   ];
   const state = {
     opacity: 1,
 
     currentPattern: {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      enter: () => {},
+      update: () => { },
+      draw: () => { },
+      enter: () => { },
     },
     patternTime: 0,
   };
@@ -88,15 +88,15 @@ export function setup(host) {
   function spawnImplosionCircle() {
     const angle = Math.random() * Math.PI * 2;
 
-    const x = mouse.x + Math.cos(angle) * 700;
-    const y = mouse.y + Math.sin(angle) * 700;
+    const x = mouse.x + Math.cos(angle) * 800;
+    const y = mouse.y + Math.sin(angle) * 800;
 
     return {
       x,
       y,
       t: 0,
       r: 0,
-      targetR: 200,
+      targetR: 300,
       active: true,
       phase: 0,
       opacity: 0,
@@ -1309,7 +1309,7 @@ export function setup(host) {
     if (state.patternTime >= state.currentPattern.duration) {
       state.currentPattern =
         loopPattern[
-          (loopPattern.indexOf(state.currentPattern) + 1) % loopPattern.length
+        (loopPattern.indexOf(state.currentPattern) + 1) % loopPattern.length
         ];
       state.patternTime = 0;
       state.currentPattern.enter?.();
