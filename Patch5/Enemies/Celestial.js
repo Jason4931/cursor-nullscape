@@ -2,54 +2,54 @@ import { death, mouse } from "../entityHost.js";
 
 export function setup(host) {
   const loopPattern = [
-    // {
-    //   duration: 5.5,
-    //   update: updateFall,
-    //   draw: drawFall,
-    //   enter: enterFall,
-    // },
+    {
+      duration: 5.5,
+      update: updateFall,
+      draw: drawFall,
+      enter: enterFall,
+    },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
       enter: enterImplosion,
     },
+    {
+      duration: 9,
+      update: updatePizzaCutter,
+      draw: drawPizzaCutter,
+      enter: enterPizzaCutter,
+    },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   enter: enterFutile,
+    // },
+    {
+      duration: 3,
+      update: updateCrumble,
+      draw: drawCrumble,
+      enter: enterCrumble,
+    },
     // {
     //   duration: 9,
-    //   update: updatePizzaCutter,
-    //   draw: drawPizzaCutter,
-    //   enter: enterPizzaCutter,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   enter: enterBitter,
     // },
-    // // {
-    // //   duration: 13,
-    // //   update: updateFutile,
-    // //   draw: drawFutile,
-    // //   enter: enterFutile,
-    // // },
-    // {
-    //   duration: 3,
-    //   update: updateCrumble,
-    //   draw: drawCrumble,
-    //   enter: enterCrumble,
-    // },
-    // // {
-    // //   duration: 9,
-    // //   update: updateBitter,
-    // //   draw: drawBitter,
-    // //   enter: enterBitter,
-    // // },
-    // {
-    //   duration: 3,
-    //   update: updateCease,
-    //   draw: drawCease,
-    //   enter: enterCease,
-    // },
-    // {
-    //   duration: 22,
-    //   update: updateDeathInBloom,
-    //   draw: drawDeathInBloom,
-    //   enter: enterDeathInBloom,
-    // },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      enter: enterCease,
+    },
+    {
+      duration: 22,
+      update: updateDeathInBloom,
+      draw: drawDeathInBloom,
+      enter: enterDeathInBloom,
+    },
   ];
   const state = {
     opacity: 1,
