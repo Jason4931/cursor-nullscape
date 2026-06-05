@@ -252,6 +252,11 @@ export function setup(host) {
       }
       ctx.lineWidth = 18;
 
+      ctx.shadowColor = "magenta";
+      ctx.shadowBlur = 100;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
       ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
 
       ctx.restore();
@@ -347,6 +352,10 @@ export function setup(host) {
       if (c.phase < 2) {
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
         ctx.stroke();
@@ -375,6 +384,11 @@ export function setup(host) {
           ctx.lineTo(x2, y2);
         }
         ctx.closePath();
+
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
 
         ctx.stroke();
       }
@@ -516,6 +530,11 @@ export function setup(host) {
           ctx.strokeStyle = "magenta";
           ctx.lineWidth = 18;
 
+          ctx.shadowColor = "magenta";
+          ctx.shadowBlur = 100;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+
           ctx.beginPath();
           ctx.rect(s.offset, -w / 2, len, w);
           ctx.stroke();
@@ -619,6 +638,11 @@ export function setup(host) {
       if (c.t >= 2) {
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
+
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -785,6 +809,11 @@ export function setup(host) {
       }
       ctx.lineWidth = 18;
 
+      ctx.shadowColor = "magenta";
+      ctx.shadowBlur = 100;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
       ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
 
       ctx.restore();
@@ -811,6 +840,11 @@ export function setup(host) {
         ctx.fillStyle = "black";
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
+
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
