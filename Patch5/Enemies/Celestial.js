@@ -70,7 +70,7 @@ export function setup(host) {
     }
     arr.length = j;
   }
-  const BEAM_RADIUS = 2000;
+  const BEAM_RADIUS = 20000;
   function spawnBeam(x, y, baseAngle, armTime = 1) {
     const base = baseAngle ?? Math.random() * Math.PI * 2;
     return {
@@ -784,6 +784,7 @@ export function setup(host) {
       x: 0,
       y: 0,
     },
+    positions: [],
   };
   function enterCease() {
     stateCease.beams = [];
@@ -795,6 +796,7 @@ export function setup(host) {
       x: mouse.x,
       y: mouse.y,
     };
+    stateCease.positions = [];
   }
   function updateCease(dt) {
     stateCease.timer += dt;
@@ -808,13 +810,24 @@ export function setup(host) {
     ) {
       stateCease.rapidTimer -= interval;
 
+      let x, y;
+      const minDist = 500;
+
+      do {
+        x = mouse.x + (Math.random() - 0.5) * 5000;
+        y = mouse.y + (Math.random() - 0.5) * 5000;
+      } while (
+        stateCease.positions.some((p) => {
+          const dx = x - p.x;
+          const dy = y - p.y;
+          return dx * dx + dy * dy < minDist * minDist;
+        })
+      );
+
+      stateCease.positions.push({ x, y });
+
       stateCease.beams.push(
-        spawnBeam(
-          mouse.x + (Math.random() - 0.5) * 5000,
-          mouse.y + (Math.random() - 0.5) * 5000,
-          Math.random() * Math.PI * 2,
-          2 - stateCease.timer,
-        ),
+        spawnBeam(x, y, Math.random() * Math.PI * 2, 2 - stateCease.timer),
       );
     }
 

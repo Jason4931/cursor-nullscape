@@ -1297,7 +1297,6 @@ export function playSound(
 
   function stop() {
     if (stopped) return;
-    stopped = true;
     audio.pause();
     if (Number.isFinite(audio.duration)) {
       audio.currentTime = clip.start * audio.duration;
@@ -1305,6 +1304,7 @@ export function playSound(
       audio.currentTime = 0;
     }
     activeSounds.delete(entry);
+    stopped = true;
   }
   const entry = { stop, audio };
   if (
