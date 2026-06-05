@@ -273,17 +273,41 @@ export function setup(host) {
 
       if (!armed) {
         ctx.strokeStyle = "transparent";
-        ctx.shadowBlur = 0;
       } else {
         ctx.strokeStyle = "magenta";
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
       }
 
       const x = b._rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
 
-      if (b.width < 1) ctx.shadowBlur = 0;
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,255,0)");
+        gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+        gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
       ctx.strokeRect(x, -b.width * 0.5, len, b.width);
 
       ctx.restore();
@@ -383,13 +407,17 @@ export function setup(host) {
       if (c.phase < 2) {
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
         ctx.stroke();
+        const glow = 200;
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
         ctx.strokeStyle = "transparent";
       } else {
         const spikes = 6;
@@ -416,11 +444,6 @@ export function setup(host) {
           ctx.lineTo(x2, y2);
         }
         ctx.closePath();
-
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
         ctx.stroke();
 
@@ -572,10 +595,22 @@ export function setup(host) {
           ctx.strokeStyle = "magenta";
           ctx.lineWidth = 18;
 
-          ctx.shadowColor = "magenta";
-          ctx.shadowBlur = 100;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
+          const drawX = Math.max(x, s.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,255,0)");
+          gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+          gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
 
           ctx.beginPath();
           ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
@@ -688,13 +723,19 @@ export function setup(host) {
       ctx.globalAlpha = alpha;
 
       if (c.t >= 2) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
-
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -870,10 +911,6 @@ export function setup(host) {
         ctx.strokeStyle = "transparent";
       } else {
         ctx.strokeStyle = "magenta";
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
       }
       ctx.lineWidth = 18;
 
@@ -883,6 +920,34 @@ export function setup(host) {
       const x = b.rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
 
+      if (b.t >= b.armTime) {
+        const glow = 100;
+        const drawX = x;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,255,0)");
+        gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(drawX, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+        gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(drawX, b.width / 2, len, glow);
+      }
       ctx.strokeRect(x, -b.width / 2, len, b.width);
 
       ctx.strokeStyle = "transparent";
@@ -908,14 +973,20 @@ export function setup(host) {
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
       } else {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.fillStyle = "black";
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
-
-        ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 100;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
