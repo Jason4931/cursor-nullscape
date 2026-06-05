@@ -63,6 +63,14 @@ export function setup(host) {
     patternTime: 0,
   };
 
+  function compact(arr) {
+    let j = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].active) arr[j++] = arr[i];
+    }
+    arr.length = j;
+  }
+  const BEAM_RADIUS = 2000;
   function spawnBeam(x, y, baseAngle, armTime = 1) {
     const base = baseAngle ?? Math.random() * Math.PI * 2;
     return {
@@ -159,132 +167,153 @@ export function setup(host) {
     stateFall.prevMx = mouse.x;
     stateFall.prevMy = mouse.y;
   }
+  const HALF_LEN = 2000;
+  const GROW_TIME = 0.5;
+  const SHRINK_SPEED = 200;
+  const DURATIONS = [1, 1, 1, 2];
   function updateFall(dt) {
-    const mvx = mouse.x - stateFall.prevMx;
-    const mvy = mouse.y - stateFall.prevMy;
+    const mx = mouse.x;
+    const my = mouse.y;
 
-    stateFall.prevMx = mouse.x;
-    stateFall.prevMy = mouse.y;
+    const mvx = mx - stateFall.prevMx;
+    const mvy = my - stateFall.prevMy;
 
-    const px = mouse.x + mvx;
-    const py = mouse.y + mvy;
+    stateFall.prevMx = mx;
+    stateFall.prevMy = my;
+
+    const px = mx + mvx;
+    const py = my + mvy;
+
+    const cycle = stateFall.cycle;
 
     if (stateFall.timer === 0) {
-      if (stateFall.cycle === 3) {
+      if (cycle === 3) {
         const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 6;
 
         stateFall.beams.push(spawnBeam(px, py, base, 1.5));
         stateFall.beams.push(spawnBeam(px, py, base - spread, 1.5));
         stateFall.beams.push(spawnBeam(px, py, base + spread, 1.5));
-      } else if (stateFall.cycle < 3) {
+      } else if (cycle < 3) {
         stateFall.beams.push(spawnBeam(px, py, undefined, 1));
       }
     }
 
     stateFall.timer += dt;
 
-    const durations = [1, 1, 1, 2];
-
-    if (stateFall.timer >= durations[stateFall.cycle]) {
+    if (stateFall.timer >= DURATIONS[cycle]) {
       stateFall.timer = 0;
-      stateFall.cycle = stateFall.cycle + 1;
+      stateFall.cycle = cycle + 1;
     }
 
     for (const b of stateFall.beams) {
-      b.t += dt;
+      let t = (b.t += dt);
 
-      if (b.t < 0.5) {
-        const p = b.t / 0.5;
+      // width handling
+      if (t < GROW_TIME) {
+        const p = t / GROW_TIME;
         const eased = 1 - (1 - p) * (1 - p);
         b.width = b.targetWidth * eased;
-      } else if (b.t < b.armTime) {
+      } else if (t < b.armTime) {
         b.width = b.targetWidth;
       } else {
-        b.width -= dt * 200;
-        if (b.width <= 0) b.active = false;
+        const w = b.width - dt * SHRINK_SPEED;
+        b.width = w;
+        if (w <= 0) b.active = false;
       }
 
-      const dx = mouse.x - b.x;
-      const dy = mouse.y - b.y;
+      // rotation + transform
+      const dx = mx - b.x;
+      const dy = my - b.y;
 
-      const cos = Math.cos(-b.angle);
-      const sin = Math.sin(-b.angle);
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
 
       const rx = dx * cos - dy * sin;
       const ry = dx * sin + dy * cos;
 
-      const halfLen = 2000;
-      const halfW = b.width / 2;
+      const halfW = b.width * 0.5;
 
       if (
         b.active &&
-        b.t >= b.armTime &&
-        Math.abs(rx) < halfLen &&
+        t >= b.armTime &&
+        Math.abs(rx) < HALF_LEN &&
         Math.abs(ry) < halfW
       ) {
         death("Celestial");
       }
+
+      // cache for draw
+      b._rx = rx;
     }
 
-    stateFall.beams = stateFall.beams.filter((b) => b.active);
+    compact(stateFall.beams);
   }
   function drawFall(ctx) {
     for (const b of stateFall.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
+
       let a = b.angle;
-      if (b.t < 0.5) {
-        const p = b.t / 0.5;
+      if (b.t < GROW_TIME) {
+        const p = b.t / GROW_TIME;
         const eased = 1 - (1 - p) * (1 - p);
         a = b.startAngle + (b.angle - b.startAngle) * eased;
       }
+
       ctx.rotate(a);
 
-      const alpha = b.t < b.armTime ? 0.5 : 1;
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
 
       ctx.globalAlpha = alpha;
-      if (b.t < b.armTime) {
-        ctx.strokeStyle = "transparent";
-      } else {
-        ctx.strokeStyle = "magenta";
-      }
       ctx.lineWidth = 18;
 
-      ctx.shadowColor = "magenta";
-      ctx.shadowBlur = 75;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.strokeStyle = "magenta";
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+      }
 
-      ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
 
-      ctx.strokeStyle = "transparent";
+      if (b.width < 1) ctx.shadowBlur = 0;
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
 
       ctx.restore();
     }
+
+    // KEEP SECOND LOOP (layering)
     for (const b of stateFall.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
+
       let a = b.angle;
-      if (b.t < 0.5) {
-        const p = b.t / 0.5;
+      if (b.t < GROW_TIME) {
+        const p = b.t / GROW_TIME;
         const eased = 1 - (1 - p) * (1 - p);
         a = b.startAngle + (b.angle - b.startAngle) * eased;
       }
+
       ctx.rotate(a);
 
-      const alpha = b.t < b.armTime ? 0.5 : 1;
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
 
       ctx.globalAlpha = alpha;
-      if (b.t < b.armTime) {
-        ctx.fillStyle = "magenta";
-      } else {
-        ctx.fillStyle = "black";
-      }
+      ctx.fillStyle = armed ? "black" : "magenta";
 
-      ctx.fillRect(-10000, -b.width / 2, 20000, b.width);
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
 
       ctx.restore();
     }
@@ -341,7 +370,7 @@ export function setup(host) {
       }
     }
 
-    s.circles = s.circles.filter((c) => c.active);
+    compact(s.circles);
   }
   function drawImplosion(ctx) {
     const s = stateImplosion;
@@ -529,19 +558,27 @@ export function setup(host) {
         ctx.rotate(Math.PI / 4);
 
         const w = isLethal ? 90 : 100;
-        const len = 20000;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
           ctx.strokeStyle = "magenta";
           ctx.lineWidth = 18;
 
           ctx.shadowColor = "magenta";
-          ctx.shadowBlur = 75;
+          ctx.shadowBlur = 100;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
 
           ctx.beginPath();
-          ctx.rect(s.offset, -w / 2, len, w);
+          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
           ctx.stroke();
 
           ctx.strokeStyle = "transparent";
@@ -556,7 +593,7 @@ export function setup(host) {
           grad.addColorStop(1, "rgba(255,0,255,0)");
 
           ctx.fillStyle = grad;
-          ctx.fillRect(-len / 2, -w / 2, len, w);
+          ctx.fillRect(x, -w / 2, len, w);
         }
       }
 
@@ -574,12 +611,20 @@ export function setup(host) {
         ctx.rotate(Math.PI / 4);
 
         const w = 90;
-        const len = 20000;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
           ctx.beginPath();
           ctx.fillStyle = "black";
-          ctx.fillRect(s.offset, -w / 2, len, w);
+          ctx.fillRect(Math.max(x, s.offset), -w / 2, len, w);
         }
       }
 
@@ -631,7 +676,7 @@ export function setup(host) {
       }
     }
 
-    stateCrumble.circles = stateCrumble.circles.filter((c) => c.active);
+    compact(stateCrumble.circles);
   }
   function drawCrumble(ctx) {
     for (const c of stateCrumble.circles) {
@@ -647,7 +692,7 @@ export function setup(host) {
         ctx.lineWidth = 18;
 
         ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 75;
+        ctx.shadowBlur = 100;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
@@ -715,7 +760,11 @@ export function setup(host) {
     stateCease.rapidTimer += dt;
 
     const interval = 0.5 / 40;
-    while (stateCease.rapidTimer >= interval && stateCease.timer < 0.5) {
+    while (
+      stateCease.rapidTimer >= interval &&
+      stateCease.beams.length < 40 &&
+      stateCease.timer <= 1
+    ) {
       stateCease.rapidTimer -= interval;
 
       stateCease.beams.push(
@@ -758,6 +807,18 @@ export function setup(host) {
     }
 
     for (const b of stateCease.beams) {
+      let a = b.angle;
+
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      b.renderAngle = a;
+      b.cos = Math.cos(-a);
+      b.sin = Math.sin(-a);
+
       b.t += dt;
 
       if (b.t < 0.5) {
@@ -774,11 +835,11 @@ export function setup(host) {
       const dx = mouse.x - b.x;
       const dy = mouse.y - b.y;
 
-      const cos = Math.cos(-b.angle);
-      const sin = Math.sin(-b.angle);
+      b.rx = dx * b.cos - dy * b.sin;
+      b.ry = dx * b.sin + dy * b.cos;
 
-      const rx = dx * cos - dy * sin;
-      const ry = dx * sin + dy * cos;
+      const rx = b.rx;
+      const ry = b.ry;
 
       const halfLen = 2000;
       const halfW = b.width / 2;
@@ -793,20 +854,14 @@ export function setup(host) {
       }
     }
 
-    stateCease.beams = stateCease.beams.filter((b) => b.active);
+    compact(stateCease.beams);
   }
   function drawCease(ctx) {
     for (const b of stateCease.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
-      let a = b.angle;
-      if (b.t < 0.5) {
-        const p = b.t / 0.5;
-        const eased = 1 - (1 - p) * (1 - p);
-        a = b.startAngle + (b.angle - b.startAngle) * eased;
-      }
-      ctx.rotate(a);
+      ctx.rotate(b.renderAngle);
 
       const alpha = b.t < b.armTime ? 0.5 : 1;
 
@@ -815,15 +870,20 @@ export function setup(host) {
         ctx.strokeStyle = "transparent";
       } else {
         ctx.strokeStyle = "magenta";
+        ctx.shadowColor = "magenta";
+        ctx.shadowBlur = 100;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
       }
       ctx.lineWidth = 18;
 
-      ctx.shadowColor = "magenta";
-      ctx.shadowBlur = 75;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
+      const dx = mouse.x - b.x;
+      const dy = mouse.y - b.y;
 
-      ctx.strokeRect(-10000, -b.width / 2, 20000, b.width);
+      const x = b.rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.strokeRect(x, -b.width / 2, len, b.width);
 
       ctx.strokeStyle = "transparent";
 
@@ -853,7 +913,7 @@ export function setup(host) {
         ctx.lineWidth = 18;
 
         ctx.shadowColor = "magenta";
-        ctx.shadowBlur = 75;
+        ctx.shadowBlur = 100;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
@@ -872,13 +932,7 @@ export function setup(host) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
-      let a = b.angle;
-      if (b.t < 0.5) {
-        const p = b.t / 0.5;
-        const eased = 1 - (1 - p) * (1 - p);
-        a = b.startAngle + (b.angle - b.startAngle) * eased;
-      }
-      ctx.rotate(a);
+      ctx.rotate(b.renderAngle);
 
       const alpha = b.t < b.armTime ? 0.5 : 1;
 
@@ -889,7 +943,13 @@ export function setup(host) {
         ctx.fillStyle = "black";
       }
 
-      ctx.fillRect(-10000, -b.width / 2, 20000, b.width);
+      const dx = mouse.x - b.x;
+      const dy = mouse.y - b.y;
+
+      const x = b.rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width / 2, len, b.width);
 
       ctx.restore();
     }
@@ -1030,7 +1090,7 @@ export function setup(host) {
         p.active = false;
       }
     }
-    s.particles = s.particles.filter((p) => p.active);
+    compact(s.particles);
 
     if (s.t >= 5 && s.t < 21) {
       s.w = Math.random() * 50 + 575;
@@ -1064,6 +1124,16 @@ export function setup(host) {
     ctx.translate(s.cx, s.cy);
     ctx.rotate(s.angle);
 
+    const dx = mouse.x - s.cx;
+    const dy = mouse.y - s.cy;
+
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
+    const rx = dx * cos - dy * sin;
+    const x = rx - BEAM_RADIUS;
+    const len = BEAM_RADIUS * 2;
+
     const isLethal = s.t >= 5;
 
     if (!isLethal) {
@@ -1076,7 +1146,7 @@ export function setup(host) {
       ctx.lineWidth = 18 * (Math.random() + 2);
 
       ctx.beginPath();
-      ctx.rect(0, -s.w / 2, s.len, s.w);
+      ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
       ctx.stroke();
 
       ctx.fillStyle = "black";
@@ -1100,7 +1170,7 @@ export function setup(host) {
     grad.addColorStop(1, "magenta");
 
     ctx.fillStyle = grad;
-    ctx.fillRect(0, -edgeOffset - glowSize, s.len, glowSize);
+    ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
 
     let grad2 = ctx.createLinearGradient(
       0,
@@ -1112,7 +1182,7 @@ export function setup(host) {
     grad2.addColorStop(1, "rgba(255,0,255,0)");
 
     ctx.fillStyle = grad2;
-    ctx.fillRect(0, edgeOffset, s.len, glowSize);
+    ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
 
     ctx.restore();
 
@@ -1120,14 +1190,14 @@ export function setup(host) {
     ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
     ctx.fillStyle = "magenta";
     const w = s.w * (Math.random() + 1);
-    ctx.fillRect(0, -w / 2, s.len, w);
+    ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
     ctx.restore();
-    ctx.fillRect(0, -s.w / 2, s.len, s.w);
+    ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
     if (isLethal) {
       ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "magenta";
       ctx.rotate(Math.PI);
-      ctx.fillRect(0, -s.w / 2, s.len, s.w);
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, s.len, s.w);
     }
 
     ctx.restore();
@@ -1135,7 +1205,7 @@ export function setup(host) {
       ctx.save();
 
       ctx.globalAlpha =
-        (s.t > 5 ? Math.random * 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+        (s.t > 5 ? Math.random() * 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "black";
 
       ctx.beginPath();
