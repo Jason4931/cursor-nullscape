@@ -70,7 +70,7 @@ export function setup(host) {
     }
     arr.length = j;
   }
-  const BEAM_RADIUS = 20000;
+  const BEAM_RADIUS = 7000;
   function spawnBeam(x, y, baseAngle, armTime = 1) {
     const base = baseAngle ?? Math.random() * Math.PI * 2;
     return {
@@ -1281,7 +1281,7 @@ export function setup(host) {
       ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "magenta";
       ctx.rotate(Math.PI);
-      ctx.fillRect(Math.max(x, 0), -s.w / 2, s.len, s.w);
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
     }
 
     ctx.restore();
