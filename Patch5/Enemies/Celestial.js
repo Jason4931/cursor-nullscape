@@ -1,6 +1,13 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, canvas } from "../main.js";
 
+const Celestial = [];
+for (let i = 1; i <= 25; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Layer ${i}.png`;
+  Celestial.push(img);
+}
+
 export let phase = { phase: 1 };
 export function setup(host) {
   const loopPattern = [
@@ -8,48 +15,56 @@ export function setup(host) {
       duration: 5.5,
       update: updateFall,
       draw: drawFall,
+      drawFront: drawFallFront,
       enter: enterFall,
     },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
+      drawFront: drawImplosionFront,
       enter: enterImplosion,
     },
     {
       duration: 9,
       update: updatePizzaCutter,
       draw: drawPizzaCutter,
+      drawFront: drawPizzaCutterFront,
       enter: enterPizzaCutter,
     },
     {
       duration: 13,
       update: updateFutile,
       draw: drawFutile,
+      drawFront: drawFutileFront,
       enter: enterFutile,
     },
     {
       duration: 3,
       update: updateCrumble,
       draw: drawCrumble,
+      drawFront: drawCrumbleFront,
       enter: enterCrumble,
     },
     {
       duration: 8,
       update: updateBitter,
       draw: drawBitter,
+      drawFront: drawBitterFront,
       enter: enterBitter,
     },
     {
       duration: 3,
       update: updateCease,
       draw: drawCease,
+      drawFront: drawCeaseFront,
       enter: enterCease,
     },
     {
       duration: 22,
       update: updateDeathInBloom,
       draw: drawDeathInBloom,
+      drawFront: drawDeathInBloomFront,
       enter: enterDeathInBloom,
     },
   ];
@@ -63,7 +78,45 @@ export function setup(host) {
       enter: () => {},
     },
     patternTime: 0,
+
+    layers: Celestial,
+    enemy: null,
+    layer: 0,
+
+    enemyX: mouse.x + 600,
+    enemyY: mouse.y,
+    lastAng: 0,
+    ang: 0,
+    enemyMode: "orbit",
+    enemyT: 0,
+    enemyOrbitTarget: { x: 0, y: 0 },
+    enemyFixed: { x: 0, y: 0 },
+    enemyScale: 1,
+    enemyTransition: "none",
+    enemyTransitionT: 0,
+    enemyTrail: [],
   };
+
+  function enterFixed(x, y, transition = true) {
+    state.enemyMode = "fixed";
+    state.enemyFixed.x = x;
+    state.enemyFixed.y = y;
+
+    if (transition == true) {
+      state.enemyTransition = "shrink";
+      state.enemyTransitionT = 0;
+    } else {
+      state.enemyX = state.enemyFixed.x;
+      state.enemyY = state.enemyFixed.y;
+    }
+  }
+  function enterOrbit() {
+    if (state.enemyMode == "fixed") {
+      state.enemyMode = "orbit";
+      state.enemyTransition = "shrink";
+      state.enemyTransitionT = 0;
+    }
+  }
 
   function compact(arr) {
     let j = 0;
@@ -246,6 +299,7 @@ export function setup(host) {
     prevMy: 0,
   };
   function enterFall() {
+    enterOrbit();
     stateFall.beams = [];
     stateFall.timer = 0;
     stateFall.cycle = 0;
@@ -397,8 +451,8 @@ export function setup(host) {
 
       ctx.restore();
     }
-
-    // KEEP SECOND LOOP (layering)
+  }
+  function drawFallFront(ctx) {
     for (const b of stateFall.beams) {
       ctx.save();
 
@@ -434,6 +488,7 @@ export function setup(host) {
     spawned: 0,
   };
   function enterImplosion() {
+    enterOrbit();
     stateImplosion.circles = [];
     stateImplosion.spawnTimer = 0;
     stateImplosion.spawned = 0;
@@ -545,6 +600,10 @@ export function setup(host) {
 
       ctx.restore();
     }
+  }
+  function drawImplosionFront(ctx) {
+    const s = stateImplosion;
+
     for (const c of s.circles) {
       ctx.save();
       ctx.globalAlpha = c.opacity;
@@ -601,8 +660,11 @@ export function setup(host) {
     statePizzaCutter.t = 0;
     statePizzaCutter.cycle = 0;
     statePizzaCutter.spawned = false;
-    statePizzaCutter.cx = mouse.x + (Math.random() - 0.5) * 2000;
-    statePizzaCutter.cy = mouse.y + (Math.random() - 0.5) * 2000;
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    statePizzaCutter.cx = cx;
+    statePizzaCutter.cy = cy;
+    enterFixed(cx, cy);
     statePizzaCutter.initialized = true;
   }
   function updatePizzaCutter(dt) {
@@ -728,6 +790,8 @@ export function setup(host) {
 
       ctx.restore();
     }
+  }
+  function drawPizzaCutterFront(ctx) {
     for (const s of statePizzaCutter.spokes) {
       ctx.save();
 
@@ -779,6 +843,7 @@ export function setup(host) {
 
     s.rift = spawnFutileRift();
     s.trail = [];
+    enterFixed(-1000, -1000);
   }
   function updateFutile(dt) {
     const s = stateFutile;
@@ -901,9 +966,6 @@ export function setup(host) {
 
       ctx.closePath();
 
-      ctx.fillStyle = "black";
-      ctx.fill();
-
       ctx.strokeStyle = "magenta";
       ctx.lineWidth = 18;
       ctx.stroke();
@@ -969,6 +1031,39 @@ export function setup(host) {
 
       ctx.restore();
     }
+  }
+  function drawFutileFront(ctx) {
+    const s = stateFutile;
+
+    if (s.rift) {
+      const pts = s.rift.points;
+
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
     for (const p of s.trail) {
       ctx.save();
 
@@ -990,6 +1085,7 @@ export function setup(host) {
 
       ctx.restore();
     }
+
     const r = stateFutile.rift;
     if (s.rift && s.rift.t <= 2 && r) {
       const cam = getCameraPos();
@@ -1074,6 +1170,7 @@ export function setup(host) {
     spawnTimer: 0,
   };
   function enterCrumble() {
+    enterOrbit();
     stateCrumble.circles = [];
     for (let i = 0; i < 300; i++) {
       stateCrumble.circles.push(spawnCircle());
@@ -1148,6 +1245,8 @@ export function setup(host) {
 
       ctx.restore();
     }
+  }
+  function drawCrumbleFront(ctx) {
     for (const c of stateCrumble.circles) {
       ctx.save();
 
@@ -1190,8 +1289,11 @@ export function setup(host) {
     stateBitter.cycle = 0;
     stateBitter.spawned = false;
 
-    stateBitter.cx = mouse.x + (Math.random() - 0.5) * 2000;
-    stateBitter.cy = mouse.y + (Math.random() - 0.5) * 2000;
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    stateBitter.cx = cx;
+    stateBitter.cy = cy;
+    enterFixed(cx, cy);
   }
   function updateBitter(dt) {
     const s = stateBitter;
@@ -1272,6 +1374,7 @@ export function setup(host) {
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
+      if (s.cycle <= 2) enterFixed(s.cx, s.cy, false);
       s.spawned = false;
     }
   }
@@ -1335,6 +1438,8 @@ export function setup(host) {
 
       ctx.restore();
     }
+  }
+  function drawBitterFront(ctx) {
     for (const b of stateBitter.spokes) {
       ctx.save();
 
@@ -1375,6 +1480,7 @@ export function setup(host) {
     positions: [],
   };
   function enterCease() {
+    enterOrbit();
     stateCease.beams = [];
     stateCease.timer = 0;
     stateCease.rapidTimer = 0;
@@ -1585,7 +1691,6 @@ export function setup(host) {
         ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "black";
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
 
@@ -1594,7 +1699,25 @@ export function setup(host) {
         ctx.stroke();
 
         ctx.strokeStyle = "transparent";
+      }
 
+      ctx.restore();
+    }
+  }
+  function drawCeaseFront(ctx) {
+    if (stateCease.circle.active) {
+      const c = stateCease.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -1652,6 +1775,7 @@ export function setup(host) {
     const ang = Math.random() * Math.PI * 2;
     s.cx = cx + Math.cos(ang) * 2000;
     s.cy = cy + Math.sin(ang) * 2000;
+    enterFixed(s.cx, s.cy);
     s.w = 625;
 
     s.ex = mouse.x;
@@ -1861,6 +1985,40 @@ export function setup(host) {
 
     ctx.restore();
 
+    ctx.restore();
+  }
+  function drawDeathInBloomFront(ctx) {
+    const s = stateDeathInBloom;
+    if (!s.active) return;
+
+    ctx.save();
+
+    ctx.translate(s.cx, s.cy);
+    ctx.rotate(s.angle);
+
+    const dx = mouse.x - s.cx;
+    const dy = mouse.y - s.cy;
+
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
+    const rx = dx * cos - dy * sin;
+    const x = rx - BEAM_RADIUS;
+    const len = BEAM_RADIUS * 2;
+
+    const isLethal = s.t >= 5;
+
+    if (!isLethal) {
+      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "magenta";
+    } else {
+      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "black";
+    }
+
+    const edgeOffset = s.w / 2;
+    const glowSize = 400;
+
     ctx.save();
     ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
     ctx.fillStyle = "magenta";
@@ -1895,7 +2053,7 @@ export function setup(host) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    state.patternTime += dt;
+    if (state.enemyTransition == "none") state.patternTime += dt;
     if (state.patternTime >= state.currentPattern.duration) {
       state.currentPattern =
         loopPattern[
@@ -1905,7 +2063,99 @@ export function setup(host) {
       state.currentPattern.enter?.();
     }
 
-    state.currentPattern.update(dt);
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
+
+    if (state.enemyTransition == "none") {
+      state.enemyT += dt;
+      if (state.enemyMode === "orbit") {
+        state.enemyT += dt;
+
+        if (state.enemyT >= 1) {
+          state.enemyT = 0;
+          const angDir =
+            state.lastAng >= 0
+              ? Math.random() <= 0.9
+                ? 0.5
+                : -0.5
+              : Math.random() <= 0.9
+                ? -0.5
+                : 0.5;
+          state.ang += angDir;
+          state.lastAng = angDir;
+        }
+
+        const dist = 600;
+
+        const targetX = mouse.x + Math.cos(state.ang) * dist;
+        const targetY = mouse.y + Math.sin(state.ang) * dist;
+
+        const dx = targetX - state.enemyX;
+        const dy = targetY - state.enemyY;
+
+        const ease = 1;
+
+        state.enemyX += dx * ease * dt;
+        state.enemyY += dy * ease * dt;
+
+        const px = state.enemyX - mouse.x;
+        const py = state.enemyY - mouse.y;
+
+        const len = Math.hypot(px, py) || 1;
+
+        state.enemyX = mouse.x + (px / len) * dist;
+        state.enemyY = mouse.y + (py / len) * dist;
+      }
+      if (state.enemyMode === "fixed") {
+        const dx = state.enemyFixed.x - state.enemyX;
+        const dy = state.enemyFixed.y - state.enemyY;
+      }
+    }
+
+    if (state.enemyTransition != "none") state.enemyTransitionT += dt;
+    if (state.enemyTransition == "shrink") {
+      const p = state.enemyTransitionT * 2;
+      const eased = 1 - (1 - p) * (1 - p);
+
+      state.enemyScale = 1 - eased;
+
+      if (p >= 1) {
+        if (state.enemyMode === "fixed") {
+          state.enemyX = state.enemyFixed.x;
+          state.enemyY = state.enemyFixed.y;
+        } else if (state.enemyMode === "orbit") {
+          state.enemyX = mouse.x + 600;
+          state.enemyY = mouse.y;
+        }
+        state.enemyTransitionT = 0;
+        state.enemyTransition = "grow";
+      }
+    } else if (state.enemyTransition <= "grow") {
+      const p = state.enemyTransitionT * 2;
+      const eased = p * p;
+
+      state.enemyScale = eased;
+
+      if (p >= 1) {
+        state.enemyTransition = "none";
+        state.enemyScale = 1;
+      }
+    }
+
+    for (let i = 0; i < 3; i++) {
+      state.enemyTrail.push({
+        x: state.enemyX + (Math.random() - 0.5) * 350,
+        y: state.enemyY + (Math.random() - 0.5) * 350,
+        r: 100,
+      });
+    }
+    for (const t of state.enemyTrail) {
+      t.r -= 3.333;
+    }
+    state.enemyTrail = state.enemyTrail.filter((t) => t.r > 0);
+
+    if (state.enemyTransition == "none") state.currentPattern.update(dt);
   }
 
   function draw(ctx) {
@@ -1914,7 +2164,39 @@ export function setup(host) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    state.currentPattern.draw(ctx);
+    if (state.enemyTransition == "none") state.currentPattern.draw(ctx);
+
+    for (const t of state.enemyTrail) {
+      ctx.save();
+      ctx.translate(t.x, t.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, t.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+    for (const t of state.enemyTrail) {
+      ctx.save();
+      ctx.translate(t.x, t.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, t.r, 0, Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    if (state.enemyTransition == "none") state.currentPattern.drawFront(ctx);
+
+    ctx.save();
+    ctx.translate(state.enemyX, state.enemyY);
+    const size = 700 * state.enemyScale;
+    ctx.drawImage(state.enemy, -size / 2, -size / 2, size, size);
+    ctx.restore();
 
     ctx.restore();
   }
