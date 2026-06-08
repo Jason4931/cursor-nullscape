@@ -1215,7 +1215,7 @@ export function setup(host) {
         b.shot = true;
       }
       if (b.t >= 2) {
-        const speed = 2000;
+        const speed = 1500;
 
         b.x += b.dirX * speed * dt;
         b.y += b.dirY * speed * dt;
@@ -1235,7 +1235,7 @@ export function setup(host) {
           const ry = dx * sin + dy * cos;
 
           const len = 1000;
-          const w = 50;
+          const w = 25;
 
           if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
             death("Celestial");
@@ -1268,7 +1268,7 @@ export function setup(host) {
         ctx.rotate((Math.PI * 2) / b.count);
 
         const len = 1000;
-        const w = isLethal ? 50 : 100;
+        const w = isLethal ? 25 : 50;
 
         if (isLethal) {
           ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
@@ -1327,7 +1327,7 @@ export function setup(host) {
         ctx.rotate((Math.PI * 2) / b.count);
 
         const len = 1000;
-        const w = isLethal ? 50 : 100;
+        const w = isLethal ? 25 : 50;
 
         if (isLethal) {
           ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
