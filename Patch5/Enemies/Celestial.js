@@ -191,7 +191,7 @@ export function setup(host) {
     const dy = mouse.y - y;
 
     const points = [];
-    const segments = 14;
+    const segments = 7;
     const h = 400;
     const maxW = 60;
     let randspike = 1;
@@ -784,7 +784,7 @@ export function setup(host) {
     } else if (r.t < 1) {
       r.scale = 1;
     } else {
-      const p = r.t - 1;
+      const p = (r.t - 1) * 2;
       r.scale = Math.max(0, 1 - p * p);
     }
 
@@ -867,6 +867,15 @@ export function setup(host) {
       ctx.translate(s.rift.x, s.rift.y);
       ctx.rotate(s.rift.angle);
       ctx.scale(s.rift.scale, s.rift.scale);
+
+      const glowSize = 300;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.beginPath();
 
@@ -990,7 +999,7 @@ export function setup(host) {
         Math.min(
           halfW / (Math.abs(Math.cos(ang)) || 0.0001),
           halfH / (Math.abs(Math.sin(ang)) || 0.0001),
-        ) * 0.8;
+        ) * 0.7;
 
       const ex = cx + Math.cos(ang) * scale;
       const ey = cy + Math.sin(ang) * scale;
@@ -1002,6 +1011,15 @@ export function setup(host) {
       ctx.rotate(ang);
 
       ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
+
+      const glowSize = 200;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
 
       ctx.beginPath();
 
@@ -1032,11 +1050,11 @@ export function setup(host) {
       ctx.rotate(ang);
 
       ctx.fillStyle = "magenta";
-      ctx.font = `${s.rift.scale * 50}px monospace`;
+      ctx.font = `${s.rift.scale * 100}px monospace`;
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
 
-      ctx.fillText("➤", s.rift.scale * 80, 0);
+      ctx.fillText("➤", s.rift.scale * 100, 0);
 
       ctx.restore();
     }
