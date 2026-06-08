@@ -511,6 +511,14 @@ export function setup(host) {
         ctx.lineWidth = 18;
 
         ctx.rotate(c.r);
+        const glow = 200;
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
         ctx.beginPath();
         for (let i = 0; i < spikes; i++) {
           const a = (i / spikes) * Math.PI * 2;
