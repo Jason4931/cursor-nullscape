@@ -2170,6 +2170,15 @@ export function setup(host) {
       ctx.save();
       ctx.translate(t.x, t.y);
 
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, t.r, 0, 0, t.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, t.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
       ctx.beginPath();
       ctx.arc(0, 0, t.r, 0, Math.PI * 2);
       ctx.strokeStyle = "magenta";
