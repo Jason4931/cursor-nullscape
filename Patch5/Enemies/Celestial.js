@@ -2143,7 +2143,7 @@ export function setup(host) {
       }
     }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       state.enemyTrail.push({
         x: state.enemyX + (Math.random() - 0.5) * 350,
         y: state.enemyY + (Math.random() - 0.5) * 350,
