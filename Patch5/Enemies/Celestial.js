@@ -1759,7 +1759,7 @@ export function setup(host) {
     for (const p of s.particles) {
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
       ctx.strokeStyle = "magenta";
       ctx.lineWidth = 18;
@@ -1856,8 +1856,7 @@ export function setup(host) {
     for (const p of s.particles) {
       ctx.save();
 
-      ctx.globalAlpha =
-        (s.t > 5 ? Math.random() * 0.8 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
       ctx.fillStyle = "black";
 
       ctx.beginPath();
