@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos } from "../main.js";
+import { getCameraPos, canvas } from "../main.js";
 
 export let phase = { phase: 1 };
 export function setup(host) {
@@ -443,8 +443,8 @@ export function setup(host) {
 
     s.spawnTimer += dt;
 
-    const interval = 1.5 / 20;
-    while (s.spawnTimer >= interval && s.spawned < 20) {
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawned < 15) {
       s.spawnTimer -= interval;
       s.spawned++;
       s.circles.push(spawnImplosionCircle());
@@ -456,8 +456,8 @@ export function setup(host) {
 
       if (c.t < 0.25) {
         c.r = 5;
-      } else if (c.t < 1.0) {
-        const p = (c.t - 0.25) / 0.75;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
         const eased = p * p * (3 - 2 * p);
         c.r = c.targetR * eased;
         c.phase = 1;
@@ -1627,8 +1627,11 @@ export function setup(host) {
     s.t = 0;
     s.active = true;
 
-    s.cx = mouse.x + (Math.random() - 0.5) * 2000;
-    s.cy = mouse.y + (Math.random() - 0.5) * 2000;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const ang = Math.random() * Math.PI * 2;
+    s.cx = cx + Math.cos(ang) * 2000;
+    s.cy = cy + Math.sin(ang) * 2000;
     s.w = 625;
 
     s.ex = mouse.x;
