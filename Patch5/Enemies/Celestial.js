@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { getCameraPos } from "../main.js";
 
 export function setup(host) {
   const loopPattern = [
@@ -20,12 +21,12 @@ export function setup(host) {
       draw: drawPizzaCutter,
       enter: enterPizzaCutter,
     },
-    // {
-    //   duration: 13,
-    //   update: updateFutile,
-    //   draw: drawFutile,
-    //   enter: enterFutile,
-    // },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      enter: enterFutile,
+    },
     {
       duration: 3,
       update: updateCrumble,
@@ -177,6 +178,62 @@ export function setup(host) {
       dirX: 0,
       dirY: 0,
       shot: false,
+    };
+  }
+  function spawnFutileRift() {
+    const dist = 2000;
+    const ang = Math.random() * Math.PI * 2;
+
+    const x = mouse.x + Math.cos(ang) * dist;
+    const y = mouse.y + Math.sin(ang) * dist;
+
+    const dx = mouse.x - x;
+    const dy = mouse.y - y;
+
+    const points = [];
+    const segments = 14;
+    const h = 400;
+    const maxW = 60;
+    let randspike = 1;
+
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      const py = -h / 2 + t * h;
+
+      const centerFalloff = Math.sin(t * Math.PI);
+      const w = maxW * centerFalloff;
+
+      const spike = randspike * Math.random() * 40;
+      randspike *= -1;
+
+      const curve = Math.sin(t * Math.PI * 2) * 20;
+
+      points.push({
+        y: py,
+        lx: -w + spike + curve,
+        rx: w + spike + curve,
+      });
+    }
+
+    return {
+      x,
+      y,
+      angle: Math.atan2(dy, dx),
+      t: 0,
+      points,
+      scale: 0,
+      indicatorT: 0,
+    };
+  }
+  function spawnSnake(rift) {
+    const speed = 2500;
+
+    return {
+      x: rift.x,
+      y: rift.y,
+      vx: Math.cos(rift.angle) * speed,
+      vy: Math.sin(rift.angle) * speed,
+      active: true,
     };
   }
 
@@ -696,10 +753,294 @@ export function setup(host) {
     }
   }
 
-  const stateFutile = {};
-  function enterFutile() {}
-  function updateFutile(dt) {}
-  function drawFutile(ctx) {}
+  const stateFutile = {
+    t: 0,
+    cycle: 0,
+
+    rift: null,
+    snake: null,
+    trail: [],
+  };
+  function enterFutile() {
+    const s = stateFutile;
+
+    s.t = 0;
+    s.cycle = 0;
+    s.snake = null;
+
+    s.rift = spawnFutileRift();
+    s.trail = [];
+  }
+  function updateFutile(dt) {
+    const s = stateFutile;
+
+    s.t += dt;
+    s.rift.t += dt;
+
+    const r = s.rift;
+    if (r.t < 0.25) {
+      const p = r.t / 0.25;
+      r.scale = 1 - (1 - p) * (1 - p);
+    } else if (r.t < 1) {
+      r.scale = 1;
+    } else {
+      const p = r.t - 1;
+      r.scale = Math.max(0, 1 - p * p);
+    }
+
+    if (s.rift.t >= 1 && s.rift.t < 3 && !s.snake) {
+      s.snake = spawnSnake(s.rift);
+    }
+
+    const sn = s.snake;
+    if (sn) {
+      const dx = mouse.x - sn.x;
+      const dy = mouse.y - sn.y;
+
+      const vLen = Math.hypot(sn.vx, sn.vy) || 1;
+      const vx = sn.vx / vLen;
+      const vy = sn.vy / vLen;
+
+      const px = -vy;
+      const py = vx;
+
+      const side = dx * px + dy * py;
+      const forward = dx * vx + dy * vy;
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1);
+
+      sn.vx += px * side * TURN_STRENGTH * dt;
+      sn.vy += py * side * TURN_STRENGTH * dt;
+
+      const newLen = Math.hypot(sn.vx, sn.vy) || 1;
+      const speed = 2500;
+
+      sn.vx = (sn.vx / newLen) * speed;
+      sn.vy = (sn.vy / newLen) * speed;
+
+      sn.x += sn.vx * dt;
+      sn.y += sn.vy * dt;
+
+      const off = 100;
+      if (s.rift.t < 3) {
+        s.trail.push({
+          x: sn.x + (Math.random() - 0.5) * off,
+          y: sn.y + (Math.random() - 0.5) * off,
+          r: 200,
+          a: Math.random() * Math.PI * 2,
+        });
+      }
+
+      if (s.rift.t >= 3) {
+        sn.vx *= 0.85;
+        sn.vy *= 0.85;
+      }
+    }
+
+    for (const p of s.trail) {
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      if (dx * dx + dy * dy < p.r * p.r) {
+        death("Celestial");
+      }
+      p.r -=
+        dt * Math.max(50, p.r) * 1.25 * (s.t >= 12 ? (s.t - 11) * 1.25 : 1);
+    }
+    s.trail = s.trail.filter((p) => p.r > 0);
+
+    if (s.rift.t >= 3) {
+      s.cycle++;
+
+      if (s.cycle < 4) {
+        s.rift = spawnFutileRift();
+      }
+
+      s.snake = null;
+    }
+  }
+  function drawFutile(ctx) {
+    const s = stateFutile;
+
+    if (s.rift) {
+      const pts = s.rift.points;
+
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, p.r, 0, 0, p.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.rotate(p.a);
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0) {
+        const grad = ctx.createLinearGradient(
+          -len / 2 - glowSize,
+          0,
+          -len / 2,
+          0,
+        );
+        grad.addColorStop(0, "rgba(255,0,255,0)");
+        grad.addColorStop(1, `rgba(255,0,255,0.5)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(-len / 2 - glowSize, -w / 2, glowSize, w);
+
+        const grad2 = ctx.createLinearGradient(
+          len / 2,
+          0,
+          len / 2 + glowSize,
+          0,
+        );
+        grad2.addColorStop(0, `rgba(255,0,255,0.5)`);
+        grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad2;
+        ctx.fillRect(len / 2, -w / 2, glowSize, w);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+        ctx.strokeRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+    const r = stateFutile.rift;
+    if (s.rift && s.rift.t <= 2 && r) {
+      const cam = getCameraPos();
+
+      const cx = cam.x + window.innerWidth / 2;
+      const cy = cam.y + window.innerHeight / 2;
+
+      const dx = r.x - cx;
+      const dy = r.y - cy;
+      const ang = Math.atan2(dy, dx);
+
+      const halfW = window.innerWidth / 2 - 60;
+      const halfH = window.innerHeight / 2 - 60;
+
+      const scale =
+        Math.min(
+          halfW / (Math.abs(Math.cos(ang)) || 0.0001),
+          halfH / (Math.abs(Math.sin(ang)) || 0.0001),
+        ) * 0.8;
+
+      const ex = cx + Math.cos(ang) * scale;
+      const ey = cy + Math.sin(ang) * scale;
+
+      const pts = r.points;
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.fillStyle = "magenta";
+      ctx.font = `${s.rift.scale * 50}px monospace`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      ctx.fillText("➤", s.rift.scale * 80, 0);
+
+      ctx.restore();
+    }
+  }
 
   const stateCrumble = {
     circles: [],
