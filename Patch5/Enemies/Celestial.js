@@ -1189,6 +1189,18 @@ export function setup(host) {
     const s = stateBitter;
     s.t += dt;
 
+    const dx = mouse.x - s.cx;
+    const dy = mouse.y - s.cy;
+    const dist = Math.hypot(dx, dy);
+    const maxDist = 2000;
+    if (dist > maxDist) {
+      const nx = dx / dist;
+      const ny = dy / dist;
+
+      s.cx = mouse.x - nx * maxDist;
+      s.cy = mouse.y - ny * maxDist;
+    }
+
     if (!s.spawned) {
       const counts = [4, 5, 6];
       s.spokes.push(spawnBitter(counts[s.cycle]));
