@@ -152,6 +152,33 @@ export function setup(host) {
       offset: 0,
     };
   }
+  let lastBitterDir = Math.random() < 0.5 ? 1 : -1;
+  function spawnBitter(count) {
+    const base = Math.random() * Math.PI * 2;
+    const dir =
+      lastBitterDir >= 0
+        ? Math.random() < 0.333
+          ? 1
+          : -1
+        : Math.random() < 0.333
+          ? -1
+          : 1;
+    lastBitterDir = dir;
+
+    return {
+      x: stateBitter.cx,
+      y: stateBitter.cy,
+      t: 0,
+      baseAngle: base,
+      angle: base,
+      count,
+      active: true,
+      dirAngle: lastBitterDir,
+      dirX: 0,
+      dirY: 0,
+      shot: false,
+    };
+  }
 
   const stateFall = {
     beams: [],
@@ -781,33 +808,6 @@ export function setup(host) {
     }
   }
 
-  let lastBitterDir = Math.random() < 0.5 ? 1 : -1;
-  function spawnBitter(count) {
-    const base = Math.random() * Math.PI * 2;
-    const dir =
-      lastBitterDir >= 0
-        ? Math.random() < 0.333
-          ? 1
-          : -1
-        : Math.random() < 0.333
-          ? -1
-          : 1;
-    lastBitterDir = dir;
-
-    return {
-      x: stateBitter.cx,
-      y: stateBitter.cy,
-      t: 0,
-      baseAngle: base,
-      angle: base,
-      count,
-      active: true,
-      dirAngle: lastBitterDir,
-      dirX: 0,
-      dirY: 0,
-      shot: false,
-    };
-  }
   const stateBitter = {
     spokes: [],
     t: 0,
@@ -937,7 +937,10 @@ export function setup(host) {
           ctx.rect(drawX, -w / 2, len, w);
           ctx.stroke();
         } else {
-          ctx.globalAlpha = 0.5;
+          ctx.globalAlpha =
+            stateBitter.t < 0.25 && stateBitter.cycle == 0
+              ? stateBitter.t * 3
+              : 0.75;
 
           const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
           grad.addColorStop(0, "rgba(255,0,255,0)");
