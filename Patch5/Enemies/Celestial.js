@@ -32,12 +32,12 @@ export function setup(host) {
       draw: drawCrumble,
       enter: enterCrumble,
     },
-    // {
-    //   duration: 9,
-    //   update: updateBitter,
-    //   draw: drawBitter,
-    //   enter: enterBitter,
-    // },
+    {
+      duration: 8,
+      update: updateBitter,
+      draw: drawBitter,
+      enter: enterBitter,
+    },
     {
       duration: 3,
       update: updateCease,
@@ -56,9 +56,9 @@ export function setup(host) {
 
     currentPattern: {
       duration: 0,
-      update: () => { },
-      draw: () => { },
-      enter: () => { },
+      update: () => {},
+      draw: () => {},
+      enter: () => {},
     },
     patternTime: 0,
   };
@@ -553,7 +553,7 @@ export function setup(host) {
         }
       }
       if (s.t >= 2.5) {
-        s.offset += dt * (statePizzaCutter.cycle >= 4 ? 10000 : 5000);
+        s.offset += dt * 10000;
       }
       if (s.t > 3) {
         s.active = false;
@@ -592,6 +592,7 @@ export function setup(host) {
         const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
           ctx.strokeStyle = "magenta";
           ctx.lineWidth = 18;
 
@@ -657,6 +658,7 @@ export function setup(host) {
         const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
           ctx.beginPath();
           ctx.fillStyle = "black";
           ctx.fillRect(Math.max(x, s.offset), -w / 2, len, w);
@@ -666,6 +668,11 @@ export function setup(host) {
       ctx.restore();
     }
   }
+
+  const stateFutile = {};
+  function enterFutile() {}
+  function updateFutile(dt) {}
+  function drawFutile(ctx) {}
 
   const stateCrumble = {
     circles: [],
@@ -768,6 +775,204 @@ export function setup(host) {
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  let lastBitterDir = Math.random() < 0.5 ? 1 : -1;
+  function spawnBitter(count) {
+    const base = Math.random() * Math.PI * 2;
+    const dir =
+      lastBitterDir >= 0
+        ? Math.random() < 0.333
+          ? 1
+          : -1
+        : Math.random() < 0.333
+          ? -1
+          : 1;
+    lastBitterDir = dir;
+
+    return {
+      x: stateBitter.cx,
+      y: stateBitter.cy,
+      t: 0,
+      baseAngle: base,
+      angle: base,
+      count,
+      active: true,
+      dirAngle: lastBitterDir,
+      dirX: 0,
+      dirY: 0,
+      shot: false,
+    };
+  }
+  const stateBitter = {
+    spokes: [],
+    t: 0,
+    cycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+  };
+  function enterBitter() {
+    stateBitter.spokes = [];
+    stateBitter.t = 0;
+    stateBitter.cycle = 0;
+    stateBitter.spawned = false;
+
+    stateBitter.cx = mouse.x + (Math.random() - 0.5) * 2000;
+    stateBitter.cy = mouse.y + (Math.random() - 0.5) * 2000;
+  }
+  function updateBitter(dt) {
+    const s = stateBitter;
+    s.t += dt;
+
+    if (!s.spawned) {
+      const counts = [4, 5, 6];
+      s.spokes.push(spawnBitter(counts[s.cycle]));
+      s.spawned = true;
+    }
+
+    for (const b of s.spokes) {
+      b.t += dt;
+
+      const p = Math.min(b.t / 2, 1);
+      const eased = 1 - (1 - p) * (1 - p);
+      let angle = b.baseAngle + eased * Math.PI * 2 * b.dirAngle;
+      angle += (b.t - 2) * Math.PI * b.dirAngle;
+      b.angle = angle;
+
+      if (b.t >= 2 && !b.shot) {
+        const dx = mouse.x - b.x;
+        const dy = mouse.y - b.y;
+        const len = Math.hypot(dx, dy) || 1;
+
+        b.dirX = dx / len;
+        b.dirY = dy / len;
+
+        b.shot = true;
+      }
+      if (b.t >= 2) {
+        const speed = 2000;
+
+        b.x += b.dirX * speed * dt;
+        b.y += b.dirY * speed * dt;
+      }
+
+      if (b.t >= 2 && b.t <= 4) {
+        for (let i = 0; i < b.count; i++) {
+          const ang = b.angle + (i * Math.PI * 2) / b.count;
+
+          const dx = mouse.x - b.x;
+          const dy = mouse.y - b.y;
+
+          const cos = Math.cos(-ang);
+          const sin = Math.sin(-ang);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 1000;
+          const w = 50;
+
+          if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+            death("Celestial");
+            break;
+          }
+        }
+      }
+
+      if (b.t > 4) b.active = false;
+    }
+
+    s.spokes = s.spokes.filter((b) => b.active);
+
+    if (s.t >= 2) {
+      s.t = 0;
+      s.cycle++;
+      s.spawned = false;
+    }
+  }
+  function drawBitter(ctx) {
+    for (const b of stateBitter.spokes) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+
+      const isLethal = b.t >= 2;
+
+      for (let i = 0; i < b.count; i++) {
+        ctx.rotate((Math.PI * 2) / b.count);
+
+        const len = 1000;
+        const w = isLethal ? 50 : 100;
+
+        if (isLethal) {
+          ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
+          const drawX = 0;
+
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,255,0)");
+          gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+          gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+
+          ctx.beginPath();
+          ctx.rect(drawX, -w / 2, len, w);
+          ctx.stroke();
+        } else {
+          ctx.globalAlpha = 0.5;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,255,0)");
+          grad.addColorStop(0.45, "magenta");
+          grad.addColorStop(0.55, "magenta");
+          grad.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const b of stateBitter.spokes) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+
+      const isLethal = b.t >= 2;
+
+      for (let i = 0; i < b.count; i++) {
+        ctx.rotate((Math.PI * 2) / b.count);
+
+        const len = 1000;
+        const w = isLethal ? 50 : 100;
+
+        if (isLethal) {
+          ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
+          const drawX = 0;
+
+          ctx.fillStyle = "black";
+          ctx.fillRect(drawX, -w / 2, len, w);
+        }
       }
 
       ctx.restore();
@@ -1309,7 +1514,7 @@ export function setup(host) {
     if (state.patternTime >= state.currentPattern.duration) {
       state.currentPattern =
         loopPattern[
-        (loopPattern.indexOf(state.currentPattern) + 1) % loopPattern.length
+          (loopPattern.indexOf(state.currentPattern) + 1) % loopPattern.length
         ];
       state.patternTime = 0;
       state.currentPattern.enter?.();
