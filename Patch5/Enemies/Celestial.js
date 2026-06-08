@@ -1,6 +1,7 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos } from "../main.js";
 
+export let phase = { phase: 1 };
 export function setup(host) {
   const loopPattern = [
     {
