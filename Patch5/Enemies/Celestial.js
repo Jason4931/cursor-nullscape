@@ -2479,7 +2479,7 @@ export function setup(host) {
     if (state.enemyTransition != "none") state.enemyTransitionT += dt;
     if (state.enemyTransition == "shrink") {
       const p = state.enemyTransitionT * 2;
-      const eased = 1 - (1 - p) * (1 - p);
+      const eased = p * p;
 
       state.enemyScale = 1 - eased;
 
@@ -2494,9 +2494,9 @@ export function setup(host) {
         state.enemyTransitionT = 0;
         state.enemyTransition = "grow";
       }
-    } else if (state.enemyTransition <= "grow") {
+    } else if (state.enemyTransition == "grow") {
       const p = state.enemyTransitionT * 2;
-      const eased = p * p;
+      const eased = 1 - (1 - p) * (1 - p);
 
       state.enemyScale = eased;
 
