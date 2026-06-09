@@ -288,7 +288,7 @@
   </head>
 
   <div id="highest-level-display">
-    Highest level reached: 0<br />(Normal & Hard only)
+    Highest level reached: 0<br />(Standard & Extreme only)
   </div>
   <div id="secret-command">Ctrl+Shift+/ to open commands</div>
   <a
@@ -436,7 +436,8 @@
         }
 
         if (!raw) {
-          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+          el.innerHTML =
+            "Highest level reached: 0<br>(Standard & Extreme only)";
           return;
         }
 
@@ -445,9 +446,10 @@
         const level = parseInt(parts[1], 10);
 
         if (!isNaN(level)) {
-          el.innerHTML = `Highest level reached: ${level} (${collected} gifts collected)<br>(Normal & Hard only)`;
+          el.innerHTML = `Highest level reached: ${level} (${collected} gifts collected)<br>(Standard & Extreme only)`;
         } else {
-          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+          el.innerHTML =
+            "Highest level reached: 0<br>(Standard & Extreme only)";
         }
       })();
       (function renderStars() {

@@ -202,6 +202,9 @@
         padding: 1vw 1vw;
         font-size: 1vw;
         width: 11vw;
+        max-height: 50vh;
+        overflow-y: auto;
+        scrollbar-width: none;
         background: rgba(0, 0, 0, 0.85);
         border: 0.1vw solid #333;
         color: white;
@@ -710,6 +713,17 @@
           opacity 0.2s ease,
           color 0.2s ease;
       }
+
+      #secret-command {
+        position: fixed;
+        left: 1vw;
+        top: 1vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #fff;
+        opacity: 0.01;
+        z-index: 2000;
+      }
     </style>
     <meta
       name="google-site-verification"
@@ -717,6 +731,7 @@
     />
   </head>
 
+  <div id="secret-command">Ctrl+Shift+/ to open commands</div>
   <body>
     <div id="viewport">
       <input

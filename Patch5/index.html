@@ -202,6 +202,9 @@
         padding: 1vw 1vw;
         font-size: 1vw;
         width: 11vw;
+        max-height: 50vh;
+        overflow-y: auto;
+        scrollbar-width: none;
         background: rgba(0, 0, 0, 0.85);
         border: 0.1vw solid #333;
         color: white;
@@ -705,10 +708,22 @@
         text-align: center;
         font-weight: bold;
         white-space: nowrap;
+        font-size: 1vw;
         transition:
           transform 0.25s ease,
           opacity 0.2s ease,
           color 0.2s ease;
+      }
+
+      #secret-command {
+        position: fixed;
+        left: 1vw;
+        top: 1vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #fff;
+        opacity: 0.01;
+        z-index: 2000;
       }
     </style>
     <meta
@@ -717,6 +732,7 @@
     />
   </head>
 
+  <div id="secret-command">Ctrl+Shift+/ to open commands</div>
   <body>
     <div id="viewport">
       <input
@@ -789,7 +805,7 @@
       <div id="entity-panel">
         <div id="entity-panel-content"></div>
         <p id="entity-panel-count">EntityCount: 0</p>
-        <p id="entity-panel-diff">Normal</p>
+        <p id="entity-panel-diff">Standard</p>
       </div>
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
@@ -813,7 +829,7 @@
             <div id="diff-left" class="diff-arrow">&lt;</div>
 
             <div class="diff-mask">
-              <div id="diff-label" class="diff-label">Normal</div>
+              <div id="diff-label" class="diff-label">Standard</div>
             </div>
 
             <div id="diff-right" class="diff-arrow">&gt;</div>

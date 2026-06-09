@@ -81,8 +81,8 @@ const cheatDetector = true;
 /* ===== DIFFICULTY ===== */
 const beaten = localStorage.getItem("GameBeaten") != null;
 const difficulties = beaten
-  ? ["Casual", "Normal", "Hard"]
-  : ["Casual", "Normal"];
+  ? ["Casual", "Standard", "Extreme"]
+  : ["Casual", "Standard"];
 let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
 let casualMode = difficultyIndex === 0;
 export let hardMode = difficultyIndex === 2;
@@ -91,7 +91,6 @@ const diffLeft = document.getElementById("diff-left");
 const diffRight = document.getElementById("diff-right");
 function applyDifficulty(firstLoad = false, direction = 0) {
   const diff = difficulties[difficultyIndex];
-  // diffLabel.textContent = diff;
   if (direction !== 0) {
     diffLabel.style.transform =
       direction > 0 ? "translateX(-100%)" : "translateX(100%)";
@@ -100,15 +99,12 @@ function applyDifficulty(firstLoad = false, direction = 0) {
     setTimeout(() => {
       diffLabel.textContent = diff;
 
-      // Move instantly to opposite side
       diffLabel.style.transition = "none";
       diffLabel.style.transform =
         direction > 0 ? "translateX(100%)" : "translateX(-100%)";
 
-      // Force layout flush
       diffLabel.offsetWidth;
 
-      // Now animate back in
       diffLabel.style.transition =
         "transform 0.25s ease, opacity 0.2s ease, color 0.2s ease";
       diffLabel.style.transform = "translateX(0)";
@@ -120,13 +116,13 @@ function applyDifficulty(firstLoad = false, direction = 0) {
 
   if (diff === "Casual") {
     diffLabel.style.color = "#0f0";
-  } else if (diff === "Hard") {
+  } else if (diff === "Extreme") {
     diffLabel.style.color = "#f00";
   } else {
     diffLabel.style.color = "#fff";
   }
   casualMode = diff === "Casual";
-  hardMode = diff === "Hard";
+  hardMode = diff === "Extreme";
   if (!firstLoad) localStorage.setItem("difficulty", difficultyIndex);
   checkDiff();
 }
@@ -522,9 +518,9 @@ function checkDiff() {
   if (casualMode) {
     document.getElementById("entity-panel-diff").textContent = "Casual";
   } else if (hardMode) {
-    document.getElementById("entity-panel-diff").textContent = "Hard";
+    document.getElementById("entity-panel-diff").textContent = "Extreme";
   } else {
-    document.getElementById("entity-panel-diff").textContent = "Normal";
+    document.getElementById("entity-panel-diff").textContent = "Standard";
   }
 }
 settingsBtn.addEventListener("click", () => {
