@@ -81,7 +81,7 @@ export function setup(host) {
   ];
   const patternBitter = [
     {
-      duration: 8,
+      duration: 9,
       update: updateBitter,
       draw: drawBitter,
       drawFront: drawBitterFront,
@@ -1695,7 +1695,7 @@ export function setup(host) {
         b.y += b.dirY * speed * dt;
       }
 
-      if (b.t >= 2 && b.t <= 4) {
+      if (b.t >= 2 && b.t <= 5) {
         for (let i = 0; i < b.count; i++) {
           const ang = b.angle + (i * Math.PI * 2) / b.count;
 
@@ -1718,7 +1718,7 @@ export function setup(host) {
         }
       }
 
-      if (b.t > 4) b.active = false;
+      if (b.t > 5) b.active = false;
     }
 
     s.spokes = s.spokes.filter((b) => b.active);
@@ -1746,7 +1746,7 @@ export function setup(host) {
         const w = isLethal ? 25 : 50;
 
         if (isLethal) {
-          ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
+          ctx.globalAlpha = b.t >= 4.75 ? (5 - b.t) * 4 : 1;
           const drawX = 0;
 
           const glow = 100;
@@ -1807,7 +1807,7 @@ export function setup(host) {
         const w = isLethal ? 25 : 50;
 
         if (isLethal) {
-          ctx.globalAlpha = b.t >= 3.75 ? (4 - b.t) * 4 : 1;
+          ctx.globalAlpha = b.t >= 4.75 ? (5 - b.t) * 4 : 1;
           const drawX = 0;
 
           ctx.fillStyle = "black";
