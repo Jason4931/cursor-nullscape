@@ -13,10 +13,10 @@ export function setup(host) {
   const patternFall = [
     {
       duration: 5.5,
-      update: updateFall,
-      draw: drawFall,
-      drawFront: drawFallFront,
-      enter: enterFall,
+      update: updateSlash,
+      draw: drawSlash,
+      drawFront: drawSlashFront,
+      enter: enterSlash,
     },
     {
       duration: 3,
@@ -50,10 +50,10 @@ export function setup(host) {
     },
     {
       duration: 5.5,
-      update: updateFall,
-      draw: drawFall,
-      drawFront: drawFallFront,
-      enter: enterFall,
+      update: updateSlash,
+      draw: drawSlash,
+      drawFront: drawSlashFront,
+      enter: enterSlash,
     },
   ];
   const patternCrumble = [
@@ -145,6 +145,71 @@ export function setup(host) {
     ...patternCease,
     ...patternBoom,
   ];
+  const specificDevOnly = [
+    //   {
+    //     duration: 5.5,
+    //     update: updateSlash,
+    //     draw: drawSlash,
+    //     drawFront: drawSlashFront,
+    //     enter: enterSlash,
+    //   },
+    //   {
+    //     duration: 3,
+    //     update: updateImplosion,
+    //     draw: drawImplosion,
+    //     drawFront: drawImplosionFront,
+    //     enter: enterImplosion,
+    //   },
+    //   {
+    //     duration: 9,
+    //     update: updatePizzaCutter,
+    //     draw: drawPizzaCutter,
+    //     drawFront: drawPizzaCutterFront,
+    //     enter: enterPizzaCutter,
+    //   },
+    //   {
+    //     duration: 13,
+    //     update: updateFutile,
+    //     draw: drawFutile,
+    //     drawFront: drawFutileFront,
+    //     enter: enterFutile,
+    //   },
+    //   {
+    //     duration: 3,
+    //     update: updateCrumble,
+    //     draw: drawCrumble,
+    //     drawFront: drawCrumbleFront,
+    //     enter: enterCrumble,
+    //   },
+    //   {
+    //     duration: 9,
+    //     update: updateBitter,
+    //     draw: drawBitter,
+    //     drawFront: drawBitterFront,
+    //     enter: enterBitter,
+    //   },
+    //   {
+    //     duration: 3,
+    //     update: updateCease,
+    //     draw: drawCease,
+    //     drawFront: drawCeaseFront,
+    //     enter: enterCease,
+    //   },
+    //   {
+    //     duration: 9,
+    //     update: updatePizzaCutterCrumble,
+    //     draw: drawPizzaCutterCrumble,
+    //     drawFront: drawPizzaCutterCrumbleFront,
+    //     enter: enterPizzaCutterCrumble,
+    //   },
+    //   {
+    //     duration: 22,
+    //     update: updateDeathInBloom,
+    //     draw: drawDeathInBloom,
+    //     drawFront: drawDeathInBloomFront,
+    //     enter: enterDeathInBloom,
+    //   },
+  ];
   const state = {
     opacity: 1,
 
@@ -156,7 +221,7 @@ export function setup(host) {
     },
     patternTime: 0,
     patternIndex: -1,
-    loopPattern: loopPatternPhase1,
+    loopPattern: specificDevOnly[0] ? specificDevOnly : loopPatternPhase1,
 
     layers: Celestial,
     enemy: null,
@@ -370,73 +435,74 @@ export function setup(host) {
     };
   }
 
-  const stateFall = {
+  const stateSlash = {
     beams: [],
     timer: 0,
     cycle: 0,
     prevMx: 0,
     prevMy: 0,
   };
-  function enterFall() {
+  function enterSlash() {
     enterOrbit();
-    stateFall.beams = [];
-    stateFall.timer = 0;
-    stateFall.cycle = 0;
-    stateFall.prevMx = mouse.x;
-    stateFall.prevMy = mouse.y;
+    stateSlash.beams = [];
+    stateSlash.timer = 0;
+    stateSlash.cycle = 0;
+    stateSlash.prevMx = mouse.x;
+    stateSlash.prevMy = mouse.y;
   }
-  const HALF_LEN = 2000;
-  const GROW_TIME = 0.5;
-  const SHRINK_SPEED = 200;
-  const DURATIONS = [1, 1, 1, 2];
-  function updateFall(dt) {
+  function updateSlash(dt) {
     const mx = mouse.x;
     const my = mouse.y;
 
-    const mvx = mx - stateFall.prevMx;
-    const mvy = my - stateFall.prevMy;
+    const mvx = mx - stateSlash.prevMx;
+    const mvy = my - stateSlash.prevMy;
 
-    stateFall.prevMx = mx;
-    stateFall.prevMy = my;
+    stateSlash.prevMx = mx;
+    stateSlash.prevMy = my;
 
     const px = mx + mvx;
     const py = my + mvy;
 
-    const cycle = stateFall.cycle;
+    const cycle = stateSlash.cycle;
 
-    if (stateFall.timer === 0) {
+    if (stateSlash.timer === 0) {
       if (cycle === 3) {
         const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 6;
 
-        stateFall.beams.push(spawnBeam(px, py, base, 1.5));
-        stateFall.beams.push(spawnBeam(px, py, base - spread, 1.5));
-        stateFall.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base - spread, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
       } else if (cycle < 3) {
-        stateFall.beams.push(spawnBeam(px, py, undefined, 1));
+        stateSlash.beams.push(spawnBeam(px, py, undefined, 1));
       }
     }
 
-    stateFall.timer += dt;
+    stateSlash.timer += dt;
 
-    if (stateFall.timer >= DURATIONS[cycle]) {
-      stateFall.timer = 0;
-      stateFall.cycle = cycle + 1;
+    const DURATIONS = [1, 1, 1, 2];
+    if (stateSlash.timer >= DURATIONS[cycle]) {
+      stateSlash.timer = 0;
+      stateSlash.cycle = cycle + 1;
     }
 
-    for (const b of stateFall.beams) {
+    let needsCompact = false;
+    for (const b of stateSlash.beams) {
       let t = (b.t += dt);
 
-      if (t < GROW_TIME) {
-        const p = t / GROW_TIME;
+      if (t < 0.5) {
+        const p = t / 0.5;
         const eased = 1 - (1 - p) * (1 - p);
         b.width = b.targetWidth * eased;
       } else if (t < b.armTime) {
         b.width = b.targetWidth;
       } else {
-        const w = b.width - dt * SHRINK_SPEED;
+        const w = b.width - dt * 200;
         b.width = w;
-        if (w <= 0) b.active = false;
+        if (w <= 0) {
+          b.active = false;
+          needsCompact = true;
+        }
       }
 
       const dx = mx - b.x;
@@ -454,7 +520,7 @@ export function setup(host) {
       if (
         b.active &&
         t >= b.armTime &&
-        Math.abs(rx) < HALF_LEN &&
+        Math.abs(rx) < 2000 &&
         Math.abs(ry) < halfW
       ) {
         death("Celestial");
@@ -462,18 +528,17 @@ export function setup(host) {
 
       b._rx = rx;
     }
-
-    compact(stateFall.beams);
+    if (needsCompact) compact(stateSlash.beams);
   }
-  function drawFall(ctx) {
-    for (const b of stateFall.beams) {
+  function drawSlash(ctx) {
+    for (const b of stateSlash.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
 
       let a = b.angle;
-      if (b.t < GROW_TIME) {
-        const p = b.t / GROW_TIME;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
         const eased = 1 - (1 - p) * (1 - p);
         a = b.startAngle + (b.angle - b.startAngle) * eased;
       }
@@ -528,15 +593,15 @@ export function setup(host) {
       ctx.restore();
     }
   }
-  function drawFallFront(ctx) {
-    for (const b of stateFall.beams) {
+  function drawSlashFront(ctx) {
+    for (const b of stateSlash.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
 
       let a = b.angle;
-      if (b.t < GROW_TIME) {
-        const p = b.t / GROW_TIME;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
         const eased = 1 - (1 - p) * (1 - p);
         a = b.startAngle + (b.angle - b.startAngle) * eased;
       }
@@ -570,6 +635,8 @@ export function setup(host) {
     stateImplosion.spawned = 0;
   }
   function updateImplosion(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     const s = stateImplosion;
 
     s.spawnTimer += dt;
@@ -581,6 +648,7 @@ export function setup(host) {
       s.circles.push(spawnImplosionCircle());
     }
 
+    let needsCompact = false;
     for (const c of s.circles) {
       c.t += dt;
       c.opacity += dt * 4;
@@ -595,12 +663,15 @@ export function setup(host) {
       } else {
         c.phase = 2;
         c.r -= dt * 600;
-        if (c.r <= 0) c.active = false;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
       }
 
       if (c.phase === 2) {
-        const dx = mouse.x - c.x;
-        const dy = mouse.y - c.y;
+        const dx = mx - c.x;
+        const dy = my - c.y;
 
         const hitR = c.r * 1.1;
 
@@ -609,8 +680,7 @@ export function setup(host) {
         }
       }
     }
-
-    compact(s.circles);
+    if (needsCompact) compact(s.circles);
   }
   function drawImplosion(ctx) {
     const s = stateImplosion;
@@ -744,6 +814,8 @@ export function setup(host) {
     statePizzaCutter.initialized = true;
   }
   function updatePizzaCutter(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     statePizzaCutter.t += dt;
 
     if (!statePizzaCutter.spawned) {
@@ -762,11 +834,11 @@ export function setup(host) {
         const len = 20000;
         const w = 90;
 
+        const dx = mx - s.x;
+        const dy = my - s.y;
+
         for (let i = 0; i < 8; i++) {
           const angle = s.angle + i * (Math.PI / 4);
-
-          const dx = mouse.x - s.x;
-          const dy = mouse.y - s.y;
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -914,31 +986,33 @@ export function setup(host) {
     circles: [],
   };
   function enterPizzaCutterCrumble() {
-    statePizzaCutter.spokes = [];
-    statePizzaCutter.t = 0;
-    statePizzaCutter.cycle = 0;
-    statePizzaCutter.spawned = false;
+    statePizzaCutterCrumble.spokes = [];
+    statePizzaCutterCrumble.t = 0;
+    statePizzaCutterCrumble.cycle = 0;
+    statePizzaCutterCrumble.spawned = false;
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    statePizzaCutter.cx = cx;
-    statePizzaCutter.cy = cy;
+    statePizzaCutterCrumble.cx = cx;
+    statePizzaCutterCrumble.cy = cy;
     enterFixed(cx, cy);
-    statePizzaCutter.initialized = true;
+    statePizzaCutterCrumble.initialized = true;
 
-    statePizzaCutter.circles = [];
+    statePizzaCutterCrumble.circles = [];
   }
   function updatePizzaCutterCrumble(dt) {
-    statePizzaCutter.t += dt;
+    const mx = mouse.x;
+    const my = mouse.y;
+    statePizzaCutterCrumble.t += dt;
 
-    if (!statePizzaCutter.spawned) {
-      statePizzaCutter.spokes.push(spawnPizza());
+    if (!statePizzaCutterCrumble.spawned) {
+      statePizzaCutterCrumble.spokes.push(spawnPizza());
       for (let i = 0; i < 300; i++) {
-        statePizzaCutter.circles.push(spawnCircle(75));
+        statePizzaCutterCrumble.circles.push(spawnCircle(75));
       }
-      statePizzaCutter.spawned = true;
+      statePizzaCutterCrumble.spawned = true;
     }
 
-    for (const s of statePizzaCutter.spokes) {
+    for (const s of statePizzaCutterCrumble.spokes) {
       s.t += dt;
 
       const p = Math.min(s.t / 2, 1);
@@ -949,11 +1023,11 @@ export function setup(host) {
         const len = 20000;
         const w = 90;
 
+        const dx = mx - s.x;
+        const dy = my - s.y;
+
         for (let i = 0; i < 8; i++) {
           const angle = s.angle + i * (Math.PI / 4);
-
-          const dx = mouse.x - s.x;
-          const dy = mouse.y - s.y;
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -978,15 +1052,16 @@ export function setup(host) {
       }
     }
 
-    if (statePizzaCutter.t >= 2) {
-      statePizzaCutter.t = 0;
-      statePizzaCutter.cycle++;
-      if (statePizzaCutter.cycle < 4) {
-        statePizzaCutter.spawned = false;
+    if (statePizzaCutterCrumble.t >= 2) {
+      statePizzaCutterCrumble.t = 0;
+      statePizzaCutterCrumble.cycle++;
+      if (statePizzaCutterCrumble.cycle < 4) {
+        statePizzaCutterCrumble.spawned = false;
       }
     }
 
-    for (const c of statePizzaCutter.circles) {
+    let needsCompact = false;
+    for (const c of statePizzaCutterCrumble.circles) {
       c.t += dt;
 
       if (c.t < 2) {
@@ -1006,21 +1081,24 @@ export function setup(host) {
         c.r = c.targetR;
       } else {
         c.r -= dt * 100;
-        if (c.r <= 0) c.active = false;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
       }
 
       if (c.t >= 2 && c.r >= 0) {
-        const dx = mouse.x - c.x;
-        const dy = mouse.y - c.y;
+        const dx = mx - c.x;
+        const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
           death("Celestial");
         }
       }
     }
-    compact(stateCrumble.circles);
+    if (needsCompact) compact(statePizzaCutterCrumble.circles);
   }
   function drawPizzaCutterCrumble(ctx) {
-    for (const s of statePizzaCutter.spokes) {
+    for (const s of statePizzaCutterCrumble.spokes) {
       ctx.save();
 
       ctx.translate(s.x, s.y);
@@ -1071,7 +1149,7 @@ export function setup(host) {
           ctx.strokeStyle = "transparent";
         } else if (i < 4) {
           ctx.globalAlpha =
-            s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
+            s.t < 0.25 && statePizzaCutterCrumble.cycle == 0 ? s.t * 3 : 0.75;
 
           const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
           grad.addColorStop(0, "rgba(255,0,255,0)");
@@ -1086,7 +1164,7 @@ export function setup(host) {
 
       ctx.restore();
     }
-    for (const c of statePizzaCutter.circles) {
+    for (const c of statePizzaCutterCrumble.circles) {
       ctx.save();
 
       ctx.translate(c.x, c.y);
@@ -1120,7 +1198,7 @@ export function setup(host) {
     }
   }
   function drawPizzaCutterCrumbleFront(ctx) {
-    for (const s of statePizzaCutter.spokes) {
+    for (const s of statePizzaCutterCrumble.spokes) {
       ctx.save();
 
       ctx.translate(s.x, s.y);
@@ -1152,7 +1230,7 @@ export function setup(host) {
 
       ctx.restore();
     }
-    for (const c of statePizzaCutter.circles) {
+    for (const c of statePizzaCutterCrumble.circles) {
       ctx.save();
 
       ctx.translate(c.x, c.y);
@@ -1200,6 +1278,8 @@ export function setup(host) {
     enterFixed(-1000, -1000);
   }
   function updateFutile(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     const s = stateFutile;
 
     s.t += dt;
@@ -1222,10 +1302,10 @@ export function setup(host) {
 
     const sn = s.snake;
     if (sn) {
-      const dx = mouse.x - sn.x;
-      const dy = mouse.y - sn.y;
+      const dx = mx - sn.x;
+      const dy = my - sn.y;
 
-      const vLen = Math.hypot(sn.vx, sn.vy) || 1;
+      const vLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
       const vx = sn.vx / vLen;
       const vy = sn.vy / vLen;
 
@@ -1239,7 +1319,7 @@ export function setup(host) {
       sn.vx += px * side * TURN_STRENGTH * dt;
       sn.vy += py * side * TURN_STRENGTH * dt;
 
-      const newLen = Math.hypot(sn.vx, sn.vy) || 1;
+      const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
       const speed = 2500;
 
       sn.vx = (sn.vx / newLen) * speed;
@@ -1265,8 +1345,8 @@ export function setup(host) {
     }
 
     for (const p of s.trail) {
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
+      const dx = p.x - mx;
+      const dy = p.y - my;
       if (dx * dx + dy * dy < p.r * p.r) {
         death("Celestial");
       }
@@ -1530,6 +1610,9 @@ export function setup(host) {
     }
   }
   function updateCrumble(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    let needsCompact = false;
     for (const c of stateCrumble.circles) {
       c.t += dt;
 
@@ -1550,19 +1633,21 @@ export function setup(host) {
         c.r = c.targetR;
       } else {
         c.r -= dt * 200;
-        if (c.r <= 0) c.active = false;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
       }
 
       if (c.t >= 2) {
-        const dx = mouse.x - c.x;
-        const dy = mouse.y - c.y;
+        const dx = mx - c.x;
+        const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
           death("Celestial");
         }
       }
     }
-
-    compact(stateCrumble.circles);
+    if (needsCompact) compact(stateCrumble.circles);
   }
   function drawCrumble(ctx) {
     for (const c of stateCrumble.circles) {
@@ -1648,19 +1733,21 @@ export function setup(host) {
     enterFixed(cx, cy);
   }
   function updateBitter(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     const s = stateBitter;
     s.t += dt;
 
-    const dx = mouse.x - s.cx;
-    const dy = mouse.y - s.cy;
-    const dist = Math.hypot(dx, dy);
+    const dx = mx - s.cx;
+    const dy = my - s.cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
     const maxDist = 2000;
     if (dist > maxDist) {
       const nx = dx / dist;
       const ny = dy / dist;
 
-      s.cx = mouse.x - nx * maxDist;
-      s.cy = mouse.y - ny * maxDist;
+      s.cx = mx - nx * maxDist;
+      s.cy = my - ny * maxDist;
     }
 
     if (!s.spawned) {
@@ -1678,10 +1765,10 @@ export function setup(host) {
       angle += (b.t - 2) * Math.PI * b.dirAngle;
       b.angle = angle;
 
+      const dx = mx - b.x;
+      const dy = my - b.y;
       if (b.t >= 2 && !b.shot) {
-        const dx = mouse.x - b.x;
-        const dy = mouse.y - b.y;
-        const len = Math.hypot(dx, dy) || 1;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
 
         b.dirX = dx / len;
         b.dirY = dy / len;
@@ -1698,9 +1785,6 @@ export function setup(host) {
       if (b.t >= 2 && b.t <= 5) {
         for (let i = 0; i < b.count; i++) {
           const ang = b.angle + (i * Math.PI * 2) / b.count;
-
-          const dx = mouse.x - b.x;
-          const dy = mouse.y - b.y;
 
           const cos = Math.cos(-ang);
           const sin = Math.sin(-ang);
@@ -1845,6 +1929,8 @@ export function setup(host) {
     stateCease.positions = [];
   }
   function updateCease(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     stateCease.timer += dt;
     stateCease.rapidTimer += dt;
 
@@ -1860,8 +1946,8 @@ export function setup(host) {
       const minDist = 500;
 
       do {
-        x = mouse.x + (Math.random() - 0.5) * 5000;
-        y = mouse.y + (Math.random() - 0.5) * 5000;
+        x = mx + (Math.random() - 0.5) * 5000;
+        y = my + (Math.random() - 0.5) * 5000;
       } while (
         stateCease.positions.some((p) => {
           const dx = x - p.x;
@@ -1896,8 +1982,8 @@ export function setup(host) {
       }
 
       if (c.t >= 2) {
-        const dx = mouse.x - c.x;
-        const dy = mouse.y - c.y;
+        const dx = mx - c.x;
+        const dy = my - c.y;
         const distSq = dx * dx + dy * dy;
 
         if (distSq <= c.r * c.r) {
@@ -1906,6 +1992,7 @@ export function setup(host) {
       }
     }
 
+    let needsCompact = false;
     for (const b of stateCease.beams) {
       let a = b.angle;
 
@@ -1929,7 +2016,10 @@ export function setup(host) {
         b.width = b.targetWidth;
       } else {
         b.width -= dt * 200;
-        if (b.width <= 0) b.active = false;
+        if (b.width <= 0) {
+          b.active = false;
+          needsCompact = true;
+        }
       }
 
       const dx = mouse.x - b.x;
@@ -1953,8 +2043,7 @@ export function setup(host) {
         death("Celestial");
       }
     }
-
-    compact(stateCease.beams);
+    if (needsCompact) compact(stateCease.beams);
   }
   function drawCease(ctx) {
     for (const b of stateCease.beams) {
@@ -2136,6 +2225,8 @@ export function setup(host) {
     s.pTimer = 0;
   }
   function updateDeathInBloom(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
     const s = stateDeathInBloom;
     if (!s.active) return;
 
@@ -2144,18 +2235,18 @@ export function setup(host) {
 
     const follow = 1 - Math.exp(-1 * dt);
 
-    s.ex += (mouse.x - s.ex) * follow;
-    s.ey += (mouse.y - s.ey) * follow;
+    s.ex += (mx - s.ex) * follow;
+    s.ey += (my - s.ey) * follow;
 
     const dx = s.ex - s.cx;
     const dy = s.ey - s.cy;
 
     s.angle = Math.atan2(dy, dx);
 
-    const mvx = mouse.x - s.prevMx;
-    const mvy = mouse.y - s.prevMy;
-    s.prevMx = mouse.x;
-    s.prevMy = mouse.y;
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
     const bx = Math.cos(s.angle);
     const by = Math.sin(s.angle);
     const dir = mvx * bx + mvy * by;
@@ -2165,17 +2256,15 @@ export function setup(host) {
 
       const spawnCount = 200;
 
+      const nx = Math.cos(s.angle + Math.PI / 2);
+      const ny = Math.sin(s.angle + Math.PI / 2);
+
       for (let i = 0; i < spawnCount; i++) {
         const angle = s.angle;
         const len = s.len;
 
         const t = Math.random();
         const along = t * len;
-
-        const bx = Math.cos(s.angle);
-        const by = Math.sin(s.angle);
-        const nx = Math.cos(s.angle + Math.PI / 2);
-        const ny = Math.sin(s.angle + Math.PI / 2);
 
         const forward = dir >= 0 ? 1 : -1;
         const edgeSide = Math.random() < 0.5 ? -1 : 1;
@@ -2200,21 +2289,22 @@ export function setup(host) {
       }
     }
 
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
     if (s.t >= 5) {
-      const cos = Math.cos(-s.angle);
-      const sin = Math.sin(-s.angle);
+      const mmx = mx - s.cx;
+      const mmy = my - s.cy;
 
-      const mx = mouse.x - s.cx;
-      const my = mouse.y - s.cy;
-
-      const rx = mx * cos - my * sin;
-      const ry = mx * sin + my * cos;
+      const rx = mmx * cos - mmy * sin;
+      const ry = mmx * sin + mmy * cos;
 
       if (Math.abs(rx) < s.len && Math.abs(ry) < s.w / 2) {
         death("Celestial");
       }
     }
 
+    let needsCompact = false;
     for (const p of s.particles) {
       p.t += dt;
 
@@ -2224,13 +2314,12 @@ export function setup(host) {
 
       if (p.t > p.life) {
         p.active = false;
+        needsCompact = true;
       }
 
       const dx = p.x - s.cx;
       const dy = p.y - s.cy;
 
-      const cos = Math.cos(-s.angle);
-      const sin = Math.sin(-s.angle);
       const rx = dx * cos - dy * sin;
       const ry = dx * sin + dy * cos;
 
@@ -2239,9 +2328,10 @@ export function setup(host) {
 
       if (Math.abs(rx) > halfLen || Math.abs(ry) > halfW) {
         p.active = false;
+        needsCompact = true;
       }
     }
-    compact(s.particles);
+    if (needsCompact) compact(s.particles);
 
     if (s.t >= 5 && s.t < 21) {
       s.w = Math.random() * 50 + 575;
@@ -2404,6 +2494,8 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    const mx = mouse.x;
+    const my = mouse.y;
 
     if (state.enemyTransition == "none") state.patternTime += dt;
     if (state.patternTime >= state.currentPattern.duration) {
@@ -2412,12 +2504,14 @@ export function setup(host) {
       if (state.patternIndex >= state.loopPattern.length) {
         state.patternIndex = 0;
 
-        if (phase.phase === 1) {
-          phase.phase = 2;
-          state.loopPattern = loopPatternPhase2;
-        } else if (phase.phase === 2) {
-          phase.phase = 3;
-          state.loopPattern = loopPatternPhase3;
+        if (!specificDevOnly[0]) {
+          if (phase.phase === 1) {
+            phase.phase = 2;
+            state.loopPattern = loopPatternPhase2;
+          } else if (phase.phase === 2) {
+            phase.phase = 3;
+            state.loopPattern = loopPatternPhase3;
+          }
         }
       }
 
@@ -2451,8 +2545,8 @@ export function setup(host) {
 
         const dist = 600;
 
-        const targetX = mouse.x + Math.cos(state.ang) * dist;
-        const targetY = mouse.y + Math.sin(state.ang) * dist;
+        const targetX = mx + Math.cos(state.ang) * dist;
+        const targetY = my + Math.sin(state.ang) * dist;
 
         const dx = targetX - state.enemyX;
         const dy = targetY - state.enemyY;
@@ -2462,13 +2556,13 @@ export function setup(host) {
         state.enemyX += dx * ease * dt;
         state.enemyY += dy * ease * dt;
 
-        const px = state.enemyX - mouse.x;
-        const py = state.enemyY - mouse.y;
+        const px = state.enemyX - mx;
+        const py = state.enemyY - my;
 
-        const len = Math.hypot(px, py) || 1;
+        const len = Math.sqrt(px * px + py * py) || 1;
 
-        state.enemyX = mouse.x + (px / len) * dist;
-        state.enemyY = mouse.y + (py / len) * dist;
+        state.enemyX = mx + (px / len) * dist;
+        state.enemyY = my + (py / len) * dist;
       }
       if (state.enemyMode === "fixed") {
         const dx = state.enemyFixed.x - state.enemyX;
@@ -2488,8 +2582,8 @@ export function setup(host) {
           state.enemyX = state.enemyFixed.x;
           state.enemyY = state.enemyFixed.y;
         } else if (state.enemyMode === "orbit") {
-          state.enemyX = mouse.x + 600;
-          state.enemyY = mouse.y;
+          state.enemyX = mx + 600;
+          state.enemyY = my;
         }
         state.enemyTransitionT = 0;
         state.enemyTransition = "grow";
