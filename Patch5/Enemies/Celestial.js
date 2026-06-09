@@ -122,7 +122,7 @@ export function setup(host) {
   ];
   const patternDeathInBloom = [
     {
-      duration: 22,
+      duration: 23,
       update: updateDeathInBloom,
       draw: drawDeathInBloom,
       drawFront: drawDeathInBloomFront,
@@ -146,70 +146,78 @@ export function setup(host) {
     ...patternBoom,
   ];
   const specificDevOnly = [
-    //   {
-    //     duration: 5.5,
-    //     update: updateSlash,
-    //     draw: drawSlash,
-    //     drawFront: drawSlashFront,
-    //     enter: enterSlash,
-    //   },
-    //   {
-    //     duration: 3,
-    //     update: updateImplosion,
-    //     draw: drawImplosion,
-    //     drawFront: drawImplosionFront,
-    //     enter: enterImplosion,
-    //   },
-    //   {
-    //     duration: 9,
-    //     update: updatePizzaCutter,
-    //     draw: drawPizzaCutter,
-    //     drawFront: drawPizzaCutterFront,
-    //     enter: enterPizzaCutter,
-    //   },
-    //   {
-    //     duration: 13,
-    //     update: updateFutile,
-    //     draw: drawFutile,
-    //     drawFront: drawFutileFront,
-    //     enter: enterFutile,
-    //   },
-    //   {
-    //     duration: 3,
-    //     update: updateCrumble,
-    //     draw: drawCrumble,
-    //     drawFront: drawCrumbleFront,
-    //     enter: enterCrumble,
-    //   },
-    //   {
-    //     duration: 9,
-    //     update: updateBitter,
-    //     draw: drawBitter,
-    //     drawFront: drawBitterFront,
-    //     enter: enterBitter,
-    //   },
-    //   {
-    //     duration: 3,
-    //     update: updateCease,
-    //     draw: drawCease,
-    //     drawFront: drawCeaseFront,
-    //     enter: enterCease,
-    //   },
-    //   {
-    //     duration: 9,
-    //     update: updatePizzaCutterCrumble,
-    //     draw: drawPizzaCutterCrumble,
-    //     drawFront: drawPizzaCutterCrumbleFront,
-    //     enter: enterPizzaCutterCrumble,
-    //   },
-    //   {
-    //     duration: 22,
-    //     update: updateDeathInBloom,
-    //     draw: drawDeathInBloom,
-    //     drawFront: drawDeathInBloomFront,
-    //     enter: enterDeathInBloom,
-    //   },
+    {
+      duration: 5.5,
+      update: updateSlash,
+      draw: drawSlash,
+      drawFront: drawSlashFront,
+      enter: enterSlash,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutter,
+      draw: drawPizzaCutter,
+      drawFront: drawPizzaCutterFront,
+      enter: enterPizzaCutter,
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateCrumble,
+      draw: drawCrumble,
+      drawFront: drawCrumbleFront,
+      enter: enterCrumble,
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloom,
+      draw: drawDeathInBloom,
+      drawFront: drawDeathInBloomFront,
+      enter: enterDeathInBloom,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutter,
+      draw: drawSuperPizzaCutter,
+      drawFront: drawSuperPizzaCutterFront,
+      enter: enterSuperPizzaCutter,
+    },
   ];
+  const celestialDevOnly = true;
   const state = {
     opacity: 1,
 
@@ -301,9 +309,9 @@ export function setup(host) {
       opacity: 0,
     };
   }
-  function spawnCircle(targetR = 150) {
+  function spawnCircle(targetR = 150, maxdist = 1000) {
     const angle = Math.random() * Math.PI * 2;
-    const dist = Math.random() * 1000;
+    const dist = Math.random() * maxdist;
 
     const sx = mouse.x + (Math.random() - 0.5) * 5000;
     const sy = mouse.y + (Math.random() - 0.5) * 5000;
@@ -325,7 +333,10 @@ export function setup(host) {
   }
   let lastPizzaAngle = Math.random() * Math.PI * 2;
   let lastPizzaDir = Math.random() < 0.5 ? 1 : -1;
-  function spawnPizza() {
+  function spawnPizza(
+    state = statePizzaCutter,
+    startAngle = (Math.random() < 0.5 ? Math.PI : -Math.PI) * 2,
+  ) {
     const dir =
       lastPizzaDir >= 0
         ? Math.random() < 0.333
@@ -341,11 +352,11 @@ export function setup(host) {
     lastPizzaAngle = base;
 
     return {
-      x: statePizzaCutter.cx,
-      y: statePizzaCutter.cy,
+      x: state.cx,
+      y: state.cy,
       t: 0,
       dir,
-      startAngle: base + (Math.random() < 0.5 ? Math.PI : -Math.PI) * 2,
+      startAngle: base + startAngle,
       targetAngle: base,
       active: true,
       offset: 0,
@@ -1005,7 +1016,7 @@ export function setup(host) {
     statePizzaCutterCrumble.t += dt;
 
     if (!statePizzaCutterCrumble.spawned) {
-      statePizzaCutterCrumble.spokes.push(spawnPizza());
+      statePizzaCutterCrumble.spokes.push(spawnPizza(statePizzaCutterCrumble));
       for (let i = 0; i < 300; i++) {
         statePizzaCutterCrumble.circles.push(spawnCircle(75));
       }
@@ -2251,7 +2262,7 @@ export function setup(host) {
     const by = Math.sin(s.angle);
     const dir = mvx * bx + mvy * by;
 
-    if (s.t < 21 && s.pTimer >= 0.02) {
+    if (s.t < 22 && s.pTimer >= 0.02) {
       s.pTimer = 0;
 
       const spawnCount = 200;
@@ -2333,10 +2344,10 @@ export function setup(host) {
     }
     if (needsCompact) compact(s.particles);
 
-    if (s.t >= 5 && s.t < 21) {
+    if (s.t >= 5 && s.t < 22) {
       s.w = Math.random() * 50 + 575;
     }
-    if (s.t >= 21) {
+    if (s.t >= 22) {
       s.w -= dt * 1000;
       if (s.w <= 0) s.active = false;
     }
@@ -2492,6 +2503,634 @@ export function setup(host) {
     ctx.restore();
   }
 
+  const stateSuperPizzaCutter = {
+    blades: [],
+    t: 0,
+    spawned: false,
+    circles: [],
+
+    cutters: [
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+        initialized: false,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+        initialized: false,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+        initialized: false,
+      },
+    ],
+    lastStartAng: 1,
+
+    crumbles: [],
+  };
+  function enterSuperPizzaCutter() {
+    const s = stateSuperPizzaCutter;
+
+    s.t = 0;
+    s.spawned = false;
+    s.blades = [];
+
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    s.cx = cx;
+    s.cy = cy;
+    enterFixed(cx, cy);
+
+    const baseAngles = [
+      Math.PI / 2,
+      Math.PI / 2 + (Math.PI * 2) / 3,
+      Math.PI / 2 + (Math.PI * 4) / 3,
+    ];
+    const offsetAng = Math.random() * Math.PI * 2;
+
+    for (let i = 0; i < 3; i++) {
+      s.blades.push({
+        x: cx,
+        y: cy,
+        cx,
+        cy,
+        dirX: Math.cos(baseAngles[i] + offsetAng),
+        dirY: Math.sin(baseAngles[i] + offsetAng),
+        baseAngle: baseAngles[i] + offsetAng,
+        angle: 0,
+        scale: 0,
+        startDelay: i * 0.1,
+        rotDur: 0.75 - i * 0.1,
+        upOffset: -1000,
+      });
+
+      stateSuperPizzaCutter.cutters[i].spokes = [];
+      stateSuperPizzaCutter.cutters[i].t = 0;
+      stateSuperPizzaCutter.cutters[i].cycle = 0;
+      stateSuperPizzaCutter.cutters[i].spawned = false;
+      stateSuperPizzaCutter.cutters[i].cx = 0;
+      stateSuperPizzaCutter.cutters[i].cy = 0;
+      stateSuperPizzaCutter.cutters[i].initialized = true;
+    }
+
+    stateSuperPizzaCutter.circles = [];
+  }
+  function updateSuperPizzaCutter(dt) {
+    const s = stateSuperPizzaCutter;
+
+    s.t += dt;
+
+    const p = Math.min(1, s.t / 2);
+    const eased = 1 - (1 - p) * (1 - p);
+    const maxDist = 700;
+
+    for (const [i, b] of s.blades.entries()) {
+      b.scale = eased;
+      b.dist = eased * maxDist;
+
+      let baseX = b.cx + b.dirX * b.dist;
+      let baseY = b.cy + b.dirY * b.dist;
+
+      let finalAngle = b.baseAngle;
+      let offsetY = 0;
+
+      if (s.t >= 2) {
+        const t2 = s.t - 2;
+
+        const localT = t2 - b.startDelay;
+
+        if (localT > 0) {
+          const p = Math.min(1, localT / b.rotDur);
+          const easedRot = 1 - (1 - p) * (1 - p);
+
+          const target = Math.PI / 2;
+          finalAngle = b.baseAngle + (target - b.baseAngle) * easedRot;
+
+          offsetY = b.upOffset * easedRot;
+        }
+
+        if (t2 >= 0.75) {
+          const p = Math.min(1, (t2 - 0.75) / 0.25);
+          const easedDown = p * p;
+
+          offsetY = b.upOffset * (1 - easedDown);
+        }
+      }
+
+      b.angle = finalAngle;
+
+      const tipX = 1000;
+      const tipY = 0;
+
+      const cos = Math.cos(finalAngle);
+      const sin = Math.sin(finalAngle);
+
+      const worldTipX = tipX * cos - tipY * sin;
+      const worldTipY = tipX * sin + tipY * cos;
+
+      const finalTipX = baseX;
+      const finalTipY = baseY + offsetY;
+
+      let blend = 0;
+
+      if (s.t >= 2) {
+        blend = Math.min(1, s.t - 2);
+      }
+
+      const tipXPos = finalTipX - worldTipX;
+      const tipYPos = finalTipY - worldTipY;
+
+      b.x = baseX * (1 - blend) + tipXPos * blend;
+      b.y = baseY * (1 - blend) + tipYPos * blend;
+
+      if (s.t >= 3) {
+        const t3 = s.t - 3;
+        const p = Math.min(1, t3 * 3);
+        const eased = p * p;
+
+        b.scale = 1 - eased;
+
+        const tipX = 1000;
+        const tipY = 0;
+
+        const cos = Math.cos(b.angle);
+        const sin = Math.sin(b.angle);
+
+        const worldTipX = tipX * cos - tipY * sin;
+        const worldTipY = tipX * sin + tipY * cos;
+
+        const tipPosX = b.x + worldTipX;
+        const tipPosY = b.y + worldTipY;
+
+        b.x = tipPosX - worldTipX * b.scale;
+        b.y = tipPosY - worldTipY * b.scale;
+
+        if (!b.spawnedCircle) {
+          const dx = mouse.x - tipPosX;
+          const dy = mouse.y - tipPosY;
+
+          if (dx * dx + dy * dy <= 300 * 300) {
+            death("Celestial");
+          }
+
+          s.circles.push({
+            x: tipPosX,
+            y: tipPosY,
+            r: 300,
+            t: 0,
+          });
+
+          s.cutters[i].cx = tipPosX;
+          s.cutters[i].cy = tipPosY;
+
+          b.spawnedCircle = true;
+        }
+      }
+    }
+
+    for (const c of s.circles) {
+      c.t += dt;
+      const p = Math.min(1, c.t / 1);
+      const eased = p * p;
+      c.r = 300 * (1 - eased);
+    }
+    s.circles = s.circles.filter((c) => c.r > 0);
+
+    if (s.t >= 3) {
+      const mx = mouse.x;
+      const my = mouse.y;
+      for (let i = 0; i < 3; i++) {
+        stateSuperPizzaCutter.cutters[i].t += dt;
+
+        if (!stateSuperPizzaCutter.cutters[i].spawned) {
+          stateSuperPizzaCutter.cutters[i].spokes.push(
+            spawnPizza(
+              stateSuperPizzaCutter.cutters[i],
+              s.lastStartAng * Math.PI * 4,
+            ),
+          );
+          s.lastStartAng *= -1;
+          if (i == 0) {
+            for (let i = 0; i < 300; i++) {
+              stateSuperPizzaCutter.crumbles.push(
+                spawnCircle(Math.random() < 0.5 ? 100 : 150, 2000),
+              );
+            }
+          }
+          stateSuperPizzaCutter.cutters[i].spawned = true;
+        }
+
+        for (const s of stateSuperPizzaCutter.cutters[i].spokes) {
+          s.t += dt;
+
+          const p = Math.min(s.t / 4, 1);
+          const eased = 1 - (1 - p) * (1 - p);
+          s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+          if (s.t >= 4 && s.t < 4.5) {
+            const len = 20000;
+            const w = 90;
+
+            const dx = mx - s.x;
+            const dy = my - s.y;
+
+            for (let i = 0; i < 8; i++) {
+              const angle = s.angle + i * (Math.PI / 4);
+
+              const cos = Math.cos(-angle);
+              const sin = Math.sin(-angle);
+
+              const rx = dx * cos - dy * sin;
+              const ry = dx * sin + dy * cos;
+
+              const halfLen = len;
+              const halfW = w / 2;
+
+              if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+                death("Celestial");
+                break;
+              }
+            }
+          }
+          if (s.t >= 4.5) {
+            s.offset += dt * 10000;
+          }
+          if (s.t > 5) {
+            s.active = false;
+          }
+        }
+      }
+
+      let needsCompact = false;
+      for (const c of stateSuperPizzaCutter.crumbles) {
+        c.t += dt;
+
+        if (c.t < 4) {
+          const p = c.t / 4;
+
+          const eased = 1 - (1 - p) * (1 - p);
+
+          c.x = c.sx + (c.tx - c.sx) * eased;
+          c.y = c.sy + (c.ty - c.sy) * eased;
+        }
+
+        if (c.t < 0.5) {
+          const p = c.t / 0.5;
+          const eased = 1 - (1 - p) * (1 - p);
+          c.r = c.targetR * eased;
+        } else if (c.t < 4) {
+          c.r = c.targetR;
+        } else {
+          c.r -= dt * (c.targetR == 150 ? 200 : 133.333);
+          if (c.r <= 0) {
+            c.active = false;
+            needsCompact = true;
+          }
+        }
+
+        if (c.t >= 4 && c.r >= 0) {
+          const dx = mx - c.x;
+          const dy = my - c.y;
+          if (dx * dx + dy * dy <= c.r * c.r) {
+            death("Celestial");
+          }
+        }
+      }
+      if (needsCompact) compact(stateSuperPizzaCutter.crumbles);
+    }
+  }
+  function drawSuperPizzaCutter(ctx) {
+    const s = stateSuperPizzaCutter;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      const glowLen = 1000;
+      const glowWidth = 200;
+      ctx.save();
+      ctx.scale(1, glowWidth / glowLen);
+
+      ctx.translate(b.x * 0.05, 0);
+
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      ctx.beginPath();
+
+      ctx.moveTo(-500, 0);
+
+      ctx.lineTo(-280, -40);
+      ctx.lineTo(-240, -240);
+      ctx.lineTo(-200, -40);
+      ctx.lineTo(-160, -30);
+
+      ctx.lineTo(-80, -40);
+      ctx.lineTo(30, -100);
+      ctx.lineTo(15, -65);
+      ctx.lineTo(80, -40);
+
+      ctx.lineTo(1000, 0);
+
+      ctx.lineTo(80, 40);
+      ctx.lineTo(15, 65);
+      ctx.lineTo(30, 100);
+      ctx.lineTo(-80, 40);
+
+      ctx.lineTo(-160, 30);
+      ctx.lineTo(-200, 40);
+      ctx.lineTo(-240, 240);
+      ctx.lineTo(-280, 40);
+
+      ctx.closePath();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < 8; i++) {
+            ctx.rotate(Math.PI / 4);
+
+            const w = isLethal ? 90 : 100;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(-(sp.angle + i * (Math.PI / 4)));
+            const sin = Math.sin(-(sp.angle + i * (Math.PI / 4)));
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
+              ctx.strokeStyle = "magenta";
+              ctx.lineWidth = 18;
+
+              const drawX = Math.max(x, sp.offset);
+              const glow = 100;
+
+              const gradTop = ctx.createLinearGradient(
+                0,
+                -w / 2 - glow,
+                0,
+                -w / 2,
+              );
+              gradTop.addColorStop(0, "rgba(255,0,255,0)");
+              gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+              ctx.fillStyle = gradTop;
+              ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+              const gradBot = ctx.createLinearGradient(
+                0,
+                w / 2,
+                0,
+                w / 2 + glow,
+              );
+              gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+              gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+              ctx.fillStyle = gradBot;
+              ctx.fillRect(drawX, w / 2, len, glow);
+
+              ctx.beginPath();
+              ctx.rect(Math.max(x, sp.offset), -w / 2, len, w);
+              ctx.stroke();
+
+              ctx.strokeStyle = "transparent";
+            } else if (i < 4) {
+              ctx.globalAlpha =
+                sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
+                  ? sp.t * 3
+                  : 0.75;
+
+              const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+              grad.addColorStop(0, "rgba(255,0,255,0)");
+              grad.addColorStop(0.45, "magenta");
+              grad.addColorStop(0.55, "magenta");
+              grad.addColorStop(1, "rgba(255,0,255,0)");
+
+              ctx.fillStyle = grad;
+              ctx.fillRect(x, -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t >= 4 && c.r >= 0) {
+          const glow = 100;
+
+          const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+          grad.addColorStop(0, "rgba(255,0,255,0.5)");
+          grad.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
+        }
+
+        ctx.restore();
+      }
+    }
+  }
+  function drawSuperPizzaCutterFront(ctx) {
+    const s = stateSuperPizzaCutter;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      ctx.beginPath();
+
+      ctx.moveTo(-500, 0);
+
+      ctx.lineTo(-280, -40);
+      ctx.lineTo(-240, -240);
+      ctx.lineTo(-200, -40);
+      ctx.lineTo(-160, -30);
+
+      ctx.lineTo(-80, -40);
+      ctx.lineTo(30, -100);
+      ctx.lineTo(15, -65);
+      ctx.lineTo(80, -40);
+
+      ctx.lineTo(1000, 0);
+
+      ctx.lineTo(80, 40);
+      ctx.lineTo(15, 65);
+      ctx.lineTo(30, 100);
+      ctx.lineTo(-80, 40);
+
+      ctx.lineTo(-160, 30);
+      ctx.lineTo(-200, 40);
+      ctx.lineTo(-240, 240);
+      ctx.lineTo(-280, 40);
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < 8; i++) {
+            ctx.rotate(Math.PI / 4);
+
+            const w = 90;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(-(sp.angle + i * (Math.PI / 4)));
+            const sin = Math.sin(-(sp.angle + i * (Math.PI / 4)));
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
+              ctx.beginPath();
+              ctx.fillStyle = "black";
+              ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t < 4) {
+          const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+          grad.addColorStop(0, "black");
+          grad.addColorStop(1, "magenta");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (c.r >= 0) {
+          ctx.fillStyle = "black";
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+  }
+
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     const mx = mouse.x;
@@ -2600,13 +3239,11 @@ export function setup(host) {
       }
     }
 
-    for (let i = 0; i < 2; i++) {
-      state.enemyTrail.push({
-        x: state.enemyX + (Math.random() - 0.5) * 350,
-        y: state.enemyY + (Math.random() - 0.5) * 350,
-        r: 100,
-      });
-    }
+    state.enemyTrail.push({
+      x: state.enemyX + (Math.random() - 0.5) * 300,
+      y: state.enemyY + (Math.random() - 0.5) * 300,
+      r: 100,
+    });
     for (const t of state.enemyTrail) {
       t.r -= 3.333;
     }
@@ -2623,46 +3260,50 @@ export function setup(host) {
 
     if (state.enemyTransition == "none") state.currentPattern.draw(ctx);
 
-    for (const t of state.enemyTrail) {
-      ctx.save();
-      ctx.translate(t.x, t.y);
+    if (celestialDevOnly) {
+      for (const t of state.enemyTrail) {
+        ctx.save();
+        ctx.translate(t.x, t.y);
 
-      const glowSize = 100;
-      const glow = ctx.createRadialGradient(0, 0, t.r, 0, 0, t.r + glowSize);
-      glow.addColorStop(0, "rgba(255,0,255,0.5)");
-      glow.addColorStop(1, "rgba(255,0,255,0)");
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(0, 0, t.r + glowSize, 0, Math.PI * 2);
-      ctx.fill();
+        const glowSize = 100;
+        const glow = ctx.createRadialGradient(0, 0, t.r, 0, 0, t.r + glowSize);
+        glow.addColorStop(0, "rgba(255,0,255,0.5)");
+        glow.addColorStop(1, "rgba(255,0,255,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(0, 0, t.r + glowSize, 0, Math.PI * 2);
+        ctx.fill();
 
-      ctx.beginPath();
-      ctx.arc(0, 0, t.r, 0, Math.PI * 2);
-      ctx.strokeStyle = "magenta";
-      ctx.lineWidth = 18;
-      ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, t.r, 0, Math.PI * 2);
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+        ctx.stroke();
 
-      ctx.restore();
-    }
-    for (const t of state.enemyTrail) {
-      ctx.save();
-      ctx.translate(t.x, t.y);
+        ctx.restore();
+      }
+      for (const t of state.enemyTrail) {
+        ctx.save();
+        ctx.translate(t.x, t.y);
 
-      ctx.beginPath();
-      ctx.arc(0, 0, t.r, 0, Math.PI * 2);
-      ctx.fillStyle = "black";
-      ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, 0, t.r, 0, Math.PI * 2);
+        ctx.fillStyle = "black";
+        ctx.fill();
 
-      ctx.restore();
+        ctx.restore();
+      }
     }
 
     if (state.enemyTransition == "none") state.currentPattern.drawFront(ctx);
 
-    ctx.save();
-    ctx.translate(state.enemyX, state.enemyY);
-    const size = 700 * state.enemyScale;
-    ctx.drawImage(state.enemy, -size / 2, -size / 2, size, size);
-    ctx.restore();
+    if (celestialDevOnly) {
+      ctx.save();
+      ctx.translate(state.enemyX, state.enemyY);
+      const size = 700 * state.enemyScale;
+      ctx.drawImage(state.enemy, -size / 2, -size / 2, size, size);
+      ctx.restore();
+    }
 
     ctx.restore();
   }
