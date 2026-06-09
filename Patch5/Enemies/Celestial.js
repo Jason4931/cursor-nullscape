@@ -10,7 +10,7 @@ for (let i = 1; i <= 25; i++) {
 
 export let phase = { phase: 1 };
 export function setup(host) {
-  const loopPattern = [
+  const patternFall = [
     {
       duration: 5.5,
       update: updateFall,
@@ -32,6 +32,8 @@ export function setup(host) {
       drawFront: drawPizzaCutterFront,
       enter: enterPizzaCutter,
     },
+  ];
+  const patternFutile = [
     {
       duration: 13,
       update: updateFutile,
@@ -41,11 +43,43 @@ export function setup(host) {
     },
     {
       duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 5.5,
+      update: updateFall,
+      draw: drawFall,
+      drawFront: drawFallFront,
+      enter: enterFall,
+    },
+  ];
+  const patternCrumble = [
+    {
+      duration: 3,
       update: updateCrumble,
       draw: drawCrumble,
       drawFront: drawCrumbleFront,
       enter: enterCrumble,
     },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutter,
+      draw: drawPizzaCutter,
+      drawFront: drawPizzaCutterFront,
+      enter: enterPizzaCutter,
+    },
+  ];
+  const patternBitter = [
     {
       duration: 8,
       update: updateBitter,
@@ -55,11 +89,38 @@ export function setup(host) {
     },
     {
       duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+  ];
+  const patternCease = [
+    {
+      duration: 3,
       update: updateCease,
       draw: drawCease,
       drawFront: drawCeaseFront,
       enter: enterCease,
     },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+    },
+  ];
+  const patternBoom = [
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+  ];
+  const patternDeathInBloom = [
     {
       duration: 22,
       update: updateDeathInBloom,
@@ -67,6 +128,22 @@ export function setup(host) {
       drawFront: drawDeathInBloomFront,
       enter: enterDeathInBloom,
     },
+  ];
+  const loopPatternPhase1 = [...patternFall, ...patternCrumble];
+  const loopPatternPhase2 = [
+    ...patternFutile,
+    ...patternCrumble,
+    ...patternBitter,
+    ...patternCease,
+  ];
+  const loopPatternPhase3 = [
+    ...patternDeathInBloom,
+    ...patternFutile,
+    ...patternCease,
+    ...patternBitter,
+    ...patternFutile,
+    ...patternCease,
+    ...patternBoom,
   ];
   const state = {
     opacity: 1,
@@ -78,6 +155,8 @@ export function setup(host) {
       enter: () => {},
     },
     patternTime: 0,
+    patternIndex: -1,
+    loopPattern: loopPatternPhase1,
 
     layers: Celestial,
     enemy: null,
@@ -157,7 +236,7 @@ export function setup(host) {
       opacity: 0,
     };
   }
-  function spawnCircle() {
+  function spawnCircle(targetR = 150) {
     const angle = Math.random() * Math.PI * 2;
     const dist = Math.random() * 1000;
 
@@ -175,7 +254,7 @@ export function setup(host) {
 
       t: 0,
       r: 0,
-      targetR: 150,
+      targetR: targetR,
       active: true,
     };
   }
@@ -348,7 +427,6 @@ export function setup(host) {
     for (const b of stateFall.beams) {
       let t = (b.t += dt);
 
-      // width handling
       if (t < GROW_TIME) {
         const p = t / GROW_TIME;
         const eased = 1 - (1 - p) * (1 - p);
@@ -361,7 +439,6 @@ export function setup(host) {
         if (w <= 0) b.active = false;
       }
 
-      // rotation + transform
       const dx = mx - b.x;
       const dy = my - b.y;
 
@@ -383,7 +460,6 @@ export function setup(host) {
         death("Celestial");
       }
 
-      // cache for draw
       b._rx = rx;
     }
 
@@ -826,6 +902,284 @@ export function setup(host) {
     }
   }
 
+  const statePizzaCutterCrumble = {
+    spokes: [],
+    t: 0,
+    cycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+    initialized: false,
+
+    circles: [],
+  };
+  function enterPizzaCutterCrumble() {
+    statePizzaCutter.spokes = [];
+    statePizzaCutter.t = 0;
+    statePizzaCutter.cycle = 0;
+    statePizzaCutter.spawned = false;
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    statePizzaCutter.cx = cx;
+    statePizzaCutter.cy = cy;
+    enterFixed(cx, cy);
+    statePizzaCutter.initialized = true;
+
+    statePizzaCutter.circles = [];
+  }
+  function updatePizzaCutterCrumble(dt) {
+    statePizzaCutter.t += dt;
+
+    if (!statePizzaCutter.spawned) {
+      statePizzaCutter.spokes.push(spawnPizza());
+      for (let i = 0; i < 300; i++) {
+        statePizzaCutter.circles.push(spawnCircle(75));
+      }
+      statePizzaCutter.spawned = true;
+    }
+
+    for (const s of statePizzaCutter.spokes) {
+      s.t += dt;
+
+      const p = Math.min(s.t / 2, 1);
+      const eased = 1 - (1 - p) * (1 - p);
+      s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+      if (s.t >= 2 && s.t < 2.5) {
+        const len = 20000;
+        const w = 90;
+
+        for (let i = 0; i < 8; i++) {
+          const angle = s.angle + i * (Math.PI / 4);
+
+          const dx = mouse.x - s.x;
+          const dy = mouse.y - s.y;
+
+          const cos = Math.cos(-angle);
+          const sin = Math.sin(-angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const halfLen = len;
+          const halfW = w / 2;
+
+          if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+            death("Celestial");
+            break;
+          }
+        }
+      }
+      if (s.t >= 2.5) {
+        s.offset += dt * 10000;
+      }
+      if (s.t > 3) {
+        s.active = false;
+      }
+    }
+
+    if (statePizzaCutter.t >= 2) {
+      statePizzaCutter.t = 0;
+      statePizzaCutter.cycle++;
+      if (statePizzaCutter.cycle < 4) {
+        statePizzaCutter.spawned = false;
+      }
+    }
+
+    for (const c of statePizzaCutter.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        c.r -= dt * 100;
+        if (c.r <= 0) c.active = false;
+      }
+
+      if (c.t >= 2 && c.r >= 0) {
+        const dx = mouse.x - c.x;
+        const dy = mouse.y - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          death("Celestial");
+        }
+      }
+    }
+    compact(stateCrumble.circles);
+  }
+  function drawPizzaCutterCrumble(ctx) {
+    for (const s of statePizzaCutter.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < 8; i++) {
+        ctx.rotate(Math.PI / 4);
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+
+          const drawX = Math.max(x, s.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,255,0)");
+          gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+          gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          ctx.beginPath();
+          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
+          ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
+        } else if (i < 4) {
+          ctx.globalAlpha =
+            s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,255,0)");
+          grad.addColorStop(0.45, "magenta");
+          grad.addColorStop(0.55, "magenta");
+          grad.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const c of statePizzaCutter.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+  }
+  function drawPizzaCutterCrumbleFront(ctx) {
+    for (const s of statePizzaCutter.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < 8; i++) {
+        ctx.rotate(Math.PI / 4);
+
+        const w = 90;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, s.offset), -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const c of statePizzaCutter.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "magenta");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
   const stateFutile = {
     t: 0,
     cycle: 0,
@@ -1167,7 +1521,6 @@ export function setup(host) {
 
   const stateCrumble = {
     circles: [],
-    spawnTimer: 0,
   };
   function enterCrumble() {
     enterOrbit();
@@ -1175,7 +1528,6 @@ export function setup(host) {
     for (let i = 0; i < 300; i++) {
       stateCrumble.circles.push(spawnCircle());
     }
-    stateCrumble.spawnTimer = 0;
   }
   function updateCrumble(dt) {
     for (const c of stateCrumble.circles) {
@@ -1221,7 +1573,7 @@ export function setup(host) {
       const alpha = c.t < 2 ? 0.5 : 1;
       ctx.globalAlpha = alpha;
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.r >= 0) {
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
@@ -1264,7 +1616,7 @@ export function setup(host) {
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
-      } else {
+      } else if (c.r >= 0) {
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -2055,10 +2407,21 @@ export function setup(host) {
 
     if (state.enemyTransition == "none") state.patternTime += dt;
     if (state.patternTime >= state.currentPattern.duration) {
-      state.currentPattern =
-        loopPattern[
-          (loopPattern.indexOf(state.currentPattern) + 1) % loopPattern.length
-        ];
+      state.patternIndex++;
+
+      if (state.patternIndex >= state.loopPattern.length) {
+        state.patternIndex = 0;
+
+        if (phase.phase === 1) {
+          phase.phase = 2;
+          state.loopPattern = loopPatternPhase2;
+        } else if (phase.phase === 2) {
+          phase.phase = 3;
+          state.loopPattern = loopPatternPhase3;
+        }
+      }
+
+      state.currentPattern = state.loopPattern[state.patternIndex];
       state.patternTime = 0;
       state.currentPattern.enter?.();
     }
