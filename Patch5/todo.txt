@@ -17,7 +17,7 @@ vx guardian
 vx telefragger
 x kolona
 vx voidbound baby
-x cadence
+vx cadence
 x sigil
 x voidbreaker
 x voidbound guardian

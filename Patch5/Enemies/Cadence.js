@@ -1,8 +1,24 @@
 import { death, mouse } from "../entityHost.js";
 import { pickRandomPlaced4or5, moveCamera, playSound } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Cadence.png";
+const Cadence_idle_patch_5 = [];
+for (let i = 1; i <= 12; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Cadence/Cadence_idle_patch_5/Layer ${i}.png`;
+  Cadence_idle_patch_5.push(img);
+}
+const Cadence_enraged_opening = [];
+for (let i = 1; i <= 10; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Cadence/Cadence_enraged_opening/Layer ${i}.png`;
+  Cadence_enraged_opening.push(img);
+}
+const CadenceEnragedPatch5 = [];
+for (let i = 1; i <= 24; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Cadence/CadenceEnragedPatch5/Layer ${i}.png`;
+  CadenceEnragedPatch5.push(img);
+}
 
 const violin = new Image();
 violin.src = "./ASSET/Misc/Violin.png";
@@ -15,6 +31,11 @@ export function setup(host, hardMode, deafMode) {
   const state = {
     x: canvas.width / 2 + 200,
     y: canvas.height / 2 + 200,
+    layers: Cadence_idle_patch_5,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false],
+    layerspeed: 100,
 
     mode: "idle",
     timer: 0,
@@ -49,17 +70,26 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function resetToIdle() {
-    if (state.mode === "agro")
-      playSound(
-        "./ASSET/Sound/Enemies/Cadence/Cadence_ChaseStop.ogg",
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        true,
-      );
-    state.mode = "idle";
-    enemy.src = "./ASSET/Enemies/Cadence.png";
+    if (state.mode === "agro") {
+      state.mode = "idleWait";
+      setTimeout(() => {
+        playSound(
+          "./ASSET/Sound/Enemies/Cadence/Cadence_ChaseStop.ogg",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
+        );
+        if (!state.layerChange[1]) {
+          state.layers = Cadence_idle_patch_5;
+          state.layer = state.layers.length;
+          state.layerChange[1] = true;
+          state.layerChange[0] = false;
+        }
+        state.mode = "idle";
+      }, 1000);
+    }
     rollDelay();
   }
 
@@ -81,6 +111,18 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function update(dt) {
+    state.layerspeed += dt;
+    if (
+      state.layerspeed >= 1 / Math.pow(state.instruments.length + 1, 2) ||
+      state.mode == "agro" ||
+      state.mode === "idleWait"
+    ) {
+      state.layer++;
+      if (state.layer > state.layers.length) state.layer = 1;
+      state.enemy = state.layers[state.layer - 1];
+      state.layerspeed = 0;
+    }
+
     state.timer += dt;
     if (state.instruments.length >= (hardMode ? 2 : 3)) {
       const target = getNearestInstrument();
@@ -143,12 +185,21 @@ export function setup(host, hardMode, deafMode) {
             undefined,
             true,
           );
-          enemy.src = "./ASSET/Enemies/CadenceAgro.png";
+          if (!state.layerChange[0]) {
+            state.layers = Cadence_enraged_opening;
+            state.layer = state.layers.length;
+            state.layerChange[0] = true;
+            state.layerChange[1] = false;
+            setTimeout(() => {
+              state.layers = CadenceEnragedPatch5;
+              state.layer = state.layers.length;
+            }, 500);
+          }
         }
       }
     }
 
-    if (state.mode === "agro") {
+    if (state.mode === "agro" || state.mode === "idleWait") {
       const dx = mouse.x - state.x;
       const dy = mouse.y - state.y;
       const len = Math.hypot(dx, dy) || 1;
@@ -156,7 +207,7 @@ export function setup(host, hardMode, deafMode) {
       state.x += (dx / len) * AGRO_SPEED * dt;
       state.y += (dy / len) * AGRO_SPEED * dt;
 
-      if (len < 24) {
+      if (len < 100) {
         death("Cadence");
       }
     }
@@ -204,55 +255,49 @@ export function setup(host, hardMode, deafMode) {
   const STEP = 14;
 
   function drawChain(ctx, x1, y1, x2, y2) {
-    x1 = Math.round(x1);
-    y1 = Math.round(y1);
-    x2 = Math.round(x2);
-    y2 = Math.round(y2);
-
     const dx = x2 - x1;
     const dy = y2 - y1;
     const dist = Math.hypot(dx, dy) || 1;
 
-    const ux = dx / dist;
-    const uy = dy / dist;
+    const angle = Math.atan2(dy, dx);
 
-    for (let d = 0; d < dist; d += STEP) {
-      const cx = Math.round(x1 + ux * d);
-      const cy = Math.round(y1 + uy * d);
+    ctx.save();
+    ctx.translate(x1, y1);
+    ctx.rotate(angle);
 
-      const grad = ctx.createRadialGradient(
-        cx - Math.round(LINK_R * 0.4),
-        cy - Math.round(LINK_R * 0.4),
-        1,
-        cx,
-        cy,
-        LINK_R,
+    const ropeWidth = LINK_R * 2;
+
+    const grad = ctx.createLinearGradient(0, -ropeWidth / 2, 0, ropeWidth / 2);
+    grad.addColorStop(0, "#272727");
+    grad.addColorStop(0.5, "#5a5a5a");
+    grad.addColorStop(1, "#272727");
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, -ropeWidth / 2, dist, ropeWidth);
+
+    const twistSpacing = 6;
+    const twistWidth = ropeWidth * 0.15;
+
+    for (let d = 0; d < dist; d += twistSpacing) {
+      const t = d / dist;
+
+      const offset = Math.sin(d * 0.2) * (ropeWidth * 0.25);
+
+      const twistGrad = ctx.createLinearGradient(
+        d,
+        offset - twistWidth,
+        d,
+        offset + twistWidth,
       );
-      grad.addColorStop(0, "#fff0");
-      grad.addColorStop(0.6, "#fff0");
-      grad.addColorStop(0.61, "#8a8a8a");
-      grad.addColorStop(1, "#8a8a8a");
+      twistGrad.addColorStop(0, "rgba(255,255,255,0)");
+      twistGrad.addColorStop(0.5, "rgba(255,255,255,0.25)");
+      twistGrad.addColorStop(1, "rgba(255,255,255,0)");
 
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, LINK_R, 0, Math.PI * 2);
-      ctx.fill();
-
-      const dx2 = Math.round(cx + ux * (LINK_R + DASH_W / 2));
-      const dy2 = Math.round(cy + uy * (LINK_R + DASH_W / 2));
-
-      ctx.save();
-      ctx.translate(dx2, dy2);
-      ctx.rotate(Math.atan2(uy, ux));
-      ctx.fillStyle = "#8a8a8a";
-      ctx.fillRect(
-        -Math.round(DASH_W / 2),
-        -Math.round(DASH_H / 2),
-        DASH_W,
-        DASH_H,
-      );
-      ctx.restore();
+      ctx.fillStyle = twistGrad;
+      ctx.fillRect(d, offset - twistWidth, twistSpacing, twistWidth * 2);
     }
+
+    ctx.restore();
   }
 
   function drawArrow(ctx) {
@@ -270,7 +315,7 @@ export function setup(host, hardMode, deafMode) {
   function draw(ctx) {
     ctx.save();
 
-    if (state.mode === "agro") {
+    if (state.mode === "agro" || state.mode === "idleWait") {
       const strength = 6;
       const sx = (Math.random() * 2 - 1) * strength;
       const sy = (Math.random() * 2 - 1) * strength;
@@ -293,7 +338,8 @@ export function setup(host, hardMode, deafMode) {
     ctx.arc(sx, sy, 150, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.drawImage(enemy, sx - 100, sy - 100, 200, 200);
+    const size = state.layers == CadenceEnragedPatch5 ? 400 : 200;
+    ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
 
     for (const it of state.instruments) {
       const ix = Math.round(it.x);
