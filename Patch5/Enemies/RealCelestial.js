@@ -514,8 +514,6 @@ export function setup(host, hardMode) {
     stateSlash.cycle = 0;
     stateSlash.prevMx = mouse.x;
     stateSlash.prevMy = mouse.y;
-
-    showText("FALL.");
   }
   function updateSlash(dt) {
     const mx = mouse.x;
@@ -700,8 +698,6 @@ export function setup(host, hardMode) {
     stateImplosion.circles = [];
     stateImplosion.spawnTimer = 0;
     stateImplosion.spawned = 0;
-
-    showText("BOOM.");
   }
   function updateImplosion(dt) {
     const mx = mouse.x;
@@ -1341,8 +1337,6 @@ export function setup(host, hardMode) {
     s.rift = spawnFutileRift();
     s.trail = [];
     enterFixed(-1000, -1000);
-
-    showText("FUTILE.");
   }
   function updateFutile(dt) {
     const mx = mouse.x;
@@ -1675,8 +1669,6 @@ export function setup(host, hardMode) {
     for (let i = 0; i < 300; i++) {
       stateCrumble.circles.push(spawnCircle());
     }
-
-    showText("CRUMBLE.");
   }
   function updateCrumble(dt) {
     const mx = mouse.x;
@@ -1800,8 +1792,6 @@ export function setup(host, hardMode) {
     stateBitter.cx = cx;
     stateBitter.cy = cy;
     enterFixed(cx, cy);
-
-    showText("BITTER.");
   }
   function updateBitter(dt) {
     const mx = mouse.x;
@@ -1998,8 +1988,6 @@ export function setup(host, hardMode) {
       y: mouse.y,
     };
     stateCease.positions = [];
-
-    showText("CEASE.");
   }
   function updateCease(dt) {
     const mx = mouse.x;
@@ -2297,8 +2285,6 @@ export function setup(host, hardMode) {
     s.ey = mouse.y;
     s.particles = [];
     s.pTimer = 0;
-
-    showText("DEATH IN BLOOM.");
   }
   function updateDeathInBloom(dt) {
     const mx = mouse.x;
@@ -3294,8 +3280,6 @@ export function setup(host, hardMode) {
     stateBitter3Stars.extraStars = [];
     stateBitter3Stars.extraT = 0;
     stateBitter3Stars.extraSpawned = 0;
-
-    showText("BITTER.");
   }
   function updateBitter3Stars(dt) {
     const mx = mouse.x;
@@ -3688,8 +3672,6 @@ export function setup(host, hardMode) {
 
     s.crumbleT = 0;
     s.circles = [];
-
-    showText("DEATH IN BLOOM.");
   }
   function updateDeathInBloomCrumble(dt) {
     const mx = mouse.x;
@@ -4681,8 +4663,6 @@ export function setup(host, hardMode) {
     stateFirstSilence.timer = 0;
     stateFirstSilence.prevMx = mouse.x;
     stateFirstSilence.prevMy = mouse.y;
-
-    showText("SILENCE.");
   }
   function updateFirstSilence(dt) {
     const mx = mouse.x;
@@ -5466,8 +5446,6 @@ export function setup(host, hardMode) {
     s.snake = null;
     s.rift = spawnFutileRift();
     s.trail = [];
-
-    showText("SILENCE.");
   }
   function updateSecondSilence(dt) {
     const mx = mouse.x;
