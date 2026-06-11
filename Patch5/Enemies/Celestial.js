@@ -2255,9 +2255,9 @@ export function setup(host, hardMode) {
 
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    const ang = Math.random() * Math.PI * 2;
-    s.cx = cx + Math.cos(ang) * 2000;
-    s.cy = cy + Math.sin(ang) * 2000;
+    const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
+    s.cx = mouse.x + Math.cos(ang) * 2000;
+    s.cy = mouse.y + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
     s.w = 625;
     s.angle = 0;
@@ -2313,7 +2313,7 @@ export function setup(host, hardMode) {
         const len = s.len;
 
         const t = Math.random();
-        const along = t * len;
+        const along = t * len + 125;
 
         const forward = dir >= 0 ? 1 : -1;
         const edgeSide = Math.random() < 0.5 ? -1 : 1;
@@ -2414,7 +2414,10 @@ export function setup(host, hardMode) {
 
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -2426,8 +2429,49 @@ export function setup(host, hardMode) {
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
+      const randLineWidth = 18 * (Math.random() + 2);
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "magenta");
+        grad.addColorStop(0.5, "magenta");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -2436,7 +2480,7 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18 * (Math.random() + 2);
+        ctx.lineWidth = randLineWidth;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -2488,7 +2532,10 @@ export function setup(host, hardMode) {
     if (s.active) {
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -2502,6 +2549,28 @@ export function setup(host, hardMode) {
       const len = BEAM_RADIUS * 2;
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "black";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -2521,12 +2590,6 @@ export function setup(host, hardMode) {
       ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
       ctx.restore();
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      if (isLethal) {
-        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "magenta";
-        ctx.rotate(Math.PI);
-        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      }
 
       ctx.restore();
       for (const p of s.particles) {
@@ -3576,9 +3639,9 @@ export function setup(host, hardMode) {
 
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    const ang = Math.random() * Math.PI * 2;
-    s.cx = cx + Math.cos(ang) * 2000;
-    s.cy = cy + Math.sin(ang) * 2000;
+    const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
+    s.cx = mouse.x + Math.cos(ang) * 2000;
+    s.cy = mouse.y + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
     s.w = 625;
     s.angle = 0;
@@ -3637,7 +3700,7 @@ export function setup(host, hardMode) {
         const len = s.len;
 
         const t = Math.random();
-        const along = t * len;
+        const along = t * len + 125;
 
         const forward = dir >= 0 ? 1 : -1;
         const edgeSide = Math.random() < 0.5 ? -1 : 1;
@@ -3816,7 +3879,10 @@ export function setup(host, hardMode) {
 
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -3828,8 +3894,49 @@ export function setup(host, hardMode) {
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
+      const randLineWidth = 18 * (Math.random() + 2);
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "magenta");
+        grad.addColorStop(0.5, "magenta");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -3838,7 +3945,7 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18 * (Math.random() + 2);
+        ctx.lineWidth = randLineWidth;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -3917,7 +4024,10 @@ export function setup(host, hardMode) {
     if (s.active) {
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -3931,6 +4041,28 @@ export function setup(host, hardMode) {
       const len = BEAM_RADIUS * 2;
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "black";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -3950,12 +4082,6 @@ export function setup(host, hardMode) {
       ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
       ctx.restore();
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      if (isLethal) {
-        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "magenta";
-        ctx.rotate(Math.PI);
-        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      }
 
       ctx.restore();
       for (const p of s.particles) {
@@ -5294,9 +5420,9 @@ export function setup(host, hardMode) {
 
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    const ang = Math.random() * Math.PI * 2;
-    s.cx = cx + Math.cos(ang) * 2000;
-    s.cy = cy + Math.sin(ang) * 2000;
+    const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
+    s.cx = mouse.x + Math.cos(ang) * 1000;
+    s.cy = mouse.y + Math.sin(ang) * 1000;
     enterFixed(s.cx, s.cy);
     s.w = 417;
     s.angle = 0;
@@ -5360,7 +5486,7 @@ export function setup(host, hardMode) {
         const len = s.len;
 
         const t = Math.random();
-        const along = t * len;
+        const along = t * len + 125;
 
         const forward = dir >= 0 ? 1 : -1;
         const edgeSide = Math.random() < 0.5 ? -1 : 1;
@@ -5847,7 +5973,10 @@ export function setup(host, hardMode) {
 
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -5859,8 +5988,49 @@ export function setup(host, hardMode) {
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
+      const randLineWidth = 18 * (Math.random() + 2);
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "magenta");
+        grad.addColorStop(0.5, "magenta");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -5869,7 +6039,7 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18 * (Math.random() + 2);
+        ctx.lineWidth = randLineWidth;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -6027,7 +6197,10 @@ export function setup(host, hardMode) {
     if (s.active) {
       ctx.save();
 
-      ctx.translate(s.cx, s.cy);
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
       ctx.rotate(s.angle);
 
       const dx = mouse.x - s.cx;
@@ -6041,6 +6214,28 @@ export function setup(host, hardMode) {
       const len = BEAM_RADIUS * 2;
 
       const isLethal = s.t >= 5;
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "black";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
 
       if (!isLethal) {
         ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
@@ -6060,12 +6255,6 @@ export function setup(host, hardMode) {
       ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
       ctx.restore();
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      if (isLethal) {
-        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "magenta";
-        ctx.rotate(Math.PI);
-        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-      }
 
       ctx.restore();
       for (const p of s.particles) {
