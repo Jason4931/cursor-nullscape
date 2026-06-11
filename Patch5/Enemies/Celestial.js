@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, canvas } from "../main.js";
+import { getCameraPos, canvas, moveCamera } from "../main.js";
 
 const font = new FontFace(
   "CelestialFont",
@@ -295,6 +295,10 @@ export function setup(host, hardMode) {
     enemyTransition: "none",
     enemyTransitionT: 0,
     enemyTrail: [],
+
+    shakeX: 0,
+    shakeY: 0,
+    shakeStrength: 0,
   };
 
   function showText(text) {
@@ -302,6 +306,10 @@ export function setup(host, hardMode) {
     floatingText.t = 0;
     floatingText.duration = 2;
     floatingText.active = true;
+  }
+  function shakeScreen(strength = 1) {
+    state.shakeStrength += strength;
+    if (state.shakeStrength > 1) state.shakeStrength = 1;
   }
   function enterFixed(x, y, transition = true) {
     state.enemyMode = "fixed";
@@ -547,10 +555,11 @@ export function setup(host, hardMode) {
 
     stateSlash.timer += dt;
 
-    const DURATIONS = [1, 1, 1, 2];
+    const DURATIONS = [1, 1, 1, 1.5];
     if (stateSlash.timer >= DURATIONS[cycle]) {
       stateSlash.timer = 0;
       stateSlash.cycle = cycle + 1;
+      shakeScreen();
     }
 
     let needsCompact = false;
@@ -730,6 +739,10 @@ export function setup(host, hardMode) {
         c.r = c.targetR * eased;
         c.phase = 1;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.phase = 2;
         c.r -= dt * 600;
         if (c.r <= 0) {
@@ -933,6 +946,7 @@ export function setup(host, hardMode) {
     if (statePizzaCutter.t >= 2) {
       statePizzaCutter.t = 0;
       statePizzaCutter.cycle++;
+      shakeScreen();
       if (statePizzaCutter.cycle < 4) {
         statePizzaCutter.spawned = false;
       }
@@ -1120,6 +1134,7 @@ export function setup(host, hardMode) {
     if (statePizzaCutterCrumble.t >= 2) {
       statePizzaCutterCrumble.t = 0;
       statePizzaCutterCrumble.cycle++;
+      shakeScreen(2);
       if (statePizzaCutterCrumble.cycle < 4) {
         statePizzaCutterCrumble.spawned = false;
       }
@@ -1403,6 +1418,7 @@ export function setup(host, hardMode) {
           r: 200,
           a: Math.random() * Math.PI * 2,
         });
+        shakeScreen();
       }
 
       if (s.rift.t >= 3) {
@@ -1701,6 +1717,10 @@ export function setup(host, hardMode) {
       } else if (c.t < 2) {
         c.r = c.targetR;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.r -= dt * 200;
         if (c.r <= 0) {
           c.active = false;
@@ -1881,6 +1901,7 @@ export function setup(host, hardMode) {
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
+      if (s.cycle <= 3) shakeScreen();
       if (s.cycle <= 2) enterFixed(s.cx, s.cy, false);
       s.spawned = false;
     }
@@ -2048,6 +2069,10 @@ export function setup(host, hardMode) {
       } else if (c.t < 2) {
         c.r = 600;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.r -= dt * 800;
         if (c.r <= 0) {
           c.active = false;
@@ -2375,6 +2400,7 @@ export function setup(host, hardMode) {
     const sin = Math.sin(-s.angle);
 
     if (s.t >= 5) {
+      if (s.t <= 22) shakeScreen();
       const mmx = mx - s.cx;
       const mmy = my - s.cy;
 
@@ -2825,6 +2851,7 @@ export function setup(host, hardMode) {
             r: 300,
             t: 0,
           });
+          shakeScreen();
 
           s.cutters[i].cx = tipPosX;
           s.cutters[i].cy = tipPosY;
@@ -2927,6 +2954,10 @@ export function setup(host, hardMode) {
         } else if (c.t < 4) {
           c.r = c.targetR;
         } else {
+          if (!c.shake) {
+            c.shake = true;
+            shakeScreen();
+          }
           c.r -= dt * (c.targetR == 150 ? 200 : 133.333);
           if (c.r <= 0) {
             c.active = false;
@@ -3441,6 +3472,7 @@ export function setup(host, hardMode) {
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
+      shakeScreen();
       if (s.cycle <= 2) enterFixed(s.cx, s.cy, false);
       s.spawned = false;
     }
@@ -3766,6 +3798,7 @@ export function setup(host, hardMode) {
     const sin = Math.sin(-s.angle);
 
     if (s.t >= 5) {
+      if (s.t <= 22) shakeScreen();
       const mmx = mx - s.cx;
       const mmy = my - s.cy;
 
@@ -3845,6 +3878,10 @@ export function setup(host, hardMode) {
       } else if (c.t < 2) {
         c.r = c.targetR;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.r -= dt * 200;
         if (c.r <= 0) {
           c.active = false;
@@ -4207,6 +4244,10 @@ export function setup(host, hardMode) {
         c.r = c.targetR * eased;
         c.phase = 1;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.phase = 2;
         c.r -= dt * 600;
         if (c.r <= 0) {
@@ -4304,6 +4345,7 @@ export function setup(host, hardMode) {
 
           if (!d.slashInit) {
             d.slashInit = true;
+            shakeScreen();
 
             d.slashStartX = d.cx;
             d.slashStartY = d.cy;
@@ -4753,6 +4795,7 @@ export function setup(host, hardMode) {
     if (stateFirstSilence.t >= 2) {
       stateFirstSilence.t = 0;
       stateFirstSilence.cycle++;
+      shakeScreen(stateFirstSilence.cycle % 2 == 0 ? 2 : 3);
       if (stateFirstSilence.cycle < 4) {
         stateFirstSilence.spawned = false;
       }
@@ -5536,6 +5579,7 @@ export function setup(host, hardMode) {
     const sin = Math.sin(-s.angle);
 
     if (s.t >= 5) {
+      if (s.t <= 14) shakeScreen();
       enterFixed(-1000, -1000, false);
 
       const mmx = mx - s.cx;
@@ -5617,6 +5661,10 @@ export function setup(host, hardMode) {
       } else if (c.t < 2) {
         c.r = c.targetR;
       } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+        }
         c.r -= dt * 200;
         if (c.r <= 0) {
           c.active = false;
@@ -5659,6 +5707,10 @@ export function setup(host, hardMode) {
       } else if (t < b.armTime) {
         b.width = b.targetWidth;
       } else {
+        if (!b.shake) {
+          b.shake = true;
+          shakeScreen();
+        }
         const w = b.width - dt * 200;
         b.width = w;
         if (w <= 0) {
@@ -5748,6 +5800,7 @@ export function setup(host, hardMode) {
           r: 200,
           a: Math.random() * Math.PI * 2,
         });
+        shakeScreen();
       }
 
       if (s.rift.t >= 3) {
@@ -6495,6 +6548,34 @@ export function setup(host, hardMode) {
       floatingText.t += dt;
       if (floatingText.t >= floatingText.duration) {
         floatingText.active = false;
+      }
+    }
+
+    state.shakeStrength -= 2 * dt;
+    if (state.shakeStrength > 0) {
+      if (state.shakeX && state.shakeY) {
+        moveCamera(-state.shakeX, -state.shakeY, true);
+        state.shakeX = 0;
+        state.shakeY = 0;
+      } else {
+        const x =
+          (Math.random() < 0.5 ? 1 : -1) *
+          Math.min(state.shakeStrength, 1) *
+          10;
+        const y =
+          (Math.random() < 0.5 ? 1 : -1) *
+          Math.min(state.shakeStrength, 1) *
+          10;
+        moveCamera(x, y, true);
+        state.shakeX = x;
+        state.shakeY = y;
+      }
+    } else {
+      state.shakeStrength = 0;
+      if (state.shakeX && state.shakeY) {
+        moveCamera(-state.shakeX, -state.shakeY, true);
+        state.shakeX = 0;
+        state.shakeY = 0;
       }
     }
 
