@@ -146,76 +146,76 @@ export function setup(host, hardMode) {
     ...patternBoom,
   ];
   const specificDevOnly = [
-    // {
-    //   duration: 5.5,
-    //   update: updateSlash,
-    //   draw: drawSlash,
-    //   drawFront: drawSlashFront,
-    //   enter: enterSlash,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateImplosion,
-    //   draw: drawImplosion,
-    //   drawFront: drawImplosionFront,
-    //   enter: enterImplosion,
-    // },
-    // {
-    //   duration: 9,
-    //   update: updatePizzaCutter,
-    //   draw: drawPizzaCutter,
-    //   drawFront: drawPizzaCutterFront,
-    //   enter: enterPizzaCutter,
-    // },
-    // {
-    //   duration: 13,
-    //   update: updateFutile,
-    //   draw: drawFutile,
-    //   drawFront: drawFutileFront,
-    //   enter: enterFutile,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateCrumble,
-    //   draw: drawCrumble,
-    //   drawFront: drawCrumbleFront,
-    //   enter: enterCrumble,
-    // },
-    // {
-    //   duration: 9,
-    //   update: updateBitter,
-    //   draw: drawBitter,
-    //   drawFront: drawBitterFront,
-    //   enter: enterBitter,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateCease,
-    //   draw: drawCease,
-    //   drawFront: drawCeaseFront,
-    //   enter: enterCease,
-    // },
-    // {
-    //   duration: 9,
-    //   update: updatePizzaCutterCrumble,
-    //   draw: drawPizzaCutterCrumble,
-    //   drawFront: drawPizzaCutterCrumbleFront,
-    //   enter: enterPizzaCutterCrumble,
-    // },
-    // {
-    //   duration: 23,
-    //   update: updateDeathInBloom,
-    //   draw: drawDeathInBloom,
-    //   drawFront: drawDeathInBloomFront,
-    //   enter: enterDeathInBloom,
-    // },
-    // {
-    //   duration: 8,
-    //   update: updateSuperPizzaCutter,
-    //   draw: drawSuperPizzaCutter,
-    //   drawFront: drawSuperPizzaCutterFront,
-    //   enter: enterSuperPizzaCutter,
-    // },
+    {
+      duration: 5.5,
+      update: updateSlash,
+      draw: drawSlash,
+      drawFront: drawSlashFront,
+      enter: enterSlash,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutter,
+      draw: drawPizzaCutter,
+      drawFront: drawPizzaCutterFront,
+      enter: enterPizzaCutter,
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateCrumble,
+      draw: drawCrumble,
+      drawFront: drawCrumbleFront,
+      enter: enterCrumble,
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloom,
+      draw: drawDeathInBloom,
+      drawFront: drawDeathInBloomFront,
+      enter: enterDeathInBloom,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutter,
+      draw: drawSuperPizzaCutter,
+      drawFront: drawSuperPizzaCutterFront,
+      enter: enterSuperPizzaCutter,
+    },
     {
       duration: 9,
       update: updateFirstSilence,
@@ -223,34 +223,34 @@ export function setup(host, hardMode) {
       drawFront: drawFirstSilenceFront,
       enter: enterFirstSilence,
     },
-    // {
-    //   duration: 9,
-    //   update: updateBitter3Stars,
-    //   draw: drawBitter3Stars,
-    //   drawFront: drawBitter3StarsFront,
-    //   enter: enterBitter3Stars,
-    // },
-    // {
-    //   duration: 23,
-    //   update: updateDeathInBloomCrumble,
-    //   draw: drawDeathInBloomCrumble,
-    //   drawFront: drawDeathInBloomCrumbleFront,
-    //   enter: enterDeathInBloomCrumble,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateImplosionBreaker,
-    //   draw: drawImplosionBreaker,
-    //   drawFront: drawImplosionBreakerFront,
-    //   enter: enterImplosionBreaker,
-    // },
-    // {
-    //   duration: 18,
-    //   update: updateSecondSilence,
-    //   draw: drawSecondSilence,
-    //   drawFront: drawSecondSilenceFront,
-    //   enter: enterSecondSilence,
-    // },
+    {
+      duration: 9,
+      update: updateBitter3Stars,
+      draw: drawBitter3Stars,
+      drawFront: drawBitter3StarsFront,
+      enter: enterBitter3Stars,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumble,
+      draw: drawDeathInBloomCrumble,
+      drawFront: drawDeathInBloomCrumbleFront,
+      enter: enterDeathInBloomCrumble,
+    },
+    {
+      duration: 3,
+      update: updateImplosionBreaker,
+      draw: drawImplosionBreaker,
+      drawFront: drawImplosionBreakerFront,
+      enter: enterImplosionBreaker,
+    },
+    {
+      duration: 18,
+      update: updateSecondSilence,
+      draw: drawSecondSilence,
+      drawFront: drawSecondSilenceFront,
+      enter: enterSecondSilence,
+    },
   ];
   const celestialDevOnly = true;
   const state = {
@@ -2271,7 +2271,6 @@ export function setup(host, hardMode) {
     const mx = mouse.x;
     const my = mouse.y;
     const s = stateDeathInBloom;
-    if (!s.active) return;
 
     s.t += dt;
     s.pTimer += dt;
@@ -2288,7 +2287,7 @@ export function setup(host, hardMode) {
     let diff = targetAngle - s.angle;
     if (diff > Math.PI) diff -= Math.PI * 2;
     if (diff < -Math.PI) diff += Math.PI * 2;
-    const maxDiff = 0.1;
+    const maxDiff = s.t < 1 ? 10 : 0.1;
     if (diff > maxDiff) diff = maxDiff;
     if (diff < -maxDiff) diff = -maxDiff;
     s.angle += diff;
@@ -2349,7 +2348,7 @@ export function setup(host, hardMode) {
       const rx = mmx * cos - mmy * sin;
       const ry = mmx * sin + mmy * cos;
 
-      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2) {
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
         death("Celestial");
       }
     }
@@ -2388,158 +2387,163 @@ export function setup(host, hardMode) {
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
-      if (s.w <= 0) s.active = false;
+      if (s.w <= 0) {
+        s.w = 0;
+        s.active = false;
+      }
     }
   }
   function drawDeathInBloom(ctx) {
     const s = stateDeathInBloom;
-    if (!s.active) return;
 
-    for (const p of s.particles) {
+    if (s.active) {
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
 
-      ctx.strokeStyle = "magenta";
-      ctx.lineWidth = 18;
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.stroke();
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18 * (Math.random() + 2);
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,255,0)");
+      grad.addColorStop(1, "magenta");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "magenta");
+      grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
 
       ctx.restore();
     }
-
-    ctx.save();
-
-    ctx.translate(s.cx, s.cy);
-    ctx.rotate(s.angle);
-
-    const dx = mouse.x - s.cx;
-    const dy = mouse.y - s.cy;
-
-    const cos = Math.cos(-s.angle);
-    const sin = Math.sin(-s.angle);
-
-    const rx = dx * cos - dy * sin;
-    const x = rx - BEAM_RADIUS;
-    const len = BEAM_RADIUS * 2;
-
-    const isLethal = s.t >= 5;
-
-    if (!isLethal) {
-      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-    } else {
-      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-
-      ctx.strokeStyle = "magenta";
-      ctx.lineWidth = 18 * (Math.random() + 2);
-
-      ctx.beginPath();
-      ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
-      ctx.stroke();
-
-      ctx.fillStyle = "black";
-    }
-
-    const edgeOffset = s.w / 2;
-    const glowSize = 400;
-
-    ctx.save();
-    ctx.globalAlpha =
-      (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
-      (s.t < 0.25 ? s.t * 4 : 1);
-
-    let grad = ctx.createLinearGradient(
-      0,
-      -edgeOffset - glowSize,
-      0,
-      -edgeOffset,
-    );
-    grad.addColorStop(0, "rgba(255,0,255,0)");
-    grad.addColorStop(1, "magenta");
-
-    ctx.fillStyle = grad;
-    ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
-
-    let grad2 = ctx.createLinearGradient(
-      0,
-      edgeOffset,
-      0,
-      edgeOffset + glowSize,
-    );
-    grad2.addColorStop(0, "magenta");
-    grad2.addColorStop(1, "rgba(255,0,255,0)");
-
-    ctx.fillStyle = grad2;
-    ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
-
-    ctx.restore();
-
-    ctx.restore();
   }
   function drawDeathInBloomFront(ctx) {
     const s = stateDeathInBloom;
-    if (!s.active) return;
 
-    ctx.save();
-
-    ctx.translate(s.cx, s.cy);
-    ctx.rotate(s.angle);
-
-    const dx = mouse.x - s.cx;
-    const dy = mouse.y - s.cy;
-
-    const cos = Math.cos(-s.angle);
-    const sin = Math.sin(-s.angle);
-
-    const rx = dx * cos - dy * sin;
-    const x = rx - BEAM_RADIUS;
-    const len = BEAM_RADIUS * 2;
-
-    const isLethal = s.t >= 5;
-
-    if (!isLethal) {
-      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-    } else {
-      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "black";
-    }
-
-    const edgeOffset = s.w / 2;
-    const glowSize = 400;
-
-    ctx.save();
-    ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
-    ctx.fillStyle = "magenta";
-    const w = s.w * (Math.random() + 1);
-    ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
-    ctx.restore();
-    ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-    if (isLethal) {
-      ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-      ctx.rotate(Math.PI);
-      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-    }
-
-    ctx.restore();
-    for (const p of s.particles) {
+    if (s.active) {
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "black";
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "magenta";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      if (isLethal) {
+        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+        ctx.rotate(Math.PI);
+        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      }
+
+      ctx.restore();
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
 
       ctx.restore();
     }
-
-    ctx.restore();
   }
 
   const stateSuperPizzaCutter = {
@@ -3591,7 +3595,6 @@ export function setup(host, hardMode) {
     const mx = mouse.x;
     const my = mouse.y;
     const s = stateDeathInBloomCrumble;
-    if (!s.active) return;
 
     s.t += dt;
     s.pTimer += dt;
@@ -3608,7 +3611,7 @@ export function setup(host, hardMode) {
     let diff = targetAngle - s.angle;
     if (diff > Math.PI) diff -= Math.PI * 2;
     if (diff < -Math.PI) diff += Math.PI * 2;
-    const maxDiff = 0.1;
+    const maxDiff = s.t < 1 ? 10 : 0.1;
     if (diff > maxDiff) diff = maxDiff;
     if (diff < -maxDiff) diff = -maxDiff;
     s.angle += diff;
@@ -3669,7 +3672,7 @@ export function setup(host, hardMode) {
       const rx = mmx * cos - mmy * sin;
       const ry = mmx * sin + mmy * cos;
 
-      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2) {
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
         death("Celestial");
       }
     }
@@ -3716,7 +3719,10 @@ export function setup(host, hardMode) {
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
-      if (s.w <= 0) s.active = false;
+      if (s.w <= 0) {
+        s.w = 0;
+        s.active = false;
+      }
     }
 
     let needsCompactCrumble = false;
@@ -3758,7 +3764,6 @@ export function setup(host, hardMode) {
   }
   function drawDeathInBloomCrumble(ctx) {
     const s = stateDeathInBloomCrumble;
-    if (!s.active) return;
 
     for (const c of s.circles) {
       ctx.save();
@@ -3793,93 +3798,94 @@ export function setup(host, hardMode) {
       ctx.restore();
     }
 
-    for (const p of s.particles) {
+    if (s.active) {
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
 
-      ctx.strokeStyle = "magenta";
-      ctx.lineWidth = 18;
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.stroke();
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18 * (Math.random() + 2);
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,255,0)");
+      grad.addColorStop(1, "magenta");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "magenta");
+      grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
 
       ctx.restore();
     }
-
-    ctx.save();
-
-    ctx.translate(s.cx, s.cy);
-    ctx.rotate(s.angle);
-
-    const dx = mouse.x - s.cx;
-    const dy = mouse.y - s.cy;
-
-    const cos = Math.cos(-s.angle);
-    const sin = Math.sin(-s.angle);
-
-    const rx = dx * cos - dy * sin;
-    const x = rx - BEAM_RADIUS;
-    const len = BEAM_RADIUS * 2;
-
-    const isLethal = s.t >= 5;
-
-    if (!isLethal) {
-      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-    } else {
-      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-
-      ctx.strokeStyle = "magenta";
-      ctx.lineWidth = 18 * (Math.random() + 2);
-
-      ctx.beginPath();
-      ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
-      ctx.stroke();
-
-      ctx.fillStyle = "black";
-    }
-
-    const edgeOffset = s.w / 2;
-    const glowSize = 400;
-
-    ctx.save();
-    ctx.globalAlpha =
-      (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
-      (s.t < 0.25 ? s.t * 4 : 1);
-
-    let grad = ctx.createLinearGradient(
-      0,
-      -edgeOffset - glowSize,
-      0,
-      -edgeOffset,
-    );
-    grad.addColorStop(0, "rgba(255,0,255,0)");
-    grad.addColorStop(1, "magenta");
-
-    ctx.fillStyle = grad;
-    ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
-
-    let grad2 = ctx.createLinearGradient(
-      0,
-      edgeOffset,
-      0,
-      edgeOffset + glowSize,
-    );
-    grad2.addColorStop(0, "magenta");
-    grad2.addColorStop(1, "rgba(255,0,255,0)");
-
-    ctx.fillStyle = grad2;
-    ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
-
-    ctx.restore();
-
-    ctx.restore();
   }
   function drawDeathInBloomCrumbleFront(ctx) {
     const s = stateDeathInBloomCrumble;
-    if (!s.active) return;
 
     for (const c of s.circles) {
       ctx.save();
@@ -3908,63 +3914,65 @@ export function setup(host, hardMode) {
       ctx.restore();
     }
 
-    ctx.save();
-
-    ctx.translate(s.cx, s.cy);
-    ctx.rotate(s.angle);
-
-    const dx = mouse.x - s.cx;
-    const dy = mouse.y - s.cy;
-
-    const cos = Math.cos(-s.angle);
-    const sin = Math.sin(-s.angle);
-
-    const rx = dx * cos - dy * sin;
-    const x = rx - BEAM_RADIUS;
-    const len = BEAM_RADIUS * 2;
-
-    const isLethal = s.t >= 5;
-
-    if (!isLethal) {
-      ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-    } else {
-      ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "black";
-    }
-
-    const edgeOffset = s.w / 2;
-    const glowSize = 400;
-
-    ctx.save();
-    ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
-    ctx.fillStyle = "magenta";
-    const w = s.w * (Math.random() + 1);
-    ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
-    ctx.restore();
-    ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-    if (isLethal) {
-      ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-      ctx.rotate(Math.PI);
-      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-    }
-
-    ctx.restore();
-    for (const p of s.particles) {
+    if (s.active) {
       ctx.save();
 
-      ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "black";
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "magenta";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      if (isLethal) {
+        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+        ctx.rotate(Math.PI);
+        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      }
+
+      ctx.restore();
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
 
       ctx.restore();
     }
-
-    ctx.restore();
   }
 
   const stateImplosionBreaker = {
@@ -5247,6 +5255,909 @@ export function setup(host, hardMode) {
 
       ctx.fillStyle = "black";
       ctx.fill();
+
+      ctx.restore();
+    }
+  }
+
+  const stateSecondSilence = {
+    t: 0,
+    cx: 0,
+    cy: 0,
+    ex: 0,
+    ey: 0,
+    prevMx: 0,
+    prevMy: 0,
+    len: 20000,
+    w: 417,
+    active: false,
+    particles: [],
+    pTimer: 0,
+
+    crumbleT: 0,
+    circles: [],
+
+    beams: [],
+    timer: 0,
+
+    cycle: 0,
+    futileT: 0,
+    rift: null,
+    snake: null,
+    trail: [],
+  };
+  function enterSecondSilence() {
+    const s = stateSecondSilence;
+
+    s.t = 0;
+    s.active = true;
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const ang = Math.random() * Math.PI * 2;
+    s.cx = cx + Math.cos(ang) * 2000;
+    s.cy = cy + Math.sin(ang) * 2000;
+    enterFixed(s.cx, s.cy);
+    s.w = 417;
+    s.angle = 0;
+    s.baseAngle = Math.random() * Math.PI * 2;
+    s.dir = Math.random() < 0.5;
+
+    s.ex = mouse.x;
+    s.ey = mouse.y;
+    s.particles = [];
+    s.pTimer = 0;
+
+    s.crumbleT = 0;
+    s.circles = [];
+
+    s.beams = [];
+    s.timer = 0;
+    s.prevMx = mouse.x;
+    s.prevMy = mouse.y;
+
+    s.cycle = 0;
+    s.futileT = 0;
+    s.snake = null;
+    s.rift = spawnFutileRift();
+    s.trail = [];
+  }
+  function updateSecondSilence(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    const s = stateSecondSilence;
+
+    s.t += dt;
+    s.pTimer += dt;
+
+    const follow = 1 - Math.exp(-0.8 * dt);
+
+    s.ex += (mx - s.ex) * follow;
+    s.ey += (my - s.ey) * follow;
+
+    const totalRotationTime = 9;
+    const rotSpeed = (Math.PI * 2) / totalRotationTime;
+    s.angle = s.baseAngle + rotSpeed * s.t * (s.dir ? 1 : -1);
+
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
+    const bx = Math.cos(s.angle);
+    const by = Math.sin(s.angle);
+    const dir = mvx * bx + mvy * by;
+
+    if (s.t < 14 && s.pTimer >= 0.02) {
+      s.pTimer = 0;
+
+      const spawnCount = 200;
+
+      const nx = Math.cos(s.angle + Math.PI / 2);
+      const ny = Math.sin(s.angle + Math.PI / 2);
+
+      for (let i = 0; i < spawnCount; i++) {
+        const angle = s.angle;
+        const len = s.len;
+
+        const t = Math.random();
+        const along = t * len;
+
+        const forward = dir >= 0 ? 1 : -1;
+        const edgeSide = Math.random() < 0.5 ? -1 : 1;
+        const trailingOffset = (s.w / 2) * forward * edgeSide;
+        const leadingOffset = (s.w / 1.5) * forward * edgeSide;
+        const isLeading = Math.random() < 0.35;
+        const spread = isLeading ? leadingOffset : trailingOffset;
+
+        const px = s.cx + bx * along + nx * spread;
+        const py = s.cy + by * along + ny * spread;
+
+        s.particles.push({
+          x: px,
+          y: py,
+          vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+          vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+          r: Math.random() * 40,
+          t: 0,
+          life: 0.25 + Math.random() * 0.25,
+          active: true,
+        });
+      }
+    }
+
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
+    if (s.t >= 5) {
+      enterFixed(-1000, -1000, false);
+
+      const mmx = mx - s.cx;
+      const mmy = my - s.cy;
+
+      const rx = mmx * cos - mmy * sin;
+      const ry = mmx * sin + mmy * cos;
+
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
+        death("Celestial");
+      }
+    }
+
+    s.crumbleT += dt;
+    if (s.t >= 6 && s.crumbleT >= 2 && s.t < 14) {
+      for (let i = 0; i < 300; i++) {
+        s.circles.push(spawnCircle(75));
+      }
+      s.crumbleT = 0;
+    }
+
+    let needsCompact = false;
+    for (const p of s.particles) {
+      p.t += dt;
+
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.r += dt * 5;
+
+      if (p.t > p.life) {
+        p.active = false;
+        needsCompact = true;
+      }
+
+      const dx = p.x - s.cx;
+      const dy = p.y - s.cy;
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfLen = s.len;
+      const halfW = s.w / 2 + 100;
+
+      if (Math.abs(rx) > halfLen || Math.abs(ry) > halfW) {
+        p.active = false;
+        needsCompact = true;
+      }
+    }
+    if (needsCompact) compact(s.particles);
+
+    if (s.t >= 5 && s.t < 14) {
+      s.w = Math.random() * 50 + 367;
+    }
+    if (s.t >= 14) {
+      s.w -= dt * 1000;
+      if (s.w <= 0) {
+        s.w = 0;
+        s.active = false;
+      }
+    }
+
+    let needsCompactCrumble = false;
+    for (const c of s.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        c.r -= dt * 200;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactCrumble = true;
+        }
+      }
+
+      if (c.t >= 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          death("Celestial");
+        }
+      }
+    }
+    if (needsCompactCrumble) compact(s.circles);
+
+    const px = mx + mvx;
+    const py = my + mvy;
+
+    if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
+      const base = Math.random() * Math.PI * 2;
+      const spread = Math.PI / 6;
+
+      s.beams.push(spawnBeam(px, py, base, 1.5));
+      s.beams.push(spawnBeam(px, py, base - spread, 1.5));
+      s.beams.push(spawnBeam(px, py, base + spread, 1.5));
+    }
+
+    s.timer += dt;
+
+    let needsCompactSlash = false;
+    for (const b of s.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        death("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(s.beams);
+
+    if (s.t >= 5) {
+      s.futileT += dt;
+      s.rift.t += dt;
+    }
+
+    const r = s.rift;
+    if (r.t < 0.25) {
+      const p = r.t / 0.25;
+      r.scale = 1 - (1 - p) * (1 - p);
+    } else if (r.t < 1) {
+      r.scale = 1;
+    } else {
+      const p = (r.t - 1) * 2;
+      r.scale = Math.max(0, 1 - p * p);
+    }
+
+    if (s.rift.t >= 1 && s.rift.t < 3 && !s.snake) {
+      s.snake = spawnSnake(s.rift);
+    }
+
+    const sn = s.snake;
+    if (sn) {
+      const dx = mx - sn.x;
+      const dy = my - sn.y;
+
+      const vLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
+      const vx = sn.vx / vLen;
+      const vy = sn.vy / vLen;
+
+      const px = -vy;
+      const py = vx;
+
+      const side = dx * px + dy * py;
+      const forward = dx * vx + dy * vy;
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1);
+
+      sn.vx += px * side * TURN_STRENGTH * dt;
+      sn.vy += py * side * TURN_STRENGTH * dt;
+
+      const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
+      const speed = 2500;
+
+      sn.vx = (sn.vx / newLen) * speed;
+      sn.vy = (sn.vy / newLen) * speed;
+
+      sn.x += sn.vx * dt;
+      sn.y += sn.vy * dt;
+
+      const off = 100;
+      if (s.rift.t < 3) {
+        s.trail.push({
+          x: sn.x + (Math.random() - 0.5) * off,
+          y: sn.y + (Math.random() - 0.5) * off,
+          r: 200,
+          a: Math.random() * Math.PI * 2,
+        });
+      }
+
+      if (s.rift.t >= 3) {
+        sn.vx *= 0.85;
+        sn.vy *= 0.85;
+      }
+    }
+
+    for (const p of s.trail) {
+      const dx = p.x - mx;
+      const dy = p.y - my;
+      if (dx * dx + dy * dy < p.r * p.r) {
+        death("Celestial");
+      }
+      p.r -=
+        dt *
+        Math.max(50, p.r) *
+        1.25 *
+        (s.futileT >= 12 ? (s.futileT - 11) * 1.25 : 1);
+    }
+    s.trail = s.trail.filter((p) => p.r > 0);
+
+    if (s.rift.t >= 3) {
+      s.cycle++;
+
+      if (s.cycle < 4) {
+        s.rift = spawnFutileRift();
+      }
+
+      s.snake = null;
+    }
+  }
+  function drawSecondSilence(ctx) {
+    const s = stateSecondSilence;
+
+    if (s.rift) {
+      const pts = s.rift.points;
+
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      const glowSize = 300;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, p.r, 0, 0, p.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.rotate(p.a);
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0) {
+        const grad = ctx.createLinearGradient(
+          -len / 2 - glowSize,
+          0,
+          -len / 2,
+          0,
+        );
+        grad.addColorStop(0, "rgba(255,0,255,0)");
+        grad.addColorStop(1, `rgba(255,0,255,0.5)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(-len / 2 - glowSize, -w / 2, glowSize, w);
+
+        const grad2 = ctx.createLinearGradient(
+          len / 2,
+          0,
+          len / 2 + glowSize,
+          0,
+        );
+        grad2.addColorStop(0, `rgba(255,0,255,0.5)`);
+        grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad2;
+        ctx.fillRect(len / 2, -w / 2, glowSize, w);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+        ctx.strokeRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 18;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "magenta";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,255,0)");
+        gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+        gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    if (s.active) {
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.save();
+
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18 * (Math.random() + 2);
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,255,0)");
+      grad.addColorStop(1, "magenta");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "magenta");
+      grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
+
+      ctx.restore();
+    }
+  }
+  function drawSecondSilenceFront(ctx) {
+    const s = stateSecondSilence;
+
+    if (s.rift) {
+      const pts = s.rift.points;
+
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "magenta";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "magenta");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    if (s.active) {
+      ctx.save();
+
+      ctx.translate(s.cx, s.cy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "magenta";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      if (isLethal) {
+        ctx.globalAlpha = 0.1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+        ctx.rotate(Math.PI);
+        ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+      }
+
+      ctx.restore();
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    const r = s.rift;
+    if (s.rift && s.rift.t <= 2 && r) {
+      const cam = getCameraPos();
+
+      const cx = cam.x + window.innerWidth / 2;
+      const cy = cam.y + window.innerHeight / 2;
+
+      const dx = r.x - cx;
+      const dy = r.y - cy;
+      const ang = Math.atan2(dy, dx);
+
+      const halfW = window.innerWidth / 2 - 60;
+      const halfH = window.innerHeight / 2 - 60;
+
+      const scale =
+        Math.min(
+          halfW / (Math.abs(Math.cos(ang)) || 0.0001),
+          halfH / (Math.abs(Math.sin(ang)) || 0.0001),
+        ) * 0.7;
+
+      const ex = cx + Math.cos(ang) * scale;
+      const ey = cy + Math.sin(ang) * scale;
+
+      const pts = r.points;
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
+
+      const glowSize = 200;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (i === 0) ctx.moveTo(p.lx, p.y);
+        else ctx.lineTo(p.lx, p.y);
+      }
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        ctx.lineTo(p.rx, p.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.fillStyle = "magenta";
+      ctx.font = `${s.rift.scale * 100}px monospace`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      ctx.fillText("➤", s.rift.scale * 100, 0);
 
       ctx.restore();
     }
