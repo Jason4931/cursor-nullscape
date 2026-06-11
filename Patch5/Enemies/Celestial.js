@@ -9,7 +9,7 @@ for (let i = 1; i <= 25; i++) {
 }
 
 export let phase = { phase: 1 };
-export function setup(host) {
+export function setup(host, hardMode) {
   const patternFall = [
     {
       duration: 5.5,
@@ -146,97 +146,111 @@ export function setup(host) {
     ...patternBoom,
   ];
   const specificDevOnly = [
-    {
-      duration: 5.5,
-      update: updateSlash,
-      draw: drawSlash,
-      drawFront: drawSlashFront,
-      enter: enterSlash,
-    },
-    {
-      duration: 3,
-      update: updateImplosion,
-      draw: drawImplosion,
-      drawFront: drawImplosionFront,
-      enter: enterImplosion,
-    },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlash,
+    //   draw: drawSlash,
+    //   drawFront: drawSlashFront,
+    //   enter: enterSlash,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateImplosion,
+    //   draw: drawImplosion,
+    //   drawFront: drawImplosionFront,
+    //   enter: enterImplosion,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   drawFront: drawPizzaCutterFront,
+    //   enter: enterPizzaCutter,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   drawFront: drawFutileFront,
+    //   enter: enterFutile,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   drawFront: drawCrumbleFront,
+    //   enter: enterCrumble,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   drawFront: drawBitterFront,
+    //   enter: enterBitter,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   drawFront: drawCeaseFront,
+    //   enter: enterCease,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumble,
+    //   draw: drawPizzaCutterCrumble,
+    //   drawFront: drawPizzaCutterCrumbleFront,
+    //   enter: enterPizzaCutterCrumble,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom,
+    //   draw: drawDeathInBloom,
+    //   drawFront: drawDeathInBloomFront,
+    //   enter: enterDeathInBloom,
+    // },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter,
+    //   draw: drawSuperPizzaCutter,
+    //   drawFront: drawSuperPizzaCutterFront,
+    //   enter: enterSuperPizzaCutter,
+    // },
     {
       duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      drawFront: drawPizzaCutterFront,
-      enter: enterPizzaCutter,
+      update: updateFirstSilence,
+      draw: drawFirstSilence,
+      drawFront: drawFirstSilenceFront,
+      enter: enterFirstSilence,
     },
-    {
-      duration: 13,
-      update: updateFutile,
-      draw: drawFutile,
-      drawFront: drawFutileFront,
-      enter: enterFutile,
-    },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      drawFront: drawCrumbleFront,
-      enter: enterCrumble,
-    },
-    {
-      duration: 9,
-      update: updateBitter,
-      draw: drawBitter,
-      drawFront: drawBitterFront,
-      enter: enterBitter,
-    },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      drawFront: drawCeaseFront,
-      enter: enterCease,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumble,
-      draw: drawPizzaCutterCrumble,
-      drawFront: drawPizzaCutterCrumbleFront,
-      enter: enterPizzaCutterCrumble,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom,
-      draw: drawDeathInBloom,
-      drawFront: drawDeathInBloomFront,
-      enter: enterDeathInBloom,
-    },
-    {
-      duration: 8,
-      update: updateSuperPizzaCutter,
-      draw: drawSuperPizzaCutter,
-      drawFront: drawSuperPizzaCutterFront,
-      enter: enterSuperPizzaCutter,
-    },
-    {
-      duration: 9,
-      update: updateBitter3Stars,
-      draw: drawBitter3Stars,
-      drawFront: drawBitter3StarsFront,
-      enter: enterBitter3Stars,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloomCrumble,
-      draw: drawDeathInBloomCrumble,
-      drawFront: drawDeathInBloomCrumbleFront,
-      enter: enterDeathInBloomCrumble,
-    },
-    {
-      duration: 3,
-      update: updateImplosionBreaker,
-      draw: drawImplosionBreaker,
-      drawFront: drawImplosionBreakerFront,
-      enter: enterImplosionBreaker,
-    },
+    // {
+    //   duration: 9,
+    //   update: updateBitter3Stars,
+    //   draw: drawBitter3Stars,
+    //   drawFront: drawBitter3StarsFront,
+    //   enter: enterBitter3Stars,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumble,
+    //   draw: drawDeathInBloomCrumble,
+    //   drawFront: drawDeathInBloomCrumbleFront,
+    //   enter: enterDeathInBloomCrumble,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateImplosionBreaker,
+    //   draw: drawImplosionBreaker,
+    //   drawFront: drawImplosionBreakerFront,
+    //   enter: enterImplosionBreaker,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilence,
+    //   draw: drawSecondSilence,
+    //   drawFront: drawSecondSilenceFront,
+    //   enter: enterSecondSilence,
+    // },
   ];
   const celestialDevOnly = true;
   const state = {
@@ -552,7 +566,7 @@ export function setup(host) {
       if (
         b.active &&
         t >= b.armTime &&
-        Math.abs(rx) < 2000 &&
+        Math.abs(rx) < 20000 &&
         Math.abs(ry) < halfW
       ) {
         death("Celestial");
@@ -2246,6 +2260,7 @@ export function setup(host) {
     s.cy = cy + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
     s.w = 625;
+    s.angle = 0;
 
     s.ex = mouse.x;
     s.ey = mouse.y;
@@ -2269,7 +2284,14 @@ export function setup(host) {
     const dx = s.ex - s.cx;
     const dy = s.ey - s.cy;
 
-    s.angle = Math.atan2(dy, dx);
+    const targetAngle = Math.atan2(dy, dx);
+    let diff = targetAngle - s.angle;
+    if (diff > Math.PI) diff -= Math.PI * 2;
+    if (diff < -Math.PI) diff += Math.PI * 2;
+    const maxDiff = 0.1;
+    if (diff > maxDiff) diff = maxDiff;
+    if (diff < -maxDiff) diff = -maxDiff;
+    s.angle += diff;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -2327,7 +2349,7 @@ export function setup(host) {
       const rx = mmx * cos - mmy * sin;
       const ry = mmx * sin + mmy * cos;
 
-      if (Math.abs(rx) < s.len && Math.abs(ry) < s.w / 2) {
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2) {
         death("Celestial");
       }
     }
@@ -3555,6 +3577,7 @@ export function setup(host) {
     s.cy = cy + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
     s.w = 625;
+    s.angle = 0;
 
     s.ex = mouse.x;
     s.ey = mouse.y;
@@ -3581,7 +3604,14 @@ export function setup(host) {
     const dx = s.ex - s.cx;
     const dy = s.ey - s.cy;
 
-    s.angle = Math.atan2(dy, dx);
+    const targetAngle = Math.atan2(dy, dx);
+    let diff = targetAngle - s.angle;
+    if (diff > Math.PI) diff -= Math.PI * 2;
+    if (diff < -Math.PI) diff += Math.PI * 2;
+    const maxDiff = 0.1;
+    if (diff > maxDiff) diff = maxDiff;
+    if (diff < -maxDiff) diff = -maxDiff;
+    s.angle += diff;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -3639,7 +3669,7 @@ export function setup(host) {
       const rx = mmx * cos - mmy * sin;
       const ry = mmx * sin + mmy * cos;
 
-      if (Math.abs(rx) < s.len && Math.abs(ry) < s.w / 2) {
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2) {
         death("Celestial");
       }
     }
@@ -4340,6 +4370,788 @@ export function setup(host) {
       ctx.restore();
     }
     for (const d of stateImplosionBreaker.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 9;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.beginPath();
+
+      ctx.moveTo(-500, 0);
+
+      ctx.lineTo(-280, -40);
+      ctx.lineTo(-240, -240);
+      ctx.lineTo(-200, -40);
+      ctx.lineTo(-160, -30);
+
+      ctx.lineTo(-80, -40);
+      ctx.lineTo(30, -100);
+      ctx.lineTo(15, -65);
+      ctx.lineTo(80, -40);
+
+      ctx.lineTo(1000, 0);
+
+      ctx.lineTo(80, 40);
+      ctx.lineTo(15, 65);
+      ctx.lineTo(30, 100);
+      ctx.lineTo(-80, 40);
+
+      ctx.lineTo(-160, 30);
+      ctx.lineTo(-200, 40);
+      ctx.lineTo(-240, 240);
+      ctx.lineTo(-280, 40);
+
+      ctx.closePath();
+
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+  }
+
+  const stateFirstSilence = {
+    spokes: [],
+    t: 0,
+    cycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+
+    circles: [],
+
+    daggers: [],
+
+    beams: [],
+    timer: 0,
+    prevMx: 0,
+    prevMy: 0,
+  };
+  function enterFirstSilence() {
+    stateFirstSilence.spokes = [];
+    stateFirstSilence.t = 0;
+    stateFirstSilence.cycle = 0;
+    stateFirstSilence.spawned = false;
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    stateFirstSilence.cx = cx;
+    stateFirstSilence.cy = cy;
+    enterFixed(cx, cy);
+
+    stateFirstSilence.circles = [];
+
+    const dir = Math.random() < 0.5 ? 1 : -1;
+    stateFirstSilence.daggers = [];
+    for (let i = 0; i < 4; i++) {
+      const baseAngle = (i / 4) * Math.PI * 2;
+      let delay;
+      if (i == 0) {
+        delay = 0;
+      } else if (i == 1) {
+        delay = 0.2;
+      } else if (i == 2) {
+        delay = 0.1;
+      } else if (i == 3) {
+        delay = 0.3;
+      }
+      stateFirstSilence.daggers.push({
+        t: 0,
+        baseAngle,
+        startAngle: baseAngle,
+        targetAngle: baseAngle + Math.PI * 2 * dir,
+
+        delay: delay,
+        slashT: 0,
+        slashing: false,
+      });
+    }
+
+    stateFirstSilence.beams = [];
+    stateFirstSilence.timer = 0;
+    stateFirstSilence.prevMx = mouse.x;
+    stateFirstSilence.prevMy = mouse.y;
+  }
+  function updateFirstSilence(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    stateFirstSilence.t += dt;
+
+    if (!stateFirstSilence.spawned) {
+      stateFirstSilence.spokes.push(spawnPizza(stateFirstSilence));
+      for (let i = 0; i < 300; i++) {
+        stateFirstSilence.circles.push(spawnCircle(75));
+      }
+      stateFirstSilence.spawned = true;
+    }
+
+    if (!stateFirstSilence.prevMouse) {
+      stateFirstSilence.prevMouse = { x: mx, y: my };
+    }
+    const vx = mx - stateFirstSilence.prevMouse.x;
+    const vy = my - stateFirstSilence.prevMouse.y;
+    stateFirstSilence.prevMouse.x = mx;
+    stateFirstSilence.prevMouse.y = my;
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      stateFirstSilence.lastDirX = vx / len;
+      stateFirstSilence.lastDirY = vy / len;
+    }
+
+    for (const s of stateFirstSilence.spokes) {
+      s.t += dt;
+
+      const p = Math.min(s.t / 2, 1);
+      const eased = 1 - (1 - p) * (1 - p);
+      s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+      if (s.t >= 2 && s.t < 2.5) {
+        const len = 20000;
+        const w = 90;
+
+        const dx = mx - s.x;
+        const dy = my - s.y;
+
+        for (let i = 0; i < 8; i++) {
+          const angle = s.angle + i * (Math.PI / 4);
+
+          const cos = Math.cos(-angle);
+          const sin = Math.sin(-angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const halfLen = len;
+          const halfW = w / 2;
+
+          if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+            death("Celestial");
+            break;
+          }
+        }
+      }
+      if (s.t >= 2.5) {
+        s.offset += dt * 10000;
+      }
+      if (s.t > 3) {
+        s.active = false;
+      }
+    }
+
+    if (stateFirstSilence.t >= 2) {
+      stateFirstSilence.t = 0;
+      stateFirstSilence.cycle++;
+      if (stateFirstSilence.cycle < 4) {
+        stateFirstSilence.spawned = false;
+      }
+    }
+
+    let needsCompact = false;
+    for (const c of stateFirstSilence.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        c.r -= dt * 100;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
+      }
+
+      if (c.t >= 2 && c.r >= 0) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          death("Celestial");
+        }
+      }
+    }
+    if (needsCompact) compact(stateFirstSilence.circles);
+
+    for (const d of stateFirstSilence.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const predictScale = 20;
+          const px = mx + vx * predictScale;
+          const py = my + vy * predictScale;
+
+          const dirX = stateFirstSilence.lastDirX ?? 0;
+          const dirY = stateFirstSilence.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
+
+          const spread = (10 * Math.PI) / 180;
+          const index = stateFirstSilence.daggers.indexOf(d);
+          const offset = (index - 1.5) * spread;
+
+          d.targetAngle = baseAngle + offset;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * ease;
+
+        d.radius = 0;
+
+        const slashStart = 2 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const ease = 1 - (1 - p) * (1 - p);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * ease;
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * ease;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.t <= 3) {
+            death("Celestial");
+          }
+        }
+      }
+    }
+
+    const mvx = mx - stateFirstSilence.prevMx;
+    const mvy = my - stateFirstSilence.prevMy;
+
+    stateFirstSilence.prevMx = mx;
+    stateFirstSilence.prevMy = my;
+
+    const px = mx + mvx;
+    const py = my + mvy;
+
+    if (
+      stateFirstSilence.timer >= 4.5 &&
+      stateFirstSilence.timer <= 5.5 &&
+      stateFirstSilence.beams.length == 0
+    ) {
+      const base = Math.random() * Math.PI * 2;
+      const spread = Math.PI / 6;
+
+      stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread, 1.5));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
+    }
+
+    stateFirstSilence.timer += dt;
+
+    let needsCompactSlash = false;
+    for (const b of stateFirstSilence.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        death("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(stateFirstSilence.beams);
+  }
+  function drawFirstSilence(ctx) {
+    for (const s of stateFirstSilence.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < 8; i++) {
+        ctx.rotate(Math.PI / 4);
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+
+          const drawX = Math.max(x, s.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,255,0)");
+          gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+          gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          ctx.beginPath();
+          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
+          ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
+        } else if (i < 4) {
+          ctx.globalAlpha =
+            s.t < 0.25 && stateFirstSilence.cycle == 0 ? s.t * 3 : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,255,0)");
+          grad.addColorStop(0.45, "magenta");
+          grad.addColorStop(0.55, "magenta");
+          grad.addColorStop(1, "rgba(255,0,255,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const c of stateFirstSilence.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+    for (const d of stateFirstSilence.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      const glowLen = 100;
+      const glowWidth = 20;
+      ctx.save();
+      ctx.scale(1, glowWidth / glowLen);
+      ctx.translate(tipOffset * 0.25, 0);
+
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+      glow.addColorStop(0, "rgba(255,0,255,0.5)");
+      glow.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.scale(0.1, 0.1);
+      ctx.beginPath();
+
+      ctx.moveTo(-500, 0);
+
+      ctx.lineTo(-280, -40);
+      ctx.lineTo(-240, -240);
+      ctx.lineTo(-200, -40);
+      ctx.lineTo(-160, -30);
+
+      ctx.lineTo(-80, -40);
+      ctx.lineTo(30, -100);
+      ctx.lineTo(15, -65);
+      ctx.lineTo(80, -40);
+
+      ctx.lineTo(1000, 0);
+
+      ctx.lineTo(80, 40);
+      ctx.lineTo(15, 65);
+      ctx.lineTo(30, 100);
+      ctx.lineTo(-80, 40);
+
+      ctx.lineTo(-160, 30);
+      ctx.lineTo(-200, 40);
+      ctx.lineTo(-240, 240);
+      ctx.lineTo(-280, 40);
+
+      ctx.closePath();
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+    for (const b of stateFirstSilence.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 18;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "magenta";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,255,0)");
+        gradTop.addColorStop(1, "rgba(255,0,255,0.5)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,255,0.5)");
+        gradBot.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+  function drawFirstSilenceFront(ctx) {
+    for (const s of stateFirstSilence.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < 8; i++) {
+        ctx.rotate(Math.PI / 4);
+
+        const w = 90;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, s.offset), -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const b of stateFirstSilence.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "magenta";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+    for (const c of stateFirstSilence.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "magenta");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+    for (const d of stateFirstSilence.daggers) {
       const spinDuration = 1.5;
       const moveDuration = 0.5;
 

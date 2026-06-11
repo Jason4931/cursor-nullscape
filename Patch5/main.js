@@ -390,7 +390,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Celestial",
-    spawn: () => spawnCelestial(entityHost),
+    spawn: () => spawnCelestial(entityHost, hardMode),
     start: 1000000000,
     src: "./ASSET/Enemies/Celestial.png",
     desc: "YOU SHALL WILT IN THIS DANCE WITH ME.",
@@ -895,6 +895,7 @@ topLeftInput.addEventListener("input", () => {
     spawnCadence(entityHost, hardMode, deafMode);
     spawnCatalyst(entityHost);
     spawnCatalystIntro();
+    spawnCelestial(entityHost, hardMode);
     registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
     registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
     registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
@@ -919,6 +920,7 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+    registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
