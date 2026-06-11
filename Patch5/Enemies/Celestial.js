@@ -4118,23 +4118,13 @@ export function setup(host, hardMode) {
     stateImplosionBreaker.daggers = [];
     for (let i = 0; i < 4; i++) {
       const baseAngle = (i / 4) * Math.PI * 2;
-      let delay;
-      if (i == 0) {
-        delay = 0;
-      } else if (i == 1) {
-        delay = 0.2;
-      } else if (i == 2) {
-        delay = 0.1;
-      } else if (i == 3) {
-        delay = 0.3;
-      }
       stateImplosionBreaker.daggers.push({
         t: 0,
         baseAngle,
         startAngle: baseAngle,
         targetAngle: baseAngle + Math.PI * 2 * dir,
 
-        delay: delay,
+        delay: 0,
         slashT: 0,
         slashing: false,
       });
@@ -4234,7 +4224,7 @@ export function setup(host, hardMode) {
 
           const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
 
-          const spread = (10 * Math.PI) / 180;
+          const spread = (20 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
           const offset = (index - 1.5) * spread;
 
@@ -4638,23 +4628,13 @@ export function setup(host, hardMode) {
     stateFirstSilence.daggers = [];
     for (let i = 0; i < 4; i++) {
       const baseAngle = (i / 4) * Math.PI * 2;
-      let delay;
-      if (i == 0) {
-        delay = 0;
-      } else if (i == 1) {
-        delay = 0.2;
-      } else if (i == 2) {
-        delay = 0.1;
-      } else if (i == 3) {
-        delay = 0.3;
-      }
       stateFirstSilence.daggers.push({
         t: 0,
         baseAngle,
         startAngle: baseAngle,
         targetAngle: baseAngle + Math.PI * 2 * dir,
 
-        delay: delay,
+        delay: 0,
         slashT: 0,
         slashing: false,
       });
@@ -4809,7 +4789,7 @@ export function setup(host, hardMode) {
 
           const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
 
-          const spread = (10 * Math.PI) / 180;
+          const spread = (20 * Math.PI) / 180;
           const index = stateFirstSilence.daggers.indexOf(d);
           const offset = (index - 1.5) * spread;
 
