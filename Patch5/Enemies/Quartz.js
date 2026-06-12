@@ -213,14 +213,20 @@ export function setup(host) {
 
       const cos = Math.cos(-state.angle);
       const sin = Math.sin(-state.angle);
-
       const rx = dx * cos - dy * sin;
       const ry = dx * sin + dy * cos;
-
       const len = 20000;
       const w = 100;
-
       if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+        death("Sigil");
+      }
+
+      const slowCos = Math.cos(-state.slowAngle);
+      const slowSin = Math.sin(-state.slowAngle);
+      const slowRx = dx * slowCos - dy * slowSin;
+      const slowRy = dx * slowSin + dy * slowCos;
+      const slowW = 25;
+      if (slowRx > 0 && slowRx < len && Math.abs(slowRy) < slowW / 2) {
         death("Sigil");
       }
 
