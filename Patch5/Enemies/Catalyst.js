@@ -134,11 +134,6 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x)) return;
 
     if (beaconed) {
-      if (!state.layerChange) {
-        state.layers = Catalyst_Shock;
-        state.layer = state.layers.length;
-        state.layerChange = true;
-      }
       state.phase = "scream";
       state.screaming = true;
       state.timer = 0;
@@ -319,7 +314,18 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        if (actualCollectedCount >= 11000) state.MAX_DASH_DIST = 10000;
+        if (actualCollectedCount >= 11000) {
+          state.MAX_DASH_DIST = 10000;
+          if (!state.layerChange) {
+            state.layers = Catalyst_Shock;
+            state.layer = state.layers.length;
+            state.layerChange = true;
+            setTimeout(() => {
+              state.layers = CatalystOptim;
+              state.layer = state.layers.length;
+            }, 1000);
+          }
+        }
         const d = Math.hypot(dx, dy) || 1;
 
         if (d > state.MAX_DASH_DIST) {
@@ -537,7 +543,7 @@ export function setup(host) {
       ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
-    if (!beaconed) {
+    if (!beaconed && state.layers != Catalyst_Shock) {
       for (let i = 0; i < 3; i++) {
         ctx.save();
 
