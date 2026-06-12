@@ -30,7 +30,7 @@ x voidbound operator
 rare
 vx ponderer
 vx nil (considered separate from new nil)
-x quartz
+vx quartz
 x fear/visage
 x locust/belchboy
 x serverstoragebaby (3x big baby)

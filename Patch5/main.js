@@ -46,6 +46,7 @@ import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
+import { setup as spawnQuartz } from "./Enemies/Quartz.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
@@ -388,6 +389,14 @@ const ENTITY_POOL = [
     start: 1500,
     src: "./ASSET/Enemies/Sigil.png",
     desc: "Fires a tracking and long lasting beam.",
+  },
+  {
+    name: "Quartz",
+    spawn: () => spawnQuartz(entityHost),
+    start: 1500,
+    src: "./ASSET/Enemies/Quartz.png",
+    rare: true,
+    desc: "shiny rock",
   },
   {
     name: "Catalyst",
@@ -902,6 +911,7 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
     spawnSigil(entityHost);
+    spawnQuartz(entityHost);
     spawnCatalyst(entityHost);
     spawnCatalystIntro();
     spawnCelestial(entityHost, hardMode);
@@ -929,6 +939,7 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
     registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
+    registerEntitySpawn("Quartz", "./ASSET/Enemies/Quartz.png");
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
     topLeftInput.value = "";
