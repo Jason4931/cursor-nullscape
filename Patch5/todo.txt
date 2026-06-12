@@ -18,7 +18,7 @@ vx telefragger
 x kolona
 vx voidbound baby
 vx cadence
-x sigil
+vx sigil
 x voidbreaker
 x voidbound guardian
 x scrapmaw
@@ -28,7 +28,7 @@ x oblivion
 x razorbloom
 x voidbound operator
 rare
-x ponderer
+vx ponderer
 vx nil (considered separate from new nil)
 x quartz
 x fear/visage

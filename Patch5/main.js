@@ -45,6 +45,7 @@ import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
 import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
+import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
@@ -355,7 +356,7 @@ const ENTITY_POOL = [
     name: "Ponderer",
     spawn: () => spawnPonderer(entityHost, hardMode),
     start: 1200,
-    src: "./ASSET/Enemies/Ponderer.png",
+    src: "./ASSET/Enemies/PondererIcon.png",
     rare: true,
     desc: "Focus on it. Don't let the clock tick down.",
   },
@@ -380,6 +381,13 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Cadence.png",
     desc: "Collect the instruments, keep it at bay.",
     unstackable: true,
+  },
+  {
+    name: "Sigil",
+    spawn: () => spawnSigil(entityHost),
+    start: 1500,
+    src: "./ASSET/Enemies/Sigil.png",
+    desc: "Fires a tracking and long lasting beam.",
   },
   {
     name: "Catalyst",
@@ -893,6 +901,7 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidboundGuardian(entityHost, hardMode);
     spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
+    spawnSigil(entityHost);
     spawnCatalyst(entityHost);
     spawnCatalystIntro();
     spawnCelestial(entityHost, hardMode);
@@ -912,13 +921,14 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Sorrow", "./ASSET/Curses/Sorrow.png");
     registerEntitySpawn("Doombringer", "./ASSET/Curses/Doombringer.png");
     registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
-    registerEntitySpawn("Ponderer", "./ASSET/Enemies/Ponderer.png");
+    registerEntitySpawn("Ponderer", "./ASSET/Enemies/PondererIcon.png");
     registerEntitySpawn(
       "VoidboundGuardian",
       "./ASSET/Enemies/VoidboundGuardian.png",
     );
     registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
+    registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
     topLeftInput.value = "";
@@ -1042,7 +1052,7 @@ input.addEventListener("input", () => {
     {
       text: "pondererisbackforblood",
       activate: () => {
-        img.src = "./ASSET/Enemies/Ponderer.png";
+        img.src = "./ASSET/Enemies/PondererIcon.png";
         setTimeout(() => {
           location.reload();
         }, 2000);
