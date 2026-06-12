@@ -571,6 +571,7 @@ export function setup(host) {
       ctx.beginPath();
       ctx.arc(0, 0, 8, 0, Math.PI * 2);
       ctx.fill();
+      ctx.drawImage(state.enemy, -4, -4, 8, 8);
       ctx.restore();
     }
 
