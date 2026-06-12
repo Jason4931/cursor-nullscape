@@ -172,11 +172,11 @@ export function setup(host, overshootBrake) {
       let r;
 
       if (p.t < 0.75) {
-        r = 10;
+        r = 15;
       } else {
         const k = (p.t - 0.75) / 0.25;
         const eased = k * k;
-        r = 10 * (1 - eased);
+        r = 15 * (1 - eased);
       }
 
       ctx.strokeStyle = "magenta";
