@@ -82,7 +82,7 @@ export function setup(host) {
   };
 
   const BODY_RADIUS = 80;
-  const PELLET_RADIUS = 8;
+  const PELLET_RADIUS = 12;
 
   function randNearCursor(r = 600) {
     const a = Math.random() * Math.PI * 2;
@@ -575,9 +575,15 @@ export function setup(host) {
       );
       ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
       ctx.beginPath();
-      ctx.arc(0, 0, 8, 0, Math.PI * 2);
+      ctx.arc(0, 0, PELLET_RADIUS, 0, Math.PI * 2);
       ctx.fill();
-      ctx.drawImage(state.enemy, -4, -4, 8, 8);
+      ctx.drawImage(
+        state.enemy,
+        -PELLET_RADIUS / 2,
+        -PELLET_RADIUS / 2,
+        PELLET_RADIUS,
+        PELLET_RADIUS,
+      );
       ctx.restore();
     }
 
