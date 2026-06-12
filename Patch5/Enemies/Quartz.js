@@ -43,7 +43,7 @@ export function setup(host) {
   const glyphs = "ᚠᚢᚦᚨᚱᚲΩΣΨΔΘΛЖҖҜ卐※✧✦✩☯☸✶✷✹✺";
   for (let i = 0; i < 3; i++) {
     state.glyphRings.push({
-      radius: 40 + i * 20,
+      radius: 80 + i * 40,
       angle: Math.random() * Math.PI * 2,
       speed: (Math.random() * 0.5 + 0.2) * (Math.random() < 0.5 ? -1 : 1),
       count: 16 + Math.floor(Math.random() * 8),
@@ -58,7 +58,7 @@ export function setup(host) {
 
     octx.translate(off.width / 2, off.height / 2);
     octx.fillStyle = rainbow(((ring.radius - 40) / 20) * 0.5);
-    octx.font = "20px serif";
+    octx.font = "30px serif";
     octx.textAlign = "center";
     octx.textBaseline = "middle";
 
@@ -102,7 +102,7 @@ export function setup(host) {
       c.t += dt;
       const p = c.t / c.life;
       const eased = 1 - (1 - p) * (1 - p);
-      c.r = eased * 100;
+      c.r = eased * 200;
       if (c.t >= c.life) {
         state.trailCircles.splice(i, 1);
       }
@@ -341,14 +341,14 @@ export function setup(host) {
       0,
       state.x,
       state.y,
-      100,
+      200,
     );
     glow.addColorStop(0, rainbow(0, 0.2));
     glow.addColorStop(1, rainbow(1, 0));
     ctx.globalAlpha = 1;
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(state.x, state.y, 100, 0, Math.PI * 2);
+    ctx.arc(state.x, state.y, 200, 0, Math.PI * 2);
     ctx.fill();
     for (const c of state.trailCircles) {
       const p = c.t / c.life;
@@ -390,7 +390,7 @@ export function setup(host) {
     }
 
     ctx.globalAlpha = state.opacity;
-    ctx.drawImage(state.enemy, state.x - 100, state.y - 100, 200, 200);
+    ctx.drawImage(state.enemy, state.x - 200, state.y - 200, 400, 400);
 
     ctx.restore();
   }
