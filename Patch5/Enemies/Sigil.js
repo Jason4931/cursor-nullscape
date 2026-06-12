@@ -324,6 +324,29 @@ export function setup(host) {
     }
     ctx.restore();
 
+    if (state.phase === "indicator") {
+      const glow = ctx.createRadialGradient(
+        mouse.x,
+        mouse.y,
+        0,
+        mouse.x,
+        mouse.y,
+        50,
+      );
+
+      glow.addColorStop(0, "rgba(255,255,0,0.5)");
+      glow.addColorStop(1, "rgba(255,255,0,0)");
+
+      ctx.save();
+      ctx.globalAlpha = state.beamAlpha;
+      ctx.fillStyle = glow;
+
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
     ctx.globalAlpha = state.opacity;
     ctx.drawImage(state.enemy, state.x - 100, state.y - 100, 200, 200);
 
