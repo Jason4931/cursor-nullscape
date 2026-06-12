@@ -45,7 +45,9 @@ export function setup(host, overshootBrake) {
       state.screaming = true;
       state.screamTimer = 0;
       playSound(
-        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        Math.random() < 0.5
+          ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+          : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
         undefined,
         undefined,
         undefined,

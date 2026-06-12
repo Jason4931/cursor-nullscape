@@ -62,13 +62,23 @@ export function setup(host) {
         state.timer = 0;
         state.phase = "spawn";
         playSound(
-          "./ASSET/Sound/Enemies/Catalyst/hand.mp3",
+          "./ASSET/Sound/Enemies/Catalyst/CataTeleport.mp3",
           undefined,
           undefined,
           undefined,
           undefined,
           true,
         );
+        setTimeout(() => {
+          playSound(
+            "./ASSET/Sound/Enemies/Catalyst/CataHandPop.mp3",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            true,
+          );
+        }, 500);
 
         state.x = state.lx;
         state.startY = state.ly - 120;

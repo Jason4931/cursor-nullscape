@@ -27,6 +27,8 @@ export function setup(host) {
     timer: 0,
     totalTimer: 0,
     nextScream: 14 + Math.random(),
+    randomLaughT: 0,
+    randomLaugh: 6 + Math.random() * 5,
 
     cycleTime: 0,
     cycleDuration: 0.5,
@@ -46,7 +48,6 @@ export function setup(host) {
     beaconWaveRadius: 0,
     beaconWaveOpacity: 1,
     beaconTime: 0,
-    dashSound: 1,
 
     pellets: [],
   };
@@ -140,6 +141,19 @@ export function setup(host) {
 
     state.timer += dt;
     if (state.phase === "chase") state.totalTimer += dt;
+    state.randomLaughT += dt;
+    if (state.randomLaughT >= state.randomLaugh) {
+      state.randomLaughT = 0;
+      state.randomLaugh = 6 + Math.random() * 5;
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/CataLaughter.mp3",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
 
     if (state.phase === "initDarken") {
       if (state.timer >= 3) {
@@ -158,7 +172,9 @@ export function setup(host) {
         state.phase = "scream";
         state.screaming = true;
         playSound(
-          "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+          Math.random() < 0.5
+            ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+            : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
           undefined,
           undefined,
           undefined,
@@ -180,7 +196,9 @@ export function setup(host) {
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
       playSound(
-        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        Math.random() < 0.5
+          ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+          : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
         undefined,
         undefined,
         undefined,
@@ -251,27 +269,14 @@ export function setup(host) {
         state.dashToY = state.dashFromY + dy;
 
         state.dashStarted = true;
-        if (state.dashSound == 1) {
-          playSound(
-            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_oyv1u8u8.mp3",
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "50",
-          );
-          state.dashSound = 2;
-        } else {
-          playSound(
-            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_fbTIhPqt.mp3",
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "50",
-          );
-          state.dashSound = 1;
-        }
+        playSound(
+          "./ASSET/Sound/Enemies/Catalyst/CataDash.mp3",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
       }
 
       const k = state.cycleTime / t0;
@@ -304,7 +309,9 @@ export function setup(host) {
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
       playSound(
-        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        Math.random() < 0.5
+          ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+          : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
         undefined,
         undefined,
         undefined,

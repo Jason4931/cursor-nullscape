@@ -316,6 +316,13 @@ const DEATH_MESSAGES = {
     "YOU WERE SAVED.",
     "YOU WERE VISITED BY A HOLY SPIRIT.",
   ],
+  Celestial: [
+    "YOU FOUGHT IN VAIN.",
+    "FAREWELL.",
+    "FELLED.",
+    "MERELY MORTAL.",
+    "FRAGILE.",
+  ],
   Void: [
     "You are null.",
     "You fell off.",
@@ -343,7 +350,7 @@ const DEATH_MESSAGES = {
 };
 function getDeathMessage(name) {
   let list;
-  if (name === "Catalyst") {
+  if (name === "Catalyst" || name === "Celestial") {
     list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
   } else {
     list =
@@ -449,6 +456,13 @@ export function death(name = "Unknown", color = "#f70000") {
     entityCanvas.style.display = "none";
     text.textContent = getDeathMessage(name);
     text.style.color = color;
+    if (name === "Celestial") {
+      text.style.color = "#d05e8b";
+      text.style.fontSize = "5vw";
+      text.style.top = "2vw";
+      text.style.left = "1vw";
+      text.style.fontFamily = "CelestialFont";
+    }
     screen.style.display = "block";
     input.focus();
     input.select();

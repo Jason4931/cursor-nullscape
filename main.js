@@ -1033,7 +1033,9 @@ export function playSound(
 ) {
   if (
     soundStopped &&
-    soundPath != "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataOnCollapse.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
   )
     return;
@@ -1087,7 +1089,9 @@ export function playSound(
   }
   const entry = { stop, audio };
   if (
-    soundPath != "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataOnCollapse.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
   )
     activeSounds.add(entry);
@@ -3442,13 +3446,31 @@ export function onFinalContact() {
   entityCanvas.style.cursor = "none";
   entityCanvas2.style.cursor = "none";
   playSound(
-    "./ASSET/Sound/Enemies/Catalyst/ending_1.mp3",
-    1.724,
+    "./ASSET/Sound/Enemies/Catalyst/CataOnCollapse.mp3",
+    1,
     undefined,
     undefined,
     undefined,
     "50",
   );
+  playSound(
+    "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3",
+    1,
+    undefined,
+    undefined,
+    undefined,
+    "50",
+  );
+  setTimeout(() => {
+    playSound(
+      "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3",
+      1,
+      undefined,
+      undefined,
+      undefined,
+      "50",
+    );
+  }, 1500);
   disableCollect = true;
   setTimeout(() => {
     originalVolume = [musicVolume, sfxVolume];

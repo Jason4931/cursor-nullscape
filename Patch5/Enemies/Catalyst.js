@@ -7,11 +7,17 @@ import {
   actualCollectedCount,
 } from "../main.js";
 
-const layers = [];
+const CatalystOptim = [];
 for (let i = 1; i <= 8; i++) {
   const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
-  layers.push(img);
+  img.src = `./ASSET/Enemies/Catalyst/CatalystOptim/Layer ${i}.png`;
+  CatalystOptim.push(img);
+}
+const Catalyst_Shock = [];
+for (let i = 1; i <= 4; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Catalyst/Catalyst_Shock/Layer ${i}.png`;
+  Catalyst_Shock.push(img);
 }
 
 export let catalystPos = { x: 0, y: 0 };
@@ -22,11 +28,15 @@ export function setup(host) {
     x: 0,
     y: 0,
 
+    layers: CatalystOptim,
+    enemy: null,
     layer: 0,
-    enemy: layers[0],
+    layerChange: false,
     timer: 0,
     totalTimer: 0,
     nextScream: 14 + Math.random(),
+    randomLaughT: 0,
+    randomLaugh: 6 + Math.random() * 5,
 
     cycleTime: 0,
     cycleDuration: 0.5,
@@ -46,9 +56,29 @@ export function setup(host) {
     beaconWaveRadius: 0,
     beaconWaveOpacity: 1,
     beaconTime: 0,
-    dashSound: 1,
 
+    squares: [
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+    ],
     pellets: [],
+    extraTrail: [],
   };
 
   const BODY_RADIUS = 80;
@@ -104,6 +134,11 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x)) return;
 
     if (beaconed) {
+      if (!state.layerChange) {
+        state.layers = Catalyst_Shock;
+        state.layer = state.layers.length;
+        state.layerChange = true;
+      }
       state.phase = "scream";
       state.screaming = true;
       state.timer = 0;
@@ -114,10 +149,38 @@ export function setup(host) {
       }
     }
 
+    for (let i = state.extraTrail.length - 1; i >= 0; i--) {
+      const p = state.extraTrail[i];
+      p.t += dt;
+
+      if (p.t < 0.75) {
+        const k = p.t / 0.75;
+        const eased = 1 - (1 - k) * (1 - k);
+
+        p.x = p.sx + (p.tx - p.sx) * eased;
+        p.y = p.sy + (p.ty - p.sy) * eased;
+      }
+
+      if (p.t >= 1) {
+        state.extraTrail.splice(i, 1);
+      }
+    }
+    if (state.screaming) {
+      state.extraTrail.push({
+        x: state.x,
+        y: state.y,
+        sx: state.x,
+        sy: state.y,
+        tx: state.x + (Math.random() - 0.5) * 500,
+        ty: state.y + (Math.random() - 0.5) * 500,
+        t: 0,
+      });
+    }
+
     catalystPos = { x: state.x, y: state.y };
     state.layer++;
-    if (state.layer > 8) state.layer = 1;
-    state.enemy = layers[state.layer - 1];
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
@@ -140,6 +203,19 @@ export function setup(host) {
 
     state.timer += dt;
     if (state.phase === "chase") state.totalTimer += dt;
+    state.randomLaughT += dt;
+    if (state.randomLaughT >= state.randomLaugh) {
+      state.randomLaughT = 0;
+      state.randomLaugh = 6 + Math.random() * 5;
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/CataLaughter.mp3",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
 
     if (state.phase === "initDarken") {
       if (state.timer >= 3) {
@@ -158,7 +234,9 @@ export function setup(host) {
         state.phase = "scream";
         state.screaming = true;
         playSound(
-          "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+          Math.random() < 0.5
+            ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+            : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
           undefined,
           undefined,
           undefined,
@@ -180,7 +258,9 @@ export function setup(host) {
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
       playSound(
-        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        Math.random() < 0.5
+          ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+          : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
         undefined,
         undefined,
         undefined,
@@ -251,27 +331,34 @@ export function setup(host) {
         state.dashToY = state.dashFromY + dy;
 
         state.dashStarted = true;
-        if (state.dashSound == 1) {
-          playSound(
-            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_oyv1u8u8.mp3",
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "50",
-          );
-          state.dashSound = 2;
-        } else {
-          playSound(
-            "./ASSET/Sound/Enemies/Catalyst/nullscape-level-100-patch-4-tjg0abib_fbTIhPqt.mp3",
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            "50",
-          );
-          state.dashSound = 1;
-        }
+        playSound(
+          "./ASSET/Sound/Enemies/Catalyst/CataDash.mp3",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+        state.squares = [
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+        ];
       }
 
       const k = state.cycleTime / t0;
@@ -304,7 +391,9 @@ export function setup(host) {
       state.phase = "scream";
       state.nextScream = 14 + Math.random();
       playSound(
-        "./ASSET/Sound/Enemies/Catalyst/PursuerHowl2.mp3.mpeg",
+        Math.random() < 0.5
+          ? "./ASSET/Sound/Enemies/Catalyst/CataScream_v1.mp3"
+          : "./ASSET/Sound/Enemies/Catalyst/CataScream_v2.mp3",
         undefined,
         undefined,
         undefined,
@@ -380,6 +469,26 @@ export function setup(host) {
       }
     }
 
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
+        r = 25;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 25 * (1 - eased);
+      }
+
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 18;
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fill();
+    }
+
     if (state.screaming) {
       const sx = Math.round(state.x);
       const sy = Math.round(state.y);
@@ -428,6 +537,22 @@ export function setup(host) {
       ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
+    if (!beaconed) {
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+
+        ctx.globalAlpha = Math.random() < 0.1 ? 0 : 1;
+        ctx.fillStyle = "black";
+        ctx.fillRect(
+          state.x - state.squares[i].w / 2 + state.squares[i].offsetX,
+          state.y - state.squares[i].h / 2 + state.squares[i].offsetY,
+          state.squares[i].w,
+          state.squares[i].h,
+        );
+
+        ctx.restore();
+      }
+    }
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - 100),

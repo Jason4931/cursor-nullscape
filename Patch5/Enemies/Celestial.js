@@ -3902,39 +3902,6 @@ export function setup(host, hardMode) {
   function drawDeathInBloomCrumble(ctx) {
     const s = stateDeathInBloomCrumble;
 
-    for (const c of s.circles) {
-      ctx.save();
-
-      ctx.translate(c.x, c.y);
-
-      const alpha = c.t < 2 ? 0.5 : 1;
-      ctx.globalAlpha = alpha;
-
-      if (c.t >= 2 && c.r >= 0) {
-        const glow = 100;
-
-        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,255,0.5)");
-        grad.addColorStop(1, "rgba(255,0,255,0)");
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18;
-
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = "transparent";
-      }
-
-      ctx.restore();
-    }
-
     if (s.active) {
       for (const p of s.particles) {
         ctx.save();
@@ -4064,9 +4031,6 @@ export function setup(host, hardMode) {
 
       ctx.restore();
     }
-  }
-  function drawDeathInBloomCrumbleFront(ctx) {
-    const s = stateDeathInBloomCrumble;
 
     for (const c of s.circles) {
       ctx.save();
@@ -4076,24 +4040,33 @@ export function setup(host, hardMode) {
       const alpha = c.t < 2 ? 0.5 : 1;
       ctx.globalAlpha = alpha;
 
-      if (c.t < 2) {
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
-        grad.addColorStop(0, "black");
-        grad.addColorStop(1, "magenta");
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,255,0.5)");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
         ctx.fill();
-      } else if (c.r >= 0) {
-        ctx.fillStyle = "black";
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
       }
 
       ctx.restore();
     }
+  }
+  function drawDeathInBloomCrumbleFront(ctx) {
+    const s = stateDeathInBloomCrumble;
 
     if (s.active) {
       ctx.save();
@@ -4169,6 +4142,33 @@ export function setup(host, hardMode) {
         ctx.fill();
 
         ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "magenta");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       ctx.restore();
@@ -5836,6 +5836,136 @@ export function setup(host, hardMode) {
   function drawSecondSilence(ctx) {
     const s = stateSecondSilence;
 
+    if (s.active) {
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = 18;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.save();
+
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+      const randLineWidth = 18 * (Math.random() + 2);
+
+      const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "magenta");
+        grad.addColorStop(0.5, "magenta");
+        grad.addColorStop(1, "rgba(255,0,255,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "magenta";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "magenta";
+        ctx.lineWidth = randLineWidth;
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,255,0)");
+      grad.addColorStop(1, "magenta");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "magenta");
+      grad2.addColorStop(1, "rgba(255,0,255,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
+
+      ctx.restore();
+    }
+
     if (s.rift) {
       const pts = s.rift.points;
 
@@ -6028,23 +6158,11 @@ export function setup(host, hardMode) {
 
       ctx.restore();
     }
+  }
+  function drawSecondSilenceFront(ctx) {
+    const s = stateSecondSilence;
 
     if (s.active) {
-      for (const p of s.particles) {
-        ctx.save();
-
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.restore();
-      }
-
       ctx.save();
 
       const forwardOffset = 125;
@@ -6062,44 +6180,25 @@ export function setup(host, hardMode) {
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
-      const randLineWidth = 18 * (Math.random() + 2);
 
       const isLethal = s.t >= 5;
 
       ctx.save();
-      if (isLethal) {
-        const alpha = s.t < 0.25 ? s.t * 4 : 1;
-
-        const glowLen = 1500;
-        const glowWidth = s.w * 1.1;
-
-        ctx.scale(1, glowWidth / glowLen);
-
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-        grad.addColorStop(0, "magenta");
-        grad.addColorStop(0.5, "magenta");
-        grad.addColorStop(1, "rgba(255,0,255,0)");
-
-        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
-        ctx.fillStyle = grad;
-
-        ctx.beginPath();
-        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.restore();
-
-      ctx.save();
 
       ctx.beginPath();
-      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
-      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
-      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
       ctx.closePath();
 
       if (isLethal) {
-        ctx.fillStyle = "magenta";
+        ctx.fillStyle = "black";
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "magenta";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.fill();
       }
@@ -6111,14 +6210,6 @@ export function setup(host, hardMode) {
         ctx.fillStyle = "magenta";
       } else {
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.strokeStyle = "magenta";
-        ctx.lineWidth = randLineWidth;
-
-        ctx.beginPath();
-        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
-        ctx.stroke();
-
         ctx.fillStyle = "black";
       }
 
@@ -6126,41 +6217,29 @@ export function setup(host, hardMode) {
       const glowSize = 400;
 
       ctx.save();
-      ctx.globalAlpha =
-        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
-        (s.t < 0.25 ? s.t * 4 : 1);
-
-      let grad = ctx.createLinearGradient(
-        0,
-        -edgeOffset - glowSize,
-        0,
-        -edgeOffset,
-      );
-      grad.addColorStop(0, "rgba(255,0,255,0)");
-      grad.addColorStop(1, "magenta");
-
-      ctx.fillStyle = grad;
-      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
-
-      let grad2 = ctx.createLinearGradient(
-        0,
-        edgeOffset,
-        0,
-        edgeOffset + glowSize,
-      );
-      grad2.addColorStop(0, "magenta");
-      grad2.addColorStop(1, "rgba(255,0,255,0)");
-
-      ctx.fillStyle = grad2;
-      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "magenta";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
 
       ctx.restore();
+      for (const p of s.particles) {
+        ctx.save();
+
+        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
 
       ctx.restore();
     }
-  }
-  function drawSecondSilenceFront(ctx) {
-    const s = stateSecondSilence;
 
     if (s.rift) {
       const pts = s.rift.points;
@@ -6263,85 +6342,6 @@ export function setup(host, hardMode) {
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      ctx.restore();
-    }
-
-    if (s.active) {
-      ctx.save();
-
-      const forwardOffset = 125;
-      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
-      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
-      ctx.translate(ox, oy);
-      ctx.rotate(s.angle);
-
-      const dx = mouse.x - s.cx;
-      const dy = mouse.y - s.cy;
-
-      const cos = Math.cos(-s.angle);
-      const sin = Math.sin(-s.angle);
-
-      const rx = dx * cos - dy * sin;
-      const x = rx - BEAM_RADIUS;
-      const len = BEAM_RADIUS * 2;
-
-      const isLethal = s.t >= 5;
-
-      ctx.save();
-
-      ctx.beginPath();
-      ctx.moveTo(0.25, -s.w / 2);
-      ctx.lineTo(0.25, s.w / 2);
-      ctx.lineTo(-forwardOffset, 0);
-      ctx.closePath();
-
-      if (isLethal) {
-        ctx.fillStyle = "black";
-        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.fill();
-      } else {
-        ctx.fillStyle = "magenta";
-        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.fill();
-      }
-
-      ctx.restore();
-
-      if (!isLethal) {
-        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "magenta";
-      } else {
-        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "black";
-      }
-
-      const edgeOffset = s.w / 2;
-      const glowSize = 400;
-
-      ctx.save();
-      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
-      ctx.fillStyle = "magenta";
-      const w = s.w * (Math.random() + 1);
-      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
-      ctx.restore();
-      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
-
-      ctx.restore();
-      for (const p of s.particles) {
-        ctx.save();
-
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "black";
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
       }
 
       ctx.restore();
