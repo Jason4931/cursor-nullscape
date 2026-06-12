@@ -40,7 +40,7 @@ export function setup(host) {
     trailCircles: [],
     trailTimer: 0,
   };
-  const glyphs = "ᚠᚢᚦᚨᚱᚲΩΣΨΔΘΛЖҖҜ卐※✧✦✩☯☸✶✷✹✺";
+  const glyphs = "ᚠᚢᚦᚨᚱᚲΩΣΨΔΘΛЖҖҜ※✧✦✩☯☸✶✷✹✺";
   for (let i = 0; i < 3; i++) {
     state.glyphRings.push({
       radius: 80 + i * 40,
@@ -174,7 +174,7 @@ export function setup(host) {
       if (diff > Math.PI) diff -= Math.PI * 2;
       if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.1;
+      state.angle += diff * 0.05;
       state.slowAngle += diff * 0.01;
 
       if (state.phaseT >= 3) {
@@ -207,7 +207,7 @@ export function setup(host) {
       if (diff > Math.PI) diff -= Math.PI * 2;
       if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.1;
+      state.angle += diff * 0.05;
       state.slowAngle += diff * 0.01;
       state.beamActive = true;
 

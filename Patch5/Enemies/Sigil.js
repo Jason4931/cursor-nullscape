@@ -39,7 +39,7 @@ export function setup(host) {
     trailCircles: [],
     trailTimer: 0,
   };
-  const glyphs = "ᚠᚢᚦᚨᚱᚲΩΣΨΔΘΛЖҖҜ卐※✧✦✩☯☸✶✷✹✺";
+  const glyphs = "ᚠᚢᚦᚨᚱᚲΩΣΨΔΘΛЖҖҜ※✧✦✩☯☸✶✷✹✺";
   for (let i = 0; i < 3; i++) {
     state.glyphRings.push({
       radius: 80 + i * 40,
@@ -164,7 +164,7 @@ export function setup(host) {
       if (diff > Math.PI) diff -= Math.PI * 2;
       if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.1;
+      state.angle += diff * 0.05;
 
       if (state.phaseT >= 3) {
         state.phase = "fire";
@@ -196,7 +196,7 @@ export function setup(host) {
       if (diff > Math.PI) diff -= Math.PI * 2;
       if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.1;
+      state.angle += diff * 0.05;
       state.beamActive = true;
 
       const cos = Math.cos(-state.angle);
