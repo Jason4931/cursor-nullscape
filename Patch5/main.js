@@ -83,11 +83,12 @@ const cheatDetector = true;
 /* ===== DIFFICULTY ===== */
 const beaten = localStorage.getItem("GameBeaten") != null;
 const difficulties = beaten
-  ? ["Casual", "Standard", "Extreme"]
+  ? ["Casual", "Standard", "Extreme", "CHAOS"]
   : ["Casual", "Standard"];
 let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
 let casualMode = difficultyIndex === 0;
 export let hardMode = difficultyIndex === 2;
+let chaosMode = difficultyIndex === 3;
 const diffLabel = document.getElementById("diff-label");
 const diffLeft = document.getElementById("diff-left");
 const diffRight = document.getElementById("diff-right");
@@ -120,11 +121,14 @@ function applyDifficulty(firstLoad = false, direction = 0) {
     diffLabel.style.color = "#0f0";
   } else if (diff === "Extreme") {
     diffLabel.style.color = "#f00";
+  } else if (diff === "CHAOS") {
+    diffLabel.style.color = "#600";
   } else {
     diffLabel.style.color = "#fff";
   }
   casualMode = diff === "Casual";
   hardMode = diff === "Extreme";
+  chaosMode = diff === "CHAOS";
   if (!firstLoad) localStorage.setItem("difficulty", difficultyIndex);
   checkDiff();
 }
@@ -393,10 +397,20 @@ const ENTITY_POOL = [
   {
     name: "Quartz",
     spawn: () => spawnQuartz(entityHost),
-    start: 1500,
+    start: 0,
     src: "./ASSET/Enemies/Quartz.png",
     rare: true,
     desc: "shiny rock",
+    chaosOnly: true,
+  },
+  {
+    name: "Cascade",
+    spawn: () => spawnCascade(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/Cascade.png",
+    rare: true,
+    desc: "Orbiting shards that summon homing cyan bullets and fast elliptical rams.",
+    chaosOnly: true,
   },
   {
     name: "Catalyst",
@@ -536,6 +550,8 @@ function checkDiff() {
     document.getElementById("entity-panel-diff").textContent = "Casual";
   } else if (hardMode) {
     document.getElementById("entity-panel-diff").textContent = "Extreme";
+  } else if (chaosMode) {
+    document.getElementById("entity-panel-diff").textContent = "CHAOS";
   } else {
     document.getElementById("entity-panel-diff").textContent = "Standard";
   }
@@ -809,12 +825,19 @@ topLeftInput.addEventListener("input", () => {
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost);
       } else if (entity.name === "Random") {
-        const randUnlocked = ENTITY_POOL.filter((e) => {
-          if (e.name === "Random") return false;
-          if (collectedCount < e.start) return false;
-          if (e.unstackable) return false;
-          return true;
-        });
+        const randUnlocked = chaosMode
+          ? ENTITY_POOL.filter((e) => {
+              if (e.name === "Celestial" || e.name === "Catalyst") return false;
+              if (e.name === "Random") return false;
+              return true;
+            })
+          : ENTITY_POOL.filter((e) => {
+              if (e.chaosOnly) return false;
+              if (e.name === "Random") return false;
+              if (collectedCount < e.start) return false;
+              if (e.unstackable) return false;
+              return true;
+            });
         if (randUnlocked.length !== 0) {
           let randPick =
             randUnlocked[(Math.random() * randUnlocked.length) | 0];
@@ -879,12 +902,6 @@ topLeftInput.addEventListener("input", () => {
   if (input === "revive") {
     revive();
     soundStopped = false;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "cascade") {
-    spawnCascade(entityHost);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -1995,12 +2012,19 @@ function spawnCatalystIntro() {
 let lastAltar = null;
 function ENTITY_SPAWN(temp = false, exceptEntity = null) {
   let name = null;
-  const unlocked = ENTITY_POOL.filter((e) => {
-    if (collectedCount < e.start) return false;
-    if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
-    if (exceptEntity && e.name === exceptEntity) return false;
-    return true;
-  });
+  const unlocked = chaosMode
+    ? ENTITY_POOL.filter((e) => {
+        if (e.name === "Celestial" || e.name === "Catalyst") return false;
+        if (exceptEntity && e.name === exceptEntity) return false;
+        return true;
+      })
+    : ENTITY_POOL.filter((e) => {
+        if (e.chaosOnly) return false;
+        if (collectedCount < e.start) return false;
+        if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+        if (exceptEntity && e.name === exceptEntity) return false;
+        return true;
+      });
 
   if (unlocked.length > 0) {
     let pick;
@@ -2046,12 +2070,19 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     }
     if (pick.name === "Random") {
-      const randUnlocked = ENTITY_POOL.filter((e) => {
-        if (e.name === "Random") return false;
-        if (collectedCount < e.start) return false;
-        if (e.unstackable) return false;
-        return true;
-      });
+      const randUnlocked = chaosMode
+        ? ENTITY_POOL.filter((e) => {
+            if (e.name === "Celestial" || e.name === "Catalyst") return false;
+            if (e.name === "Random") return false;
+            return true;
+          })
+        : ENTITY_POOL.filter((e) => {
+            if (e.chaosOnly) return false;
+            if (e.name === "Random") return false;
+            if (collectedCount < e.start) return false;
+            if (e.unstackable) return false;
+            return true;
+          });
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
@@ -3552,11 +3583,18 @@ function updateCamera() {
       ) {
         lastEntitySpawnAt = collectedCount;
 
-        const unlocked = ENTITY_POOL.filter((e) => {
-          if (collectedCount < e.start) return false;
-          if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
-          return true;
-        });
+        const unlocked = chaosMode
+          ? ENTITY_POOL.filter((e) => {
+              if (e.name === "Celestial" || e.name === "Catalyst") return false;
+              return true;
+            })
+          : ENTITY_POOL.filter((e) => {
+              if (e.chaosOnly) return false;
+              if (collectedCount < e.start) return false;
+              if (e.unstackable && spawnedUnstackables.has(e.name))
+                return false;
+              return true;
+            });
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
@@ -3564,7 +3602,9 @@ function updateCamera() {
           spawnJumpPad(entityHost, 2000);
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
-            const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
+            const pool = chaosMode
+              ? ENTITY_POOL.filter((e) => e.name !== "Random")
+              : ENTITY_POOL.filter((e) => e.name !== "Random" && !e.chaosOnly);
             const pick = pool[(Math.random() * pool.length) | 0];
 
             let spawned = 0;
@@ -3654,12 +3694,20 @@ function updateCamera() {
             }
           }
           if (pick.name === "Random") {
-            const randUnlocked = ENTITY_POOL.filter((e) => {
-              if (e.name === "Random") return false;
-              if (collectedCount < e.start) return false;
-              if (e.unstackable) return false;
-              return true;
-            });
+            const randUnlocked = chaosMode
+              ? ENTITY_POOL.filter((e) => {
+                  if (e.name === "Celestial" || e.name === "Catalyst")
+                    return false;
+                  if (e.name === "Random") return false;
+                  return true;
+                })
+              : ENTITY_POOL.filter((e) => {
+                  if (e.chaosOnly) return false;
+                  if (e.name === "Random") return false;
+                  if (collectedCount < e.start) return false;
+                  if (e.unstackable) return false;
+                  return true;
+                });
             if (randUnlocked.length !== 0) {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
@@ -4340,10 +4388,15 @@ const unlock = () => {
   tipstimer = 900;
   setInterval(() => {
     const basicEnemies = ENTITY_POOL.filter((e) => {
+      if (e.chaosOnly) return false;
       if (e.start != 0) return false;
       return true;
     });
-    if (basicEnemies.length > 0 && !disablespawn) {
+    if (
+      basicEnemies.length > 0 &&
+      !disablespawn &&
+      actualCollectedCount > 100
+    ) {
       const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
       pick.spawn();
     }

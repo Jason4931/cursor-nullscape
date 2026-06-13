@@ -3404,7 +3404,11 @@ const unlock = () => {
       if (e.start != 0) return false;
       return true;
     });
-    if (basicEnemies.length > 0 && !disablespawn) {
+    if (
+      basicEnemies.length > 0 &&
+      !disablespawn &&
+      actualCollectedCount > 100
+    ) {
       const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
       pick.spawn();
     }

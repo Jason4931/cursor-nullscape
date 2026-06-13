@@ -5,6 +5,8 @@ voidboundguardian agro on passage
 voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
+Altars?
+
 vx bell
 vx baby
 vx husk
@@ -30,13 +32,14 @@ x voidbound operator
 rare
 vx ponderer
 vx nil (considered separate from new nil)
+chaos
 vx quartz
 x fear/visage
 x locust/belchboy
 x serverstoragebaby (3x big baby)
-x big springer (2-3x)
+v cascade
 
 x hazard - highrise
 
-x catalyst
-x celestial
+vx catalyst
+vx celestial

@@ -459,9 +459,9 @@ export function death(name = "Unknown", color = "#f70000") {
     if (name === "Celestial") {
       text.style.color = "#d05e8b";
       text.style.fontSize = "5vw";
-      text.style.top = "2vw";
-      text.style.left = "1vw";
-      text.style.fontFamily = "CelestialFont";
+      text.style.top = "2.25vw";
+      text.style.left = "0.5vw";
+      text.style.fontFamily = "CelestialDeathFont";
     }
     screen.style.display = "block";
     input.focus();

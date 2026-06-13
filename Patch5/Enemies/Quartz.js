@@ -21,13 +21,12 @@ export function setup(host) {
     wanderDuration: 9 + Math.random(),
 
     w: 100,
-    angle: 0,
-    slowAngle: 0,
+    angles: [],
+    beamCount: 5,
 
     targetX: 0,
     targetY: 0,
 
-    angle: 0,
     beamAlpha: 0,
     beamActive: false,
     x: canvas.width / 2,
@@ -78,6 +77,9 @@ export function setup(host) {
     }
 
     state.glyphRingCanvases.push(off);
+  }
+  for (let i = 0; i < state.beamCount; i++) {
+    state.angles.push(Math.random() * Math.PI * 2);
   }
   function rainbow(offset = 0, alpha = 1) {
     const t = performance.now() * 0.01;
@@ -170,12 +172,15 @@ export function setup(host) {
       const dy = mouse.y - state.y;
       const targetAngle = Math.atan2(dy, dx);
 
-      let diff = targetAngle - state.angle;
-      if (diff > Math.PI) diff -= Math.PI * 2;
-      if (diff < -Math.PI) diff += Math.PI * 2;
+      for (let i = 0; i < state.angles.length; i++) {
+        let diff = targetAngle - state.angles[i];
+        if (diff > Math.PI) diff -= Math.PI * 2;
+        if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.05;
-      state.slowAngle += diff * 0.01;
+        const speed = 0.05 * (1 - i / state.angles.length);
+
+        state.angles[i] += diff * speed;
+      }
 
       if (state.phaseT >= 3) {
         state.phase = "fire";
@@ -203,31 +208,31 @@ export function setup(host) {
       const dy = mouse.y - state.y;
       const targetAngle = Math.atan2(dy, dx);
 
-      let diff = targetAngle - state.angle;
-      if (diff > Math.PI) diff -= Math.PI * 2;
-      if (diff < -Math.PI) diff += Math.PI * 2;
+      for (let i = 0; i < state.angles.length; i++) {
+        let diff = targetAngle - state.angles[i];
+        if (diff > Math.PI) diff -= Math.PI * 2;
+        if (diff < -Math.PI) diff += Math.PI * 2;
 
-      state.angle += diff * 0.05;
-      state.slowAngle += diff * 0.01;
+        const speed = 0.05 * (1 - i / state.angles.length);
+
+        state.angles[i] += diff * speed;
+      }
       state.beamActive = true;
 
-      const cos = Math.cos(-state.angle);
-      const sin = Math.sin(-state.angle);
-      const rx = dx * cos - dy * sin;
-      const ry = dx * sin + dy * cos;
       const len = 20000;
-      const w = 100;
-      if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
-        death("Sigil");
-      }
+      for (let i = 0; i < state.angles.length; i++) {
+        const w = i == 0 ? 100 : 25;
+        const ang = state.angles[i];
 
-      const slowCos = Math.cos(-state.slowAngle);
-      const slowSin = Math.sin(-state.slowAngle);
-      const slowRx = dx * slowCos - dy * slowSin;
-      const slowRy = dx * slowSin + dy * slowCos;
-      const slowW = 25;
-      if (slowRx > 0 && slowRx < len && Math.abs(slowRy) < slowW / 2) {
-        death("Sigil");
+        const cos = Math.cos(-ang);
+        const sin = Math.sin(-ang);
+
+        const rx = dx * cos - dy * sin;
+        const ry = dx * sin + dy * cos;
+
+        if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+          death("Quartz");
+        }
       }
 
       if (state.phaseT >= 2.5) {
@@ -254,67 +259,41 @@ export function setup(host) {
 
     ctx.save();
 
-    ctx.save();
-    ctx.translate(state.x, state.y);
-    ctx.rotate(state.angle);
-    ctx.globalAlpha = state.beamAlpha;
+    for (let i = 0; i < state.angles.length; i++) {
+      ctx.save();
+      ctx.translate(state.x, state.y);
+      ctx.rotate(state.angles[i]);
 
-    const len = 20000;
-    const w =
-      (state.w || 100) *
-      (state.beamAlpha <= 0.5 ? 1 : 0.8 + Math.random() * 0.2);
+      ctx.globalAlpha = state.beamAlpha;
 
-    const forwardOffset = w / 4;
+      const len = 20000;
+      let w =
+        (state.w || 100) *
+        (state.beamAlpha <= 0.5 ? 1 : 0.8 + Math.random() * 0.2) *
+        (i == 0 ? 1 : 0.25);
 
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(forwardOffset, -w / 2);
-    ctx.lineTo(forwardOffset, w / 2);
-    ctx.closePath();
+      const forwardOffset = w / 4;
 
-    const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
-    grad.addColorStop(0, rainbow(0, 0));
-    grad.addColorStop(0.5, rainbow(1, 1));
-    grad.addColorStop(1, rainbow(2, 0));
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(forwardOffset, -w / 2);
+      ctx.lineTo(forwardOffset, w / 2);
+      ctx.closePath();
 
-    ctx.fillStyle = state.beamAlpha <= 0.5 ? grad : rainbow(0);
-    ctx.fill();
+      const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+      grad.addColorStop(0, rainbow(i * 0.3, 0));
+      grad.addColorStop(0.5, rainbow(i * 0.3 + 1, 1));
+      grad.addColorStop(1, rainbow(i * 0.3 + 2, 0));
 
-    ctx.beginPath();
-    ctx.rect(forwardOffset - 0.25, -w / 2, len, w);
-    ctx.fill();
+      ctx.fillStyle = state.beamAlpha <= 0.5 ? grad : rainbow(i * 0.3);
+      ctx.fill();
 
-    ctx.restore();
-    ctx.save();
-    ctx.translate(state.x, state.y);
-    ctx.rotate(state.slowAngle);
-    ctx.globalAlpha = state.beamAlpha;
+      ctx.beginPath();
+      ctx.rect(forwardOffset - 0.25, -w / 2, len, w);
+      ctx.fill();
 
-    const slowW =
-      (state.w / 4 || 25) *
-      (state.beamAlpha <= 0.5 ? 1 : 0.8 + Math.random() * 0.2);
-
-    const slowForwardOffset = slowW / 4;
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(slowForwardOffset, -slowW / 2);
-    ctx.lineTo(slowForwardOffset, slowW / 2);
-    ctx.closePath();
-
-    const slowGrad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
-    slowGrad.addColorStop(0, rainbow(0, 0));
-    slowGrad.addColorStop(0.5, rainbow(1, 1));
-    slowGrad.addColorStop(1, rainbow(2, 0));
-
-    ctx.fillStyle = state.beamAlpha <= 0.5 ? slowGrad : rainbow(0);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.rect(slowForwardOffset - 0.25, -slowW / 2, len, slowW);
-    ctx.fill();
-
-    ctx.restore();
+      ctx.restore();
+    }
 
     ctx.save();
     ctx.translate(state.x, state.y);

@@ -1,12 +1,19 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, canvas, moveCamera } from "../main.js";
 
-const font = new FontFace(
+const CelestialFont = new FontFace(
   "CelestialFont",
   "url(./ASSET/Misc/CelestialFont.ttf)",
 );
-await font.load();
-document.fonts.add(font);
+await CelestialFont.load();
+document.fonts.add(CelestialFont);
+
+const CelestialDeathFont = new FontFace(
+  "CelestialDeathFont",
+  "url(./ASSET/Misc/CelestialDeathFont.ttf)",
+);
+await CelestialDeathFont.load();
+document.fonts.add(CelestialDeathFont);
 
 const Celestial = [];
 for (let i = 1; i <= 25; i++) {
