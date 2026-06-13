@@ -20,7 +20,7 @@ export function setup(host) {
     shakeY: 0,
     sound: null,
     soundTime: 0,
-    deathsound: false,
+    death: false,
   };
 
   const RAIN_COUNT = 40;
@@ -46,14 +46,11 @@ export function setup(host) {
       }
       if (!isCursorOnFloor()) {
         state.offFloorTime += dt;
-        if (state.offFloorTime >= 3.5) {
+        if (state.offFloorTime >= 3.5 && !state.death) {
+          state.death = true;
           death("Sorrow");
-          if (!state.deathsound) {
-            state.deathsound = true;
-            playSound(
-              "./ASSET/Sound/Enemies/Sorrow/SorrowDeathEffect.mp3.mpeg",
-            );
-          }
+          state.duration = 0;
+          playSound("./ASSET/Sound/Enemies/Sorrow/SorrowDeathEffect.mp3.mpeg");
         }
       } else {
         state.offFloorTime -= 1.75 * dt;
@@ -78,6 +75,7 @@ export function setup(host) {
         }
         state.phase = 1;
         state.time = 0;
+        state.death = false;
       }
     } else if (state.phase === 1) {
       if (state.time >= 15) {

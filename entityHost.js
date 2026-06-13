@@ -386,7 +386,7 @@ export function toggleTripmineLeniency(state) {
 }
 export function death(name = "Unknown", color = "#f70000") {
   if (dies || immortality || springerImmortality) return;
-  if (ability && name != "Dozer") {
+  if (ability && (name != "Dozer" || name != "Void")) {
     setParried(true);
     return;
   }

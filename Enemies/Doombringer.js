@@ -8,7 +8,7 @@ export function setup(host) {
     delay: 0,
     opacity: 0,
     sound: null,
-    deathsound: false,
+    death: false,
   };
 
   const WARNING_TIME = 10;
@@ -17,6 +17,7 @@ export function setup(host) {
     state.phase = "idle";
     state.timer = 0;
     state.delay = 14 + Math.random();
+    state.death = false;
   }
   resetDelay();
 
@@ -45,21 +46,17 @@ export function setup(host) {
     if (state.phase === "warning") {
       state.opacity = Math.min(1, state.timer / WARNING_TIME);
 
-      if (jumppadHit("get")) {
+      if (jumppadHit("get") || state.death) {
         if (state.sound) state.sound();
         state.opacity = 0;
         resetDelay();
         return;
       }
 
-      if (state.timer >= WARNING_TIME) {
+      if (state.timer >= WARNING_TIME && !state.death) {
+        state.death = true;
         death("Doombringer");
-        if (!state.deathsound) {
-          playSound(
-            "./ASSET/Sound/Enemies/Doombringer/DoombringerExplosion.ogg",
-          );
-          state.deathsound = true;
-        }
+        playSound("./ASSET/Sound/Enemies/Doombringer/DoombringerExplosion.ogg");
       }
       return;
     }
