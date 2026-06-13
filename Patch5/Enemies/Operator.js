@@ -148,7 +148,7 @@ export function setup(host, hardMode) {
       ) {
         state.jitterRot = 0;
         state.enemy = OperatorDanger;
-        state.abilityLongerCooldown -= 15;
+        state.abilityLongerCooldown -= 10;
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
       }
 
