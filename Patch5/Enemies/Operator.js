@@ -148,6 +148,8 @@ export function setup(host, hardMode) {
       ) {
         state.jitterRot = 0;
         state.enemy = OperatorDanger;
+        state.abilityLongerCooldown -= 15;
+        if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
       }
 
       if (state.timer >= state.watchDuration && !state.death) {
@@ -156,6 +158,13 @@ export function setup(host, hardMode) {
         state.enemy = OperatorKilling;
         playSound("./ASSET/Sound/Enemies/Operator/Operator_Fail.ogg");
         death("Operator");
+        setTimeout(() => {
+          state.phase = "disable";
+          state.timer = 0;
+          state.jitterRot = 0;
+          state.enemy = OperatorIdle;
+          if (state.idleSound) state.idleSound();
+        }, 500);
       }
     } else if (state.phase === "disable") {
       const cam = getCameraPos();

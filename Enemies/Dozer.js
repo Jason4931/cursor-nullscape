@@ -96,11 +96,22 @@ export function setup(host, hardMode) {
         state.lastMouseY = mouse._clientY;
       }
 
+      if (
+        state.timer >= state.watchDuration - 0.25 &&
+        state.timer < state.watchDuration
+      ) {
+        state.abilityLongerCooldown -= 15;
+        if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
+      }
+
       if (state.timer >= state.watchDuration && !state.death) {
         state.death = true;
         death("Dozer");
         playSound("./ASSET/Sound/Enemies/Dozer/DozerJumpTextFull.wav");
         playSound("./ASSET/Sound/Enemies/Dozer/DozerDeathEffect.wav");
+        setTimeout(() => {
+          enterIdle();
+        }, 500);
       }
     }
   }
