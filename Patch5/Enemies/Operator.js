@@ -46,6 +46,7 @@ export function setup(host, hardMode) {
     state.phase = "idle";
     state.timer = 0;
     state.idleDuration = 14 + Math.random();
+    state.death = false;
   }
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 3);
@@ -148,7 +149,7 @@ export function setup(host, hardMode) {
       ) {
         state.jitterRot = 0;
         state.enemy = OperatorDanger;
-        state.abilityLongerCooldown -= 10;
+        state.abilityLongerCooldown -= 30;
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
       }
 

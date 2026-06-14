@@ -46,6 +46,7 @@ export function setup(host) {
     state.screenY = window.innerHeight / 2;
     state.strikesound = false;
     state.deathStrike = true;
+    state.deathsound = false;
     playSound("./ASSET/Sound/Enemies/Kookoo/Kookoo_Startup.wav");
   }
 

@@ -415,7 +415,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (shieldActive[1]) {
+  if (shieldActive[1] && name != "Void" && name != "VoidImplosions") {
     shieldBroken[1] = true;
     setTimeout(() => {
       shieldBroken[1] = false;
@@ -423,7 +423,12 @@ export function death(name = "Unknown", color = "#f70000") {
     }, 1000);
     return;
   }
-  if (shieldActive[0] && !shieldActive[1]) {
+  if (
+    shieldActive[0] &&
+    !shieldActive[1] &&
+    name != "Void" &&
+    name != "VoidImplosions"
+  ) {
     shieldBroken[0] = true;
     setTimeout(() => {
       shieldBroken[0] = false;

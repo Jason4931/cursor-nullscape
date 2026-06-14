@@ -38,6 +38,7 @@ export function setup(host, hardMode) {
     state.timer = 0;
     state.idleDuration = 14 + Math.random();
     if (state.idleSound) state.idleSound();
+    state.death = false;
   }
 
   enterIdle();
@@ -100,7 +101,7 @@ export function setup(host, hardMode) {
         state.timer >= state.watchDuration - 0.25 &&
         state.timer < state.watchDuration
       ) {
-        state.abilityLongerCooldown -= 10;
+        state.abilityLongerCooldown -= 30;
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
       }
 
