@@ -49,6 +49,7 @@ import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnQuartz } from "./Enemies/Quartz.js";
 import { setup as spawnVisage } from "./Enemies/Visage.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
+import { setup as spawnScrapmaw } from "./Enemies/Scrapmaw.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
@@ -79,10 +80,13 @@ const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
-const cheatDetector = true;
+const cheatDetector = false;
 
 /* ===== DIFFICULTY ===== */
-const beaten = localStorage.getItem("GameBeaten") != null;
+const beaten =
+  localStorage.getItem("lv50-casual") != null ||
+  localStorage.getItem("lv50-normal") != null ||
+  localStorage.getItem("lv50-hard") != null;
 const difficulties = beaten
   ? ["Casual", "Standard", "Extreme", "CHAOS"]
   : ["Casual", "Standard"];
@@ -394,6 +398,13 @@ const ENTITY_POOL = [
     start: 1500,
     src: "./ASSET/Enemies/Sigil.png",
     desc: "Fires a tracking and long lasting beam.",
+  },
+  {
+    name: "Scrapmaw",
+    spawn: () => spawnScrapmaw(entityHost, casualMode, hardMode),
+    start: 1500,
+    src: "./ASSET/Enemies/ScrapmawIcon.png",
+    desc: "Blitzes toward the player, shooting beams.",
   },
   {
     name: "Quartz",
@@ -943,6 +954,7 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
     spawnSigil(entityHost);
+    spawnScrapmaw(entityHost, casualMode, hardMode);
     spawnCatalyst(entityHost);
     spawnCatalystIntro();
     spawnCelestial(entityHost, hardMode);
@@ -970,6 +982,7 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
     registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
+    registerEntitySpawn("Scrapmaw", "./ASSET/Enemies/ScrapmawIcon.png");
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
     topLeftInput.value = "";

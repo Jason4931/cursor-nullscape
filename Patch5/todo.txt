@@ -23,7 +23,7 @@ vx cadence
 vx sigil
 x voidbreaker
 x voidbound guardian
-x scrapmaw
+vx scrapmaw
 x random
 x void implosion
 x oblivion
@@ -37,7 +37,9 @@ vx quartz
 vx fear/visage
 x locust/belchboy
 vx big baby
-x realmweaver
+x realmweaver - teleport across map periodically and move at slow speed (big)
+x moth (?) - taking gift near cursor to slow down collection
+x manta ray (?) - always circling the cursor at slow speed (average size)
 v cascade
 
 x hazard - highrise

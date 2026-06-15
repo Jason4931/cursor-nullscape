@@ -72,7 +72,10 @@ let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
 const cheatDetector = true;
 
 /* ===== DIFFICULTY ===== */
-const beaten = localStorage.getItem("GameBeaten") != null;
+const beaten =
+  localStorage.getItem("lv50-casual") != null ||
+  localStorage.getItem("lv50-normal") != null ||
+  localStorage.getItem("lv50-hard") != null;
 const difficulties = beaten
   ? ["Casual", "Normal", "Hard"]
   : ["Casual", "Normal"];

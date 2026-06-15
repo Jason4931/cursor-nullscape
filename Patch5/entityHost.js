@@ -310,6 +310,18 @@ const DEATH_MESSAGES = {
     "You gazed at the wrong star.",
     "Twinkle twinkle, little star!",
   ],
+  Scrapmaw: [
+    "NULLKIND IS DEAD. YOU ARE FUEL. NULLSCAPE IS FULL.",
+    "Yoy failed the laser QTE.",
+    "You didn't realize Scrapmaw was the light at the end of the tunnel.",
+    "You got speedblitzed.",
+    "You became fuel.",
+    "Train time.",
+    "You are no scrap... but I shall feast upon your essence regardless!",
+    ":disintegrate you",
+    "GET OUT OF MY WAY!!!!.",
+    "DID YOU SEE THAT?!",
+  ],
   Visage: ["YOU WERE CAUGHT"],
   Catalyst: [
     "YOU ENTERED PARADISE.",
