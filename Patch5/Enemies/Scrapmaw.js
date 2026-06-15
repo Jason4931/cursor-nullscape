@@ -4,12 +4,12 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Scrapmaw.png";
 
-export function setup(host) {
+export function setup(host, casualMode, hardMode) {
   const state = {
     opacity: 1,
     phase: "idle",
     phaseT: 0,
-    idleDuration: 20 + Math.random(),
+    idleDuration: (casualMode ? 30 : 20) + Math.random(),
 
     appearLine: null,
     attackData: null,
@@ -23,7 +23,7 @@ export function setup(host) {
 
     for (const lz of state.lasers) {
       lz.t += dt;
-      if (lz.t >= 1 && lz.t <= 1.1) {
+      if (lz.t >= lz.life * 0.5 && lz.t <= lz.life * 0.55) {
         const halfLen = 20000;
 
         const ax = lz.x + lz.nx * halfLen;
@@ -51,6 +51,9 @@ export function setup(host) {
         if (dist < 10) {
           death("Scrapmaw");
         }
+      }
+      if (lz.t >= 2) {
+        state.lasers = state.lasers.filter((x) => x !== lz);
       }
     }
     for (const e of state.ellipseFX) {
@@ -230,6 +233,25 @@ export function setup(host) {
         state.phase = "disappear";
         state.phaseT = 0;
 
+        if (hardMode) {
+          const dx = mouse.x - l.cx;
+          const dy = mouse.y - l.cy;
+          const len = Math.hypot(dx, dy) || 1;
+
+          const nx = dx / len;
+          const ny = dy / len;
+
+          state.lasers.push({
+            x: l.cx,
+            y: l.cy,
+            nx,
+            ny,
+            t: 0,
+            life: 1,
+          });
+          playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerFire.ogg", 2);
+        }
+
         const cx = (l.cx + l.tx) * 0.5;
         const cy = (l.cy + l.ty) * 0.5;
         state.ellipseFX = [
@@ -282,7 +304,6 @@ export function setup(host) {
         state.appearLine = null;
         state.attackData = null;
         state.disappearData = null;
-        state.lasers = [];
       }
     }
   }
@@ -385,9 +406,8 @@ export function setup(host) {
       const y4 = by + perpY * thickness;
 
       ctx.save();
-      ctx.globalAlpha =
-        state.phase == "attack" ? Math.min(1, state.phaseT * 4) : 1;
-      ctx.fillStyle = state.phase == "disappear" ? "orange" : "red";
+      ctx.globalAlpha = lz.t < 0.25 ? Math.min(1, state.phaseT * 4) : 1;
+      ctx.fillStyle = lz.t > lz.life / 2 ? "orange" : "red";
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);
