@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, playSound } from "../main.js";
+import { canvas, playSound, soundStopped } from "../main.js";
 
 const Quartz = [];
 for (let i = 1; i <= 75; i++) {
@@ -142,6 +142,7 @@ export function setup(host) {
         state.phase = "moveToSpot";
         state.phaseT = 0;
         playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Warning.ogg`);
+        playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Reposition.ogg`);
 
         const ang = Math.random() * Math.PI * 2;
         state.targetX = mouse.x + Math.cos(ang) * 1000;
@@ -161,7 +162,7 @@ export function setup(host) {
       if (p >= 1) {
         state.phase = "indicator";
         state.phaseT = 0;
-        playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Laser_Charge.ogg`);
+        playSound(`./ASSET/Sound/Enemies/Quartz/Quartz_Charge.mp3`);
       }
     }
     if (state.phase === "indicator") {
@@ -185,7 +186,7 @@ export function setup(host) {
       if (state.phaseT >= 3) {
         state.phase = "fire";
         state.phaseT = 0;
-        playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Laser_Firing.ogg`);
+        playSound(`./ASSET/Sound/Enemies/Quartz/Quartz_Beam.mp3`);
         state.beamAlpha = 1;
         state.trailTimer = 1;
       }
@@ -250,6 +251,39 @@ export function setup(host) {
         state.phaseT = 0;
         state.w = 100;
         state.wanderDuration = 9 + Math.random();
+      }
+    }
+
+    const dx = mouse.x - state.x;
+    const dy = mouse.y - state.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= 200) {
+      state.opacity = 0.5;
+    } else {
+      state.opacity = 1;
+    }
+    if (!soundStopped) {
+      if (dist <= 500) {
+        if (!state.sound)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Sigil/Sigil_Ambience.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
       }
     }
   }

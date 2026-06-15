@@ -296,7 +296,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Telefragger",
-    spawn: () => spawnTelefragger(entityHost, hardMode, deafMode),
+    spawn: () => spawnTelefragger(entityHost, casualMode, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
     desc: "Teleports infront of you.",
@@ -932,7 +932,7 @@ topLeftInput.addEventListener("input", () => {
     spawnNIL(entityHost);
     spawnGuardian(entityHost, hardMode);
     spawnOperator(entityHost, hardMode);
-    spawnTelefragger(entityHost, hardMode, deafMode);
+    spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
     spawnKookoo(entityHost);
     spawnVoidImplosions(entityHost);
     spawnSorrow(entityHost);

@@ -36,6 +36,7 @@ export function setup(host, stack, hardMode) {
     delayTarget: 0,
     delayTimer: 0,
     deathSound: false,
+    spawnTimer: 10,
 
     history: [],
 
@@ -63,9 +64,13 @@ export function setup(host, stack, hardMode) {
         );
     }
 
-    state.layer++;
-    if (state.layer > state.layers.length) state.layer = 1;
-    state.enemy = state.layers[state.layer - 1];
+    state.spawnTimer += dt;
+    if (state.layers != Huskspawn || state.spawnTimer > 0.2) {
+      state.layer++;
+      if (state.layer > state.layers.length) state.layer = 1;
+      state.enemy = state.layers[state.layer - 1];
+      state.spawnTimer = 0;
+    }
 
     state.history.push({
       x: mouse.x,
@@ -188,6 +193,8 @@ export function setup(host, stack, hardMode) {
         }
         death("Husk");
         return;
+      } else {
+        state.deathSound = false;
       }
     }
 

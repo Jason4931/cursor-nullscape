@@ -43,4 +43,4 @@ v cascade
 x hazard - highrise
 
 vx catalyst
-vx celestial
+vx celestial (not hardmode)

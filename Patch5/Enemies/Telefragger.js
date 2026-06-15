@@ -8,7 +8,7 @@ for (let i = 1; i <= 2; i++) {
   Telefragger.push(img);
 }
 
-export function setup(host, hardMode, deafMode) {
+export function setup(host, casualMode, hardMode, deafMode) {
   const state = {
     opacity: 1,
     enemy: null,
@@ -17,10 +17,10 @@ export function setup(host, hardMode, deafMode) {
     y: 0,
 
     size: 100,
-    speed: hardMode ? 80 : 40,
+    speed: casualMode ? 20 : hardMode ? 80 : 40,
 
     teleportTimer: 1,
-    teleportDistance: 450,
+    teleportDistance: casualMode ? 600 : 450,
 
     prevMouseX: NaN,
     prevMouseY: NaN,
@@ -40,6 +40,14 @@ export function setup(host, hardMode, deafMode) {
     walkSoundTimer: 0,
 
     teleportSound: false,
+
+    dashDirX: 0,
+    dashDirY: 0,
+    lineLength: 810,
+    dashState: "idle",
+    dashTimer: 0,
+    dashStartX: 0,
+    dashStartY: 0,
   };
 
   function update(dt) {
@@ -62,6 +70,7 @@ export function setup(host, hardMode, deafMode) {
       if (state.walkSound) state.walkSound();
       state.walkSound = false;
     }
+
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y;
     const dist = Math.hypot(dx, dy);
@@ -112,6 +121,49 @@ export function setup(host, hardMode, deafMode) {
 
     state.facingAngle = angle;
 
+    let overrideMovement = false;
+    if (state.dashState !== "idle") {
+      state.dashTimer += dt;
+
+      if (state.dashState === "indicator") {
+        overrideMovement = true;
+        if (state.dashTimer >= 0.5) {
+          state.dashState = "dash";
+          state.dashTimer = 0;
+          playSound(
+            "./ASSET/Sound/Enemies/Telefragger/Telefragger_Ambush.ogg",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            true,
+          );
+        }
+      }
+
+      if (state.dashState === "dash") {
+        overrideMovement = true;
+        let t = state.dashTimer / 0.5;
+        if (t > 1) t = 1;
+
+        const ease = 1 - Math.pow(1 - t, 3);
+
+        state.x = state.dashStartX + state.dashDirX * state.lineLength * ease;
+        state.y = state.dashStartY + state.dashDirY * state.lineLength * ease;
+
+        const dx = mouse.x - state.x;
+        const dy = mouse.y - state.y;
+
+        if (Math.hypot(dx, dy) <= state.size * 0.25) {
+          death("Telefragger");
+        }
+
+        if (t >= 1) {
+          state.dashState = "idle";
+        }
+      }
+    }
+
     state.teleportTimer -= dt;
     if (state.teleportTimer <= 0) {
       state.x = mouse.x + state.predDirX * state.teleportDistance;
@@ -122,6 +174,21 @@ export function setup(host, hardMode, deafMode) {
       state.flashTime = state.flashDuration;
       state.flashAngle = Math.random() * Math.PI * 2;
       state.teleportSound = false;
+
+      if (hardMode) {
+        const dx = mouse.x - state.x;
+        const dy = mouse.y - state.y;
+        const d = Math.hypot(dx, dy) || 1;
+
+        state.dashDirX = dx / d;
+        state.dashDirY = dy / d;
+
+        state.dashStartX = state.x;
+        state.dashStartY = state.y;
+
+        state.dashTimer = 0;
+        state.dashState = "indicator";
+      }
     }
     if (
       state.teleportTimer >= 0.9 &&
@@ -138,7 +205,7 @@ export function setup(host, hardMode, deafMode) {
       );
       state.teleportSound = true;
     }
-    if (dist > 1) {
+    if (dist > 1 && !overrideMovement) {
       state.x += (dx / dist) * state.speed * dt;
       state.y += (dy / dist) * state.speed * dt;
     }
@@ -159,6 +226,33 @@ export function setup(host, hardMode, deafMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     ctx.save();
+
+    if (state.dashState === "indicator") {
+      const alpha = 1 - state.dashTimer * 2;
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+
+      const dashLength = 30;
+      const gapLength = 20;
+      const thickness = 4;
+
+      const angle = Math.atan2(state.dashDirY, state.dashDirX);
+
+      let dist = 0;
+      while (dist < state.lineLength) {
+        const cx = state.x + state.dashDirX * dist;
+        const cy = state.y + state.dashDirY * dist;
+
+        ctx.save();
+        ctx.translate(Math.round(cx), Math.round(cy));
+        ctx.rotate(angle);
+
+        ctx.fillRect(0, -thickness / 2, dashLength, thickness);
+
+        ctx.restore();
+
+        dist += dashLength + gapLength;
+      }
+    }
 
     if (state.teleportTimer > 0 && state.teleportTimer <= 1 && deafMode) {
       const t = 1 - state.teleportTimer;
@@ -197,7 +291,7 @@ export function setup(host, hardMode, deafMode) {
     const trailRadius = Math.round(
       state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
     );
-    ctx.globalAlpha = 0.01;
+    ctx.globalAlpha = 0.15;
     ctx.fillStyle = "#9fdfff";
     ctx.beginPath();
     ctx.arc(

@@ -1,12 +1,19 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound, getCameraPos, soundStopped } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/NIL.png";
+const NIL = [];
+for (let i = 1; i <= 4; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/NIL/Layer ${i}.png`;
+  NIL.push(img);
+}
 
 export function setup(host, deafMode) {
   const state = {
     opacity: 0.1,
+    layers: NIL,
+    enemy: null,
+    layer: 0,
 
     x: 0,
     y: 0,
@@ -59,6 +66,10 @@ export function setup(host, deafMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     if (!state.initialized) {
       teleportFarFromCursor();
@@ -238,7 +249,7 @@ export function setup(host, deafMode) {
     ctx.globalAlpha = state.opacity;
 
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),

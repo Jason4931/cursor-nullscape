@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { pondererPositions } from "../main.js";
+import { playSound, pondererPositions, soundStopped } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Ponderer.png";
@@ -26,6 +26,8 @@ export function setup(host, hardMode) {
 
     wobbleTime: 0,
     wasNear: true,
+    sound: null,
+    deathSound: false,
   };
 
   const canvas = host.ctx.canvas;
@@ -43,12 +45,38 @@ export function setup(host, hardMode) {
 
     const near = dist <= state.radius;
 
+    if (!soundStopped) {
+      if (near && state.agro) {
+        if (!state.sound)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Ponderer/PondererMove.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
+
     if (state.agro) {
       if (near) {
         state.timer += state.recoverRate * dt;
         if (state.timer >= 1) {
           state.timer = 1;
           state.agro = false;
+          playSound("./ASSET/Sound/Enemies/Ponderer/PondererStop.ogg");
         }
       }
     } else {
@@ -57,7 +85,10 @@ export function setup(host, hardMode) {
 
       state.timer = Math.max(0, Math.min(state.maxTimer, state.timer));
 
-      if (state.timer === 0) state.agro = true;
+      if (state.timer === 0) {
+        state.agro = true;
+        playSound("./ASSET/Sound/Enemies/Ponderer/PondererStart.ogg");
+      }
     }
 
     state.wasNear = near;
@@ -88,6 +119,12 @@ export function setup(host, hardMode) {
 
       if (dist < state.size * 0.15) {
         death("Ponderer");
+        if (!state.deathSound) {
+          playSound("./ASSET/Sound/Enemies/Ponderer/PondererKill.ogg");
+          state.deathSound = true;
+        }
+      } else {
+        state.deathSound = false;
       }
     }
 

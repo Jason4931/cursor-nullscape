@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, playSound } from "../main.js";
+import { canvas, playSound, soundStopped } from "../main.js";
 
 const Sigil = [];
 for (let i = 1; i <= 75; i++) {
@@ -32,6 +32,7 @@ export function setup(host) {
     x: canvas.width / 2,
     y: canvas.height / 2,
 
+    sound: null,
     wanderDirX: 0,
     wanderDirY: 0,
     glyphRings: [],
@@ -130,6 +131,7 @@ export function setup(host) {
         state.phase = "moveToSpot";
         state.phaseT = 0;
         playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Warning.ogg`);
+        playSound(`./ASSET/Sound/Enemies/Sigil/Sigil_Reposition.ogg`);
 
         const ang = Math.random() * Math.PI * 2;
         state.targetX = mouse.x + Math.cos(ang) * 1000;
@@ -227,6 +229,39 @@ export function setup(host) {
         state.phaseT = 0;
         state.w = 100;
         state.wanderDuration = 9 + Math.random();
+      }
+    }
+
+    const dx = mouse.x - state.x;
+    const dy = mouse.y - state.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= 200) {
+      state.opacity = 0.5;
+    } else {
+      state.opacity = 1;
+    }
+    if (!soundStopped) {
+      if (dist <= 500) {
+        if (!state.sound)
+          state.sound = playSound(
+            `./ASSET/Sound/Enemies/Sigil/Sigil_Ambience.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound = null;
+            },
+          );
+      } else {
+        if (state.sound) {
+          state.sound();
+          state.sound = null;
+        }
+      }
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
       }
     }
   }

@@ -1,8 +1,12 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
 
-const missile = new Image();
-missile.src = "./ASSET/Enemies/ICBM.png";
+const ICBM = [];
+for (let i = 1; i <= 7; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/ICBM/Layer ${i}.png`;
+  ICBM.push(img);
+}
 const marker = new Image();
 marker.src = "./ASSET/Misc/ICBMMarker.png";
 
@@ -17,6 +21,10 @@ export function setup(host, hardMode) {
     maxCircleRadius: 210,
     rotation: 90,
     startY: 0,
+
+    layers: ICBM,
+    enemy: null,
+    layer: 0,
 
     phase: "lock",
     timer: 0,
@@ -43,6 +51,10 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     if (!state.initialized) {
       state.x = host.canvas.width / 2;
@@ -177,7 +189,7 @@ export function setup(host, hardMode) {
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate((state.rotation * Math.PI) / 180);
       const s = Math.round(state.currentSize);
-      ctx.drawImage(missile, -Math.round(s / 2), -Math.round(s / 2), s, s);
+      ctx.drawImage(state.enemy, -Math.round(s / 2), -Math.round(s / 2), s, s);
       ctx.restore();
     }
 

@@ -60,7 +60,14 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function spawnInstrument() {
-    playSound("./ASSET/Sound/Enemies/Cadence/Cad_Instrument.wav");
+    playSound(
+      "./ASSET/Sound/Enemies/Cadence/Cad_Instrument.wav",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      true,
+    );
     const pos = pickRandomPlaced4or5(500);
     state.instruments.push({
       x: pos.x,

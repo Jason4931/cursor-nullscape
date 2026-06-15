@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, canvas, moveCamera } from "../main.js";
+import {
+  getCameraPos,
+  canvas,
+  moveCamera,
+  playSound,
+  soundStopped,
+} from "../main.js";
 
 const CelestialFont = new FontFace(
   "CelestialFont",
@@ -275,6 +281,8 @@ export function setup(host, hardMode) {
   };
   const state = {
     opacity: 1,
+    sound: null,
+    deathSound: false,
 
     currentPattern: {
       duration: 0,
@@ -308,11 +316,36 @@ export function setup(host, hardMode) {
     shakeStrength: 0,
   };
 
+  function checkDeath(text = "Celestial") {
+    if (!state.deathSound) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Celestial_Kill_Sound.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      state.deathSound = true;
+      setTimeout(() => {
+        state.deathSound = false;
+      }, 1000);
+    }
+    death(text);
+  }
   function showText(text) {
     floatingText.text = text;
     floatingText.t = 0;
     floatingText.duration = 2;
     floatingText.active = true;
+    playSound(
+      `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "50",
+    );
   }
   function shakeScreen(strength = 1) {
     state.shakeStrength += strength;
@@ -606,7 +639,7 @@ export function setup(host, hardMode) {
         Math.abs(rx) < 20000 &&
         Math.abs(ry) < halfW
       ) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
 
       b._rx = rx;
@@ -765,7 +798,7 @@ export function setup(host, hardMode) {
         const hitR = c.r * 1.1;
 
         if (dx * dx + dy * dy <= hitR * hitR) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -937,7 +970,7 @@ export function setup(host, hardMode) {
           const halfW = w / 2;
 
           if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -1125,7 +1158,7 @@ export function setup(host, hardMode) {
           const halfW = w / 2;
 
           if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -1178,7 +1211,7 @@ export function setup(host, hardMode) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -1438,7 +1471,7 @@ export function setup(host, hardMode) {
       const dx = p.x - mx;
       const dy = p.y - my;
       if (dx * dx + dy * dy < p.r * p.r) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
       p.r -=
         dt * Math.max(50, p.r) * 1.25 * (s.t >= 12 ? (s.t - 11) * 1.25 : 1);
@@ -1739,7 +1772,7 @@ export function setup(host, hardMode) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -1894,7 +1927,7 @@ export function setup(host, hardMode) {
           const w = 25;
 
           if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -2092,7 +2125,7 @@ export function setup(host, hardMode) {
         const distSq = dx * dx + dy * dy;
 
         if (distSq <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -2145,7 +2178,7 @@ export function setup(host, hardMode) {
         Math.abs(rx) < halfLen &&
         Math.abs(ry) < halfW
       ) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
     }
     if (needsCompact) compact(stateCease.beams);
@@ -2415,7 +2448,7 @@ export function setup(host, hardMode) {
       const ry = mmx * sin + mmy * cos;
 
       if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
     }
 
@@ -2849,7 +2882,7 @@ export function setup(host, hardMode) {
           const dy = mouse.y - tipPosY;
 
           if (dx * dx + dy * dy <= 300 * 300) {
-            death("Celestial");
+            checkDeath("Celestial");
           }
 
           s.circles.push({
@@ -2927,7 +2960,7 @@ export function setup(host, hardMode) {
               const halfW = w / 2;
 
               if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
-                death("Celestial");
+                checkDeath("Celestial");
                 break;
               }
             }
@@ -2976,7 +3009,7 @@ export function setup(host, hardMode) {
           const dx = mx - c.x;
           const dy = my - c.y;
           if (dx * dx + dy * dy <= c.r * c.r) {
-            death("Celestial");
+            checkDeath("Celestial");
           }
         }
       }
@@ -3413,7 +3446,7 @@ export function setup(host, hardMode) {
           const w = 25;
 
           if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -3470,7 +3503,7 @@ export function setup(host, hardMode) {
           const w = 25;
 
           if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -3813,7 +3846,7 @@ export function setup(host, hardMode) {
       const ry = mmx * sin + mmy * cos;
 
       if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
     }
 
@@ -3900,7 +3933,7 @@ export function setup(host, hardMode) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -4270,7 +4303,7 @@ export function setup(host, hardMode) {
         const hitR = c.r * 1.1;
 
         if (dx * dx + dy * dy <= hitR * hitR) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -4376,7 +4409,7 @@ export function setup(host, hardMode) {
           const w = 60;
 
           if (rx > -40 && rx < len && Math.abs(ry) < w / 2) {
-            death("Celestial");
+            checkDeath("Celestial");
           }
         }
       }
@@ -4786,7 +4819,7 @@ export function setup(host, hardMode) {
           const halfW = w / 2;
 
           if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
-            death("Celestial");
+            checkDeath("Celestial");
             break;
           }
         }
@@ -4839,7 +4872,7 @@ export function setup(host, hardMode) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -4944,7 +4977,7 @@ export function setup(host, hardMode) {
           const w = 60;
 
           if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.t <= 3) {
-            death("Celestial");
+            checkDeath("Celestial");
           }
         }
       }
@@ -5011,7 +5044,7 @@ export function setup(host, hardMode) {
         Math.abs(rx) < 20000 &&
         Math.abs(ry) < halfW
       ) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
 
       b._rx = rx;
@@ -5596,7 +5629,7 @@ export function setup(host, hardMode) {
       const ry = mmx * sin + mmy * cos;
 
       if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
     }
 
@@ -5683,7 +5716,7 @@ export function setup(host, hardMode) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
-          death("Celestial");
+          checkDeath("Celestial");
         }
       }
     }
@@ -5744,7 +5777,7 @@ export function setup(host, hardMode) {
         Math.abs(rx) < 20000 &&
         Math.abs(ry) < halfW
       ) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
 
       b._rx = rx;
@@ -5820,7 +5853,7 @@ export function setup(host, hardMode) {
       const dx = p.x - mx;
       const dy = p.y - my;
       if (dx * dx + dy * dy < p.r * p.r) {
-        death("Celestial");
+        checkDeath("Celestial");
       }
       p.r -=
         dt *
@@ -6438,6 +6471,24 @@ export function setup(host, hardMode) {
     const mx = mouse.x;
     const my = mouse.y;
 
+    if (!soundStopped) {
+      if (!state.sound)
+        state.sound = playSound(
+          `./ASSET/Sound/Enemies/Celestial/Celestial_Radius1.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            state.sound = null;
+          },
+          "50",
+        );
+    } else {
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
     if (state.enemyTransition == "none") state.patternTime += dt;
     if (state.patternTime >= state.currentPattern.duration) {
       state.patternIndex++;

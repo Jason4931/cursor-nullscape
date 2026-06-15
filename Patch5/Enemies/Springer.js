@@ -133,6 +133,8 @@ export function setup(host, hardMode) {
             );
             state.deathSound = true;
           }
+        } else {
+          state.deathSound = false;
         }
 
         pickIdleDuration();

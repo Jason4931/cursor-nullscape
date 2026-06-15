@@ -23,6 +23,7 @@ export function setup(host, hardMode) {
     randomDirY: 0,
 
     sound: null,
+    deathSound: false,
     wobbleTime: 0,
     _targetDuration: 9 + Math.random(),
   };
@@ -74,7 +75,13 @@ export function setup(host, hardMode) {
 
     if (dist <= state.size * 0.5) {
       death("Mart", "#43aeff");
+      if (!state.deathSound) {
+        playSound(`./ASSET/Sound/Enemies/Mart/MartKill.mp3`);
+        state.deathSound = true;
+      }
       return;
+    } else {
+      state.deathSound = false;
     }
 
     if (state.mode === "target") {
@@ -100,7 +107,7 @@ export function setup(host, hardMode) {
       if (dist <= 500) {
         if (!state.sound)
           state.sound = playSound(
-            `./ASSET/Sound/Enemies/Mart/Mart_Ambience.ogg`,
+            `./ASSET/Sound/Enemies/Mart/MartLoop.mp3`,
             undefined,
             undefined,
             undefined,

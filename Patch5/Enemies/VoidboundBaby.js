@@ -1,6 +1,12 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
 
+const VoidboundBaby_Idle = [];
+for (let i = 1; i <= 18; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundBaby/VoidboundBaby_Idle/Layer ${i}.png`;
+  VoidboundBaby_Idle.push(img);
+}
 const VBbabyLockOnTarget = [];
 for (let i = 1; i <= 7; i++) {
   const img = new Image();
@@ -23,10 +29,10 @@ for (let i = 1; i <= 6; i++) {
 export function setup(host, hardMode) {
   const state = {
     opacity: 1,
-    layers: Vbabytrans,
+    layers: VoidboundBaby_Idle,
     enemy: null,
     layer: 0,
-    layerChange: [false, false, false],
+    layerChange: [false, false, false, false, false],
 
     x: 0,
     y: 0,
@@ -83,7 +89,7 @@ export function setup(host, hardMode) {
 
     if (state.state === "idle") {
       if (!state.layerChange[0]) {
-        state.layers = Vbabytrans;
+        state.layers = VoidboundBaby_Idle;
         state.layer = state.layers.length;
         state.layerChange[0] = true;
       }
@@ -138,11 +144,25 @@ export function setup(host, hardMode) {
       }
     } else if (state.state === "charging") {
       if (!state.layerChange[2]) {
-        state.layers = VBbabyCharging;
+        state.layers = Vbabytrans;
         state.layer = state.layers.length;
         state.layerChange[2] = true;
       }
       state.chargeTime += dt;
+      if (state.chargeTime >= 0.1 && !state.layerChange[3]) {
+        state.layers = VBbabyCharging;
+        state.layer = state.layers.length;
+        state.layerChange[3] = true;
+      }
+      if (
+        !hardMode &&
+        state.chargeTime >= state.chargeDuration - 0.1 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Vbabytrans;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime / state.chargeDuration;
       if (t > 1) t = 1;
@@ -179,10 +199,20 @@ export function setup(host, hardMode) {
           state.layerChange[0] = false;
           state.layerChange[1] = false;
           state.layerChange[2] = false;
+          state.layerChange[3] = false;
+          state.layerChange[4] = false;
         }
       }
     } else if (state.state === "charging2") {
       state.chargeTime2 += dt;
+      if (
+        state.chargeTime2 >= state.chargeDuration2 - 0.1 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Vbabytrans;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime2 / state.chargeDuration2;
       if (t > 1) t = 1;
@@ -207,6 +237,8 @@ export function setup(host, hardMode) {
         state.layerChange[0] = false;
         state.layerChange[1] = false;
         state.layerChange[2] = false;
+        state.layerChange[3] = false;
+        state.layerChange[4] = false;
       }
     }
   }
