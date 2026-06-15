@@ -34,9 +34,10 @@ vx ponderer
 vx nil (considered separate from new nil)
 chaos
 vx quartz
-x fear/visage
+vx fear/visage
 x locust/belchboy
-x serverstoragebaby (3x big baby)
+vx big baby
+x realmweaver
 v cascade
 
 x hazard - highrise

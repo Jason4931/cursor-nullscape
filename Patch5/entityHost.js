@@ -304,6 +304,13 @@ const DEATH_MESSAGES = {
     "Your soul now screams with the rest.",
     "You were imprisoned.",
   ],
+  Sigil: [
+    "You were vaporized.",
+    "You returned to the stars.",
+    "You gazed at the wrong star.",
+    "Twinkle twinkle, little star!",
+  ],
+  Visage: ["YOU WERE CAUGHT"],
   Catalyst: [
     "YOU ENTERED PARADISE.",
     "YOU HAVE ASCENDED.",
@@ -467,6 +474,11 @@ export function death(name = "Unknown", color = "#f70000") {
       text.style.top = "2.25vw";
       text.style.left = "0.5vw";
       text.style.fontFamily = "CelestialDeathFont";
+    }
+    if (name === "Visage") {
+      text.style.color = "#ff0000";
+      text.style.fontSize = "1.25vw";
+      text.style.fontFamily = "VisageFont";
     }
     screen.style.display = "block";
     input.focus();

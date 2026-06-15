@@ -26,7 +26,7 @@ for (let i = 1; i <= 13; i++) {
   Babycharge.push(img);
 }
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, scale = 1) {
   const state = {
     opacity: 1,
     layers: Babyidle,
@@ -37,7 +37,7 @@ export function setup(host, hardMode) {
     x: 0,
     y: 0,
 
-    size: 90,
+    size: 90 * scale,
 
     state: "idle",
     timer: 0,
@@ -46,7 +46,7 @@ export function setup(host, hardMode) {
     dirY: 0,
     dirX2: 0,
     dirY2: 0,
-    lineLength: 810,
+    lineLength: 810 * scale,
 
     chargeTime: 0,
     chargeDuration: 0,
@@ -57,6 +57,7 @@ export function setup(host, hardMode) {
     chargeDuration2: 0,
     startX2: 0,
     startY2: 0,
+    speed: 1 * scale,
 
     initialized: false,
   };
@@ -252,9 +253,9 @@ export function setup(host, hardMode) {
       const alpha = 0.75 - state.timer;
       ctx.fillStyle = `rgba(255,0,0,${alpha})`;
 
-      const dashLength = 30;
-      const gapLength = 20;
-      const thickness = 4;
+      const dashLength = 30 * scale;
+      const gapLength = 20 * scale;
+      const thickness = 4 * scale;
 
       const angle =
         hardMode && state.state === "charging"

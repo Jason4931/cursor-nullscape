@@ -47,6 +47,7 @@ import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnQuartz } from "./Enemies/Quartz.js";
+import { setup as spawnVisage } from "./Enemies/Visage.js";
 import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
@@ -399,8 +400,23 @@ const ENTITY_POOL = [
     spawn: () => spawnQuartz(entityHost),
     start: 0,
     src: "./ASSET/Enemies/Quartz.png",
-    rare: true,
     desc: "shiny rock",
+    chaosOnly: true,
+  },
+  {
+    name: "Visage",
+    spawn: () => spawnVisage(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/Visage.png",
+    desc: "a horrible visage. dont let it touch you",
+    chaosOnly: true,
+  },
+  {
+    name: "BigBaby",
+    spawn: () => spawnBaby(entityHost, hardMode, 3 + Math.random()),
+    start: 0,
+    src: "./ASSET/Enemies/Baby.png",
+    desc: "Big baby. Dashes in a straight line towards you.",
     chaosOnly: true,
   },
   {
@@ -408,7 +424,6 @@ const ENTITY_POOL = [
     spawn: () => spawnCascade(entityHost),
     start: 0,
     src: "./ASSET/Enemies/Cascade.png",
-    rare: true,
     desc: "Orbiting shards that summon homing cyan bullets and fast elliptical rams.",
     chaosOnly: true,
   },
@@ -928,7 +943,6 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
     spawnSigil(entityHost);
-    spawnQuartz(entityHost);
     spawnCatalyst(entityHost);
     spawnCatalystIntro();
     spawnCelestial(entityHost, hardMode);
@@ -956,7 +970,6 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
     registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
-    registerEntitySpawn("Quartz", "./ASSET/Enemies/Quartz.png");
     registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
     topLeftInput.value = "";
