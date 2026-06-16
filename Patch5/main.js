@@ -185,10 +185,10 @@ let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
+export let lastAbilityCooldown = 150;
 export let slowmode = false;
 export let ultrafastmode = false;
 let abilityCooldown = 0;
-let lastAbilityCooldown = 150;
 let parried = false;
 let soundParry = false;
 export let beaconed = false;
@@ -801,9 +801,9 @@ window.addEventListener("keydown", (e) => {
   }
   if (abilityCooldown == 0 && !slowness) {
     if (e.key.toLowerCase() === "e") {
-      ability = true;
       abilityCooldown = 150;
       lastAbilityCooldown = 150;
+      ability = true;
       setTimeout(() => {
         ability = false;
       }, 500);
@@ -814,7 +814,7 @@ window.addEventListener("keydown", (e) => {
       ability = true;
       setTimeout(() => {
         ability = false;
-      }, 10);
+      }, 500);
     }
   }
 });
