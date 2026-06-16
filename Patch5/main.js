@@ -437,6 +437,7 @@ const ENTITY_POOL = [
     spawn: () => spawnCascade(entityHost),
     start: 0,
     src: "./ASSET/Enemies/Cascade.png",
+    rare: true,
     desc: "Orbiting shards that summon homing cyan bullets and fast elliptical rams.",
     chaosOnly: true,
   },
@@ -854,6 +855,7 @@ topLeftInput.addEventListener("input", () => {
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost);
       } else if (input.toLowerCase() === "realitycollapse") {
+        spawnRealityCollapse(entityHost, true);
         spawnRealityCollapse(entityHost);
       } else if (entity.name === "Random") {
         const randUnlocked = chaosMode

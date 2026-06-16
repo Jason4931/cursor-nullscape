@@ -1,12 +1,14 @@
 import { death, mouse } from "../entityHost.js";
 
-export let RealityCollapseCount = { count: 2 };
-export function setup(host) {
+let mainReality = false;
+let fastReality = false;
+export let RealityCollapseCount = { count: 2.5 }; //max 10 -> 4/5
+export function setup(host, fast = false) {
   const state = {
     opacity: 1,
     phase: "idle",
     phaseT: 0,
-    idleDuration: 10 - RealityCollapseCount.count / 2,
+    idleDuration: fast ? 0.1 : 10 - RealityCollapseCount.count / 2,
 
     lines: [],
   };
@@ -17,11 +19,19 @@ export function setup(host) {
     state.phaseT += dt;
 
     if (state.phase === "idle") {
-      if (state.phaseT >= state.idleDuration) {
+      if (
+        state.phaseT >= state.idleDuration &&
+        (fast ? !mainReality : !fastReality)
+      ) {
+        if (fast) {
+          fastReality = true;
+        } else {
+          mainReality = true;
+        }
         state.phaseT = 0;
         state.phase = "spawn";
 
-        for (let i = 0; i < RealityCollapseCount.count; i++) {
+        for (let i = 0; i < (fast ? 1 : RealityCollapseCount.count); i++) {
           const ang = Math.random() * Math.PI * 2;
           const sx = mouse.x + Math.cos(ang) * (Math.random() * 2000);
           const sy = mouse.y + Math.sin(ang) * (Math.random() * 2000);
@@ -117,6 +127,11 @@ export function setup(host) {
         }
       }
       if (state.phaseT >= 1) {
+        if (fast) {
+          fastReality = false;
+        } else {
+          mainReality = false;
+        }
         state.phase = "idle";
         state.phaseT = 0;
         state.lines = [];
