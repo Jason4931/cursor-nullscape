@@ -29,6 +29,7 @@ x void implosion
 x oblivion
 x razorbloom
 x voidbound operator
+v reality collapse
 rare
 vx ponderer
 vx nil (considered separate from new nil)

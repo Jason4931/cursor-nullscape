@@ -37,6 +37,7 @@ import { setup as spawnGuardian } from "./Enemies/Guardian.js";
 import { setup as spawnOperator } from "./Enemies/Operator.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
+import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
@@ -836,6 +837,7 @@ topLeftInput.addEventListener("input", () => {
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
     input.toLowerCase() === "seamine" ||
+    input.toLowerCase() === "realitycollapse" ||
     input.toLowerCase() === "grindrail";
   if (entity) {
     let spawned = 0;
@@ -851,6 +853,8 @@ topLeftInput.addEventListener("input", () => {
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost);
+      } else if (input.toLowerCase() === "realitycollapse") {
+        spawnRealityCollapse(entityHost);
       } else if (entity.name === "Random") {
         const randUnlocked = chaosMode
           ? ENTITY_POOL.filter((e) => {

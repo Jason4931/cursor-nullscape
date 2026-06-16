@@ -172,8 +172,8 @@ export function setup(host) {
           ctx.arc(t.x, t.y, b.radius * 0.8, 0, Math.PI * 2);
           ctx.fillStyle =
             b.type === "yellow"
-              ? `rgba(255,255,120,${alpha * 0.6})`
-              : `rgba(120,255,255,${alpha * 0.6})`;
+              ? `rgba(255,255,128,${alpha * 0.6})`
+              : `rgba(128,255,255,${alpha * 0.6})`;
           ctx.fill();
         }
       }
@@ -182,9 +182,9 @@ export function setup(host) {
       ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
 
       if (b.type === "yellow") {
-        ctx.fillStyle = "#fff7aa";
+        ctx.fillStyle = "#ffff88";
       } else {
-        ctx.fillStyle = "#ccffff";
+        ctx.fillStyle = "#88ffff";
       }
 
       ctx.fill();
@@ -271,10 +271,12 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     ctx.save();
-    ctx.globalAlpha = state.opacity;
+    ctx.globalAlpha =
+      state.patternTime >= 2.75 ? (3 - state.patternTime) * 4 : 1;
 
     for (let e of state.ellipses) {
       ctx.save();
+      ctx.globalAlpha = 1;
 
       ctx.translate(e.x, e.y);
       ctx.rotate(e.angle);
@@ -282,11 +284,11 @@ export function setup(host) {
       ctx.beginPath();
       ctx.ellipse(0, 0, e.width, e.height, 0, 0, Math.PI * 2);
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#ccffcc";
       ctx.fill();
 
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "#aeefff";
+      ctx.strokeStyle = "#88ff88";
       ctx.stroke();
 
       ctx.restore();

@@ -323,6 +323,11 @@ const DEATH_MESSAGES = {
     "DID YOU SEE THAT?!",
   ],
   Visage: ["YOU WERE CAUGHT"],
+  RealityCollapse: [
+    "You couldn't handle the collapse.",
+    "You were obliterated.",
+    "You got destroyed.",
+  ],
   Catalyst: [
     "YOU ENTERED PARADISE.",
     "YOU HAVE ASCENDED.",
