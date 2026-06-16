@@ -811,6 +811,10 @@ window.addEventListener("keydown", (e) => {
       abilityCooldown = 75;
       lastAbilityCooldown = 75;
       speedBoostScale = 2;
+      ability = true;
+      setTimeout(() => {
+        ability = false;
+      }, 10);
     }
   }
 });
