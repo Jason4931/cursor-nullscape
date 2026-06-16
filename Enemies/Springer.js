@@ -120,7 +120,7 @@ export function setup(host, hardMode) {
       const cy = mouse.y - state.ringCenterY;
       const dist = Math.hypot(cx, cy);
 
-      const thickness = 25;
+      const thickness = 30;
       let insideRing = false;
 
       if (state.timer < state.idleGrowTime) {

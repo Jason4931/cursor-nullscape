@@ -24,7 +24,7 @@ vx sigil
 x voidbreaker
 x voidbound guardian
 vx scrapmaw
-x random
+v random
 x void implosion
 x oblivion
 x razorbloom

@@ -405,6 +405,7 @@ const ENTITY_POOL = [
     start: 1500,
     src: "./ASSET/Enemies/ScrapmawIcon.png",
     desc: "Blitzes toward the player, shooting beams.",
+    unstackable: true,
   },
   {
     name: "Quartz",
