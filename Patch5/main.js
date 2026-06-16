@@ -188,6 +188,7 @@ export let ability = false;
 export let slowmode = false;
 export let ultrafastmode = false;
 let abilityCooldown = 0;
+let lastAbilityCooldown = 150;
 let parried = false;
 let soundParry = false;
 export let beaconed = false;
@@ -802,11 +803,13 @@ window.addEventListener("keydown", (e) => {
     if (e.key.toLowerCase() === "e") {
       ability = true;
       abilityCooldown = 150;
+      lastAbilityCooldown = 150;
       setTimeout(() => {
         ability = false;
       }, 500);
     } else if (e.key.toLowerCase() === "r") {
       abilityCooldown = 75;
+      lastAbilityCooldown = 75;
       speedBoostScale = 2;
     }
   }
@@ -4146,7 +4149,8 @@ function loop(now) {
       screenY + h - 40,
       w * 0.5,
       20,
-      150 - abilityCooldown,
+      (lastAbilityCooldown == 75 ? 2 : 1) *
+        (lastAbilityCooldown - abilityCooldown),
     );
   if (parried && parry) {
     if (!soundParry) {
