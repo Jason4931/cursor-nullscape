@@ -145,6 +145,7 @@ let isSeamineEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
+let speedBoostScale = 1;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedCatalyst = false;
@@ -648,16 +649,17 @@ window.addEventListener("keydown", (e) => {
     panelOpen = !panelOpen;
     panel.classList.toggle("open", panelOpen);
   }
-  if (
-    (e.key.toLowerCase() === "e" || e.key.toLowerCase() === "r") &&
-    abilityCooldown == 0 &&
-    !slowness
-  ) {
-    ability = true;
-    abilityCooldown = 150;
-    setTimeout(() => {
-      ability = false;
-    }, 500);
+  if (abilityCooldown == 0 && !slowness) {
+    if (e.key.toLowerCase() === "e") {
+      ability = true;
+      abilityCooldown = 150;
+      setTimeout(() => {
+        ability = false;
+      }, 500);
+    } else if (e.key.toLowerCase() === "r") {
+      abilityCooldown = 75;
+      speedBoostScale = 2;
+    }
   }
 });
 let disableProgression = false;
@@ -2618,6 +2620,7 @@ function updateCamera() {
     voidScale *
     seamineScale *
     disableCollectScale *
+    speedBoostScale *
     ultrafastScale;
   camY +=
     vy *
@@ -2627,6 +2630,7 @@ function updateCamera() {
     voidScale *
     seamineScale *
     disableCollectScale *
+    speedBoostScale *
     ultrafastScale;
 
   const lim = getLimits();
@@ -3140,6 +3144,8 @@ function loop(now) {
   if (seamineScale > 1) seamineScale = 1;
   abilityCooldown--;
   if (abilityCooldown < 0) abilityCooldown = 0;
+  speedBoostScale -= 0.033;
+  if (speedBoostScale < 1) speedBoostScale = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
@@ -3179,6 +3185,7 @@ function loop(now) {
   if (parried && parry) {
     if (!soundParry) {
       soundParry = true;
+      speedBoostScale = 2;
       playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
       setTimeout(() => {
         parried = false;
@@ -3278,8 +3285,8 @@ function loop(now) {
       if (tipstimer > 550) color = "#ff0a0a";
       if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
     } else if (tipstimer > 204) {
-      text = "Press E or R to parry a death.";
-      text2 = "Use your ability wisely.";
+      text = "Press E to parry a death.";
+      text2 = "Press R to boost movement.";
       if (tipstimer > 376) color = "#ff0a0a";
       if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
     } else if (tipstimer > 30) {

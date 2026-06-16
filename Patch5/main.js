@@ -160,6 +160,7 @@ let voidScale = 1;
 let seamineScale = 1;
 let grindrailScale = 1;
 let wallScale = 1;
+let speedBoostScale = 1;
 let iceEffect = false;
 let lastTouchedIce;
 let debtAltar = null;
@@ -797,16 +798,17 @@ window.addEventListener("keydown", (e) => {
     panelOpen = !panelOpen;
     panel.classList.toggle("open", panelOpen);
   }
-  if (
-    (e.key.toLowerCase() === "e" || e.key.toLowerCase() === "r") &&
-    abilityCooldown == 0 &&
-    !slowness
-  ) {
-    ability = true;
-    abilityCooldown = 150;
-    setTimeout(() => {
-      ability = false;
-    }, 500);
+  if (abilityCooldown == 0 && !slowness) {
+    if (e.key.toLowerCase() === "e") {
+      ability = true;
+      abilityCooldown = 150;
+      setTimeout(() => {
+        ability = false;
+      }, 500);
+    } else if (e.key.toLowerCase() === "r") {
+      abilityCooldown = 75;
+      speedBoostScale = 2;
+    }
   }
 });
 let disableProgression = false;
@@ -3487,6 +3489,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      speedBoostScale *
       extremeScale *
       ultrafastScale *
       0.1;
@@ -3500,6 +3503,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      speedBoostScale *
       extremeScale *
       ultrafastScale *
       0.1;
@@ -3514,6 +3518,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      speedBoostScale *
       extremeScale *
       ultrafastScale;
     camY +=
@@ -3526,6 +3531,7 @@ function updateCamera() {
       grindrailScale *
       wallScale *
       disableCollectScale *
+      speedBoostScale *
       extremeScale *
       ultrafastScale;
   }
@@ -4100,6 +4106,8 @@ function loop(now) {
   if (seamineScale > 1) seamineScale = 1;
   abilityCooldown--;
   if (abilityCooldown < 0) abilityCooldown = 0;
+  speedBoostScale -= 0.033;
+  if (speedBoostScale < 1) speedBoostScale = 1;
   grindrailScale -= 0.017;
   if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;
@@ -4143,6 +4151,7 @@ function loop(now) {
   if (parried && parry) {
     if (!soundParry) {
       soundParry = true;
+      speedBoostScale = 2;
       playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
       setTimeout(() => {
         parried = false;
@@ -4295,8 +4304,8 @@ function loop(now) {
       if (tipstimer > 550) color = "#ff0a0a";
       if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
     } else if (tipstimer > 204) {
-      text = "Press E or R to parry a death.";
-      text2 = "Use your ability wisely.";
+      text = "Press E to parry a death.";
+      text2 = "Press R to boost movement.";
       if (tipstimer > 376) color = "#ff0a0a";
       if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
     } else if (tipstimer > 30) {
