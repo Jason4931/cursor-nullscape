@@ -4278,7 +4278,7 @@ function loop(now) {
       ? parseInt(
           localStorage.getItem("highest-level-reached").split(" ")[1],
           10,
-        ) < 10
+        ) < 25
       : true) &&
     !disableProgression
   ) {
