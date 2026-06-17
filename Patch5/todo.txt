@@ -2,7 +2,6 @@ HIGHRISE TOWER -> how the fuck do i do this [lvl 18]
 
 actually starting entity reworks
 voidboundguardian agro on passage
-voidbreaker sword follows cursor (actually need to dodge cliently) - patch5
 33% chance for operator becoming voidbound operator
 
 Altars?
