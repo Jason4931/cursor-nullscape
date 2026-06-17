@@ -462,10 +462,10 @@ export function setup(host, casualMode, hardMode) {
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.arc(0, 0, 68, 0, Math.PI * 2);
+      ctx.arc(0, 0, 55, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(0, 0, 75, 0, Math.PI * 2);
+      ctx.arc(0, 0, 60, 0, Math.PI * 2);
       ctx.stroke();
 
       function drawHex(radius) {
@@ -482,11 +482,11 @@ export function setup(host, casualMode, hardMode) {
       }
       ctx.save();
       ctx.rotate(t);
-      drawHex(60);
+      drawHex(50);
       ctx.restore();
       ctx.save();
       ctx.rotate(t + Math.PI / 4);
-      drawHex(60);
+      drawHex(50);
       ctx.restore();
 
       ctx.restore();
