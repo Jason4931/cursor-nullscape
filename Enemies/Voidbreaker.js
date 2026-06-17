@@ -60,12 +60,12 @@ export function setup(host, stack, hardMode) {
 
     const DIRECTIONS = [
       [1, 0],
-      [1, 1],
+      [0.707, 0.707],
       [0, 1],
-      [-1, 1],
+      [-0.707, 0.707],
       [-1, 0],
-      [-1, -1],
-      [1, -1],
+      [-0.707, -0.707],
+      [0.707, -0.707],
     ];
 
     function resetIdle() {
@@ -207,7 +207,7 @@ export function setup(host, stack, hardMode) {
               t > 0.25 &&
               t <= 0.5 &&
               Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-              KILL_RADIUS
+                KILL_RADIUS
             ) {
               death("Voidbreaker");
             }
@@ -512,7 +512,7 @@ export function setup(host, stack, hardMode) {
               t > 0.25 &&
               t <= 0.5 &&
               Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-              KILL_RADIUS
+                KILL_RADIUS
             ) {
               death("Voidbreaker");
             }

@@ -78,12 +78,12 @@ export function setup(host, casualMode, hardMode) {
 
   const DIRECTIONS = [
     [1, 0],
-    [1, 1],
+    [0.707, 0.707],
     [0, 1],
-    [-1, 1],
+    [-0.707, 0.707],
     [-1, 0],
-    [-1, -1],
-    [1, -1],
+    [-0.707, -0.707],
+    [0.707, -0.707],
   ];
 
   function resetIdle() {
@@ -455,10 +455,10 @@ export function setup(host, casualMode, hardMode) {
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.arc(0, 0, 45, 0, Math.PI * 2);
+      ctx.arc(0, 0, 68, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(0, 0, 50, 0, Math.PI * 2);
+      ctx.arc(0, 0, 75, 0, Math.PI * 2);
       ctx.stroke();
 
       function drawHex(radius) {
@@ -475,21 +475,21 @@ export function setup(host, casualMode, hardMode) {
       }
       ctx.save();
       ctx.rotate(t);
-      drawHex(40);
+      drawHex(60);
       ctx.restore();
       ctx.save();
       ctx.rotate(t + Math.PI / 4);
-      drawHex(40);
+      drawHex(60);
       ctx.restore();
 
       ctx.restore();
 
       ctx.drawImage(
         enemy,
-        Math.round(mouse.x - 50),
-        Math.round(mouse.y + HOVER_Y - 50),
-        100,
-        100,
+        Math.round(mouse.x - 75),
+        Math.round(mouse.y + HOVER_Y - 75),
+        150,
+        150,
       );
     }
 
@@ -654,7 +654,7 @@ export function setup(host, casualMode, hardMode) {
       );
       ctx.rotate(state.swordHard.angle + Math.PI);
       const swordHardSize = Math.round(SWORD_SIZE);
-      if (state.phase === "attack" && state.timer <= 1.75) {
+      if (state.phase === "attack" && state.timer <= 2) {
         ctx.save();
         ctx.globalAlpha = 1;
         ctx.fillStyle = "black";
@@ -717,7 +717,7 @@ export function setup(host, casualMode, hardMode) {
         Math.round(state.swordHard2.y),
       );
       ctx.rotate(state.swordHard2.angle + Math.PI);
-      if (state.phase === "attack" && state.timer <= 1.75) {
+      if (state.phase === "attack" && state.timer <= 2) {
         ctx.save();
         ctx.globalAlpha = 1;
         ctx.fillStyle = "black";
