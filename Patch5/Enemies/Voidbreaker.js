@@ -1,10 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import {
-  voidbreakerActive,
-  setVoidbreakerActive,
-  voidbreakerCount,
-  playSound,
-} from "../main.js";
+import { playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Voidbreaker.png";
@@ -12,160 +7,357 @@ enemy.src = "./ASSET/Enemies/Voidbreaker.png";
 const sword = new Image();
 sword.src = "./ASSET/Misc/Sword.png";
 
-export function setup(host, stack, hardMode) {
-  if (stack == 0) {
-    const state = {
-      phase: "idle",
-      timer: 0,
-      delay: 0,
+let voidbreakerActive = false;
+export function setup(host, casualMode, hardMode) {
+  const state = {
+    phase: "idle",
+    timer: 0,
+    delay: 0,
 
-      opacity: 0,
-      flashX: 0,
-      flashY: 0,
-      flashX2: 0,
-      flashY2: 0,
+    opacity: 0,
+    flashX: 0,
+    flashY: 0,
+    flashX2: 0,
+    flashY2: 0,
+    flashHardX: 0,
+    flashHardY: 0,
+    flashHardX2: 0,
+    flashHardY2: 0,
 
-      sword: {
-        active: false,
-        x: 0,
-        y: 0,
-        dx: 0,
-        dy: 0,
-        opacity: 1,
-        lockX: 0,
-        lockY: 0,
-        angle: 0,
-      },
-      sword2: {
-        active: false,
-        x: 0,
-        y: 0,
-        dx: 0,
-        dy: 0,
-        opacity: 1,
-        lockX: 0,
-        lockY: 0,
-        angle: 0,
-      },
-    };
+    sword: {
+      active: false,
+      x: 0,
+      y: 0,
+      dx: 0,
+      dy: 0,
+      opacity: 1,
+      lockX: 0,
+      lockY: 0,
+      angle: 0,
+    },
+    sword2: {
+      active: false,
+      x: 0,
+      y: 0,
+      dx: 0,
+      dy: 0,
+      opacity: 1,
+      lockX: 0,
+      lockY: 0,
+      angle: 0,
+    },
+    swordHard: {
+      active: false,
+      x: 0,
+      y: 0,
+      dx: 0,
+      dy: 0,
+      opacity: 1,
+      lockX: 0,
+      lockY: 0,
+      angle: 0,
+    },
+    swordHard2: {
+      active: false,
+      x: 0,
+      y: 0,
+      dx: 0,
+      dy: 0,
+      opacity: 1,
+      lockX: 0,
+      lockY: 0,
+      angle: 0,
+    },
+  };
 
-    const HOVER_Y = -200;
-    const DASH_DIST = 500;
+  const HOVER_Y = -200;
+  const DASH_DIST = 500;
 
-    const SWORD_SIZE = 50;
-    const KILL_RADIUS = 20;
+  const SWORD_SIZE = 125;
+  const KILL_RADIUS = 60;
 
-    const FLASH_OUTER = 27;
-    const FLASH_INNER = 6;
+  const DIRECTIONS = [
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+    [1, -1],
+  ];
 
-    const DIRECTIONS = [
-      [1, 0],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1],
-      [1, -1],
-    ];
+  function resetIdle() {
+    state.phase = "idle";
+    state.timer = 0;
+    state.delay = 9 + Math.random();
+    state.opacity = 0;
+    state.sword.active = false;
+    setTimeout(() => {
+      voidbreakerActive = false;
+    }, 1000);
+  }
 
-    function resetIdle() {
-      state.phase = "idle";
-      state.timer = 0;
-      state.delay = 9 + Math.random();
-      state.opacity = 0;
-      state.sword.active = false;
+  resetIdle();
+
+  function update(dt) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    state.timer += dt;
+
+    if (state.phase === "idle") {
+      if (state.timer >= state.delay && !voidbreakerActive) {
+        state.phase = "warning";
+        playSound(
+          "./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Spawn.ogg",
+        );
+        state.timer = 0;
+        state.opacity = 0;
+        voidbreakerActive = true;
+      }
+      return;
     }
 
-    resetIdle();
+    if (state.phase === "warning") {
+      state.opacity = state.timer <= 0.5 ? state.timer / 0.5 : 1;
 
-    function update(dt) {
-      if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+      if (state.timer >= 1) {
+        const dir = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
 
-      state.timer += dt;
+        state.sword.active = true;
+        state.sword.dx = dir[0];
+        state.sword.dy = dir[1];
+        state.sword.targetAngle = Math.atan2(dir[1], dir[0]);
+        state.sword.angle = Math.PI / 2;
 
-      if (state.phase === "idle") {
-        if (state.timer >= state.delay) {
-          state.phase = "warning";
-          playSound("./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_Warn.ogg");
-          state.timer = 0;
-          state.opacity = 0;
-        }
-        return;
-      }
+        if (!casualMode) {
+          let dir2;
+          do {
+            dir2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
+          } while (dir2[0] === dir[0] && dir2[1] === dir[1]);
 
-      if (state.phase === "warning") {
-        state.opacity = state.timer <= 0.5 ? state.timer / 0.5 : 1;
-
-        if (state.timer >= 3) {
-          const dir = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
-
-          state.sword.active = true;
-          state.sword.opacity = 1;
-          state.sword.dx = dir[0];
-          state.sword.dy = dir[1];
-          state.sword.angle = Math.atan2(dir[1], dir[0]);
-
-          if (hardMode) {
-            let dir2;
-            do {
-              dir2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
-            } while (dir2[0] === dir[0] && dir2[1] === dir[1]);
-
-            state.sword2.active = true;
-            state.sword2.opacity = 1;
-            state.sword2.dx = dir2[0];
-            state.sword2.dy = dir2[1];
-            state.sword2.angle = Math.atan2(dir2[1], dir2[0]);
-          } else {
-            state.sword2.active = false;
-          }
-
-          setVoidbreakerActive({
-            start: performance.now(),
-            count: stack + 1,
-            id: (voidbreakerActive?.id || 0) + 1,
-          });
-
-          state.phase = "attack";
-          playSound(
-            "./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_SwordReadyV2.ogg",
-          );
-          state.timer = 0;
-        }
-        return;
-      }
-
-      if (state.phase === "attack") {
-        if (state.timer <= 1.5) {
-          state.sword.x = mouse.x + state.sword.dx * 120;
-          state.sword.y = mouse.y + state.sword.dy * 120;
+          state.sword2.active = true;
+          state.sword2.dx = dir2[0];
+          state.sword2.dy = dir2[1];
+          state.sword2.targetAngle = Math.atan2(dir2[1], dir2[0]);
+          state.sword2.angle = Math.PI / 2;
         } else {
-          if (state.timer - dt <= 1.5) {
-            state.sword.lockX = state.sword.x;
-            state.sword.lockY = state.sword.y;
-            state.sword.flash = 1;
-            state.flashX = state.sword.x;
-            state.flashY = state.sword.y;
+          state.sword2.active = false;
+        }
+
+        const randSound = Math.random() < 0.5;
+        playSound(
+          `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Sword_Summon${randSound ? "" : "_2"}.ogg`,
+          randSound ? 0.857 : 1,
+        );
+        state.phase = "attack";
+        state.timer = 0;
+      }
+      return;
+    }
+
+    if (state.phase === "attack") {
+      if (state.timer <= 1.75) {
+        const ROT_TIME = 1;
+        const rotP = Math.min(1, state.timer / ROT_TIME);
+        const rotEased = 1 - Math.pow(1 - rotP, 2);
+        function lerpAngle(a, b, t) {
+          let d = b - a;
+          if (d > Math.PI) d -= Math.PI * 2;
+          if (d < -Math.PI) d += Math.PI * 2;
+          return a + d * t;
+        }
+        state.sword.angle = lerpAngle(
+          Math.PI / 2,
+          state.sword.targetAngle,
+          rotEased,
+        );
+        if (state.sword2.active) {
+          state.sword2.angle = lerpAngle(
+            Math.PI / 2,
+            state.sword2.targetAngle,
+            rotEased,
+          );
+        }
+
+        state.sword.opacity = Math.min(1, state.timer * 4);
+        state.sword.x = mouse.x + state.sword.dx * 100;
+        state.sword.y = mouse.y + state.sword.dy * 100;
+      } else {
+        if (state.timer - dt <= 1.75) {
+          playSound(
+            `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_SwordLaunch${Math.random() < 0.5 ? "" : "_2"}.ogg`,
+          );
+          state.sword.lockX = state.sword.x;
+          state.sword.lockY = state.sword.y;
+          state.sword.flash = 1;
+          state.flashX = state.sword.x;
+          state.flashY = state.sword.y;
+        }
+
+        state.sword.flash = Math.max(0, state.sword.flash - dt);
+
+        const t = state.timer - 1.75;
+        const k = Math.min(1, t);
+
+        const baseX = state.sword.lockX - state.sword.dx * DASH_DIST * k;
+        const baseY = state.sword.lockY - state.sword.dy * DASH_DIST * k;
+        const followStrength = 0.25;
+        state.sword.x = baseX + (mouse.x - baseX) * followStrength;
+        state.sword.y = baseY + (mouse.y - baseY) * followStrength;
+
+        const FLASH_FOLLOW = 0.5;
+        state.flashX += (state.sword.x - state.flashX) * FLASH_FOLLOW * dt;
+        state.flashY += (state.sword.y - state.flashY) * FLASH_FOLLOW * dt;
+
+        state.sword.opacity = 1 - k;
+
+        const vx = mouse.x - state.sword.lockX;
+        const vy = mouse.y - state.sword.lockY;
+
+        const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
+
+        const dist = perp;
+
+        if (t > 0.25 && t <= 0.5 && dist <= KILL_RADIUS) {
+          death("Voidbreaker");
+        }
+      }
+
+      if (!casualMode && state.sword2.active) {
+        if (state.timer <= 1.75) {
+          state.sword2.opacity = Math.min(1, state.timer * 4);
+          state.sword2.x = mouse.x + state.sword2.dx * 100;
+          state.sword2.y = mouse.y + state.sword2.dy * 100;
+        } else {
+          if (state.timer - dt <= 1.75) {
+            state.sword2.lockX = state.sword2.x;
+            state.sword2.lockY = state.sword2.y;
+            state.sword2.flash = 1;
+            state.flashX2 = state.sword2.x;
+            state.flashY2 = state.sword2.y;
           }
-
-          state.sword.flash = Math.max(0, state.sword.flash - dt);
-
-          const t = state.timer - 1.5;
+          const t = state.timer - 1.75;
           const k = Math.min(1, t);
-
-          state.sword.x = state.sword.lockX - state.sword.dx * DASH_DIST * k;
-          state.sword.y = state.sword.lockY - state.sword.dy * DASH_DIST * k;
+          const baseX2 = state.sword2.lockX - state.sword2.dx * DASH_DIST * k;
+          const baseY2 = state.sword2.lockY - state.sword2.dy * DASH_DIST * k;
+          const followStrength = 0.25;
+          state.sword2.x = baseX2 + (mouse.x - baseX2) * followStrength;
+          state.sword2.y = baseY2 + (mouse.y - baseY2) * followStrength;
+          state.sword2.flash = Math.max(0, state.sword2.flash - dt);
+          state.sword2.opacity = 1 - k;
 
           const FLASH_FOLLOW = 0.5;
-          state.flashX += (state.sword.x - state.flashX) * FLASH_FOLLOW * dt;
-          state.flashY += (state.sword.y - state.flashY) * FLASH_FOLLOW * dt;
+          state.flashX2 += (state.sword2.x - state.flashX2) * FLASH_FOLLOW * dt;
+          state.flashY2 += (state.sword2.y - state.flashY2) * FLASH_FOLLOW * dt;
 
-          state.sword.opacity = 1 - k;
+          const vx = mouse.x - state.sword2.lockX;
+          const vy = mouse.y - state.sword2.lockY;
+          if (
+            t > 0.25 &&
+            t <= 0.5 &&
+            Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <= KILL_RADIUS
+          ) {
+            death("Voidbreaker");
+          }
+        }
+      }
 
-          const vx = mouse.x - state.sword.lockX;
-          const vy = mouse.y - state.sword.lockY;
+      if (hardMode) {
+        if (state.timer >= 1.75 && !state.swordHard.active) {
+          const dirHard = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
 
-          const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
+          state.swordHard.active = true;
+          state.swordHard.dx = dirHard[0];
+          state.swordHard.dy = dirHard[1];
+          state.swordHard.targetAngle = Math.atan2(dirHard[1], dirHard[0]);
+          state.swordHard.angle = Math.PI / 2;
+
+          let dirHard2;
+          do {
+            dirHard2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
+          } while (dirHard2[0] === dirHard[0] && dirHard2[1] === dirHard[1]);
+
+          state.swordHard2.active = true;
+          state.swordHard2.dx = dirHard2[0];
+          state.swordHard2.dy = dirHard2[1];
+          state.swordHard2.targetAngle = Math.atan2(dirHard2[1], dirHard2[0]);
+          state.swordHard2.angle = Math.PI / 2;
+
+          const randSound = Math.random() < 0.5;
+          playSound(
+            `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Sword_Summon${randSound ? "" : "_2"}.ogg`,
+            randSound ? 0.857 : 1,
+          );
+        }
+        const timerHard = state.timer - 1.75;
+        if (timerHard <= 1.75) {
+          const ROT_TIME = 1;
+          const rotP = Math.min(1, timerHard / ROT_TIME);
+          const rotEased = 1 - Math.pow(1 - rotP, 2);
+          function lerpAngle(a, b, t) {
+            let d = b - a;
+            if (d > Math.PI) d -= Math.PI * 2;
+            if (d < -Math.PI) d += Math.PI * 2;
+            return a + d * t;
+          }
+          state.swordHard.angle = lerpAngle(
+            Math.PI / 2,
+            state.swordHard.targetAngle,
+            rotEased,
+          );
+          if (state.swordHard2.active) {
+            state.swordHard2.angle = lerpAngle(
+              Math.PI / 2,
+              state.swordHard2.targetAngle,
+              rotEased,
+            );
+          }
+
+          state.swordHard.opacity = Math.min(1, timerHard * 4);
+          state.swordHard.x = mouse.x + state.swordHard.dx * 100;
+          state.swordHard.y = mouse.y + state.swordHard.dy * 100;
+        } else {
+          if (timerHard - dt <= 1.75) {
+            playSound(
+              `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_SwordLaunch${Math.random() < 0.5 ? "" : "_2"}.ogg`,
+            );
+            state.swordHard.lockX = state.swordHard.x;
+            state.swordHard.lockY = state.swordHard.y;
+            state.swordHard.flashHard = 1;
+            state.flashHardX = state.swordHard.x;
+            state.flashHardY = state.swordHard.y;
+          }
+
+          state.swordHard.flashHard = Math.max(
+            0,
+            state.swordHard.flashHard - dt,
+          );
+
+          const t = timerHard - 1.75;
+          const k = Math.min(1, t);
+
+          const baseX =
+            state.swordHard.lockX - state.swordHard.dx * DASH_DIST * k;
+          const baseY =
+            state.swordHard.lockY - state.swordHard.dy * DASH_DIST * k;
+          const followStrength = 0.25;
+          state.swordHard.x = baseX + (mouse.x - baseX) * followStrength;
+          state.swordHard.y = baseY + (mouse.y - baseY) * followStrength;
+
+          const FLASH_FOLLOW = 0.5;
+          state.flashHardX +=
+            (state.swordHard.x - state.flashHardX) * FLASH_FOLLOW * dt;
+          state.flashHardY +=
+            (state.swordHard.y - state.flashHardY) * FLASH_FOLLOW * dt;
+
+          state.swordHard.opacity = 1 - k;
+
+          const vx = mouse.x - state.swordHard.lockX;
+          const vy = mouse.y - state.swordHard.lockY;
+
+          const perp = Math.abs(
+            vx * state.swordHard.dy - vy * state.swordHard.dx,
+          );
 
           const dist = perp;
 
@@ -174,368 +366,182 @@ export function setup(host, stack, hardMode) {
           }
         }
 
-        if (hardMode && state.sword2.active) {
-          if (state.timer <= 1.5) {
-            state.sword2.x = mouse.x + state.sword2.dx * 120;
-            state.sword2.y = mouse.y + state.sword2.dy * 120;
-          } else {
-            if (state.timer - dt <= 1.5) {
-              state.sword2.lockX = state.sword2.x;
-              state.sword2.lockY = state.sword2.y;
-              state.sword2.flash = 1;
-              state.flashX2 = state.sword2.x;
-              state.flashY2 = state.sword2.y;
-            }
-            const t = state.timer - 1.5;
-            const k = Math.min(1, t);
-            state.sword2.x =
-              state.sword2.lockX - state.sword2.dx * DASH_DIST * k;
-            state.sword2.y =
-              state.sword2.lockY - state.sword2.dy * DASH_DIST * k;
-            state.sword2.flash = Math.max(0, state.sword2.flash - dt);
-            state.sword2.opacity = 1 - k;
-
-            const FLASH_FOLLOW = 0.5;
-            state.flashX2 +=
-              (state.sword2.x - state.flashX2) * FLASH_FOLLOW * dt;
-            state.flashY2 +=
-              (state.sword2.y - state.flashY2) * FLASH_FOLLOW * dt;
-
-            const vx = mouse.x - state.sword2.lockX;
-            const vy = mouse.y - state.sword2.lockY;
-            if (
-              t > 0.25 &&
-              t <= 0.5 &&
-              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-              KILL_RADIUS
-            ) {
-              death("Voidbreaker");
-            }
-          }
-        }
-
-        if (state.timer >= 2 * voidbreakerCount + 0.5) {
-          state.sword.active = false;
-          state.phase = "ending";
-          state.timer = 0;
-        }
-        return;
-      }
-
-      if (state.phase === "ending") {
-        if (state.timer > 0.5) {
-          state.opacity = 1 - (state.timer - 0.5) / 0.5;
-        }
-
-        if (state.timer >= 1) {
-          resetIdle();
-        }
-      }
-    }
-
-    function draw(ctx) {
-      if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-
-      ctx.save();
-
-      if (state.phase !== "idle") {
-        ctx.globalAlpha = state.opacity;
-        ctx.drawImage(
-          enemy,
-          Math.round(mouse.x - 50),
-          Math.round(mouse.y + HOVER_Y - 50),
-          100,
-          100,
-        );
-      }
-
-      if (state.sword.active) {
-        ctx.globalAlpha = state.sword.opacity;
-
-        ctx.save();
-        ctx.translate(Math.round(state.sword.x), Math.round(state.sword.y));
-        ctx.rotate(state.sword.angle + 0.25 * Math.PI);
-        const swordSize = Math.round(SWORD_SIZE);
-        ctx.drawImage(
-          sword,
-          Math.round(-swordSize / 2),
-          Math.round(-swordSize / 2),
-          swordSize,
-          swordSize,
-        );
-        ctx.restore();
-
-        if (state.sword.flash > 0) {
-          ctx.save();
-          ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
-          ctx.rotate(state.sword.angle + 0.25 * Math.PI);
-
-          const a = 0.5 * state.sword.flash;
-          ctx.globalAlpha = a;
-          ctx.fillStyle = "#b300ff";
-
-          const rOuter = Math.round(FLASH_OUTER);
-          const rInner = Math.round(FLASH_INNER);
-
-          ctx.beginPath();
-          ctx.moveTo(0, -rOuter);
-          ctx.lineTo(rInner, -rInner);
-          ctx.lineTo(rOuter, 0);
-          ctx.lineTo(rInner, rInner);
-          ctx.lineTo(0, rOuter);
-          ctx.lineTo(-rInner, rInner);
-          ctx.lineTo(-rOuter, 0);
-          ctx.lineTo(-rInner, -rInner);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.restore();
-        }
-      }
-      if (state.sword2.active) {
-        ctx.globalAlpha = state.sword2.opacity;
-        ctx.save();
-        ctx.translate(Math.round(state.sword2.x), Math.round(state.sword2.y));
-        ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
-        ctx.drawImage(
-          sword,
-          Math.round(-SWORD_SIZE / 2),
-          Math.round(-SWORD_SIZE / 2),
-          SWORD_SIZE,
-          SWORD_SIZE,
-        );
-        ctx.restore();
-
-        if (state.sword2.flash > 0) {
-          ctx.save();
-          ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
-          ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
-          ctx.globalAlpha = 0.5 * state.sword2.flash;
-          ctx.fillStyle = "#b300ff";
-
-          ctx.beginPath();
-          ctx.moveTo(0, -FLASH_OUTER);
-          ctx.lineTo(FLASH_INNER, -FLASH_INNER);
-          ctx.lineTo(FLASH_OUTER, 0);
-          ctx.lineTo(FLASH_INNER, FLASH_INNER);
-          ctx.lineTo(0, FLASH_OUTER);
-          ctx.lineTo(-FLASH_INNER, FLASH_INNER);
-          ctx.lineTo(-FLASH_OUTER, 0);
-          ctx.lineTo(-FLASH_INNER, -FLASH_INNER);
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      ctx.restore();
-    }
-
-    const unregister = host.register({ update, draw });
-    return unregister;
-  } else {
-    const state = {
-      phase: "idle",
-      timer: 0,
-
-      lastAttackId: -1,
-      triggered: false,
-
-      sword: {
-        x: 0,
-        y: 0,
-        dx: 0,
-        dy: 0,
-        angle: 0,
-        opacity: 0,
-        lockX: 0,
-        lockY: 0,
-      },
-      sword2: {
-        active: false,
-        x: 0,
-        y: 0,
-        dx: 0,
-        dy: 0,
-        opacity: 1,
-        lockX: 0,
-        lockY: 0,
-        angle: 0,
-      },
-
-      flash: 0,
-      flashX: 0,
-      flashY: 0,
-      flash2: 0,
-      flashX2: 0,
-      flashY2: 0,
-    };
-
-    const DASH_DIST = 500;
-    const SWORD_SIZE = 50;
-    const KILL_RADIUS = 20;
-
-    const DIRECTIONS = [
-      [1, 0],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1],
-      [1, -1],
-    ];
-
-    function tryTrigger() {
-      const v = voidbreakerActive;
-      if (!v) return;
-
-      if (state.lastAttackId === v.id) return;
-
-      const slotIndex = stack;
-      const slotTime = slotIndex * 2;
-      const elapsed = (performance.now() - v.start) / 1000;
-
-      if (elapsed >= slotTime && elapsed < slotTime + 2 && !state.triggered) {
-        state.triggered = true;
-        state.lastAttackId = v.id;
-        beginSlash();
-      }
-    }
-
-    function beginSlash() {
-      const dir = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
-
-      state.sword.dx = dir[0];
-      state.sword.dy = dir[1];
-      state.sword.angle = Math.atan2(dir[1], dir[0]);
-
-      state.sword.opacity = 1;
-
-      if (hardMode) {
-        let dir2;
-        do {
-          dir2 = DIRECTIONS[(Math.random() * DIRECTIONS.length) | 0];
-        } while (dir2[0] === dir[0] && dir2[1] === dir[1]);
-
-        state.sword2.active = true;
-        state.sword2.opacity = 1;
-        state.sword2.dx = dir2[0];
-        state.sword2.dy = dir2[1];
-        state.sword2.angle = Math.atan2(dir2[1], dir2[0]);
-      } else {
-        state.sword2.active = false;
-      }
-
-      state.phase = "attack";
-      playSound(
-        "./ASSET/Sound/Enemies/Voidbreaker/VoidBreaker_-_SwordReadyV2.ogg",
-      );
-      state.timer = 0;
-    }
-
-    function update(dt) {
-      if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-
-      tryTrigger();
-
-      if (state.phase === "idle") return;
-
-      state.timer += dt;
-
-      if (state.phase === "attack") {
-        if (state.timer <= 1.5) {
-          state.sword.x = mouse.x + state.sword.dx * 120;
-          state.sword.y = mouse.y + state.sword.dy * 120;
+        if (timerHard <= 1.75) {
+          state.swordHard2.opacity = Math.min(1, timerHard * 4);
+          state.swordHard2.x = mouse.x + state.swordHard2.dx * 100;
+          state.swordHard2.y = mouse.y + state.swordHard2.dy * 100;
         } else {
-          if (state.timer - dt <= 1.5) {
-            state.sword.lockX = state.sword.x;
-            state.sword.lockY = state.sword.y;
-
-            state.flash = 1;
-            state.flashX = state.sword.x;
-            state.flashY = state.sword.y;
+          if (timerHard - dt <= 1.75) {
+            state.swordHard2.lockX = state.swordHard2.x;
+            state.swordHard2.lockY = state.swordHard2.y;
+            state.swordHard2.flashHard = 1;
+            state.flashHardX2 = state.swordHard2.x;
+            state.flashHardY2 = state.swordHard2.y;
           }
-
-          state.flash = Math.max(0, state.flash - dt);
-
-          const t = state.timer - 1.5;
+          const t = timerHard - 1.75;
           const k = Math.min(1, t);
-
-          state.sword.x = state.sword.lockX - state.sword.dx * DASH_DIST * k;
-          state.sword.y = state.sword.lockY - state.sword.dy * DASH_DIST * k;
-
-          state.sword.opacity = 1 - k;
+          const baseX2 =
+            state.swordHard2.lockX - state.swordHard2.dx * DASH_DIST * k;
+          const baseY2 =
+            state.swordHard2.lockY - state.swordHard2.dy * DASH_DIST * k;
+          const followStrength = 0.25;
+          state.swordHard2.x = baseX2 + (mouse.x - baseX2) * followStrength;
+          state.swordHard2.y = baseY2 + (mouse.y - baseY2) * followStrength;
+          state.swordHard2.flashHard = Math.max(
+            0,
+            state.swordHard2.flashHard - dt,
+          );
+          state.swordHard2.opacity = 1 - k;
 
           const FLASH_FOLLOW = 0.5;
-          state.flashX += (state.sword.x - state.flashX) * FLASH_FOLLOW * dt;
-          state.flashY += (state.sword.y - state.flashY) * FLASH_FOLLOW * dt;
+          state.flashHardX2 +=
+            (state.swordHard2.x - state.flashHardX2) * FLASH_FOLLOW * dt;
+          state.flashHardY2 +=
+            (state.swordHard2.y - state.flashHardY2) * FLASH_FOLLOW * dt;
 
-          const vx = mouse.x - state.sword.lockX;
-          const vy = mouse.y - state.sword.lockY;
-          const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
-
-          if (t > 0.25 && t <= 0.5 && perp <= KILL_RADIUS) {
+          const vx = mouse.x - state.swordHard2.lockX;
+          const vy = mouse.y - state.swordHard2.lockY;
+          if (
+            t > 0.25 &&
+            t <= 0.5 &&
+            Math.abs(vx * state.swordHard2.dy - vy * state.swordHard2.dx) <=
+              KILL_RADIUS
+          ) {
             death("Voidbreaker");
           }
         }
-
-        if (hardMode && state.sword2.active) {
-          if (state.timer <= 1.5) {
-            state.sword2.x = mouse.x + state.sword2.dx * 120;
-            state.sword2.y = mouse.y + state.sword2.dy * 120;
-          } else {
-            if (state.timer - dt <= 1.5) {
-              state.sword2.lockX = state.sword2.x;
-              state.sword2.lockY = state.sword2.y;
-              state.flash2 = 1;
-              state.flashX2 = state.sword2.x;
-              state.flashY2 = state.sword2.y;
-            }
-            const t = state.timer - 1.5;
-            const k = Math.min(1, t);
-            state.sword2.x =
-              state.sword2.lockX - state.sword2.dx * DASH_DIST * k;
-            state.sword2.y =
-              state.sword2.lockY - state.sword2.dy * DASH_DIST * k;
-            state.flash2 = Math.max(0, state.flash2 - dt);
-            state.sword2.opacity = 1 - k;
-
-            const FLASH_FOLLOW = 0.5;
-            state.flashX2 +=
-              (state.sword2.x - state.flashX2) * FLASH_FOLLOW * dt;
-            state.flashY2 +=
-              (state.sword2.y - state.flashY2) * FLASH_FOLLOW * dt;
-
-            const vx = mouse.x - state.sword2.lockX;
-            const vy = mouse.y - state.sword2.lockY;
-            if (
-              t > 0.25 &&
-              t <= 0.5 &&
-              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-              KILL_RADIUS
-            ) {
-              death("Voidbreaker");
-            }
-          }
-        }
-
-        if (state.timer >= 2.5) {
-          state.phase = "idle";
-          state.timer = 0;
-          state.triggered = false;
-        }
       }
+
+      if (state.timer >= (hardMode ? 4.5 : 2.75)) {
+        state.sword.active = false;
+        state.sword2.active = false;
+        state.swordHard.active = false;
+        state.swordHard2.active = false;
+        state.phase = "ending";
+        state.timer = 0;
+        playSound(
+          `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Despawn.ogg`,
+        );
+      }
+      return;
     }
 
-    function draw(ctx) {
-      if (state.phase === "idle") return;
+    if (state.phase === "ending") {
+      state.opacity = 1 - state.timer / 0.5;
+
+      if (state.timer >= 0.5) {
+        resetIdle();
+      }
+    }
+  }
+
+  function draw(ctx) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    ctx.save();
+
+    if (state.phase !== "idle") {
+      ctx.globalAlpha = state.opacity;
+
+      const cx = Math.round(mouse.x);
+      const cy = Math.round(mouse.y + HOVER_Y);
+
+      const t = performance.now() * 0.001;
 
       ctx.save();
+      ctx.translate(cx, cy);
+      ctx.globalAlpha *= 0.25;
+      ctx.strokeStyle = "#b300ff";
+      ctx.lineWidth = 3;
 
+      ctx.beginPath();
+      ctx.arc(0, 0, 45, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 50, 0, Math.PI * 2);
+      ctx.stroke();
+
+      function drawHex(radius) {
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const ang = (i / 4) * Math.PI * 2;
+          const x = Math.cos(ang) * radius;
+          const y = Math.sin(ang) * radius;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      }
+      ctx.save();
+      ctx.rotate(t);
+      drawHex(40);
+      ctx.restore();
+      ctx.save();
+      ctx.rotate(t + Math.PI / 4);
+      drawHex(40);
+      ctx.restore();
+
+      ctx.restore();
+
+      ctx.drawImage(
+        enemy,
+        Math.round(mouse.x - 50),
+        Math.round(mouse.y + HOVER_Y - 50),
+        100,
+        100,
+      );
+    }
+
+    if (state.sword.active) {
       ctx.globalAlpha = state.sword.opacity;
+
+      if (state.sword.flash > 0) {
+        ctx.save();
+        ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
+        ctx.rotate(state.sword.angle + Math.PI);
+        ctx.globalAlpha = 0.5 * state.sword.flash;
+        const count = 12;
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 20;
+
+          const px = Math.cos(ang) * dist;
+          const py = Math.sin(ang) * dist;
+
+          const size = 4 + Math.random() * 8;
+
+          ctx.save();
+          ctx.translate(px, py);
+
+          ctx.globalAlpha = state.sword.flash * (0.3 + Math.random() * 0.7);
+          const fadeT = Math.min(1, (1 - state.sword.flash) / 0.25);
+          const fade = 1 - fadeT;
+          ctx.fillStyle = `rgb(${128 * fade * 0.5}, 0, ${128 * fade})`;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      ctx.save();
       ctx.translate(Math.round(state.sword.x), Math.round(state.sword.y));
-      ctx.rotate(state.sword.angle + 0.25 * Math.PI);
+      ctx.rotate(state.sword.angle + Math.PI);
       const swordSize = Math.round(SWORD_SIZE);
+      if (state.phase === "attack" && state.timer <= 0.25) {
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 80, 40, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
       ctx.drawImage(
         sword,
         Math.round(-swordSize / 2),
@@ -544,74 +550,195 @@ export function setup(host, stack, hardMode) {
         swordSize,
       );
       ctx.restore();
+    }
+    if (state.sword2.active) {
+      ctx.globalAlpha = state.sword2.opacity;
 
-      if (state.flash > 0) {
+      if (state.sword2.flash > 0) {
         ctx.save();
-        ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
-        ctx.rotate(state.sword.angle + 0.25 * Math.PI);
+        ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
+        ctx.rotate(state.sword2.angle + Math.PI);
+        ctx.globalAlpha = 0.5 * state.sword2.flash;
+        const count = 12;
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 20;
 
-        const a = 0.5 * state.flash;
-        ctx.globalAlpha = a;
-        ctx.fillStyle = "#b300ff";
+          const px = Math.cos(ang) * dist;
+          const py = Math.sin(ang) * dist;
 
-        const rOuter = Math.round(27);
-        const rInner = Math.round(6);
+          const size = 4 + Math.random() * 8;
 
-        ctx.beginPath();
-        ctx.moveTo(0, -rOuter);
-        ctx.lineTo(rInner, -rInner);
-        ctx.lineTo(rOuter, 0);
-        ctx.lineTo(rInner, rInner);
-        ctx.lineTo(0, rOuter);
-        ctx.lineTo(-rInner, rInner);
-        ctx.lineTo(-rOuter, 0);
-        ctx.lineTo(-rInner, -rInner);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      if (state.sword2.active) {
-        ctx.globalAlpha = state.sword2.opacity;
-        ctx.save();
-        ctx.translate(Math.round(state.sword2.x), Math.round(state.sword2.y));
-        ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
-        ctx.drawImage(
-          sword,
-          Math.round(-SWORD_SIZE / 2),
-          Math.round(-SWORD_SIZE / 2),
-          SWORD_SIZE,
-          SWORD_SIZE,
-        );
-        ctx.restore();
-
-        if (state.flash2 > 0) {
           ctx.save();
-          ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
-          ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
-          ctx.globalAlpha = 0.5 * state.flash2;
-          ctx.fillStyle = "#b300ff";
+          ctx.translate(px, py);
 
-          const rOuter = Math.round(27);
-          const rInner = Math.round(6);
+          ctx.globalAlpha = state.sword2.flash * (0.3 + Math.random() * 0.7);
+          const fadeT = Math.min(1, (1 - state.sword2.flash) / 0.25);
+          const fade = 1 - fadeT;
+          ctx.fillStyle = `rgb(${128 * fade * 0.5}, 0, ${128 * fade})`;
 
           ctx.beginPath();
-          ctx.moveTo(0, -rOuter);
-          ctx.lineTo(rInner, -rInner);
-          ctx.lineTo(rOuter, 0);
-          ctx.lineTo(rInner, rInner);
-          ctx.lineTo(0, rOuter);
-          ctx.lineTo(-rInner, rInner);
-          ctx.lineTo(-rOuter, 0);
-          ctx.lineTo(-rInner, -rInner);
-          ctx.closePath();
+          ctx.arc(0, 0, size, 0, Math.PI * 2);
           ctx.fill();
+
           ctx.restore();
         }
+        ctx.restore();
       }
+
+      ctx.save();
+      ctx.translate(Math.round(state.sword2.x), Math.round(state.sword2.y));
+      ctx.rotate(state.sword2.angle + Math.PI);
+      if (state.phase === "attack" && state.timer <= 0.25) {
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 80, 40, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.drawImage(
+        sword,
+        Math.round(-SWORD_SIZE / 2),
+        Math.round(-SWORD_SIZE / 2),
+        SWORD_SIZE,
+        SWORD_SIZE,
+      );
+      ctx.restore();
+    }
+    if (state.swordHard.active) {
+      ctx.globalAlpha = state.swordHard.opacity;
+
+      if (state.swordHard.flashHard > 0) {
+        ctx.save();
+        ctx.translate(
+          Math.round(state.flashHardX),
+          Math.round(state.flashHardY),
+        );
+        ctx.rotate(state.swordHard.angle + Math.PI);
+        ctx.globalAlpha = 0.5 * state.swordHard.flashHard;
+        const count = 12;
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 20;
+
+          const px = Math.cos(ang) * dist;
+          const py = Math.sin(ang) * dist;
+
+          const size = 4 + Math.random() * 8;
+
+          ctx.save();
+          ctx.translate(px, py);
+
+          ctx.globalAlpha =
+            state.swordHard.flashHard * (0.3 + Math.random() * 0.7);
+          const fadeT = Math.min(1, (1 - state.swordHard.flashHard) / 0.25);
+          const fade = 1 - fadeT;
+          ctx.fillStyle = `rgb(${128 * fade * 0.5}, 0, ${128 * fade})`;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.translate(
+        Math.round(state.swordHard.x),
+        Math.round(state.swordHard.y),
+      );
+      ctx.rotate(state.swordHard.angle + Math.PI);
+      const swordHardSize = Math.round(SWORD_SIZE);
+      if (state.phase === "attack" && state.timer <= 1.75) {
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 80, 40, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.drawImage(
+        sword,
+        Math.round(-swordHardSize / 2),
+        Math.round(-swordHardSize / 2),
+        swordHardSize,
+        swordHardSize,
+      );
+      ctx.restore();
+    }
+    if (state.swordHard2.active) {
+      ctx.globalAlpha = state.swordHard2.opacity;
+
+      if (state.swordHard2.flashHard > 0) {
+        ctx.save();
+        ctx.translate(
+          Math.round(state.flashHardX2),
+          Math.round(state.flashHardY2),
+        );
+        ctx.rotate(state.swordHard2.angle + Math.PI);
+        ctx.globalAlpha = 0.5 * state.swordHard2.flashHard;
+        const count = 12;
+        for (let i = 0; i < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 20;
+
+          const px = Math.cos(ang) * dist;
+          const py = Math.sin(ang) * dist;
+
+          const size = 4 + Math.random() * 8;
+
+          ctx.save();
+          ctx.translate(px, py);
+
+          ctx.globalAlpha =
+            state.swordHard2.flashHard * (0.3 + Math.random() * 0.7);
+          const fadeT = Math.min(1, (1 - state.swordHard2.flashHard) / 0.25);
+          const fade = 1 - fadeT;
+          ctx.fillStyle = `rgb(${128 * fade * 0.5}, 0, ${128 * fade})`;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.translate(
+        Math.round(state.swordHard2.x),
+        Math.round(state.swordHard2.y),
+      );
+      ctx.rotate(state.swordHard2.angle + Math.PI);
+      if (state.phase === "attack" && state.timer <= 1.75) {
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 80, 40, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.drawImage(
+        sword,
+        Math.round(-SWORD_SIZE / 2),
+        Math.round(-SWORD_SIZE / 2),
+        SWORD_SIZE,
+        SWORD_SIZE,
+      );
+      ctx.restore();
     }
 
-    return host.register({ update, draw });
+    ctx.restore();
   }
+
+  const unregister = host.register({ update, draw });
+  return unregister;
 }

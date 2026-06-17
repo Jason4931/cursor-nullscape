@@ -193,8 +193,6 @@ let parried = false;
 let soundParry = false;
 export let beaconed = false;
 export let despawnCatalyst = false;
-export let voidbreakerCount = 0;
-export let voidbreakerActive;
 export let bellHit = { count: 0 };
 let martStack = [];
 export function MartStack(act, v) {
@@ -203,9 +201,6 @@ export function MartStack(act, v) {
   } else if (act == "set") {
     martStack = v;
   }
-}
-export function setVoidbreakerActive(v) {
-  voidbreakerActive = v;
 }
 export function setSorrowActive(v) {
   sorrowActive = v;
@@ -241,7 +236,7 @@ const ENTITY_POOL = [
     spawn: () => spawnMart(entityHost, hardMode, 1),
     start: 0,
     src: "./ASSET/Enemies/Mart.png",
-    desc: "I am Mart! The waterimp!",
+    desc: "I am Mart. The waterimp!",
   },
   {
     name: "Baby",
@@ -306,7 +301,7 @@ const ENTITY_POOL = [
     spawn: () => spawnTelefragger(entityHost, casualMode, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
-    desc: "Teleports infront of you.",
+    desc: "Teleports in front of you.",
   },
   {
     name: "Random",
@@ -382,10 +377,10 @@ const ENTITY_POOL = [
   },
   {
     name: "Voidbreaker",
-    spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode),
+    spawn: () => spawnVoidbreaker(entityHost, casualMode, hardMode),
     start: 1500,
-    src: "./ASSET/Enemies/Voidbreaker.png",
-    desc: "Steer clear of his blades direction, his accuracy cannot be underestimated.",
+    src: "./ASSET/Enemies/VoidbreakerIcon.png",
+    desc: "Materializes swords around you, firing them shortly after.",
   },
   {
     name: "Cadence",
@@ -967,7 +962,7 @@ topLeftInput.addEventListener("input", () => {
     spawnVoidboundBaby(entityHost, hardMode);
     spawnPonderer(entityHost, hardMode);
     spawnVoidboundGuardian(entityHost, hardMode);
-    spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
+    spawnVoidbreaker(entityHost, casualMode, hardMode);
     spawnCadence(entityHost, hardMode, deafMode);
     spawnSigil(entityHost);
     spawnScrapmaw(entityHost, casualMode, hardMode);
@@ -995,7 +990,7 @@ topLeftInput.addEventListener("input", () => {
       "VoidboundGuardian",
       "./ASSET/Enemies/VoidboundGuardian.png",
     );
-    registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
+    registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/VoidbreakerIcon.png");
     registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
     registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
     registerEntitySpawn("Scrapmaw", "./ASSET/Enemies/ScrapmawIcon.png");
