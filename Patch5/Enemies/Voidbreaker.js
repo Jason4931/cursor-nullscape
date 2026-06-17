@@ -8,7 +8,18 @@ const sword = new Image();
 sword.src = "./ASSET/Misc/Sword.png";
 
 let voidbreakerActive = false;
+let voidbreakerCount = 0;
 export function setup(host, casualMode, hardMode) {
+  voidbreakerCount++;
+  if (voidbreakerActive) {
+    const unregister = host.register({
+      update: () => {},
+      draw: () => {},
+    });
+    return unregister;
+  } else {
+    voidbreakerActive = true;
+  }
   const state = {
     phase: "idle",
     timer: 0,
@@ -89,12 +100,9 @@ export function setup(host, casualMode, hardMode) {
   function resetIdle() {
     state.phase = "idle";
     state.timer = 0;
-    state.delay = 9 + Math.random();
+    state.delay = (9 + Math.random()) / voidbreakerCount;
     state.opacity = 0;
     state.sword.active = false;
-    setTimeout(() => {
-      voidbreakerActive = false;
-    }, 1000);
   }
 
   resetIdle();
@@ -105,14 +113,13 @@ export function setup(host, casualMode, hardMode) {
     state.timer += dt;
 
     if (state.phase === "idle") {
-      if (state.timer >= state.delay && !voidbreakerActive) {
+      if (state.timer >= state.delay) {
         state.phase = "warning";
         playSound(
           "./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Spawn.ogg",
         );
         state.timer = 0;
         state.opacity = 0;
-        voidbreakerActive = true;
       }
       return;
     }
