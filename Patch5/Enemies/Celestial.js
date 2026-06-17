@@ -411,7 +411,7 @@ export function setup(host, hardMode) {
       opacity: 0,
     };
   }
-  function spawnCircle(targetR = 150, maxdist = 1000) {
+  function spawnCircle(targetR = 1, maxdist = 1000) {
     const angle = Math.random() * Math.PI * 2;
     const dist = Math.random() * maxdist;
 
@@ -429,7 +429,7 @@ export function setup(host, hardMode) {
 
       t: 0,
       r: 0,
-      targetR: targetR,
+      targetR: (hardMode ? 200 : 150) / targetR,
       active: true,
     };
   }
@@ -583,13 +583,22 @@ export function setup(host, hardMode) {
     if (stateSlash.timer === 0) {
       if (cycle === 3) {
         const base = Math.random() * Math.PI * 2;
-        const spread = Math.PI / 6;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
         stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
-        stateSlash.beams.push(spawnBeam(px, py, base - spread, 1.5));
         stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
       } else if (cycle < 3) {
-        stateSlash.beams.push(spawnBeam(px, py, undefined, 1));
+        if (!hardMode) {
+          stateSlash.beams.push(spawnBeam(px, py, undefined, 1));
+        } else {
+          const base = Math.random() * Math.PI * 2;
+          const spread = Math.PI / 12 + (Math.PI / 1.2) * Math.random();
+
+          stateSlash.beams.push(spawnBeam(px, py, base));
+          stateSlash.beams.push(spawnBeam(px, py, base + spread));
+        }
       }
     }
 
@@ -957,8 +966,8 @@ export function setup(host, hardMode) {
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < 8; i++) {
-          const angle = s.angle + i * (Math.PI / 4);
+        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -1001,15 +1010,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1042,7 +1051,7 @@ export function setup(host, hardMode) {
           ctx.stroke();
 
           ctx.strokeStyle = "transparent";
-        } else if (i < 4) {
+        } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -1069,15 +1078,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1126,7 +1135,7 @@ export function setup(host, hardMode) {
     if (!statePizzaCutterCrumble.spawned) {
       statePizzaCutterCrumble.spokes.push(spawnPizza(statePizzaCutterCrumble));
       for (let i = 0; i < 300; i++) {
-        statePizzaCutterCrumble.circles.push(spawnCircle(75));
+        statePizzaCutterCrumble.circles.push(spawnCircle(2));
       }
       statePizzaCutterCrumble.spawned = true;
     }
@@ -1145,8 +1154,8 @@ export function setup(host, hardMode) {
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < 8; i++) {
-          const angle = s.angle + i * (Math.PI / 4);
+        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -1226,15 +1235,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1267,7 +1276,7 @@ export function setup(host, hardMode) {
           ctx.stroke();
 
           ctx.strokeStyle = "transparent";
-        } else if (i < 4) {
+        } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutterCrumble.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -1326,15 +1335,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1728,7 +1737,7 @@ export function setup(host, hardMode) {
   function enterCrumble() {
     enterOrbit();
     stateCrumble.circles = [];
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 400; i++) {
       stateCrumble.circles.push(spawnCircle());
     }
 
@@ -1882,7 +1891,7 @@ export function setup(host, hardMode) {
     }
 
     if (!s.spawned) {
-      const counts = [4, 5, 6];
+      const counts = hardMode ? [6, 7, 8] : [4, 5, 6];
       s.spokes.push(spawnBitter(counts[s.cycle]));
       s.spawned = true;
     }
@@ -2068,10 +2077,10 @@ export function setup(host, hardMode) {
     stateCease.timer += dt;
     stateCease.rapidTimer += dt;
 
-    const interval = 0.5 / 40;
+    const interval = 0.5 / (hardMode ? 60 : 40);
     while (
       stateCease.rapidTimer >= interval &&
-      stateCease.beams.length < 40 &&
+      stateCease.beams.length < (hardMode ? 60 : 40) &&
       stateCease.timer <= 1
     ) {
       stateCease.rapidTimer -= interval;
@@ -2338,7 +2347,7 @@ export function setup(host, hardMode) {
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: 625,
+    w: hardMode ? 800 : 625,
     active: false,
     particles: [],
     pTimer: 0,
@@ -2355,7 +2364,7 @@ export function setup(host, hardMode) {
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
-    s.w = 625;
+    s.w = hardMode ? 800 : 625;
     s.angle = 0;
 
     s.ex = mouse.x;
@@ -2423,16 +2432,38 @@ export function setup(host, hardMode) {
         const px = s.cx + bx * along + nx * spread;
         const py = s.cy + by * along + ny * spread;
 
-        s.particles.push({
-          x: px,
-          y: py,
-          vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          r: Math.random() * 40,
-          t: 0,
-          life: 0.25 + Math.random() * 0.25,
-          active: true,
-        });
+        if (s.t >= 5) {
+          s.particles.push({
+            x: px,
+            y: py,
+            vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            r: Math.random() * 40,
+            t: 0,
+            life: 0.25 + Math.random() * 0.25,
+            active: true,
+          });
+        }
+
+        if (s.t < 5 && Math.random() < 0.05) {
+          const innerSpread = (Math.random() - 0.5) * s.w * 0.8;
+
+          const px2 = s.cx + bx * along + nx * innerSpread;
+          const py2 = s.cy + by * along + ny * innerSpread;
+
+          const speed = 200 * (0.5 + Math.random() * 0.5);
+          s.particles.push({
+            x: px2,
+            y: py2,
+            vx: bx * speed,
+            vy: by * speed,
+            r: Math.random() * 40 + 40,
+            t: 0,
+            life: 0.5 + Math.random() * 0.5,
+            active: true,
+            ellipse: true,
+          });
+        }
       }
     }
 
@@ -2455,6 +2486,12 @@ export function setup(host, hardMode) {
     let needsCompact = false;
     for (const p of s.particles) {
       p.t += dt;
+
+      if (p.ellipse) {
+        const accel = 200 * dt;
+        p.vx += Math.cos(s.angle) * accel;
+        p.vy += Math.sin(s.angle) * accel;
+      }
 
       p.x += p.vx * dt;
       p.y += p.vy * dt;
@@ -2482,7 +2519,7 @@ export function setup(host, hardMode) {
     if (needsCompact) compact(s.particles);
 
     if (s.t >= 5 && s.t < 22) {
-      s.w = Math.random() * 50 + 575;
+      s.w = Math.random() * 50 + (hardMode ? 750 : 575);
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
@@ -2505,8 +2542,13 @@ export function setup(host, hardMode) {
         ctx.lineWidth = 18;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.stroke();
+        if (!p.ellipse) {
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+          ctx.stroke();
+        }
 
         ctx.restore();
       }
@@ -2697,9 +2739,49 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
         ctx.fillStyle = "black";
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
+        // if (s.t < 5 && p.ellipse) {
+        //   ctx.save();
+        //   ctx.globalAlpha = s.t < 0.25 ? s.t * 4 : 1;
+        //   const angle = s.angle;
+        //   const long = p.r * 0.5;
+        //   const short = p.r * 0.1;
+
+        //   ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+        //   ctx.strokeStyle = "magenta";
+        //   ctx.lineWidth = 1;
+        //   ctx.stroke();
+
+        //   ctx.fillStyle = "black";
+        //   ctx.fill();
+        //   ctx.restore();
+        // } else {
+        //   ctx.beginPath();
+        //   ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        //   ctx.fill();
+        // }
+        if (s.t < 5 && p.ellipse) {
+          ctx.save();
+          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+          const angle = s.angle;
+          const long = p.r * 0.5;
+          const short = p.r * 0.1;
+
+          ctx.beginPath();
+          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 9;
+          ctx.stroke();
+
+          ctx.fillStyle = "black";
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.restore();
       }
@@ -2926,7 +3008,7 @@ export function setup(host, hardMode) {
           if (i == 0) {
             for (let i = 0; i < 300; i++) {
               stateSuperPizzaCutter.crumbles.push(
-                spawnCircle(Math.random() < 0.5 ? 100 : 150, 2000),
+                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
               );
             }
           }
@@ -2947,8 +3029,8 @@ export function setup(host, hardMode) {
             const dx = mx - s.x;
             const dy = my - s.y;
 
-            for (let i = 0; i < 8; i++) {
-              const angle = s.angle + i * (Math.PI / 4);
+            for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+              const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
 
               const cos = Math.cos(-angle);
               const sin = Math.sin(-angle);
@@ -3112,15 +3194,19 @@ export function setup(host, hardMode) {
 
           const isLethal = sp.t >= 4;
 
-          for (let i = 0; i < 8; i++) {
-            ctx.rotate(Math.PI / 4);
+          for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+            ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
             const w = isLethal ? 90 : 100;
             const dx = mouse.x - sp.x;
             const dy = mouse.y - sp.y;
 
-            const cos = Math.cos(-(sp.angle + i * (Math.PI / 4)));
-            const sin = Math.sin(-(sp.angle + i * (Math.PI / 4)));
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+            );
 
             const rx = dx * cos - dy * sin;
             const x = rx - BEAM_RADIUS;
@@ -3163,7 +3249,7 @@ export function setup(host, hardMode) {
               ctx.stroke();
 
               ctx.strokeStyle = "transparent";
-            } else if (i < 4) {
+            } else if (i < (hardMode ? 5 : 4)) {
               ctx.globalAlpha =
                 sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
                   ? sp.t * 3
@@ -3283,15 +3369,19 @@ export function setup(host, hardMode) {
 
           const isLethal = sp.t >= 4;
 
-          for (let i = 0; i < 8; i++) {
-            ctx.rotate(Math.PI / 4);
+          for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+            ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
             const w = 90;
             const dx = mouse.x - sp.x;
             const dy = mouse.y - sp.y;
 
-            const cos = Math.cos(-(sp.angle + i * (Math.PI / 4)));
-            const sin = Math.sin(-(sp.angle + i * (Math.PI / 4)));
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+            );
 
             const rx = dx * cos - dy * sin;
             const x = rx - BEAM_RADIUS;
@@ -3401,7 +3491,7 @@ export function setup(host, hardMode) {
     }
 
     if (!s.spawned) {
-      const counts = [4, 5, 6];
+      const counts = hardMode ? [6, 7, 8] : [4, 5, 6];
       s.spokes.push(spawnBitter(counts[s.cycle], stateBitter3Stars));
       s.spawned = true;
     }
@@ -3730,7 +3820,7 @@ export function setup(host, hardMode) {
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: 625,
+    w: hardMode ? 800 : 625,
     active: false,
     particles: [],
     pTimer: 0,
@@ -3750,7 +3840,7 @@ export function setup(host, hardMode) {
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
     enterFixed(s.cx, s.cy);
-    s.w = 625;
+    s.w = hardMode ? 800 : 625;
     s.angle = 0;
 
     s.ex = mouse.x;
@@ -3821,16 +3911,38 @@ export function setup(host, hardMode) {
         const px = s.cx + bx * along + nx * spread;
         const py = s.cy + by * along + ny * spread;
 
-        s.particles.push({
-          x: px,
-          y: py,
-          vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          r: Math.random() * 40,
-          t: 0,
-          life: 0.25 + Math.random() * 0.25,
-          active: true,
-        });
+        if (s.t >= 5) {
+          s.particles.push({
+            x: px,
+            y: py,
+            vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            r: Math.random() * 40,
+            t: 0,
+            life: 0.25 + Math.random() * 0.25,
+            active: true,
+          });
+        }
+
+        if (s.t < 5 && Math.random() < 0.05) {
+          const innerSpread = (Math.random() - 0.5) * s.w * 0.8;
+
+          const px2 = s.cx + bx * along + nx * innerSpread;
+          const py2 = s.cy + by * along + ny * innerSpread;
+
+          const speed = 200 * (0.5 + Math.random() * 0.5);
+          s.particles.push({
+            x: px2,
+            y: py2,
+            vx: bx * speed,
+            vy: by * speed,
+            r: Math.random() * 40 + 40,
+            t: 0,
+            life: 0.5 + Math.random() * 0.5,
+            active: true,
+            ellipse: true,
+          });
+        }
       }
     }
 
@@ -3853,7 +3965,7 @@ export function setup(host, hardMode) {
     s.crumbleT += dt;
     if (s.t >= 6 && s.crumbleT >= 2 && s.t < 22) {
       for (let i = 0; i < 300; i++) {
-        s.circles.push(spawnCircle(75));
+        s.circles.push(spawnCircle(2));
       }
       s.crumbleT = 0;
     }
@@ -3861,6 +3973,12 @@ export function setup(host, hardMode) {
     let needsCompact = false;
     for (const p of s.particles) {
       p.t += dt;
+
+      if (p.ellipse) {
+        const accel = 200 * dt;
+        p.vx += Math.cos(s.angle) * accel;
+        p.vy += Math.sin(s.angle) * accel;
+      }
 
       p.x += p.vx * dt;
       p.y += p.vy * dt;
@@ -3888,7 +4006,7 @@ export function setup(host, hardMode) {
     if (needsCompact) compact(s.particles);
 
     if (s.t >= 5 && s.t < 22) {
-      s.w = Math.random() * 50 + 575;
+      s.w = Math.random() * 50 + (hardMode ? 750 : 575);
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
@@ -3952,8 +4070,13 @@ export function setup(host, hardMode) {
         ctx.lineWidth = 18;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.stroke();
+        if (!p.ellipse) {
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+          ctx.stroke();
+        }
 
         ctx.restore();
       }
@@ -4177,9 +4300,28 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
         ctx.fillStyle = "black";
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
+        if (s.t < 5 && p.ellipse) {
+          ctx.save();
+          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+          const angle = s.angle;
+          const long = p.r * 0.5;
+          const short = p.r * 0.1;
+
+          ctx.beginPath();
+          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 9;
+          ctx.stroke();
+
+          ctx.fillStyle = "black";
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.restore();
       }
@@ -4774,7 +4916,7 @@ export function setup(host, hardMode) {
     if (!stateFirstSilence.spawned) {
       stateFirstSilence.spokes.push(spawnPizza(stateFirstSilence));
       for (let i = 0; i < 300; i++) {
-        stateFirstSilence.circles.push(spawnCircle(75));
+        stateFirstSilence.circles.push(spawnCircle(2));
       }
       stateFirstSilence.spawned = true;
     }
@@ -4806,8 +4948,8 @@ export function setup(host, hardMode) {
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < 8; i++) {
-          const angle = s.angle + i * (Math.PI / 4);
+        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -4998,11 +5140,12 @@ export function setup(host, hardMode) {
       stateFirstSilence.beams.length == 0
     ) {
       const base = Math.random() * Math.PI * 2;
-      const spread = Math.PI / 6;
+      const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+      const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
       stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread, 1.5));
       stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
     }
 
     stateFirstSilence.timer += dt;
@@ -5060,15 +5203,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -5101,7 +5244,7 @@ export function setup(host, hardMode) {
           ctx.stroke();
 
           ctx.strokeStyle = "transparent";
-        } else if (i < 4) {
+        } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && stateFirstSilence.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -5310,15 +5453,15 @@ export function setup(host, hardMode) {
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
+      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
+        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / 4)));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / 4)));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -5497,7 +5640,7 @@ export function setup(host, hardMode) {
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: 417,
+    w: hardMode ? 500 : 417,
     active: false,
     particles: [],
     pTimer: 0,
@@ -5526,7 +5669,7 @@ export function setup(host, hardMode) {
     s.cx = mouse.x + Math.cos(ang) * 1000;
     s.cy = mouse.y + Math.sin(ang) * 1000;
     enterFixed(s.cx, s.cy);
-    s.w = 417;
+    s.w = hardMode ? 500 : 417;
     s.angle = 0;
     s.baseAngle = Math.random() * Math.PI * 2;
     s.dir = Math.random() < 0.5;
@@ -5565,9 +5708,19 @@ export function setup(host, hardMode) {
     s.ex += (mx - s.ex) * follow;
     s.ey += (my - s.ey) * follow;
 
-    const totalRotationTime = 9;
-    const rotSpeed = (Math.PI * 2) / totalRotationTime;
-    s.angle = s.baseAngle + rotSpeed * s.t * (s.dir ? 1 : -1);
+    const dirSign = s.dir ? 1 : -1;
+    if (s.t < 5) {
+      const rotSpeed = (Math.PI * 2) / 5;
+      s.angle = s.baseAngle + rotSpeed * s.t * dirSign;
+    } else {
+      const rotSpeed1 = (Math.PI * 2) / 5;
+      const rotSpeed2 = (Math.PI * 2) / 9;
+
+      const angleAt5 = s.baseAngle + rotSpeed1 * 5 * dirSign;
+      const t2 = s.t - 5;
+
+      s.angle = angleAt5 + rotSpeed2 * t2 * dirSign;
+    }
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -5602,16 +5755,38 @@ export function setup(host, hardMode) {
         const px = s.cx + bx * along + nx * spread;
         const py = s.cy + by * along + ny * spread;
 
-        s.particles.push({
-          x: px,
-          y: py,
-          vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
-          r: Math.random() * 40,
-          t: 0,
-          life: 0.25 + Math.random() * 0.25,
-          active: true,
-        });
+        if (s.t >= 5) {
+          s.particles.push({
+            x: px,
+            y: py,
+            vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            r: Math.random() * 40,
+            t: 0,
+            life: 0.25 + Math.random() * 0.25,
+            active: true,
+          });
+        }
+
+        if (s.t < 5 && Math.random() < 0.05) {
+          const innerSpread = (Math.random() - 0.5) * s.w * 0.8;
+
+          const px2 = s.cx + bx * along + nx * innerSpread;
+          const py2 = s.cy + by * along + ny * innerSpread;
+
+          const speed = 200 * (0.5 + Math.random() * 0.5);
+          s.particles.push({
+            x: px2,
+            y: py2,
+            vx: bx * speed,
+            vy: by * speed,
+            r: Math.random() * 40 + 40,
+            t: 0,
+            life: 0.5 + Math.random() * 0.5,
+            active: true,
+            ellipse: true,
+          });
+        }
       }
     }
 
@@ -5636,7 +5811,7 @@ export function setup(host, hardMode) {
     s.crumbleT += dt;
     if (s.t >= 6 && s.crumbleT >= 2 && s.t < 14) {
       for (let i = 0; i < 300; i++) {
-        s.circles.push(spawnCircle(75));
+        s.circles.push(spawnCircle(2));
       }
       s.crumbleT = 0;
     }
@@ -5644,6 +5819,12 @@ export function setup(host, hardMode) {
     let needsCompact = false;
     for (const p of s.particles) {
       p.t += dt;
+
+      if (p.ellipse) {
+        const accel = 200 * dt;
+        p.vx += Math.cos(s.angle) * accel;
+        p.vy += Math.sin(s.angle) * accel;
+      }
 
       p.x += p.vx * dt;
       p.y += p.vy * dt;
@@ -5671,7 +5852,7 @@ export function setup(host, hardMode) {
     if (needsCompact) compact(s.particles);
 
     if (s.t >= 5 && s.t < 14) {
-      s.w = Math.random() * 50 + 367;
+      s.w = Math.random() * 50 + (hardMode ? 450 : 367);
     }
     if (s.t >= 14) {
       s.w -= dt * 1000;
@@ -5727,11 +5908,12 @@ export function setup(host, hardMode) {
 
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
       const base = Math.random() * Math.PI * 2;
-      const spread = Math.PI / 6;
+      const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+      const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
       s.beams.push(spawnBeam(px, py, base, 1.5));
-      s.beams.push(spawnBeam(px, py, base - spread, 1.5));
       s.beams.push(spawnBeam(px, py, base + spread, 1.5));
+      s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
     }
 
     s.timer += dt;
@@ -5886,8 +6068,13 @@ export function setup(host, hardMode) {
         ctx.lineWidth = 18;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.stroke();
+        if (!p.ellipse) {
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+          ctx.stroke();
+        }
 
         ctx.restore();
       }
@@ -6271,9 +6458,28 @@ export function setup(host, hardMode) {
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
         ctx.fillStyle = "black";
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
+        if (s.t < 5 && p.ellipse) {
+          ctx.save();
+          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+          const angle = s.angle;
+          const long = p.r * 0.5;
+          const short = p.r * 0.1;
+
+          ctx.beginPath();
+          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 9;
+          ctx.stroke();
+
+          ctx.fillStyle = "black";
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.restore();
       }
@@ -6466,8 +6672,9 @@ export function setup(host, hardMode) {
     }
   }
 
-  function update(dt) {
+  function update(dtOrigin) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    const dt = dtOrigin * (hardMode ? 1.016949153 : 1);
     const mx = mouse.x;
     const my = mouse.y;
 

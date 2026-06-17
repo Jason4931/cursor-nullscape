@@ -59,6 +59,7 @@ import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
+import { setup as spawnTheWind } from "./Enemies/TheWind.js";
 
 window.__MODULE_FAILED__ = false;
 
@@ -436,6 +437,15 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Cascade.png",
     rare: true,
     desc: "Orbiting shards that summon homing cyan bullets and fast elliptical rams.",
+    chaosOnly: true,
+  },
+  {
+    name: "TheWind",
+    spawn: () => spawnTheWind(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/TheWind.png",
+    rare: true,
+    desc: "It was the wind.",
     chaosOnly: true,
   },
   {
