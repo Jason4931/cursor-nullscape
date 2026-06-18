@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { playSound } from "../main.js";
 
 export function setup(host) {
   const state = {
@@ -16,7 +17,7 @@ export function setup(host) {
   };
 
   const CIRCLE_COUNT = 6;
-  const BASE_RADIUS = 210;
+  const BASE_RADIUS = 260;
 
   function respawnCircles() {
     state.circles.length = 0;
@@ -29,6 +30,8 @@ export function setup(host) {
         y: mouse.y + Math.sin(a) * r,
       });
     }
+    playSound("./ASSET/Sound/Enemies/VoidImplosions/VoidImplosion_Spawn.ogg");
+    playSound("./ASSET/Sound/Enemies/VoidImplosions/VoidImplosion_Charge.ogg");
   }
 
   function checkDeathAtStrike() {
@@ -64,14 +67,14 @@ export function setup(host) {
     }
 
     if (state.phase === 0) {
-      const t = Math.min(state.time / 3, 1);
+      const t = Math.min(state.time / 2.75, 1);
       const ease = 1 - Math.pow(1 - t, 3);
       state.scale = ease;
 
-      if (state.time < 2) {
+      if (state.time < 1.75) {
         state.opacity = 0.25;
       } else {
-        const ot = Math.min((state.time - 2) / 1, 1);
+        const ot = Math.min((state.time - 1.75) / 1, 1);
         state.opacity = 0.25 + 0.25 * ot;
       }
 
@@ -80,6 +83,9 @@ export function setup(host) {
         state.time = 0;
         state.flashTime = 0;
         checkDeathAtStrike();
+        playSound(
+          "./ASSET/Sound/Enemies/VoidImplosions/VoidImplosion_Explode.ogg",
+        );
       }
     } else if (state.phase === 1) {
       const t = Math.min(state.time / 1, 1);
@@ -118,7 +124,7 @@ export function setup(host) {
         Math.round(r * 0.1),
         Math.round(c.x),
         Math.round(c.y),
-        r
+        r,
       );
       grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
       grad.addColorStop(1, "rgba(128, 0, 128, 1)");
@@ -143,7 +149,7 @@ export function setup(host) {
           Math.round(outlineR * 0.1),
           Math.round(c.x),
           Math.round(c.y),
-          outlineR
+          outlineR,
         );
         g.addColorStop(0.94, "rgba(255,255,255,0)");
         g.addColorStop(0.95, "rgba(255,255,255,0.5)");

@@ -24,7 +24,7 @@ vx voidbreaker
 x voidbound guardian
 vx scrapmaw
 v random
-x void implosion
+vx void implosion
 x oblivion
 x razorbloom
 x voidbound operator

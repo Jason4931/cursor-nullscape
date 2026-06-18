@@ -45,9 +45,9 @@ export function setup(host, hardMode) {
     state.dashTargetX = mouse.x + Math.cos(a) * r;
     state.dashTargetY = mouse.y + Math.sin(a) * r;
     let moveSound = [
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove1.ogg",
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove2.ogg",
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove3.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove1.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove2.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove3.ogg",
     ];
     playSound(moveSound[Math.floor(Math.random() * 3)]);
   }
@@ -116,7 +116,9 @@ export function setup(host, hardMode) {
         state.timer >= interval * state.shotsFired
       ) {
         firePellet();
-        playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
+        playSound(
+          "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianShoot.ogg",
+        );
         state.shotsFired++;
       }
 

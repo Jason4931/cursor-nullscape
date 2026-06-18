@@ -815,7 +815,7 @@ window.addEventListener("keydown", (e) => {
     } else if (e.key.toLowerCase() === "r") {
       abilityCooldown = 75;
       lastAbilityCooldown = 75;
-      speedBoostScale = 2;
+      speedBoostScale = 3;
       ability = true;
       setTimeout(() => {
         ability = false;
@@ -4164,7 +4164,7 @@ function loop(now) {
   if (parried && parry) {
     if (!soundParry) {
       soundParry = true;
-      speedBoostScale = 2;
+      speedBoostScale = 3;
       playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
       setTimeout(() => {
         parried = false;

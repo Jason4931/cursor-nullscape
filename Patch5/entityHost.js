@@ -243,7 +243,7 @@ const DEATH_MESSAGES = {
     "You fizzled out of existence.",
     "You couldn't stay in their reality.",
     "You imploded.",
-    "You have become null.",
+    "You have become... null. cue title card.",
   ],
   Sorrow: [
     "You lingered too long where you didn’t belong.",

@@ -396,9 +396,18 @@ export function setup(host, hardMode) {
   }
   function spawnImplosionCircle() {
     const angle = Math.random() * Math.PI * 2;
-
-    const x = mouse.x + Math.cos(angle) * 800;
-    const y = mouse.y + Math.sin(angle) * 800;
+    const x =
+      mouse.x +
+      Math.cos(angle) *
+        ((hardMode ? 0.5 : 0.667) +
+          Math.random() * (hardMode ? 0.667 : 0.333)) *
+        800;
+    const y =
+      mouse.y +
+      Math.sin(angle) *
+        ((hardMode ? 0.5 : 0.667) +
+          Math.random() * (hardMode ? 0.667 : 0.333)) *
+        800;
 
     return {
       x,
@@ -582,13 +591,25 @@ export function setup(host, hardMode) {
 
     if (stateSlash.timer === 0) {
       if (cycle === 3) {
-        const base = Math.random() * Math.PI * 2;
-        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        if (!hardMode) {
+          const base = Math.random() * Math.PI * 2;
+          const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+          const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
-        stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
-        stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        } else {
+          const base = Math.random() * Math.PI * 2;
+          const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+          const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+          const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+          stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+          stateSlash.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+        }
       } else if (cycle < 3) {
         if (!hardMode) {
           stateSlash.beams.push(spawnBeam(px, py, undefined, 1));
@@ -1445,7 +1466,7 @@ export function setup(host, hardMode) {
 
       const side = dx * px + dy * py;
       const forward = dx * vx + dy * vy;
-      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1);
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 2 : 1);
 
       sn.vx += px * side * TURN_STRENGTH * dt;
       sn.vy += py * side * TURN_STRENGTH * dt;
@@ -3472,7 +3493,7 @@ export function setup(host, hardMode) {
         t: 0,
         locked: false,
         angle: s.lastAng,
-        count: 6,
+        count: hardMode ? 8 : 6,
       });
       s.lastAng += Math.random() * 0.2 + 0.2;
       s.extraSpawned++;
@@ -4484,7 +4505,7 @@ export function setup(host, hardMode) {
 
           const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
 
-          const spread = (20 * Math.PI) / 180;
+          const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
           const offset = (index - 1.5) * spread;
 
@@ -5053,7 +5074,7 @@ export function setup(host, hardMode) {
 
           const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
 
-          const spread = (20 * Math.PI) / 180;
+          const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
           const index = stateFirstSilence.daggers.indexOf(d);
           const offset = (index - 1.5) * spread;
 
@@ -5139,13 +5160,25 @@ export function setup(host, hardMode) {
       stateFirstSilence.timer <= 5.5 &&
       stateFirstSilence.beams.length == 0
     ) {
-      const base = Math.random() * Math.PI * 2;
-      const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+      if (!hardMode) {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
-      stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+      } else {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+      }
     }
 
     stateFirstSilence.timer += dt;
@@ -5907,13 +5940,25 @@ export function setup(host, hardMode) {
     const py = my + mvy;
 
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
-      const base = Math.random() * Math.PI * 2;
-      const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+      if (!hardMode) {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.5));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.5));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        s.beams.push(spawnBeam(px, py, base, 1.5));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+      } else {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.5));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+      }
     }
 
     s.timer += dt;
@@ -6000,7 +6045,7 @@ export function setup(host, hardMode) {
 
       const side = dx * px + dy * py;
       const forward = dx * vx + dy * vy;
-      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1);
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 2 : 1);
 
       sn.vx += px * side * TURN_STRENGTH * dt;
       sn.vy += py * side * TURN_STRENGTH * dt;
