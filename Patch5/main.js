@@ -60,6 +60,7 @@ import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
 import { setup as spawnTheWind } from "./Enemies/TheWind.js";
+import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 
 window.__MODULE_FAILED__ = false;
 
@@ -82,7 +83,7 @@ const tempEntityCounts = new Map();
 
 const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
-const cheatDetector = false;
+const cheatDetector = true;
 
 /* ===== DIFFICULTY ===== */
 const beaten =
@@ -428,6 +429,14 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Baby.png",
     desc: "Big baby. Dashes in a straight line towards you.",
+    chaosOnly: true,
+  },
+  {
+    name: "TheEye",
+    spawn: () => spawnTheEye(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/TheEye.png",
+    desc: "Would you quit staring? it's rude.",
     chaosOnly: true,
   },
   {

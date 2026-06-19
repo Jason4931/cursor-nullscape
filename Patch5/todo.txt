@@ -37,7 +37,7 @@ vx quartz
 vx fear/visage
 x locust/belchboy
 vx big baby
-x the eye
+vx the eye
 x realmweaver - teleport across map periodically and move at slow speed (big)
 x moth (?) - taking gift near cursor to slow down collection
 x manta ray (?) - always circling the cursor at slow speed (average size)
