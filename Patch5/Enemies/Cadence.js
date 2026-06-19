@@ -131,13 +131,14 @@ export function setup(host, hardMode, deafMode) {
     }
 
     state.timer += dt;
-    if (state.instruments.length >= (hardMode ? 2 : 3)) {
+    if (
+      state.instruments.length >= 1 &&
+      (state.instruments.length == 1 ? !state.instruments[0].pickedUp : true)
+    ) {
       const target = getNearestInstrument();
-      if (target) {
-        const dx = target.x - mouse.x;
-        const dy = target.y - mouse.y;
-        state.arrowAngle = Math.atan2(dy, dx);
-      }
+      const dx = target.x - mouse.x;
+      const dy = target.y - mouse.y;
+      state.arrowAngle = Math.atan2(dy, dx);
     }
 
     for (let i = state.instruments.length - 1; i >= 0; i--) {
@@ -400,14 +401,17 @@ export function setup(host, hardMode, deafMode) {
       }
     }
 
-    if (state.instruments.length >= (hardMode ? 2 : 3) && deafMode) {
+    if (
+      state.instruments.length >= 1 &&
+      deafMode &&
+      (state.instruments.length == 1 ? !state.instruments[0].pickedUp : true)
+    ) {
       ctx.save();
       const ox = Math.round(mouse.x + Math.cos(state.arrowAngle) * 48);
       const oy = Math.round(mouse.y + Math.sin(state.arrowAngle) * 48);
-      const redness = Math.floor(Math.random() * 256);
       ctx.translate(ox, oy);
       ctx.rotate(state.arrowAngle);
-      ctx.fillStyle = `rgba(255,${redness},${redness},0.9)`;
+      ctx.fillStyle = `rgba(255,0,0,0.9)`;
       drawArrow(ctx);
       ctx.fill();
       ctx.restore();

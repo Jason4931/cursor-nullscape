@@ -23,7 +23,7 @@ export function setup(host) {
 
     stareTime: 0,
     stareLimit: 10,
-    respawnTime: 9 + Math.random(),
+    respawnTime: 14 + Math.random(),
     destroyed: false,
 
     frame: 0,
@@ -55,7 +55,7 @@ export function setup(host) {
 
       if (s.spawnTimer >= s.respawnTime) {
         s.spawnTimer = 0;
-        s.respawnTime = 9 + Math.random();
+        s.respawnTime = 14 + Math.random();
         spawn();
       }
 

@@ -1942,14 +1942,15 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
+    const connectors = [8, 9, 29];
 
     if (left) {
       const p = left.pattern;
       const pw = p[0].length;
       for (let y = 0; y < h; y++) {
         if (
-          (p[y]?.[pw - 1] === 9 || p[y]?.[pw - 1] === 29) &&
-          (pat[y][0] === 9 || pat[y][0] === 29)
+          connectors.includes(p[y]?.[pw - 1]) &&
+          connectors.includes(pat[y][0])
         )
           score++;
       }
@@ -1959,8 +1960,8 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
       const p = right.pattern;
       for (let y = 0; y < h; y++) {
         if (
-          (p[y]?.[0] === 9 || p[y]?.[0] === 29) &&
-          (pat[y][w - 1] === 9 || pat[y][w - 1] === 29)
+          connectors.includes(p[y]?.[0]) &&
+          connectors.includes(pat[y][w - 1])
         )
           score++;
       }
@@ -1970,10 +1971,9 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
       const p = top.pattern;
       const ph = p.length;
       for (let x = 0; x < w; x++) {
-        // if (p[ph - 1]?.[x] === 9 && pat[0][x] === 9) score++;
         if (
-          (p[ph - 1]?.[x] === 9 || p[ph - 1]?.[x] === 29) &&
-          (pat[0][x] === 9 || pat[0][x] === 29)
+          connectors.includes(p[ph - 1]?.[x]) &&
+          connectors.includes(pat[0][x])
         )
           score++;
       }
@@ -1983,8 +1983,8 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
       const p = bot.pattern;
       for (let x = 0; x < w; x++) {
         if (
-          (p[0]?.[x] === 9 || p[0]?.[x] === 29) &&
-          (pat[h - 1][x] === 9 || pat[h - 1][x] === 29)
+          connectors.includes(p[0]?.[x]) &&
+          connectors.includes(pat[h - 1][x])
         )
           score++;
       }
@@ -2592,6 +2592,7 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 4 ||
         pattern[y][x] === 5 ||
         pattern[y][x] === 6 ||
+        pattern[y][x] === 8 ||
         pattern[y][x] === 9 ||
         pattern[y][x] === 10 ||
         pattern[y][x] === 11 ||
@@ -2599,6 +2600,7 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 13 ||
         pattern[y][x] === 14 ||
         pattern[y][x] === 15 ||
+        pattern[y][x] === 16 ||
         pattern[y][x] === 21 ||
         pattern[y][x] === 22 ||
         pattern[y][x] === 25 ||
@@ -2614,7 +2616,8 @@ function placeSuper(sx, sy, pattern) {
           wood:
             pattern[y][x] === 11 ||
             pattern[y][x] === 12 ||
-            pattern[y][x] === 15,
+            pattern[y][x] === 15 ||
+            pattern[y][x] === 16,
           garden: pattern[y][x] === 13,
           wall: pattern[y][x] === 6,
           ice:
@@ -2626,17 +2629,18 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
               Math.min(
-                0.1,
-                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+                0.05,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.025),
               ) *
                 (pattern[y][x] === 13 ? 5 : 1),
             Math.random(),
             Math.random(),
             Math.random() <
               Math.min(
-                0.1,
-                Math.max(0.01, Number(graphicsSlider.value) * 0.05),
+                0.05,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.025),
               ),
+            Math.random() < 0.5,
           ],
         });
       }
@@ -2710,7 +2714,7 @@ function placeSuper(sx, sy, pattern) {
   for (let y = 0; y < pattern.length; y++) {
     for (let x = 0; x < pattern[0].length; x++) {
       const v = pattern[y][x];
-      if (v === 4 || v === 5 || v === 14 || v === 15 || v === 25) {
+      if (v === 4 || v === 5 || v === 14 || v === 15 || v === 16 || v === 25) {
         coords4or5.push({ x, y });
       }
     }
@@ -2932,6 +2936,139 @@ function drawGrid() {
       t.y > visibleY + visibleH
     )
       continue;
+
+    const cx = t.x + TILE / 2;
+    const cy = t.y + TILE / 2;
+
+    const dx = cx - mouse.x;
+    const dy = cy - mouse.y;
+    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+
+    let corrupted = false;
+    let blocked = false;
+
+    for (const z of cleanseZones) {
+      const zx = cx - z.x;
+      const zy = cy - z.y;
+      if (zx * zx + zy * zy < z.r * z.r) {
+        blocked = true;
+        break;
+      }
+    }
+
+    if (!blocked) {
+      for (const f of fleshPositions) {
+        const ddx = cx - f.x;
+        const ddy = cy - f.y;
+        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          corrupted = true;
+          break;
+        }
+      }
+    }
+
+    const left = floorSet.has(key(t.x - TILE, t.y));
+    const right = floorSet.has(key(t.x + TILE, t.y));
+    const up = floorSet.has(key(t.x, t.y - TILE));
+    const down = floorSet.has(key(t.x, t.y + TILE));
+    const isEdge = !left || !right || !up || !down;
+    if (!t.diorite && !t.wood && !t.ice && isEdge && t.deco[4]) {
+      ctx.save();
+
+      // center of tile (IMPORTANT)
+      ctx.translate(t.x + TILE / 2, t.y + TILE / 2);
+      ctx.scale(0.5, 0.5);
+
+      const half = TILE * 1.75;
+      const step = TILE * 0.8; // evenly spaced across edge
+
+      const placements = [];
+
+      // top edge (facing up)
+      for (let i = -1; i <= 1; i++) {
+        placements.push([
+          i * step,
+          -half + 10 * Math.abs(i),
+          -Math.PI / 2 + (i * Math.PI) / 6,
+        ]);
+      }
+
+      // bottom edge (facing down)
+      for (let i = -1; i <= 1; i++) {
+        placements.push([
+          i * step,
+          half - 10 * Math.abs(i),
+          Math.PI / 2 - (i * Math.PI) / 6,
+        ]);
+      }
+
+      // left edge (facing left)
+      for (let i = -1; i <= 1; i++) {
+        placements.push([
+          -half + 10 * Math.abs(i),
+          i * step,
+          Math.PI - (i * Math.PI) / 6,
+        ]);
+      }
+
+      // right edge (facing right)
+      for (let i = -1; i <= 1; i++) {
+        placements.push([
+          half - 10 * Math.abs(i),
+          i * step,
+          0 + (i * Math.PI) / 6,
+        ]);
+      }
+
+      for (const [ox, oy, rot] of placements) {
+        ctx.save();
+        ctx.translate(ox, oy);
+        ctx.rotate(rot + Math.PI / 2);
+
+        // leaf shape
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
+        ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
+        ctx.closePath();
+
+        ctx.fillStyle = "#900";
+        ctx.fill();
+
+        ctx.strokeStyle = "#700";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // center vein
+        ctx.beginPath();
+        ctx.moveTo(0, -20);
+        ctx.lineTo(0, 25);
+        ctx.stroke();
+
+        // side veins
+        let last = 0.5;
+        for (let i = -2; i <= 2; i++) {
+          ctx.beginPath();
+          ctx.moveTo(0, i * 8);
+          ctx.lineTo(last * 15, i * 8 + 5);
+          ctx.stroke();
+          last *= -1;
+        }
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+  }
+  for (const t of floorTiles) {
+    if (
+      t.x + TILE < visibleX ||
+      t.x > visibleX + visibleW ||
+      t.y + TILE < visibleY ||
+      t.y > visibleY + visibleH
+    )
+      continue;
     const cx = t.x + TILE / 2;
     const cy = t.y + TILE / 2;
 
@@ -3131,7 +3268,7 @@ function drawGrid() {
       const cy = t.y + TILE / 2;
       const s = TILE * 0.5;
 
-      const r = t.garden ? 0.7 : t.deco[3]; // stable random
+      const r = t.garden ? (t.deco[5] ? 0.6 : 0.8) : t.deco[3]; // stable random
 
       if (r < 0.2) {
         const drawVase = (ox, oy) => {
@@ -3245,7 +3382,7 @@ function drawGrid() {
         ctx.fill();
 
         const drawLeaves = (topY, w, y) => {
-          ctx.fillStyle = "#6a0f2a";
+          ctx.fillStyle = "#700";
           ctx.beginPath();
           ctx.moveTo(cx, topY);
           ctx.lineTo(cx - w, cy - y);
@@ -3253,7 +3390,7 @@ function drawGrid() {
           ctx.closePath();
           ctx.fill();
 
-          ctx.fillStyle = "#8a2f4a";
+          ctx.fillStyle = "#900";
           ctx.beginPath();
           ctx.moveTo(cx, topY);
           ctx.lineTo(cx + w, cy - y);
@@ -3272,7 +3409,7 @@ function drawGrid() {
         ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "#6a0f2a";
+        ctx.fillStyle = "#700";
 
         ctx.beginPath();
         ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
@@ -3286,7 +3423,15 @@ function drawGrid() {
         ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "#7a1f3a";
+        ctx.beginPath();
+        ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#900";
 
         ctx.beginPath();
         ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
@@ -3294,16 +3439,6 @@ function drawGrid() {
 
         ctx.beginPath();
         ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#6a0f2a";
-
-        ctx.beginPath();
-        ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
         ctx.fill();
       } else {
         ctx.fillStyle = "#774433";
