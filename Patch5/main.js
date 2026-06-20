@@ -168,6 +168,7 @@ let iceEffect = false;
 let lastTouchedIce;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
+let spawnedPylon = false;
 let spawnedCatalyst = false;
 let spawnedBeacon = false;
 let jumppadActive = false;
@@ -2312,6 +2313,10 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       spawnGrindrail(entityHost);
       spawnGrindrail(entityHost);
     }
+    if (actualCollectedCount >= 3500 && !spawnedPylon) {
+      spawnedPylon = true;
+      spawnPylons(entityHost);
+    }
     if (pick.unstackable) {
       spawnedUnstackables.add(pick.name);
     }
@@ -3775,6 +3780,10 @@ function updateCamera() {
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
 
+      if (actualCollectedCount >= 3500 && !spawnedPylon) {
+        spawnedPylon = true;
+        spawnPylons(entityHost);
+      }
       if (
         Math.floor(collectedCount / 100) >
           Math.floor(lastEntitySpawnAt / 100) ||
