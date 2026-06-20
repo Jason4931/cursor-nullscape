@@ -55,7 +55,7 @@ import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnCelestial } from "./Enemies/Celestial.js";
-import { setup as spawnPylons } from "./Enemies/Pylons.js";
+import { pylonLocations, setup as spawnPylons } from "./Enemies/Pylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
@@ -826,7 +826,7 @@ window.addEventListener("keydown", (e) => {
     } else if (e.key.toLowerCase() === "r") {
       abilityCooldown = 75;
       lastAbilityCooldown = 75;
-      speedBoostScale = 3;
+      speedBoostScale = 2;
       ability = true;
       setTimeout(() => {
         ability = false;
@@ -1711,6 +1711,16 @@ export function isCursorOnFloor(custom) {
         }
         return true;
       }
+    }
+  }
+  for (const py of pylonLocations) {
+    if (
+      mouse.x >= py[0] - (27 * TILE) / 2 &&
+      mouse.x < py[0] + (27 * TILE) / 2 &&
+      mouse.y >= py[1] - (27 * TILE) / 2 &&
+      mouse.y < py[1] + (27 * TILE) / 2
+    ) {
+      return true;
     }
   }
   return false;
@@ -4321,7 +4331,7 @@ function loop(now) {
   if (parried && parry) {
     if (!soundParry) {
       soundParry = true;
-      speedBoostScale = 3;
+      speedBoostScale = 2;
       playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
       setTimeout(() => {
         parried = false;

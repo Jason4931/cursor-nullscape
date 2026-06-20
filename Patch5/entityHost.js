@@ -58,8 +58,16 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
   function draw() {
     let beacon;
     for (const e of entities) {
+      if (e.name === "Pylons") {
+        e.draw?.(backctx);
+        break;
+      }
+    }
+    for (const e of entities) {
       if (e.name === "Beacon") {
         beacon = e; // store for later
+        continue;
+      } else if (e.name === "Pylons") {
         continue;
       }
       if (e.name === "Bell") {

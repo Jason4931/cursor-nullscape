@@ -109,8 +109,9 @@ const pattern = [
   ],
 ];
 export let pylonDone = 0;
+export let pylonLocations = [];
 import { death, mouse } from "../entityHost.js";
-import { TILE, canvas } from "../main.js";
+import { TILE, canvas, actualCollectedCount } from "../main.js";
 import {
   RealityCollapseCount,
   setup as spawnRealityCollapse,
@@ -122,14 +123,17 @@ export function setup(host) {
     generated: false,
     charging: false,
     realityCollapse: [null, null],
+    circleRadius: 0,
   };
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (actualCollectedCount >= 5000) return;
     const s = state;
 
     if (!s.generated) {
       s.generated = true;
+      s.circleRadius = 500;
 
       const margin = 1000;
       const minDist = 3000;
@@ -162,10 +166,15 @@ export function setup(host) {
               pTimer: 0,
               rotate: Math.PI * 2 * Math.random(),
             });
+            pylonLocations.push([x, y]);
             break;
           }
         }
       }
+    }
+    if (s.circleRadius > 0) {
+      s.circleRadius -= dt * 500;
+      if (s.circleRadius < 0) s.circleRadius = 0;
     }
 
     s.charging = false;
@@ -261,6 +270,7 @@ export function setup(host) {
           } else if (pylonDone == 5) {
             state.realityCollapse[0]();
             state.realityCollapse[1]();
+            s.circleRadius = 500;
           }
         }
       } else {
@@ -288,6 +298,7 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (actualCollectedCount >= 5000) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
@@ -298,175 +309,199 @@ export function setup(host) {
     const cols = pattern[0].length;
 
     for (const p of s.pylons) {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rotate);
-      ctx.translate(-p.x, -p.y);
-
-      const rows = pattern.length;
-      const cols = pattern[0].length;
-      const width = cols * TILE;
-      const height = rows * TILE;
       const cx = p.x;
       const cy = p.y;
-      const radius = Math.hypot(width, height) * 0.5;
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-      grad.addColorStop(0, "rgba(0,0,0,1)");
-      grad.addColorStop(0.75, "rgba(0,0,0,0.5)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fill();
+      if (pylonDone != 5) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotate);
+        ctx.translate(-p.x, -p.y);
 
-      const startX = p.x - (cols * TILE) / 2;
-      const startY = p.y - (rows * TILE) / 2;
+        const rows = pattern.length;
+        const cols = pattern[0].length;
+        const width = cols * TILE;
+        const height = rows * TILE;
+        const radius = Math.hypot(width, height) * 0.5;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        grad.addColorStop(0, "rgba(0,0,0,1)");
+        grad.addColorStop(0.75, "rgba(0,0,0,0.5)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
 
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const v = pattern[y][x];
-          if (v == 0 || v == 2 || v == 3) continue;
-          ctx.fillStyle = "#666";
-          ctx.fillRect(
-            startX + (x - 0.1) * TILE,
-            startY + (y - 0.1) * TILE,
-            TILE * 1.2,
-            TILE * 1.2,
-          );
-        }
-      }
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const v = pattern[y][x];
-          if (v === 0) continue;
+        const startX = p.x - (cols * TILE) / 2;
+        const startY = p.y - (rows * TILE) / 2;
 
-          let color = "#666";
-          if (v === 2) color = "#900";
-          else if (v === 3) color = "#333";
-
-          ctx.fillStyle = color;
-
-          if (v === 1) {
-            const h = TILE / 2;
-
-            const baseX = startX + x * TILE;
-            const baseY = startY + y * TILE;
-
-            ctx.fillStyle = "#888";
-            ctx.fillRect(baseX, baseY, h, h);
-
-            ctx.fillStyle = "#222";
-            ctx.fillRect(baseX + h, baseY, h, h);
-
-            ctx.fillStyle = "#222";
-            ctx.fillRect(baseX, baseY + h, h, h);
-
-            ctx.fillStyle = "#888";
-            ctx.fillRect(baseX + h, baseY + h, h, h);
-          } else if (v === 3) {
-            const h = TILE / 2;
-
-            const baseX = startX + x * TILE;
-            const baseY = startY + y * TILE;
-
-            ctx.fillStyle = "#444";
-            ctx.fillRect(baseX, baseY, h, h);
-
-            ctx.fillStyle = "#333";
-            ctx.fillRect(baseX + h, baseY, h, h);
-
-            ctx.fillStyle = "#222";
-            ctx.fillRect(baseX, baseY + h, h, h);
-
-            ctx.fillStyle = "#111";
-            ctx.fillRect(baseX + h, baseY + h, h, h);
-          } else {
-            ctx.fillRect(startX + x * TILE, startY + y * TILE, TILE, TILE);
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const v = pattern[y][x];
+            if (v == 0 || v == 2 || v == 3) continue;
+            ctx.fillStyle = "#666";
+            ctx.fillRect(
+              startX + (x - 0.1) * TILE,
+              startY + (y - 0.1) * TILE,
+              TILE * 1.2,
+              TILE * 1.2,
+            );
           }
         }
-      }
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const v = pattern[y][x];
+            if (v === 0) continue;
 
-      for (const pt of p.particles) {
-        const t = pt.t / pt.life;
-        ctx.save();
-        ctx.globalAlpha = 1 - t;
-        ctx.strokeStyle = pt.out ? "white" : "magenta";
-        ctx.lineWidth = 8;
-        const len = 40;
-        const nx = pt.vx;
-        const ny = pt.vy;
-        const l = Math.hypot(nx, ny) || 1;
-        const dx = (nx / l) * len;
-        const dy = (ny / l) * len;
+            let color = "#666";
+            if (v === 2) color = "#900";
+            else if (v === 3) color = "#333";
+
+            ctx.fillStyle = color;
+
+            if (v === 1) {
+              const h = TILE / 2;
+
+              const baseX = startX + x * TILE;
+              const baseY = startY + y * TILE;
+
+              ctx.fillStyle = "#888";
+              ctx.fillRect(baseX, baseY, h, h);
+
+              ctx.fillStyle = "#222";
+              ctx.fillRect(baseX + h, baseY, h, h);
+
+              ctx.fillStyle = "#222";
+              ctx.fillRect(baseX, baseY + h, h, h);
+
+              ctx.fillStyle = "#888";
+              ctx.fillRect(baseX + h, baseY + h, h, h);
+            } else if (v === 3) {
+              const h = TILE / 2;
+
+              const baseX = startX + x * TILE;
+              const baseY = startY + y * TILE;
+
+              ctx.fillStyle = "#444";
+              ctx.fillRect(baseX, baseY, h, h);
+
+              ctx.fillStyle = "#333";
+              ctx.fillRect(baseX + h, baseY, h, h);
+
+              ctx.fillStyle = "#222";
+              ctx.fillRect(baseX, baseY + h, h, h);
+
+              ctx.fillStyle = "#111";
+              ctx.fillRect(baseX + h, baseY + h, h, h);
+            } else {
+              ctx.fillRect(startX + x * TILE, startY + y * TILE, TILE, TILE);
+            }
+          }
+        }
+
+        for (const pt of p.particles) {
+          const t = pt.t / pt.life;
+          ctx.save();
+          ctx.globalAlpha = 1 - t;
+          ctx.strokeStyle = pt.out ? "white" : "magenta";
+          ctx.lineWidth = 8;
+          const len = 40;
+          const nx = pt.vx;
+          const ny = pt.vy;
+          const l = Math.hypot(nx, ny) || 1;
+          const dx = (nx / l) * len;
+          const dy = (ny / l) * len;
+          ctx.beginPath();
+          ctx.moveTo(pt.x, pt.y);
+          ctx.lineTo(pt.x - dx, pt.y - dy);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        const t = p.charging || p.charged ? p.charge / 10 : p.charge / 11;
+        const glowradius = Math.hypot(width, height) * 0.25 * t;
+        const glowgrad = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          cx,
+          cy,
+          glowradius,
+        );
+        glowgrad.addColorStop(0, "rgba(255,0,255,0.5)");
+        glowgrad.addColorStop(0.75, "rgba(255,0,255,0.25)");
+        glowgrad.addColorStop(1, "rgba(255,0,255,0)");
+        ctx.fillStyle = glowgrad;
         ctx.beginPath();
-        ctx.moveTo(pt.x, pt.y);
-        ctx.lineTo(pt.x - dx, pt.y - dy);
-        ctx.stroke();
+        ctx.arc(cx, cy, glowradius, 0, Math.PI * 2);
+        ctx.fill();
+
+        const time = performance.now() / 1000;
+        const rot = time * 0.5;
+        const shakeAmp = p.shake * (p.charged ? 20 : 8);
+        const sx = (Math.random() - 0.5) * shakeAmp;
+        const sy = (Math.random() - 0.5) * shakeAmp;
+
+        ctx.save();
+        ctx.translate(p.x + sx, p.y + sy);
+        ctx.rotate(rot);
+        const r = TILE * 2;
+        const pts = [];
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+          pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+        }
+        const cx0 = 0;
+        const cy0 = 0;
+        for (let i = 0; i < 6; i++) {
+          const p1 = pts[i];
+          const p2 = pts[(i + 1) % 6];
+          ctx.beginPath();
+          ctx.moveTo(cx0, cy0);
+          ctx.lineTo(p1[0], p1[1]);
+          ctx.lineTo(p2[0], p2[1]);
+          ctx.closePath();
+          ctx.fillStyle = i % 2 === 0 ? "black" : "#111";
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+          const px = Math.cos(a) * r;
+          const py = Math.sin(a) * r;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        if (p.charged) {
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 18;
+          ctx.stroke();
+        } else if (p.charge > 0) {
+          ctx.strokeStyle = "magenta";
+          ctx.lineWidth = 18;
+          ctx.globalAlpha = p.charging ? 0.5 + p.charge / 20 : 0;
+          ctx.stroke();
+        }
+
+        ctx.restore();
         ctx.restore();
       }
 
-      const t = p.charging || p.charged ? p.charge / 10 : p.charge / 11;
-      const glowradius = Math.hypot(width, height) * 0.25 * t;
-      const glowgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowradius);
-      glowgrad.addColorStop(0, "rgba(255,0,255,0.5)");
-      glowgrad.addColorStop(0.75, "rgba(255,0,255,0.25)");
-      glowgrad.addColorStop(1, "rgba(255,0,255,0)");
-      ctx.fillStyle = glowgrad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, glowradius, 0, Math.PI * 2);
-      ctx.fill();
-
-      const time = performance.now() / 1000;
-      const rot = time * 0.5;
-      const shakeAmp = p.shake * (p.charged ? 20 : 8);
-      const sx = (Math.random() - 0.5) * shakeAmp;
-      const sy = (Math.random() - 0.5) * shakeAmp;
-
-      ctx.save();
-      ctx.translate(p.x + sx, p.y + sy);
-      ctx.rotate(rot);
-      const r = TILE * 2;
-      const pts = [];
-      for (let i = 0; i < 6; i++) {
-        const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
-        pts.push([Math.cos(a) * r, Math.sin(a) * r]);
-      }
-      const cx0 = 0;
-      const cy0 = 0;
-      for (let i = 0; i < 6; i++) {
-        const p1 = pts[i];
-        const p2 = pts[(i + 1) % 6];
+      if (s.circleRadius > 0) {
+        ctx.save();
         ctx.beginPath();
-        ctx.moveTo(cx0, cy0);
-        ctx.lineTo(p1[0], p1[1]);
-        ctx.lineTo(p2[0], p2[1]);
-        ctx.closePath();
-        ctx.fillStyle = i % 2 === 0 ? "black" : "#111";
-        ctx.fill();
-      }
+        ctx.arc(cx, cy, s.circleRadius, 0, Math.PI * 2);
 
-      ctx.beginPath();
-      for (let i = 0; i < 6; i++) {
-        const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
-        const px = Math.cos(a) * r;
-        const py = Math.sin(a) * r;
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      if (p.charged) {
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 18;
-        ctx.stroke();
-      } else if (p.charge > 0) {
+        ctx.fillStyle = "black";
+        ctx.fill();
+
         ctx.strokeStyle = "magenta";
         ctx.lineWidth = 18;
-        ctx.globalAlpha = p.charging ? 0.5 + p.charge / 20 : 0;
         ctx.stroke();
-      }
 
-      ctx.restore();
-      ctx.restore();
+        ctx.restore();
+      }
     }
 
     const target = s.nearest;
@@ -498,6 +533,6 @@ export function setup(host) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw });
+  const unregister = host.register({ update, draw, name: "Pylons" });
   return unregister;
 }

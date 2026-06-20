@@ -126,7 +126,7 @@ export function setup(host, fast = false) {
 
         const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
 
-        if (dist < 75) {
+        if (dist < 45) {
           death("RealityCollapse");
         }
       }
@@ -154,7 +154,7 @@ export function setup(host, fast = false) {
         const perpX = -l.ny;
         const perpY = l.nx;
 
-        const thickness = 75;
+        const thickness = 45;
         const halfLen = 20000 * (l.lenScale ?? 1);
 
         const fx = l.x + l.nx * halfLen;
@@ -227,7 +227,7 @@ export function setup(host, fast = false) {
         const perpX = -l.ny;
         const perpY = l.nx;
 
-        const thickness = state.phase === "collapse" ? 75 : 100;
+        const thickness = state.phase === "collapse" ? 45 : 50;
         const halfLen = 20000 * (l.lenScale ?? 1);
 
         const fx = l.x + l.nx * halfLen;
