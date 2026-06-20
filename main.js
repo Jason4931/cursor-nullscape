@@ -711,7 +711,7 @@ topLeftInput.addEventListener("input", () => {
         spawnCatalystIntro();
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "seamine") {
-        spawnSeamine(entityHost);
+        spawnSeamine(entityHost, casualMode);
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;

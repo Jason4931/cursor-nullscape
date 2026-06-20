@@ -31,7 +31,11 @@ export function setup(host, fast = false) {
         state.phaseT = 0;
         state.phase = "spawn";
 
-        for (let i = 0; i < (fast ? 1 : RealityCollapseCount.count); i++) {
+        for (
+          let i = 0;
+          i < RealityCollapseCount.count * (fast ? 0.25 : 1);
+          i++
+        ) {
           const ang = Math.random() * Math.PI * 2;
           const sx = mouse.x + Math.cos(ang) * (Math.random() * 2000);
           const sy = mouse.y + Math.sin(ang) * (Math.random() * 2000);
@@ -122,7 +126,7 @@ export function setup(host, fast = false) {
 
         const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
 
-        if (dist < 100) {
+        if (dist < 75) {
           death("RealityCollapse");
         }
       }
@@ -150,7 +154,7 @@ export function setup(host, fast = false) {
         const perpX = -l.ny;
         const perpY = l.nx;
 
-        const thickness = 100;
+        const thickness = 75;
         const halfLen = 20000 * (l.lenScale ?? 1);
 
         const fx = l.x + l.nx * halfLen;
@@ -223,7 +227,7 @@ export function setup(host, fast = false) {
         const perpX = -l.ny;
         const perpY = l.nx;
 
-        const thickness = state.phase === "collapse" ? 100 : 125;
+        const thickness = state.phase === "collapse" ? 75 : 100;
         const halfLen = 20000 * (l.lenScale ?? 1);
 
         const fx = l.x + l.nx * halfLen;

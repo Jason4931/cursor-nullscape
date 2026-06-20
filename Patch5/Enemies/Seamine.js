@@ -4,7 +4,7 @@ import { moveCamera, playSound, setSeamineScale } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Curses/Seamine.png";
 
-export function setup(host, casualMode) {
+export function setup(host, casualMode, hardMode) {
   const state = {
     x: 0,
     y: 0,
@@ -21,8 +21,8 @@ export function setup(host, casualMode) {
 
   const SPAWN_RADIUS = 2000;
   const TOUCH_RADIUS = state.size / 2;
-  const EXPLODE_RADIUS = casualMode ? (state.size * 0.9) : (state.size * 1.8);
-  const FLASH_TIME = 1;
+  const EXPLODE_RADIUS = state.size * 1.8;
+  const FLASH_TIME = hardMode ? 0.75 : casualMode ? 1.5 : 1;
   const RESPAWN_DELAY = 10;
 
   function spawnNearCursor() {
@@ -70,7 +70,7 @@ export function setup(host, casualMode) {
 
     if (state.flashing) {
       state.flashTimer -= dt;
-      state.opacity = 0.6 + Math.sin(state.flashTimer * 40) * 0.4;
+      state.opacity = 1;
 
       if (state.flashTimer <= 0) {
         state.exploded = true;
@@ -133,18 +133,18 @@ export function setup(host, casualMode) {
     ctx.restore();
 
     if (state.flashing) {
-      const pulse = 1 + Math.sin(state.flashTimer * 40) * 0.1;
+      const pulse = ((FLASH_TIME - state.flashTimer) * 4) % 1;
 
       ctx.globalAlpha = 0.25;
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x - 3),
         Math.round(state.y - 3),
-        Math.round((state.size / 2) * pulse),
+        Math.round(state.size * pulse),
         0,
         Math.PI * 2,
       );
-      ctx.fillStyle = "orange";
+      ctx.fillStyle = "red";
       ctx.fill();
     }
 

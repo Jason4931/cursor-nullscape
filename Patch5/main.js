@@ -55,6 +55,7 @@ import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnCelestial } from "./Enemies/Celestial.js";
+import { setup as spawnPylons } from "./Enemies/Pylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
@@ -860,6 +861,7 @@ topLeftInput.addEventListener("input", () => {
   const entity =
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
+    input.toLowerCase() === "pylons" ||
     input.toLowerCase() === "seamine" ||
     input.toLowerCase() === "realitycollapse" ||
     input.toLowerCase() === "grindrail";
@@ -875,8 +877,10 @@ topLeftInput.addEventListener("input", () => {
         spawnCatalyst(entityHost);
         spawnCatalystIntro();
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+      } else if (input.toLowerCase() === "pylons") {
+        spawnPylons(entityHost);
       } else if (input.toLowerCase() === "seamine") {
-        spawnSeamine(entityHost);
+        spawnSeamine(entityHost, casualMode, hardMode);
       } else if (input.toLowerCase() === "realitycollapse") {
         spawnRealityCollapse(entityHost, true);
         spawnRealityCollapse(entityHost);
@@ -2301,9 +2305,9 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
       spawnJumpPad(entityHost, 3000);
-      spawnSeamine(entityHost, casualMode);
-      spawnSeamine(entityHost, casualMode);
-      spawnSeamine(entityHost, casualMode);
+      spawnSeamine(entityHost, casualMode, hardMode);
+      spawnSeamine(entityHost, casualMode, hardMode);
+      spawnSeamine(entityHost, casualMode, hardMode);
       spawnGrindrail(entityHost);
       spawnGrindrail(entityHost);
       spawnGrindrail(entityHost);
@@ -3961,9 +3965,9 @@ function updateCamera() {
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
             spawnJumpPad(entityHost, 3000);
-            spawnSeamine(entityHost, casualMode);
-            spawnSeamine(entityHost, casualMode);
-            spawnSeamine(entityHost, casualMode);
+            spawnSeamine(entityHost, casualMode, hardMode);
+            spawnSeamine(entityHost, casualMode, hardMode);
+            spawnSeamine(entityHost, casualMode, hardMode);
             spawnGrindrail(entityHost);
             spawnGrindrail(entityHost);
             spawnGrindrail(entityHost);
