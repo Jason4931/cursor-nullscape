@@ -2079,6 +2079,13 @@ function spawnCatalystIntro() {
     }
   }, 15000);
 }
+export function spawnCelestialIntro() {
+  disableCollect = true;
+  setTimeout(() => {
+    disableCollect = false;
+    spawnCelestial(entityHost, hardMode, true);
+  }, 5000);
+}
 /* ===== ALTARS ===== */
 let lastAltar = null;
 function ENTITY_SPAWN(temp = false, exceptEntity = null) {

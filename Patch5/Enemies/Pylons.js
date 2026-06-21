@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, canvas, actualCollectedCount, getCameraPos } from "../main.js";
+import {
+  TILE,
+  canvas,
+  actualCollectedCount,
+  getCameraPos,
+  spawnCelestialIntro,
+} from "../main.js";
 import {
   RealityCollapseCount,
   setup as spawnRealityCollapse,
@@ -285,6 +291,7 @@ export function setup(host) {
             state.realityCollapse[0]();
             state.realityCollapse[1]();
             s.circleRadius = 500;
+            spawnCelestialIntro();
           }
         }
       } else {

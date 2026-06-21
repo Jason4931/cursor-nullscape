@@ -5,7 +5,7 @@ import {
   entityCanvas2,
   canvas,
   getCameraPos,
-  collectedCount,
+  actualCollectedCount,
 } from "../main.js";
 
 const altar = new Image();
@@ -36,7 +36,11 @@ export function setup(host, hardMode) {
   }
 
   function onClick(e) {
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (
+      actualCollectedCount >= 10000 ||
+      (actualCollectedCount >= 3500 && actualCollectedCount <= 5000)
+    )
+      return;
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -61,7 +65,11 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (
+      actualCollectedCount >= 10000 ||
+      (actualCollectedCount >= 3500 && actualCollectedCount <= 5000)
+    )
+      return;
 
     if (state.flashTimer > 0) {
       state.flashTimer -= dt;
@@ -86,7 +94,11 @@ export function setup(host, hardMode) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (
+      actualCollectedCount >= 10000 ||
+      (actualCollectedCount >= 3500 && actualCollectedCount <= 5000)
+    )
+      return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;

@@ -29,7 +29,7 @@ for (let i = 1; i <= 25; i++) {
 }
 
 export let phase = { phase: 1 };
-export function setup(host, hardMode) {
+export function setup(host, hardMode, truePattern = false) {
   const patternFall = [
     {
       duration: 5.5,
@@ -292,7 +292,7 @@ export function setup(host, hardMode) {
     },
     patternTime: 0,
     patternIndex: -1,
-    loopPattern: specificDevOnly[0] ? specificDevOnly : loopPatternPhase1,
+    loopPattern: !truePattern ? specificDevOnly : loopPatternPhase1,
 
     layers: Celestial,
     enemy: null,
@@ -6748,7 +6748,7 @@ export function setup(host, hardMode) {
       if (state.patternIndex >= state.loopPattern.length) {
         state.patternIndex = 0;
 
-        if (!specificDevOnly[0]) {
+        if (truePattern) {
           if (phase.phase === 1) {
             phase.phase = 2;
             state.loopPattern = loopPatternPhase2;
