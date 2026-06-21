@@ -1,4 +1,10 @@
-const pattern = [
+import { death, mouse } from "../entityHost.js";
+import { TILE, canvas, actualCollectedCount, getCameraPos } from "../main.js";
+import {
+  RealityCollapseCount,
+  setup as spawnRealityCollapse,
+} from "./RealityCollapse.js";
+const rawpattern = [
   [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0,
@@ -108,14 +114,22 @@ const pattern = [
     0, 0,
   ],
 ];
+const pattern = rawpattern.map((row, y) =>
+  row.map((v, x) => {
+    if (v !== 1) return v;
+
+    const neighbors = [
+      rawpattern[y - 1]?.[x],
+      rawpattern[y + 1]?.[x],
+      rawpattern[y]?.[x - 1],
+      rawpattern[y]?.[x + 1],
+    ];
+
+    return neighbors.includes(0) ? (Math.random() < 0.1 ? 4 : 1) : 1;
+  }),
+);
 export let pylonDone = 0;
 export let pylonLocations = [];
-import { death, mouse } from "../entityHost.js";
-import { TILE, canvas, actualCollectedCount } from "../main.js";
-import {
-  RealityCollapseCount,
-  setup as spawnRealityCollapse,
-} from "./RealityCollapse.js";
 export function setup(host) {
   const state = {
     opacity: 1,
@@ -304,11 +318,25 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
 
     const s = state;
+    const cam = getCameraPos();
+    const viewLeft = cam.x;
+    const viewTop = cam.y;
+    const viewRight = cam.x + window.innerWidth;
+    const viewBottom = cam.y + window.innerHeight;
 
     const rows = pattern.length;
     const cols = pattern[0].length;
 
     for (const p of s.pylons) {
+      const size = (pattern.length * TILE) / 2 + 200;
+      if (
+        p.x + size < viewLeft ||
+        p.x - size > viewRight ||
+        p.y + size < viewTop ||
+        p.y - size > viewBottom
+      ) {
+        continue;
+      }
       const cx = p.x;
       const cy = p.y;
       if (pylonDone != 5) {
@@ -338,13 +366,99 @@ export function setup(host) {
           for (let x = 0; x < cols; x++) {
             const v = pattern[y][x];
             if (v == 0 || v == 2 || v == 3) continue;
-            ctx.fillStyle = "#666";
+            ctx.fillStyle = v === 1 ? "#666" : "#800";
             ctx.fillRect(
               startX + (x - 0.1) * TILE,
               startY + (y - 0.1) * TILE,
               TILE * 1.2,
               TILE * 1.2,
             );
+          }
+        }
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const v = pattern[y][x];
+            if (v == 0 || v == 1 || v == 2 || v == 3) continue;
+            ctx.save();
+            ctx.translate(
+              startX + x * TILE + TILE / 2,
+              startY + y * TILE + TILE / 2,
+            );
+            ctx.scale(0.5, 0.5);
+
+            const half = TILE * 1.75;
+            const step = TILE * 0.8;
+
+            const placements = [];
+
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                i * step,
+                -half + 10 * Math.abs(i),
+                -Math.PI / 2 + (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                i * step,
+                half - 10 * Math.abs(i),
+                Math.PI / 2 - (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                -half + 10 * Math.abs(i),
+                i * step,
+                Math.PI - (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                half - 10 * Math.abs(i),
+                i * step,
+                0 + (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (const [ox, oy, rot] of placements) {
+              ctx.save();
+              ctx.translate(ox, oy);
+              ctx.rotate(rot + Math.PI / 2);
+
+              ctx.beginPath();
+              ctx.moveTo(0, -20);
+              ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
+              ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
+              ctx.closePath();
+
+              ctx.fillStyle = "#900";
+              ctx.fill();
+
+              ctx.strokeStyle = "#700";
+              ctx.lineWidth = 4;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.moveTo(0, -20);
+              ctx.lineTo(0, 25);
+              ctx.stroke();
+
+              let last = 0.5;
+              for (let i = -2; i <= 2; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * 8);
+                ctx.lineTo(last * 15, i * 8 + 5);
+                ctx.stroke();
+                last *= -1;
+              }
+
+              ctx.restore();
+            }
+
+            ctx.restore();
           }
         }
         for (let y = 0; y < rows; y++) {
@@ -358,7 +472,7 @@ export function setup(host) {
 
             ctx.fillStyle = color;
 
-            if (v === 1) {
+            if (v === 1 || v === 4) {
               const h = TILE / 2;
 
               const baseX = startX + x * TILE;

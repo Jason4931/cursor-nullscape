@@ -3774,8 +3774,19 @@ function updateCamera() {
         continue;
       }
 
+      let insidePylon = false;
+      for (const py of pylonLocations) {
+        if (
+          mouse.x >= py[0] - (27 * TILE) / 2 &&
+          mouse.x < py[0] + (27 * TILE) / 2 &&
+          mouse.y >= py[1] - (27 * TILE) / 2 &&
+          mouse.y < py[1] + (27 * TILE) / 2
+        ) {
+          insidePylon = true;
+        }
+      }
       const value = (g.golden ? 4 : 1) * giftMultiplier;
-      if (!disableCollect) actualCollectedCount += value;
+      if (!disableCollect && !insidePylon) actualCollectedCount += value;
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
