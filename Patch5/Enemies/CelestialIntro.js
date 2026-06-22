@@ -8,6 +8,8 @@ video.loop = false;
 video.muted = true;
 const BG = new Image();
 BG.src = "./ASSET/Misc/CelestialBG.png";
+const Title = new Image();
+Title.src = "./ASSET/Misc/CelestialTitle.png";
 
 export function setup(host) {
   const state = {
@@ -21,7 +23,7 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.timer >= 30) return;
+    if (state.timer >= 33) return;
     state.BGopacity = Math.min(state.timer, 1);
     if (state.timer == 0) {
       playSound(
@@ -101,7 +103,7 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.timer >= 30) return;
+    if (state.timer >= 33) return;
 
     ctx.save();
     const cam = getCameraPos();
@@ -119,6 +121,32 @@ export function setup(host) {
 
     ctx.globalAlpha = state.VIDopacity;
     ctx.drawImage(video, cam.x, cam.y, window.innerWidth, window.innerHeight);
+
+    if (state.timer >= 30 && state.timer < 33) {
+      const t = state.timer - 30;
+      let scale = 0;
+      if (t <= 0.5) {
+        const p = t / 0.5;
+        scale = 1 - (1 - p) * (1 - p);
+      } else if (t <= 2.5) {
+        scale = 1;
+      } else {
+        const p = (t - 2.5) / 0.5;
+        scale = 1 - p * p;
+      }
+
+      const w = 1000 * scale;
+      const h = w / 3;
+
+      const x = cam.x + window.innerWidth / 2;
+      const y = cam.y + window.innerHeight / 2;
+
+      ctx.save();
+      ctx.globalAlpha = 1;
+      ctx.translate(x, y);
+      ctx.drawImage(Title, -w / 2, -h / 2, w, h);
+      ctx.restore();
+    }
 
     ctx.restore();
   }
