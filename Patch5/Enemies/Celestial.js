@@ -6897,9 +6897,9 @@ export function setup(host, hardMode, truePattern = false) {
 
     if (actualCollectedCount >= 5000) {
       phase = 4;
-    } else if (actualCollectedCount >= 4660) {
+    } else if (actualCollectedCount >= 4490) {
       phase = 3;
-    } else if (actualCollectedCount >= 4150) {
+    } else if (actualCollectedCount >= 3725) {
       phase = 2;
     } else {
       phase = 1;
@@ -6953,8 +6953,10 @@ export function setup(host, hardMode, truePattern = false) {
         state.scream = true;
         state.screamT = 0;
         state.enemyMode = "fixed";
-        state.enemyFixed.x = state.enemyX;
-        state.enemyFixed.y = state.enemyY;
+        const cx = mouse.x + (Math.random() - 0.5) * 600;
+        const cy = mouse.y + (Math.random() - 0.5) * 600;
+        state.enemyFixed.x = cx;
+        state.enemyFixed.y = cy;
       }
     }
     if (state.patternTime >= state.currentPattern.duration && !state.scream) {
@@ -7125,7 +7127,8 @@ export function setup(host, hardMode, truePattern = false) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    if (state.enemyTransition == "none") state.currentPattern.draw(ctx);
+    if (state.enemyTransition == "none" && !state.scream)
+      state.currentPattern.draw(ctx);
 
     if (celestialDevOnly) {
       for (const t of state.enemyTrail) {
@@ -7162,7 +7165,8 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
-    if (state.enemyTransition == "none") state.currentPattern.drawFront(ctx);
+    if (state.enemyTransition == "none" && !state.scream)
+      state.currentPattern.drawFront(ctx);
 
     if (state.scream) {
       const t = state.screamT;

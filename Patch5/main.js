@@ -2112,7 +2112,7 @@ export function spawnCelestialIntro() {
   });
   entities = [];
   disablespawn = true;
-  actualCollectedCount = 4000;
+  actualCollectedCount = 3500;
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
