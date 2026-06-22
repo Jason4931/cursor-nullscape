@@ -55,6 +55,7 @@ import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnCelestial } from "./Enemies/Celestial.js";
+import { setup as startCelestialIntro } from "./Enemies/CelestialIntro.js";
 import { pylonLocations, setup as spawnPylons } from "./Enemies/Pylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
@@ -81,6 +82,7 @@ const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 const tempEntityCounts = new Map();
+let entities = [];
 
 const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
@@ -186,6 +188,23 @@ let lastCursorInfectAt = 0;
 let sorrowActive = false;
 let huskCount = 0;
 let highestEntitySpawned = [];
+let celestialBG = false;
+let celestialBGstate = {
+  stars: Array.from({ length: 120 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    size: Math.random() < 0.9 ? 1 : 2,
+    color: Math.random() < 0.8 ? "#fff" : "#88aaff",
+  })),
+  blobs: Array.from({ length: 20 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: 200 + Math.random() * 400,
+    type: Math.random() < 0.6 ? "magenta" : "blue",
+    vx: (Math.random() - 0.5) * 0.02,
+    vy: (Math.random() - 0.5) * 0.02,
+  })),
+};
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
@@ -902,14 +921,20 @@ topLeftInput.addEventListener("input", () => {
         if (randUnlocked.length !== 0) {
           let randPick =
             randUnlocked[(Math.random() * randUnlocked.length) | 0];
-          randPick.spawn();
+          entities.push(randPick.spawn());
           registerEntitySpawn(entity.name, entity.src);
         }
       } else {
-        entity.spawn();
+        entities.push(entity.spawn());
         registerEntitySpawn(entity.name, entity.src);
       }
     }, 200);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "spawncelestialintro") {
+    spawnCelestialIntro();
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -2081,10 +2106,24 @@ function spawnCatalystIntro() {
 }
 export function spawnCelestialIntro() {
   disableCollect = true;
+  startCelestialIntro(entityHost);
+  entities.forEach((e) => {
+    e();
+  });
+  entities = [];
+  disablespawn = true;
+  actualCollectedCount = 4000;
+  collectedCount = hardMode
+    ? actualCollectedCount
+    : Math.floor(actualCollectedCount / 2);
+  setTimeout(() => {
+    celestialBG = true;
+  }, 15000);
   setTimeout(() => {
     disableCollect = false;
     spawnCelestial(entityHost, hardMode, true);
-  }, 5000);
+    registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
+  }, 30000);
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;
@@ -2164,6 +2203,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
+        entities.push(unregister);
         if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
         if (temp && typeof unregister === "function") {
           setTimeout(() => {
@@ -2202,6 +2242,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else if (pick.name === "Catalyst") {
       const unregister = pick.spawn();
+      entities.push(unregister);
       if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
@@ -2239,6 +2280,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else {
       const unregister = pick.spawn();
+      entities.push(unregister);
       if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
@@ -2330,7 +2372,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       spawnGrindrail(entityHost);
       spawnGrindrail(entityHost);
     }
-    if (actualCollectedCount >= 3500 && !spawnedPylon) {
+    if (actualCollectedCount >= 3500 && !spawnedPylon && !disablespawn) {
       spawnedPylon = true;
       spawnPylons(entityHost);
     }
@@ -2854,6 +2896,49 @@ function drawGrid() {
   ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
   // entityCtx.clearRect(visibleX, visibleY, visibleW * 0.01, visibleH * 0.01);
   entityCanvas.width = entityCanvas.width;
+
+  if (celestialBG) {
+    for (const b of celestialBGstate.blobs) {
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x < 0) b.x += 1;
+      if (b.x > 1) b.x -= 1;
+      if (b.y < 0) b.y += 1;
+      if (b.y > 1) b.y -= 1;
+    }
+    const cam = getCameraPos();
+    function drawSpaceBG(ctx, cam, w, h) {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(cam.x, cam.y, w, h);
+
+      for (const b of celestialBGstate.blobs) {
+        const gx = cam.x + b.x * w;
+        const gy = cam.y + b.y * h;
+
+        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, b.r);
+
+        if (b.type === "magenta") {
+          grad.addColorStop(0, "rgba(255, 0, 200, 0.25)");
+        } else {
+          grad.addColorStop(0, "rgba(0, 120, 255, 0.25)");
+        }
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(cam.x, cam.y, w, h);
+      }
+
+      for (const s of celestialBGstate.stars) {
+        const x = cam.x + s.x * w;
+        const y = cam.y + s.y * h;
+
+        ctx.fillStyle = s.color;
+        ctx.fillRect(x, y, s.size, s.size);
+      }
+    }
+    drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);
+  }
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
   const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
@@ -3808,7 +3893,7 @@ function updateCamera() {
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
 
-      if (actualCollectedCount >= 3500 && !spawnedPylon) {
+      if (actualCollectedCount >= 3500 && !spawnedPylon && !disablespawn) {
         spawnedPylon = true;
         spawnPylons(entityHost);
       }
@@ -3851,7 +3936,7 @@ function updateCamera() {
                 return;
               }
 
-              pick.spawn();
+              entities.push(pick.spawn());
               registerEntitySpawn(pick.name, pick.src);
               spawned++;
             }, 200);
@@ -3948,13 +4033,16 @@ function updateCamera() {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
               const unregister = randPick.spawn();
+              entities.push(unregister);
               trackHighestEntity(unregister, pick.start, pick.name);
             }
           } else if (pick.name === "Catalyst") {
             const unregister = pick.spawn();
+            entities.push(unregister);
             trackHighestEntity(unregister, pick.start, pick.name);
           } else {
             const unregister = pick.spawn();
+            entities.push(unregister);
             trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
@@ -4638,7 +4726,7 @@ const unlock = () => {
       actualCollectedCount > 100
     ) {
       const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
-      pick.spawn();
+      entities.push(pick.spawn());
     }
   }, 60000);
   loop();

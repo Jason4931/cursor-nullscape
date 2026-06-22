@@ -5,6 +5,7 @@ import {
   moveCamera,
   playSound,
   soundStopped,
+  actualCollectedCount,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -28,7 +29,7 @@ for (let i = 1; i <= 25; i++) {
   Celestial.push(img);
 }
 
-export let phase = { phase: 1 };
+let phase = 1;
 export function setup(host, hardMode, truePattern = false) {
   const patternFall = [
     {
@@ -165,6 +166,176 @@ export function setup(host, hardMode, truePattern = false) {
     ...patternCease,
     ...patternBoom,
   ];
+  const loopPatternPhase4 = [
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutter,
+      draw: drawSuperPizzaCutter,
+      drawFront: drawSuperPizzaCutterFront,
+      enter: enterSuperPizzaCutter,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 9,
+      update: updateFirstSilence,
+      draw: drawFirstSilence,
+      drawFront: drawFirstSilenceFront,
+      enter: enterFirstSilence,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutter,
+      draw: drawSuperPizzaCutter,
+      drawFront: drawSuperPizzaCutterFront,
+      enter: enterSuperPizzaCutter,
+    },
+    {
+      duration: 9,
+      update: updateBitter3Stars,
+      draw: drawBitter3Stars,
+      drawFront: drawBitter3StarsFront,
+      enter: enterBitter3Stars,
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumble,
+      draw: drawDeathInBloomCrumble,
+      drawFront: drawDeathInBloomCrumbleFront,
+      enter: enterDeathInBloomCrumble,
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutter,
+      draw: drawSuperPizzaCutter,
+      drawFront: drawSuperPizzaCutterFront,
+      enter: enterSuperPizzaCutter,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 3,
+      update: updateImplosionBreaker,
+      draw: drawImplosionBreaker,
+      drawFront: drawImplosionBreakerFront,
+      enter: enterImplosionBreaker,
+    },
+    {
+      duration: 18,
+      update: updateSecondSilence,
+      draw: drawSecondSilence,
+      drawFront: drawSecondSilenceFront,
+      enter: enterSecondSilence,
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updateBitter3Stars,
+      draw: drawBitter3Stars,
+      drawFront: drawBitter3StarsFront,
+      enter: enterBitter3Stars,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumble,
+      draw: drawDeathInBloomCrumble,
+      drawFront: drawDeathInBloomCrumbleFront,
+      enter: enterDeathInBloomCrumble,
+    },
+  ];
   const specificDevOnly = [
     {
       duration: 5.5,
@@ -283,11 +454,15 @@ export function setup(host, hardMode, truePattern = false) {
     opacity: 1,
     sound: null,
     deathSound: false,
+    lastPhase: 0,
+    scream: false,
+    screamT: 0,
 
     currentPattern: {
       duration: 0,
       update: () => {},
       draw: () => {},
+      drawFront: () => {},
       enter: () => {},
     },
     patternTime: 0,
@@ -6719,6 +6894,17 @@ export function setup(host, hardMode, truePattern = false) {
 
   function update(dtOrigin) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    if (actualCollectedCount >= 5000) {
+      phase = 4;
+    } else if (actualCollectedCount >= 4660) {
+      phase = 3;
+    } else if (actualCollectedCount >= 4150) {
+      phase = 2;
+    } else {
+      phase = 1;
+    }
+
     const dt = dtOrigin * (hardMode ? 1.016949153 : 1);
     const mx = mouse.x;
     const my = mouse.y;
@@ -6742,21 +6928,40 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
     if (state.enemyTransition == "none") state.patternTime += dt;
-    if (state.patternTime >= state.currentPattern.duration) {
+    if (truePattern) {
+      let scream = false;
+      if (state.lastPhase === 0 && phase === 1) {
+        scream = true;
+        state.loopPattern = loopPatternPhase1;
+        state.patternIndex = state.loopPattern.length;
+      } else if (state.lastPhase === 1 && phase === 2) {
+        scream = true;
+        state.loopPattern = loopPatternPhase2;
+        state.patternIndex = state.loopPattern.length;
+      } else if (state.lastPhase === 2 && phase === 3) {
+        scream = true;
+        state.loopPattern = loopPatternPhase3;
+        state.patternIndex = state.loopPattern.length;
+      } else if (state.lastPhase === 3 && phase === 4) {
+        scream = true;
+        // spawn pylon here
+        state.loopPattern = loopPatternPhase4;
+        state.patternIndex = state.loopPattern.length;
+      }
+      if (scream) {
+        state.lastPhase = phase;
+        state.scream = true;
+        state.screamT = 0;
+        state.enemyMode = "fixed";
+        state.enemyFixed.x = state.enemyX;
+        state.enemyFixed.y = state.enemyY;
+      }
+    }
+    if (state.patternTime >= state.currentPattern.duration && !state.scream) {
       state.patternIndex++;
 
       if (state.patternIndex >= state.loopPattern.length) {
         state.patternIndex = 0;
-
-        if (truePattern) {
-          if (phase.phase === 1) {
-            phase.phase = 2;
-            state.loopPattern = loopPatternPhase2;
-          } else if (phase.phase === 2) {
-            phase.phase = 3;
-            state.loopPattern = loopPatternPhase3;
-          }
-        }
       }
 
       state.currentPattern = state.loopPattern[state.patternIndex];
@@ -6768,7 +6973,74 @@ export function setup(host, hardMode, truePattern = false) {
     if (state.layer > state.layers.length) state.layer = 1;
     state.enemy = state.layers[state.layer - 1];
 
-    if (state.enemyTransition == "none") {
+    state.enemyTrail.push({
+      x: state.enemyX + (Math.random() - 0.5) * 300,
+      y: state.enemyY + (Math.random() - 0.5) * 300,
+      r: 100,
+      speed: 1,
+    });
+    if (state.scream) {
+      shakeScreen();
+      for (let i = 0; i < 3; i++) {
+        state.enemyTrail.push({
+          x: state.enemyX + (Math.random() - 0.5) * 1500,
+          y: state.enemyY + (Math.random() - 0.5) * 1500,
+          r: 100,
+          speed: 4,
+        });
+      }
+    }
+    for (const t of state.enemyTrail) {
+      t.r -= 3.333 * t.speed;
+    }
+    state.enemyTrail = state.enemyTrail.filter((t) => t.r > 0);
+
+    if (floatingText.active) {
+      floatingText.t += dt;
+      if (floatingText.t >= floatingText.duration) {
+        floatingText.active = false;
+      }
+    }
+
+    state.shakeStrength -= 2 * dt;
+    if (state.shakeStrength > 0) {
+      if (state.shakeX && state.shakeY) {
+        moveCamera(-state.shakeX, -state.shakeY, true);
+        state.shakeX = 0;
+        state.shakeY = 0;
+      } else {
+        const x =
+          (Math.random() < 0.5 ? 1 : -1) *
+          Math.min(state.shakeStrength, 1) *
+          10;
+        const y =
+          (Math.random() < 0.5 ? 1 : -1) *
+          Math.min(state.shakeStrength, 1) *
+          10;
+        moveCamera(x, y, true);
+        state.shakeX = x;
+        state.shakeY = y;
+      }
+    } else {
+      state.shakeStrength = 0;
+      if (state.shakeX && state.shakeY) {
+        moveCamera(-state.shakeX, -state.shakeY, true);
+        state.shakeX = 0;
+        state.shakeY = 0;
+      }
+    }
+
+    if (state.scream) {
+      state.screamT += dt;
+      if (state.screamT >= 3) {
+        console.log("a");
+        state.scream = false;
+        state.enemyMode = "orbit";
+      }
+      return;
+    }
+
+    if (state.enemyTransition == "none" && !state.scream) {
       state.enemyT += dt;
       if (state.enemyMode === "orbit") {
         state.enemyT += dt;
@@ -6844,51 +7116,6 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
-    state.enemyTrail.push({
-      x: state.enemyX + (Math.random() - 0.5) * 300,
-      y: state.enemyY + (Math.random() - 0.5) * 300,
-      r: 100,
-    });
-    for (const t of state.enemyTrail) {
-      t.r -= 3.333;
-    }
-    state.enemyTrail = state.enemyTrail.filter((t) => t.r > 0);
-
-    if (floatingText.active) {
-      floatingText.t += dt;
-      if (floatingText.t >= floatingText.duration) {
-        floatingText.active = false;
-      }
-    }
-
-    state.shakeStrength -= 2 * dt;
-    if (state.shakeStrength > 0) {
-      if (state.shakeX && state.shakeY) {
-        moveCamera(-state.shakeX, -state.shakeY, true);
-        state.shakeX = 0;
-        state.shakeY = 0;
-      } else {
-        const x =
-          (Math.random() < 0.5 ? 1 : -1) *
-          Math.min(state.shakeStrength, 1) *
-          10;
-        const y =
-          (Math.random() < 0.5 ? 1 : -1) *
-          Math.min(state.shakeStrength, 1) *
-          10;
-        moveCamera(x, y, true);
-        state.shakeX = x;
-        state.shakeY = y;
-      }
-    } else {
-      state.shakeStrength = 0;
-      if (state.shakeX && state.shakeY) {
-        moveCamera(-state.shakeX, -state.shakeY, true);
-        state.shakeX = 0;
-        state.shakeY = 0;
-      }
-    }
-
     if (state.enemyTransition == "none") state.currentPattern.update(dt);
   }
 
@@ -6937,6 +7164,33 @@ export function setup(host, hardMode, truePattern = false) {
 
     if (state.enemyTransition == "none") state.currentPattern.drawFront(ctx);
 
+    if (state.scream) {
+      const t = state.screamT;
+
+      const baseR = 1000 * (0.75 + Math.random() * 0.25);
+
+      ctx.save();
+      ctx.translate(state.enemyX, state.enemyY);
+
+      const grad = ctx.createRadialGradient(0, 0, baseR * 0.2, 0, 0, baseR);
+      grad.addColorStop(0, "rgba(255, 0, 255, 0)");
+      grad.addColorStop(0.65, "rgba(255, 0, 255, 0.1)");
+      grad.addColorStop(0.66, "rgba(255, 0, 255, 0.25)");
+      grad.addColorStop(0.7, "rgba(255, 0, 255, 0.25)");
+      grad.addColorStop(0.71, "rgba(255, 0, 255, 0.1)");
+      grad.addColorStop(0.8, "rgba(255, 0, 255, 0.1)");
+      grad.addColorStop(0.81, "rgba(255, 0, 255, 0.5)");
+      grad.addColorStop(0.9, "rgba(255, 0, 255, 0.5)");
+      grad.addColorStop(0.91, "rgba(255, 0, 255, 0.1)");
+      grad.addColorStop(1, "rgba(255, 0, 255, 0.25)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, baseR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
     if (celestialDevOnly) {
       ctx.save();
       ctx.translate(state.enemyX, state.enemyY);
