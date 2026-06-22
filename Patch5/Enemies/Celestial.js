@@ -7287,6 +7287,6 @@ export function setup(host, hardMode, truePattern = false) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw });
+  const unregister = host.register({ update, draw, name: "Celestial" });
   return unregister;
 }

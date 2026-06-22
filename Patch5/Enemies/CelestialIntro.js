@@ -151,6 +151,6 @@ export function setup(host) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw });
+  const unregister = host.register({ update, draw, name: "CelestialIntro" });
   return unregister;
 }
