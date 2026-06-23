@@ -1736,7 +1736,7 @@ export function isCursorOnFloor(custom) {
           if (t.wall[1] == 6) {
             wallScale = 0.5;
           } else if (t.wall[1] == 36) {
-            wallScale = 0.1;
+            wallScale = 0;
           }
         if (t.highrise[0] && t.highrise[1] == 38) {
           scorched = true;
@@ -2166,6 +2166,7 @@ export function spawnCelestialIntro() {
   });
   entities = [];
   disablespawn = true;
+  highriseEnabled = false;
   actualCollectedCount = 3500;
   collectedCount = hardMode
     ? actualCollectedCount
@@ -2738,7 +2739,9 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 36 ||
         pattern[y][x] === 37 ||
         pattern[y][x] === 38 ||
-        pattern[y][x] === 39
+        pattern[y][x] === 39 ||
+        pattern[y][x] === 41 ||
+        pattern[y][x] === 42
       ) {
         floorTiles.push({
           x: wx,
@@ -2767,7 +2770,9 @@ function placeSuper(sx, sy, pattern) {
               pattern[y][x] === 35 ||
               pattern[y][x] === 37 ||
               pattern[y][x] === 38 ||
-              pattern[y][x] === 39,
+              pattern[y][x] === 39 ||
+              pattern[y][x] === 41 ||
+              pattern[y][x] === 42,
             pattern[y][x],
           ],
           deco: [
@@ -2805,7 +2810,8 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 29 ||
         pattern[y][x] === 32 ||
         pattern[y][x] === 35 ||
-        pattern[y][x] === 39
+        pattern[y][x] === 39 ||
+        pattern[y][x] === 42
       ) {
         const r = Math.random();
         let type = "gift";
@@ -3443,8 +3449,15 @@ function drawGrid() {
           ctx.fillRect(t.x + h, t.y + h, h, h);
         }
         if (t.highrise[1] == 37) {
+          const h = TILE / 2;
+          ctx.fillStyle = showFloor ? "#999" : "#9991";
+          ctx.fillRect(t.x, t.y, h, h);
           ctx.fillStyle = showFloor ? "#888" : "#8881";
-          ctx.fillRect(t.x, t.y, TILE, TILE);
+          ctx.fillRect(t.x + h, t.y, h, h);
+          ctx.fillStyle = showFloor ? "#777" : "#7771";
+          ctx.fillRect(t.x, t.y + h, h, h);
+          ctx.fillStyle = showFloor ? "#666" : "#6661";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
         }
         if (t.highrise[1] == 38) {
           const h = TILE / 2;
@@ -3457,6 +3470,17 @@ function drawGrid() {
           ctx.fillStyle = showFloor ? `#f${rand2}0` : "#f801";
           ctx.fillRect(t.x, t.y + h, h, h);
           ctx.fillStyle = showFloor ? `#f${rand1}0` : "#f801";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+        }
+        if (t.highrise[1] == 41 || t.highrise[1] == 42) {
+          const h = TILE / 2;
+          ctx.fillStyle = showFloor ? "#444" : "#4441";
+          ctx.fillRect(t.x, t.y, h, h);
+          ctx.fillStyle = showFloor ? "#222" : "#2221";
+          ctx.fillRect(t.x + h, t.y, h, h);
+          ctx.fillStyle = showFloor ? "#222" : "#2221";
+          ctx.fillRect(t.x, t.y + h, h, h);
+          ctx.fillStyle = showFloor ? "#444" : "#4441";
           ctx.fillRect(t.x + h, t.y + h, h, h);
         }
       } else {
@@ -4301,7 +4325,7 @@ function updateCamera() {
   }
   if (highriseEnabled) {
     const current5x5 = countPatterns(5);
-    if (current5x5 < 3) {
+    if (current5x5 < 5) {
       forceSpawn5x5(mouse);
     }
   }

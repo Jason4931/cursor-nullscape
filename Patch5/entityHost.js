@@ -350,7 +350,7 @@ const DEATH_MESSAGES = {
   Hazards: [
     "You can't parkour.",
     "You didn't watch out for stage hazards.",
-    "You are questioning their platforming skills.",
+    "You are questioning your platforming skills.",
   ],
   RealityCollapse: [
     "You couldn't handle the collapse.",
