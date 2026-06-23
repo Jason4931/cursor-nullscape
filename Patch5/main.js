@@ -160,6 +160,7 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let isIceTileEnabled = false;
+let highriseEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
 let seamineScale = 1;
@@ -168,6 +169,9 @@ let wallScale = 1;
 let speedBoostScale = 1;
 let iceEffect = false;
 let lastTouchedIce;
+let scorched = false;
+let scorchedTime = 0;
+let scorchedTimeout = null;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedPylon = false;
@@ -541,10 +545,10 @@ const ProgressionEvents = [
   },
   {
     level: 18,
-    // title: "The smell of metal and smoke lingers...",
-    // desc: "Highrise towers begin to appear.",
-    title: "The humidity rises...",
-    desc: "Marts will grow in size.",
+    title: "The smell of metal and smoke lingers...",
+    desc: "Highrise towers begin to appear.",
+    title2: "The humidity rises...",
+    desc2: "Marts will grow in size.",
     activate: () => {}, //all mart +1 size per 60s (and first activate)
   },
   {
@@ -1726,10 +1730,28 @@ export function isCursorOnFloor(custom) {
         mouse.y < t.y + TILE
       ) {
         if (
-          t.wall ||
+          t.wall[0] ||
           (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)
         )
-          wallScale = 0.5;
+          if (t.wall[1] == 6) {
+            wallScale = 0.5;
+          } else if (t.wall[1] == 36) {
+            wallScale = 0.1;
+          }
+        if (t.highrise[0] && t.highrise[1] == 38) {
+          scorched = true;
+          scorchedTime++;
+          cameraRadius = 0.5;
+          if (scorchedTime >= 30) {
+            death("Hazards");
+          }
+          clearTimeout(scorchedTimeout);
+          scorchedTimeout = setTimeout(() => {
+            scorched = false;
+            cameraRadius = 0.4;
+            scorchedTime = 0;
+          }, 10000);
+        }
         if (t.ice) {
           lastTouchedIce = performance.now();
           iceEffect = true;
@@ -1888,10 +1910,10 @@ function pickPatternsBySize(patterns) {
     .map((obj) => obj.p);
 }
 
-function count3x3Patterns() {
+function countPatterns(length) {
   let count = 0;
   for (const p of patternsState.values()) {
-    if (p.pw === 3 && p.ph === 3) count++;
+    if (p.pw === length && p.ph === length) count++;
   }
   return count;
 }
@@ -1931,6 +1953,38 @@ function forceSpawn3x3(mouseWorld) {
       patternsState,
     );
     // fallback for initial / no-neighbor / no-9 cases
+    if (!pat) {
+      pat = pickRotatedPattern(baseIndex);
+    }
+
+    if (canPlaceSuper(target.sx, target.sy, pat)) {
+      placeSuper(target.sx, target.sy, pat);
+      break;
+    }
+  }
+}
+function forceSpawn5x5(mouseWorld) {
+  const base5x5 = PATTERNS.filter(
+    (p) => p.length / SUPER_TILE === 5 && p[0].length / SUPER_TILE === 5,
+  );
+
+  if (!base5x5.length) return;
+
+  const target = findReplacementSlot(mouseWorld);
+  if (!target) return;
+
+  destroyPattern(target);
+
+  const shuffled = pickPatternsBySize(base5x5);
+  for (let i = 0; i < shuffled.length; i++) {
+    const base = shuffled[i];
+    const baseIndex = PATTERNS.indexOf(base);
+    let pat = pickBiasedRotatedPattern(
+      baseIndex,
+      target.sx,
+      target.sy,
+      patternsState,
+    );
     if (!pat) {
       pat = pickRotatedPattern(baseIndex);
     }
@@ -1982,7 +2036,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
-    const connectors = [8, 9, 29];
+    const connectors = [8, 9, 29, 39];
 
     if (left) {
       const p = left.pattern;
@@ -2320,6 +2374,9 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (pick.src) {
       name = pick.name;
       registerEntitySpawn(pick.name, pick.src, temp);
+    }
+    if (collectedCount >= 1800 && !highriseEnabled) {
+      highriseEnabled = true;
     }
     if (collectedCount >= 800 && !isIceTileEnabled) {
       isIceTileEnabled = true;
@@ -2672,7 +2729,16 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 21 ||
         pattern[y][x] === 22 ||
         pattern[y][x] === 25 ||
-        pattern[y][x] === 29
+        pattern[y][x] === 29 ||
+        pattern[y][x] === 31 ||
+        pattern[y][x] === 32 ||
+        pattern[y][x] === 33 ||
+        pattern[y][x] === 34 ||
+        pattern[y][x] === 35 ||
+        pattern[y][x] === 36 ||
+        pattern[y][x] === 37 ||
+        pattern[y][x] === 38 ||
+        pattern[y][x] === 39
       ) {
         floorTiles.push({
           x: wx,
@@ -2687,12 +2753,23 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 15 ||
             pattern[y][x] === 16,
           garden: pattern[y][x] === 13,
-          wall: pattern[y][x] === 6,
+          wall: [pattern[y][x] === 6 || pattern[y][x] === 36, pattern[y][x]],
           ice:
             pattern[y][x] === 21 ||
             pattern[y][x] === 22 ||
             pattern[y][x] === 25 ||
             pattern[y][x] === 29,
+          highrise: [
+            pattern[y][x] === 31 ||
+              pattern[y][x] === 32 ||
+              pattern[y][x] === 33 ||
+              pattern[y][x] === 34 ||
+              pattern[y][x] === 35 ||
+              pattern[y][x] === 37 ||
+              pattern[y][x] === 38 ||
+              pattern[y][x] === 39,
+            pattern[y][x],
+          ],
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
@@ -2725,7 +2802,10 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 15 ||
         pattern[y][x] === 22 ||
         pattern[y][x] === 25 ||
-        pattern[y][x] === 29
+        pattern[y][x] === 29 ||
+        pattern[y][x] === 32 ||
+        pattern[y][x] === 35 ||
+        pattern[y][x] === 39
       ) {
         const r = Math.random();
         let type = "gift";
@@ -2989,9 +3069,11 @@ function drawGrid() {
     const isEdge = !left || !right || !up || !down;
     if (!t.diorite && !t.wood && !t.ice && isEdge) {
       ctx.fillStyle = showFloor
-        ? corrupted || t.passageGoldPattern || t.deco[4]
-          ? "#800"
-          : "#666"
+        ? t.wall[0] || t.highrise[0]
+          ? "#222"
+          : corrupted || t.passageGoldPattern || t.deco[4]
+            ? "#800"
+            : "#666"
         : "#6661";
       ctx.fillRect(t.x - TILE * 0.1, t.y - TILE * 0.1, TILE * 1.2, TILE * 1.2);
     }
@@ -3083,7 +3165,15 @@ function drawGrid() {
     const up = floorSet.has(key(t.x, t.y - TILE));
     const down = floorSet.has(key(t.x, t.y + TILE));
     const isEdge = !left || !right || !up || !down;
-    if (!t.diorite && !t.wood && !t.ice && isEdge && t.deco[4]) {
+    if (
+      !t.diorite &&
+      !t.wood &&
+      !t.ice &&
+      isEdge &&
+      t.deco[4] &&
+      !t.wall[0] &&
+      !t.highrise[0]
+    ) {
       ctx.save();
 
       // center of tile (IMPORTANT)
@@ -3298,10 +3388,77 @@ function drawGrid() {
       } else if (t.garden) {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
-      } else if (t.wall) {
-        ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
+      } else if (t.wall[0]) {
+        if (t.wall[1] == 6) {
+          ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
+        } else if (t.wall[1] == 36) {
+          ctx.fillStyle = showFloor ? "#444" : "#4441";
+        }
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else if (t.ice) {
+      } else if (t.highrise[0]) {
+        if (t.highrise[1] == 31 || t.highrise[1] == 32 || t.highrise[1] == 39) {
+          ctx.fillStyle = showFloor ? "#888" : "#8881";
+          ctx.fillRect(t.x, t.y, TILE, TILE);
+          ctx.fillStyle = showFloor ? "#222" : "#2221";
+          ctx.fillRect(
+            t.x - TILE * 0.01,
+            t.y + TILE * 0.05,
+            TILE * 0.46,
+            TILE * 0.4,
+          );
+          ctx.fillRect(
+            t.x + TILE * 0.55,
+            t.y + TILE * 0.05,
+            TILE * 0.46,
+            TILE * 0.4,
+          );
+          ctx.fillRect(
+            t.x + TILE * 0.05,
+            t.y + TILE * 0.55,
+            TILE * 0.9,
+            TILE * 0.4,
+          );
+        }
+        if (t.highrise[1] == 33) {
+          ctx.fillStyle = showFloor ? "#444" : "#4441";
+          ctx.fillRect(t.x, t.y, TILE, TILE);
+          ctx.fillStyle = showFloor ? "#222" : "#2221";
+          ctx.fillRect(
+            t.x + TILE * 0.125,
+            t.y + TILE * 0.125,
+            TILE * 0.75,
+            TILE * 0.75,
+          );
+        }
+        if (t.highrise[1] == 34 || t.highrise[1] == 35) {
+          const h = TILE / 2;
+          ctx.fillStyle = showFloor ? "#800" : "#8001";
+          ctx.fillRect(t.x, t.y, h, h);
+          ctx.fillStyle = showFloor ? "#700" : "#2001";
+          ctx.fillRect(t.x + h, t.y, h, h);
+          ctx.fillStyle = showFloor ? "#700" : "#2001";
+          ctx.fillRect(t.x, t.y + h, h, h);
+          ctx.fillStyle = showFloor ? "#800" : "#8001";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+        }
+        if (t.highrise[1] == 37) {
+          ctx.fillStyle = showFloor ? "#888" : "#8881";
+          ctx.fillRect(t.x, t.y, TILE, TILE);
+        }
+        if (t.highrise[1] == 38) {
+          const h = TILE / 2;
+          const rand1 = Math.floor(4 + Math.random() * 5);
+          const rand2 = Math.floor(4 + Math.random() * 5);
+          ctx.fillStyle = showFloor ? `#f${rand1}0` : "#f801";
+          ctx.fillRect(t.x, t.y, h, h);
+          ctx.fillStyle = showFloor ? `#f${rand2}0` : "#f801";
+          ctx.fillRect(t.x + h, t.y, h, h);
+          ctx.fillStyle = showFloor ? `#f${rand2}0` : "#f801";
+          ctx.fillRect(t.x, t.y + h, h, h);
+          ctx.fillStyle = showFloor ? `#f${rand1}0` : "#f801";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+        }
       } else {
         const h = TILE / 2;
 
@@ -3699,26 +3856,39 @@ function updateCamera() {
 
   MAX_SPEED = 25 + collectedCount / 200;
 
-  if (mouse._clientX < w * cameraRadius) {
-    vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
-    edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
-  } else if (mouse._clientX > w * (1 - cameraRadius)) {
-    vx =
-      -MAX_SPEED *
-      ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
-    edgeFactorX =
-      (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
-  }
+  if (scorched) {
+    const cx = mouse._clientX - w * 0.5;
+    const cy = mouse._clientY - h * 0.5;
 
-  if (mouse._clientY < h * cameraRadius) {
-    vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
-    edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
-  } else if (mouse._clientY > h * (1 - cameraRadius)) {
-    vy =
-      -MAX_SPEED *
-      ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
-    edgeFactorY =
-      (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
+    const len = Math.hypot(cx, cy) || 1;
+
+    vx = -(cx / len) * MAX_SPEED;
+    vy = -(cy / len) * MAX_SPEED;
+
+    edgeFactorX = 1;
+    edgeFactorY = 1;
+  } else {
+    if (mouse._clientX < w * cameraRadius) {
+      vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
+      edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
+    } else if (mouse._clientX > w * (1 - cameraRadius)) {
+      vx =
+        -MAX_SPEED *
+        ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
+      edgeFactorX =
+        (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
+    }
+
+    if (mouse._clientY < h * cameraRadius) {
+      vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
+      edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
+    } else if (mouse._clientY > h * (1 - cameraRadius)) {
+      vy =
+        -MAX_SPEED *
+        ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
+      edgeFactorY =
+        (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
+    }
   }
 
   const edgeFactor = Math.max(edgeFactorX, edgeFactorY);
@@ -4046,6 +4216,9 @@ function updateCamera() {
             trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
+          if (collectedCount >= 1800 && !highriseEnabled) {
+            highriseEnabled = true;
+          }
           if (collectedCount >= 800 && !isIceTileEnabled) {
             isIceTileEnabled = true;
             changePatterns("ice");
@@ -4122,9 +4295,15 @@ function updateCamera() {
       destroyPattern(p);
   }
 
-  const current3x3 = count3x3Patterns();
+  const current3x3 = countPatterns(3);
   if (current3x3 < 5) {
     forceSpawn3x3(mouse);
+  }
+  if (highriseEnabled) {
+    const current5x5 = countPatterns(5);
+    if (current5x5 < 3) {
+      forceSpawn5x5(mouse);
+    }
   }
 
   /* regenerate empty slots (THROTTLED + BUDGETED) */
@@ -4313,6 +4492,24 @@ function loop(now) {
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
+    ctx.fill();
+  }
+
+  // scorched
+  if (Number.isFinite(mouse.x) && Number.isFinite(mouse.y) && scorched) {
+    const g = ctx.createRadialGradient(
+      mouse.x,
+      mouse.y,
+      0,
+      mouse.x,
+      mouse.y,
+      50,
+    );
+    g.addColorStop(0, `rgba(255, 128, 0, ${0.25 + Math.random() * 0.25})`);
+    g.addColorStop(1, `rgba(255, 128, 0, 0)`);
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
+    ctx.fillStyle = g;
     ctx.fill();
   }
 

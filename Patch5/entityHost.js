@@ -347,6 +347,11 @@ const DEATH_MESSAGES = {
     "DID YOU SEE THAT?!",
   ],
   Visage: ["YOU WERE CAUGHT"],
+  Hazards: [
+    "You can't parkour.",
+    "You didn't watch out for stage hazards.",
+    "You are questioning their platforming skills.",
+  ],
   RealityCollapse: [
     "You couldn't handle the collapse.",
     "You were obliterated.",
