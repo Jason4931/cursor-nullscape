@@ -2178,7 +2178,7 @@ export function spawnCelestialIntro() {
     disableCollect = false;
     spawnCelestial(entityHost, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
-  }, 30000);
+  }, 31000);
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;

@@ -23,27 +23,27 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.timer >= 33) return;
-    state.BGopacity = Math.min(state.timer, 1);
+    if (state.timer >= 34) return;
+    state.BGopacity = Math.min(state.timer / 2, 1);
     if (state.timer == 0) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Intro.ogg`,
-        1.1,
+        undefined,
         undefined,
         undefined,
         undefined,
         "50",
       );
     }
-    if (state.timer >= 1 && !state.VidStart) {
+    if (state.timer >= 2 && !state.VidStart) {
       state.VidStart = true;
       state.VIDopacity = 1;
       video.play();
-    } else if (state.timer >= 29.5 && !state.VidEnd) {
+    } else if (state.timer >= 30.5 && !state.VidEnd) {
       state.VidEnd = true;
       state.VIDopacity = 0;
     }
-    if (state.timer >= 1.033 && !state.sound[0]) {
+    if (state.timer >= 2.033 && !state.sound[0]) {
       state.sound[0] = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -54,7 +54,7 @@ export function setup(host) {
         "50",
       );
     }
-    if (state.timer >= 6 && !state.sound[1]) {
+    if (state.timer >= 7 && !state.sound[1]) {
       state.sound[1] = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -65,7 +65,7 @@ export function setup(host) {
         "50",
       );
     }
-    if (state.timer >= 10.9 && !state.sound[2]) {
+    if (state.timer >= 11.9 && !state.sound[2]) {
       state.sound[2] = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -76,7 +76,7 @@ export function setup(host) {
         "50",
       );
     }
-    if (state.timer >= 16.033 && !state.sound[3]) {
+    if (state.timer >= 17.033 && !state.sound[3]) {
       state.sound[3] = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -87,7 +87,7 @@ export function setup(host) {
         "50",
       );
     }
-    if (state.timer >= 20.033 && !state.sound[4]) {
+    if (state.timer >= 21.033 && !state.sound[4]) {
       state.sound[4] = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -103,12 +103,12 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.timer >= 33) return;
+    if (state.timer >= 34) return;
 
     ctx.save();
     const cam = getCameraPos();
 
-    const shrinkT = Math.min(Math.max((state.timer - 29.5) / 0.5, 0), 1);
+    const shrinkT = Math.min(Math.max((state.timer - 30.5) / 0.5, 0), 1);
     ctx.globalAlpha = state.BGopacity;
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -122,8 +122,8 @@ export function setup(host) {
     ctx.globalAlpha = state.VIDopacity;
     ctx.drawImage(video, cam.x, cam.y, window.innerWidth, window.innerHeight);
 
-    if (state.timer >= 30 && state.timer < 33) {
-      const t = state.timer - 30;
+    if (state.timer >= 31 && state.timer < 34) {
+      const t = state.timer - 31;
       let scale = 0;
       if (t <= 0.5) {
         const p = t / 0.5;
