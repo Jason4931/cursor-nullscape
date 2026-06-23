@@ -5337,14 +5337,6 @@ export function setup(host, hardMode, truePattern = false) {
     ) {
       if (!hardMode) {
         const base = Math.random() * Math.PI * 2;
-        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-
-        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-      } else {
-        const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -5353,6 +5345,18 @@ export function setup(host, hardMode, truePattern = false) {
         stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
         stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+      } else {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread4, 1.5));
       }
     }
 
@@ -6117,14 +6121,6 @@ export function setup(host, hardMode, truePattern = false) {
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
       if (!hardMode) {
         const base = Math.random() * Math.PI * 2;
-        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-
-        s.beams.push(spawnBeam(px, py, base, 1.5));
-        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-      } else {
-        const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -6133,6 +6129,18 @@ export function setup(host, hardMode, truePattern = false) {
         s.beams.push(spawnBeam(px, py, base + spread, 1.5));
         s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+      } else {
+        const base = Math.random() * Math.PI * 2;
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.5));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.5));
       }
     }
 
