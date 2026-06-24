@@ -2,10 +2,19 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound } from "../main.js";
 
 const video = document.createElement("video");
+const videoCanvas = document.createElement("canvas");
+const vctx = videoCanvas.getContext("2d");
 video.src = "./ASSET/Misc/CelestialIntro.mp4";
 video.autoplay = true;
 video.loop = false;
 video.muted = true;
+video.playsInline = true;
+video.preload = "auto";
+video.addEventListener("loadedmetadata", () => {
+  videoCanvas.width = window.innerWidth;
+  videoCanvas.height = window.innerHeight;
+});
+
 const BG = new Image();
 BG.src = "./ASSET/Misc/CelestialBG.png";
 const Title = new Image();
@@ -38,6 +47,8 @@ export function setup(host) {
     if (state.timer >= 2 && !state.VidStart) {
       state.VidStart = true;
       state.VIDopacity = 1;
+      videoCanvas.width = window.innerWidth;
+      videoCanvas.height = window.innerHeight;
       video.play();
     } else if (state.timer >= 30.5 && !state.VidEnd) {
       state.VidEnd = true;
@@ -120,7 +131,8 @@ export function setup(host) {
     ctx.drawImage(BG, cam.x, cy - shrinkH / 2, w, shrinkH);
 
     ctx.globalAlpha = state.VIDopacity;
-    ctx.drawImage(video, cam.x, cam.y, window.innerWidth, window.innerHeight);
+    vctx.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+    ctx.drawImage(videoCanvas, cam.x, cam.y);
 
     if (state.timer >= 31 && state.timer < 34) {
       const t = state.timer - 31;

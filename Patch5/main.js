@@ -191,13 +191,12 @@ let deathOpacity = 0;
 let lastCursorInfectAt = 0;
 let OblivionActive = 0;
 let OblivionActivestate = {
-  clouds: Array.from({ length: 30 }, () => ({
+  blobs: Array.from({ length: 20 }, () => ({
     x: Math.random(),
     y: Math.random(),
     r: 200 + Math.random() * 400,
     vx: (Math.random() - 0.5) * 0.1,
     vy: (Math.random() - 0.5) * 0.1,
-    seed: Math.random(),
   })),
 };
 let huskCount = 0;
@@ -2997,44 +2996,39 @@ function drawGrid() {
   entityCanvas.width = entityCanvas.width;
 
   if (OblivionActive) {
-    function drawOblivionBG(ctx, cam, w, h) {
+    for (const b of OblivionActivestate.blobs) {
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x < 0) b.x += 1;
+      if (b.x > 1) b.x -= 1;
+      if (b.y < 0) b.y += 1;
+      if (b.y > 1) b.y -= 1;
+    }
+    function drawSpaceBG(ctx, cam, w, h) {
       ctx.save();
       ctx.globalAlpha = OblivionActive;
-      ctx.fillStyle = "rgba(255,0,255,0.25)";
+      ctx.fillStyle = "rgba(255, 0, 255, 0.25)";
       ctx.fillRect(cam.x, cam.y, w, h);
 
-      ctx.globalCompositeOperation = "lighter";
+      for (const b of OblivionActivestate.blobs) {
+        const gx = cam.x + b.x * w;
+        const gy = cam.y + b.y * h;
 
-      for (const c of OblivionActivestate.clouds) {
-        c.x += c.vx;
-        c.y += c.vy;
+        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, b.r);
 
-        if (c.x < -0.2) c.x = 1.2;
-        if (c.x > 1.2) c.x = -0.2;
-        if (c.y < -0.2) c.y = 1.2;
-        if (c.y > 1.2) c.y = -0.2;
+        grad.addColorStop(0, "rgba(255, 0, 200, 0.1)");
+        grad.addColorStop(0.35, "rgba(160, 0, 255, 0.064)");
+        grad.addColorStop(0.7, "rgba(90, 0, 140, 0.036)");
+        grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
-        const gx = cam.x + c.x * w;
-        const gy = cam.y + c.y * h;
-
-        const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, c.r);
-        g.addColorStop(0, "rgba(255, 0, 200, 0.1)");
-        g.addColorStop(0.35, "rgba(160, 0, 255, 0.064)");
-        g.addColorStop(0.7, "rgba(90, 0, 140, 0.023)");
-        g.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-        ctx.fillStyle = g;
-
-        ctx.beginPath();
-        ctx.arc(gx, gy, c.r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = grad;
+        ctx.fillRect(cam.x, cam.y, w, h);
       }
-
-      ctx.globalCompositeOperation = "source-over";
       ctx.restore();
     }
     const cam = getCameraPos();
-    drawOblivionBG(ctx, cam, window.innerWidth, window.innerHeight);
+    drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);
   }
   if (celestialBG) {
     for (const b of celestialBGstate.blobs) {
