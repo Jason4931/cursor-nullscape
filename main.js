@@ -697,7 +697,8 @@ topLeftInput.addEventListener("input", () => {
   const entity =
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
-    input.toLowerCase() === "seamine";
+    input.toLowerCase() === "seamine" ||
+    input.toLowerCase() === "jumppad";
   if (entity) {
     let spawned = 0;
     const interval = setInterval(() => {
@@ -712,6 +713,8 @@ topLeftInput.addEventListener("input", () => {
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost, casualMode);
+      } else if (input.toLowerCase() === "jumppad") {
+        spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
       } else if (entity.name === "Random") {
         const randUnlocked = ENTITY_POOL.filter((e) => {
           if (e.name === "Random") return false;

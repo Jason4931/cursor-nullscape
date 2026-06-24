@@ -41,8 +41,8 @@ import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
 import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
-import { setup as spawnSorrow } from "./Enemies/Sorrow.js";
-import { setup as spawnDoombringer } from "./Enemies/Doombringer.js";
+import { setup as spawnOblivion } from "./Enemies/Oblivion.js";
+import { setup as spawnRazorbloom } from "./Enemies/Razorbloom.js";
 import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
@@ -189,7 +189,17 @@ let disableKnockback = false;
 let immunebell = false;
 let deathOpacity = 0;
 let lastCursorInfectAt = 0;
-let sorrowActive = false;
+let OblivionActive = 0;
+let OblivionActivestate = {
+  clouds: Array.from({ length: 30 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: 200 + Math.random() * 400,
+    vx: (Math.random() - 0.5) * 0.1,
+    vy: (Math.random() - 0.5) * 0.1,
+    seed: Math.random(),
+  })),
+};
 let huskCount = 0;
 let highestEntitySpawned = [];
 let celestialBG = false;
@@ -229,8 +239,8 @@ export function MartStack(act, v) {
     martStack = v;
   }
 }
-export function setSorrowActive(v) {
-  sorrowActive = v;
+export function setOblivionActive(v) {
+  OblivionActive = v;
 }
 export function setVoidScale(v) {
   voidScale = v;
@@ -365,20 +375,20 @@ const ENTITY_POOL = [
     desc: "Creates several implosions around the map that explode after a short duration.",
   },
   {
-    name: "Sorrow",
-    spawn: () => spawnSorrow(entityHost),
+    name: "Oblivion",
+    spawn: () => spawnOblivion(entityHost),
     start: 1000,
-    src: "./ASSET/Curses/Sorrow.png",
+    src: "./ASSET/Curses/Oblivion.png",
     unstackable: true,
-    desc: "When the rain starts, get above something, those in the air will quickly melt away.",
+    desc: "When the convergence starts, get above something, those in the air will quickly be obliterated.",
   },
   {
-    name: "Doombringer",
-    spawn: () => spawnDoombringer(entityHost),
+    name: "Razorbloom",
+    spawn: () => spawnRazorbloom(entityHost, hardMode),
     start: 1000,
-    src: "./ASSET/Curses/Doombringer.png",
+    src: "./ASSET/Curses/Razorbloom.png",
     unstackable: true,
-    desc: "It will scream, shut it up by touching a Jumppad.",
+    desc: "Razorbloom will land on your head, get rid of it by touching a Jump Pad.",
   },
   {
     name: "VoidboundBaby",
@@ -887,6 +897,7 @@ topLeftInput.addEventListener("input", () => {
     input.toLowerCase() === "catalyst" ||
     input.toLowerCase() === "pylons" ||
     input.toLowerCase() === "seamine" ||
+    input.toLowerCase() === "jumppad" ||
     input.toLowerCase() === "realitycollapse" ||
     input.toLowerCase() === "grindrail";
   if (entity) {
@@ -905,6 +916,8 @@ topLeftInput.addEventListener("input", () => {
         spawnPylons(entityHost);
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost, casualMode, hardMode);
+      } else if (input.toLowerCase() === "jumppad") {
+        spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
       } else if (input.toLowerCase() === "realitycollapse") {
         spawnRealityCollapse(entityHost, true);
         spawnRealityCollapse(entityHost);
@@ -1010,8 +1023,8 @@ topLeftInput.addEventListener("input", () => {
     spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
     spawnKookoo(entityHost);
     spawnVoidImplosions(entityHost);
-    spawnSorrow(entityHost);
-    spawnDoombringer(entityHost);
+    spawnOblivion(entityHost);
+    spawnRazorbloom(entityHost, hardMode);
     spawnVoidboundBaby(entityHost, hardMode);
     spawnPonderer(entityHost, hardMode);
     spawnVoidboundGuardian(entityHost, hardMode);
@@ -1035,8 +1048,8 @@ topLeftInput.addEventListener("input", () => {
     registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
     registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
     registerEntitySpawn("VoidImplosions", "./ASSET/Curses/VoidImplosions.png");
-    registerEntitySpawn("Sorrow", "./ASSET/Curses/Sorrow.png");
-    registerEntitySpawn("Doombringer", "./ASSET/Curses/Doombringer.png");
+    registerEntitySpawn("Oblivion", "./ASSET/Curses/Oblivion.png");
+    registerEntitySpawn("Razorbloom", "./ASSET/Curses/Razorbloom.png");
     registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
     registerEntitySpawn("Ponderer", "./ASSET/Enemies/PondererIcon.png");
     registerEntitySpawn(
@@ -2983,6 +2996,46 @@ function drawGrid() {
   // entityCtx.clearRect(visibleX, visibleY, visibleW * 0.01, visibleH * 0.01);
   entityCanvas.width = entityCanvas.width;
 
+  if (OblivionActive) {
+    function drawOblivionBG(ctx, cam, w, h) {
+      ctx.save();
+      ctx.globalAlpha = OblivionActive;
+      ctx.fillStyle = "rgba(255,0,255,0.25)";
+      ctx.fillRect(cam.x, cam.y, w, h);
+
+      ctx.globalCompositeOperation = "lighter";
+
+      for (const c of OblivionActivestate.clouds) {
+        c.x += c.vx;
+        c.y += c.vy;
+
+        if (c.x < -0.2) c.x = 1.2;
+        if (c.x > 1.2) c.x = -0.2;
+        if (c.y < -0.2) c.y = 1.2;
+        if (c.y > 1.2) c.y = -0.2;
+
+        const gx = cam.x + c.x * w;
+        const gy = cam.y + c.y * h;
+
+        const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, c.r);
+        g.addColorStop(0, "rgba(255, 0, 200, 0.1)");
+        g.addColorStop(0.35, "rgba(160, 0, 255, 0.064)");
+        g.addColorStop(0.7, "rgba(90, 0, 140, 0.023)");
+        g.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+        ctx.fillStyle = g;
+
+        ctx.beginPath();
+        ctx.arc(gx, gy, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.restore();
+    }
+    const cam = getCameraPos();
+    drawOblivionBG(ctx, cam, window.innerWidth, window.innerHeight);
+  }
   if (celestialBG) {
     for (const b of celestialBGstate.blobs) {
       b.x += b.vx;
@@ -2993,7 +3046,6 @@ function drawGrid() {
       if (b.y < 0) b.y += 1;
       if (b.y > 1) b.y -= 1;
     }
-    const cam = getCameraPos();
     function drawSpaceBG(ctx, cam, w, h) {
       ctx.fillStyle = "#000";
       ctx.fillRect(cam.x, cam.y, w, h);
@@ -3023,6 +3075,7 @@ function drawGrid() {
         ctx.fillRect(x, y, s.size, s.size);
       }
     }
+    const cam = getCameraPos();
     drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);
   }
 
@@ -4601,7 +4654,7 @@ function loop(now) {
   entityHost.draw();
 
   // slowness
-  if (slowness || sorrowActive) {
+  if (slowness) {
     ctx.save();
     // ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;

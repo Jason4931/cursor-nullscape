@@ -25,8 +25,8 @@ x voidbound guardian
 vx scrapmaw
 v random
 vx void implosion
-x oblivion
-x razorbloom
+vx oblivion
+vx razorbloom
 x voidbound operator
 v reality collapse
 rare
