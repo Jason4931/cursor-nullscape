@@ -145,6 +145,7 @@ export function setup(host) {
       const minDist = 2000;
 
       let count = 3;
+      if (pylonDone >= 9) count = 1;
       for (let i = 0; i < count; i++) {
         while (true) {
           const x = Math.random() * (canvas.width - margin * 2) + margin;
@@ -273,7 +274,7 @@ export function setup(host) {
           p.charged = true;
           p.shake = 2;
           pylonDone++;
-          if (pylonDone == 9) {
+          if (pylonDone == 10) {
             spawnCelestialEnding();
           } else if (pylonDone % 3 == 0) {
             s.generated = false;
