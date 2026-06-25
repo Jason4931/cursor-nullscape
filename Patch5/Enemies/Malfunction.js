@@ -21,14 +21,10 @@ export function setup(host) {
     idleDuration: 0,
     spawnDuration: 0.5,
     disableDuration: 1,
-    watchDuration: 5.5,
-    watch2Duration: 3.5,
-    watch3Duration: 3.5,
+    watchDuration: 5.25,
+    watch2Duration: 3.25,
+    watch3Duration: 3.25,
     idleSound: null,
-    jitCount: 0,
-    idleCount: 5,
-    idle2Count: 3,
-    idle3Count: 3,
     despawn: false,
 
     abilityLongerCooldown: 0,
@@ -105,11 +101,9 @@ export function setup(host) {
         state.lastMouseX = mouse._clientX;
         state.lastMouseY = mouse._clientY;
         state.opacity = 1;
-        playSound(
+        state.idleSound = playSound(
           "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
         );
-        state.jitCount = 0;
-        state.idleCount--;
       }
     } else if (state.phase === "watch") {
       const cam = getCameraPos();
@@ -118,17 +112,9 @@ export function setup(host) {
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
-        state.jitterTimer = 0;
+        state.jitterTimer -= 0.25;
         if (state.jitterRot == 0.1) state.jitterRot = -0.1;
         else state.jitterRot = 0.1;
-        state.jitCount++;
-        if (state.jitCount == 4 && state.idleCount != 0) {
-          state.jitCount = 0;
-          state.idleCount--;
-          state.idleSound = playSound(
-            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
-          );
-        }
       }
 
       const dx = mouse._clientX - state.lastMouseX;
@@ -173,11 +159,9 @@ export function setup(host) {
           playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Success.ogg",
           );
-          playSound(
-            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
+          state.idleSound = playSound(
+            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking_Short.ogg",
           );
-          state.jitCount = 0;
-          state.idle2Count--;
         }
       }
 
@@ -203,17 +187,9 @@ export function setup(host) {
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
-        state.jitterTimer = 0;
+        state.jitterTimer -= 0.25;
         if (state.jitterRot == 0.1) state.jitterRot = -0.1;
         else state.jitterRot = 0.1;
-        state.jitCount++;
-        if (state.jitCount == 4 && state.idle2Count != 0) {
-          state.jitCount = 0;
-          state.idle2Count--;
-          state.idleSound = playSound(
-            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
-          );
-        }
       }
 
       const dx = mouse._clientX - state.lastMouseX;
@@ -258,11 +234,9 @@ export function setup(host) {
           playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Success.ogg",
           );
-          playSound(
-            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
+          state.idleSound = playSound(
+            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking_Short.ogg",
           );
-          state.jitCount = 0;
-          state.idle3Count--;
         }
       }
 
@@ -288,17 +262,9 @@ export function setup(host) {
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
-        state.jitterTimer = 0;
+        state.jitterTimer -= 0.25;
         if (state.jitterRot == 0.1) state.jitterRot = -0.1;
         else state.jitterRot = 0.1;
-        state.jitCount++;
-        if (state.jitCount == 4 && state.idle3Count != 0) {
-          state.jitCount = 0;
-          state.idle3Count--;
-          state.idleSound = playSound(
-            "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
-          );
-        }
       }
 
       const dx = mouse._clientX - state.lastMouseX;

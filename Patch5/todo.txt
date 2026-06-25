@@ -3,7 +3,7 @@ HIGHRISE TOWER -> how the fuck do i do this [lvl 18]
 actually starting entity reworks
 voidboundguardian agro on passage
 
-Altars?
+x Altars
 
 vx bell
 vx baby
@@ -45,7 +45,12 @@ v cascade
 v the wind
 x black hole
 
-x hazard - highrise
+v hazard
+v seamine
+v jumppad
+v grindrail
+v pylons
+v realitycollapse
 
 vx catalyst
 vx celestial

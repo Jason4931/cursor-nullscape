@@ -121,7 +121,7 @@ export function setup(host, hardMode) {
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
-        state.jitterTimer = 0;
+        state.jitterTimer -= 0.25;
         if (state.jitterRot == 0.1) state.jitterRot = -0.1;
         else state.jitterRot = 0.1;
       }
