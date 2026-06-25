@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, ability } from "../main.js";
+import { setup as spawnMalfunction } from "./Malfunction.js";
 
 const OperatorIdle = new Image();
 OperatorIdle.src = "./ASSET/Enemies/Operator/Operator_Idle.png";
@@ -10,6 +11,7 @@ OperatorDanger.src = "./ASSET/Enemies/Operator/Operator_Danger.png";
 const OperatorKilling = new Image();
 OperatorKilling.src = "./ASSET/Enemies/Operator/Operator_Killing.png";
 
+export let malfunctionActive = [false];
 export function setup(host, hardMode) {
   const state = {
     opacity: 1,
@@ -42,10 +44,10 @@ export function setup(host, hardMode) {
     death: false,
   };
 
-  function enterIdle() {
+  function enterIdle(mal = false) {
     state.phase = "idle";
     state.timer = 0;
-    state.idleDuration = 14 + Math.random();
+    state.idleDuration = (mal ? 13.25 : 0) + 14 + Math.random();
     state.death = false;
   }
   function easeOut(t) {
@@ -69,9 +71,14 @@ export function setup(host, hardMode) {
 
     if (state.phase === "idle") {
       if (state.timer >= state.idleDuration) {
-        state.phase = "spawn";
-        state.timer = 0;
-        playSound("./ASSET/Sound/Enemies/Operator/Operator_Spawn.ogg");
+        if (malfunctionActive[0] && Math.random() < 0.5) {
+          spawnMalfunction(host);
+          enterIdle(true);
+        } else {
+          state.phase = "spawn";
+          state.timer = 0;
+          playSound("./ASSET/Sound/Enemies/Operator/Operator_Spawn.ogg");
+        }
       }
     } else if (state.phase === "spawn") {
       const cam = getCameraPos();

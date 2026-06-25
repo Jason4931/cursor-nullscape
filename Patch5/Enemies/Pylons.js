@@ -134,7 +134,7 @@ const pattern = rawpattern.map((row, y) =>
     return neighbors.includes(0) ? (Math.random() < 0.1 ? 4 : 1) : 1;
   }),
 );
-export let pylonDone = 0;
+let pylonDone = 0;
 export let pylonLocations = [];
 export function setup(host) {
   const state = {

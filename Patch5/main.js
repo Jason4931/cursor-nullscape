@@ -34,7 +34,10 @@ import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { setup as spawnNIL } from "./Enemies/NIL.js";
 import { setup as spawnGuardian } from "./Enemies/Guardian.js";
-import { setup as spawnOperator } from "./Enemies/Operator.js";
+import {
+  malfunctionActive,
+  setup as spawnOperator,
+} from "./Enemies/Operator.js";
 import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
@@ -57,6 +60,7 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnCelestial } from "./Enemies/Celestial.js";
 import { setup as startCelestialIntro } from "./Enemies/CelestialIntro.js";
 import { pylonLocations, setup as spawnPylons } from "./Enemies/Pylons.js";
+import { setup as spawnTruePylons } from "./Enemies/TruePylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
@@ -182,6 +186,7 @@ let SHAKE = false;
 let transformAllGift = false;
 let allGold = false;
 export let passageGoldPattern = 0;
+let stopCollect = false;
 let disableTripmine = false;
 let disableCollect = false;
 let disablespawn = false;
@@ -331,6 +336,16 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Operator.png",
     unstackable: true,
     desc: "Stand still briefly, before it wakes.",
+  },
+  {
+    name: "Malfunction",
+    spawn: () => {
+      malfunctionActive[0] = true;
+    },
+    start: 1000,
+    src: "./ASSET/Enemies/Malfunction.png",
+    unstackable: true,
+    desc: "Operator becomes Voidbound. Stay still 3 times to survive.",
   },
   {
     name: "Telefragger",
@@ -895,6 +910,7 @@ topLeftInput.addEventListener("input", () => {
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
     input.toLowerCase() === "pylons" ||
+    input.toLowerCase() === "truepylons" ||
     input.toLowerCase() === "seamine" ||
     input.toLowerCase() === "jumppad" ||
     input.toLowerCase() === "realitycollapse" ||
@@ -913,6 +929,8 @@ topLeftInput.addEventListener("input", () => {
         registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
       } else if (input.toLowerCase() === "pylons") {
         spawnPylons(entityHost);
+      } else if (input.toLowerCase() === "truepylons") {
+        spawnTruePylons(entityHost);
       } else if (input.toLowerCase() === "seamine") {
         spawnSeamine(entityHost, casualMode, hardMode);
       } else if (input.toLowerCase() === "jumppad") {
@@ -2172,6 +2190,7 @@ function spawnCatalystIntro() {
 }
 export function spawnCelestialIntro() {
   disableCollect = true;
+  activateShield();
   startCelestialIntro(entityHost);
   entities.forEach((e) => {
     e();
@@ -2191,6 +2210,26 @@ export function spawnCelestialIntro() {
     spawnCelestial(entityHost, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
   }, 31000);
+}
+export function startCelestialPhase4() {
+  spawnTruePylons(entityHost);
+  stopCollect = true;
+  allGold = true;
+  giftPositions.forEach((gift) => {
+    if (gift.type === "gift") {
+      gift.golden = true;
+    }
+  });
+}
+export function spawnCelestialEnding() {
+  // startCelestialEnding(entityHost)
+  stopCollect = false;
+  disablespawn = true;
+  allGold = false;
+  // despawn celestial and true pylon
+  // destroy all pattern
+  // spawn back all entity after cutscene
+  // 4s of immortallity after cutscene
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;
@@ -2456,7 +2495,7 @@ export function activatePurgatory() {
   lastAltar = "Purgatory";
   let beforeCollectedCount = collectedCount;
   let beforeLastEntitySpawnAt = lastEntitySpawnAt;
-  if (!disableCollect) actualCollectedCount += 1000;
+  if (!disableCollect && !stopCollect) actualCollectedCount += 1000;
   if (actualCollectedCount > 10000) actualCollectedCount = 10000;
   collectedCount = hardMode
     ? actualCollectedCount
@@ -4119,7 +4158,8 @@ function updateCamera() {
         }
       }
       const value = (g.golden ? 4 : 1) * giftMultiplier;
-      if (!disableCollect && !insidePylon) actualCollectedCount += value;
+      if (!disableCollect && !insidePylon && !stopCollect)
+        actualCollectedCount += value;
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);

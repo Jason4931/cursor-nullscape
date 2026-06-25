@@ -6,6 +6,7 @@ import {
   playSound,
   soundStopped,
   actualCollectedCount,
+  startCelestialPhase4,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -6952,7 +6953,7 @@ export function setup(host, hardMode, truePattern = false) {
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 3 && phase === 4) {
         scream = true;
-        // spawn pylon here
+        startCelestialPhase4();
         state.loopPattern = loopPatternPhase4;
         state.patternIndex = state.loopPattern.length;
       }
@@ -7043,7 +7044,6 @@ export function setup(host, hardMode, truePattern = false) {
     if (state.scream) {
       state.screamT += dt;
       if (state.screamT >= 3) {
-        console.log("a");
         state.scream = false;
         state.enemyMode = "orbit";
       }
@@ -7126,7 +7126,8 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
-    if (state.enemyTransition == "none") state.currentPattern.update(dt);
+    if (state.enemyTransition == "none" && !state.scream)
+      state.currentPattern.update(dt);
   }
 
   function draw(ctx) {

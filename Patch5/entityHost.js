@@ -226,7 +226,7 @@ const DEATH_MESSAGES = {
     "You forgot to check both ways before crossing.",
     "Caution: you ahead.",
     "Why did the chicken cross the road? To get to the other side!",
-    "{player} went over the speed limit.",
+    "You went over the speed limit.",
   ],
   Telefragger: [
     "You got completely telefragged.",
