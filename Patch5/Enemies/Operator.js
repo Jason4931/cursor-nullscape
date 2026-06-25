@@ -47,7 +47,7 @@ export function setup(host, hardMode) {
   function enterIdle(mal = false) {
     state.phase = "idle";
     state.timer = 0;
-    state.idleDuration = (mal ? 13.25 : 0) + 14 + Math.random();
+    state.idleDuration = (mal ? 12.5 : 0) + 14 + Math.random();
     state.death = false;
   }
   function easeOut(t) {
