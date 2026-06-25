@@ -25,6 +25,7 @@ export function setup(host) {
     watch2Duration: 3.25,
     watch3Duration: 3.25,
     idleSound: null,
+    attackSound: null,
     despawn: false,
 
     abilityLongerCooldown: 0,
@@ -147,7 +148,7 @@ export function setup(host) {
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
         if (prev != state.enemy) {
           if (state.idleSound) state.idleSound();
-          playSound(
+          state.attackSound = playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Attacking.ogg",
           );
         }
@@ -156,6 +157,7 @@ export function setup(host) {
           state.timer = 0;
           state.jitterRot = 0;
           state.enemy = OperatorIdle;
+          if (state.attackSound) state.attackSound();
           playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Success.ogg",
           );
@@ -222,7 +224,7 @@ export function setup(host) {
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
         if (prev != state.enemy) {
           if (state.idleSound) state.idleSound();
-          playSound(
+          state.attackSound = playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Attacking.ogg",
           );
         }
@@ -231,6 +233,7 @@ export function setup(host) {
           state.timer = 0;
           state.jitterRot = 0;
           state.enemy = OperatorIdle;
+          if (state.attackSound) state.attackSound();
           playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Success.ogg",
           );
@@ -297,7 +300,7 @@ export function setup(host) {
         if (state.abilityLongerCooldown < 0) state.abilityLongerCooldown = 0;
         if (prev != state.enemy) {
           if (state.idleSound) state.idleSound();
-          playSound(
+          state.attackSound = playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Attacking.ogg",
           );
         }
@@ -306,6 +309,7 @@ export function setup(host) {
           state.timer = 0;
           state.jitterRot = 0;
           state.enemy = OperatorIdle;
+          if (state.attackSound) state.attackSound();
           playSound(
             "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Cleared.ogg",
           );
