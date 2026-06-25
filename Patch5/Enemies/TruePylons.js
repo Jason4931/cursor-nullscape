@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, canvas, getCameraPos } from "../main.js";
+import { TILE, canvas, getCameraPos, spawnCelestialEnding } from "../main.js";
 const rawpattern = [
   [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -145,7 +145,6 @@ export function setup(host) {
       const minDist = 2000;
 
       let count = 3;
-      if (pylonDone >= 9) count = 2;
       for (let i = 0; i < count; i++) {
         while (true) {
           const x = Math.random() * (canvas.width - margin * 2) + margin;
@@ -274,10 +273,10 @@ export function setup(host) {
           p.charged = true;
           p.shake = 2;
           pylonDone++;
-          if (pylonDone % 3 == 0) {
+          if (pylonDone == 9) {
+            spawnCelestialEnding();
+          } else if (pylonDone % 3 == 0) {
             s.generated = false;
-          }
-          if (pylonDone == 11) {
           }
         }
       } else {

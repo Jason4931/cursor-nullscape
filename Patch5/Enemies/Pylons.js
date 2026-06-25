@@ -156,7 +156,7 @@ export function setup(host) {
       s.circleRadius = 500;
 
       const margin = 1000;
-      const minDist = 3000;
+      const minDist = 4000;
 
       for (let i = 0; i < 5; i++) {
         while (true) {
