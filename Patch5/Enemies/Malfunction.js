@@ -198,8 +198,8 @@ export function setup(host) {
       }
     } else if (state.phase === "watch2") {
       const cam = getCameraPos();
-      state.x = cam.x + window.innerWidth / 4;
-      state.y = cam.y + window.innerHeight / 2;
+      state.x = cam.x + window.innerWidth / 4 - state.size / 4;
+      state.y = cam.y + window.innerHeight / 2 + state.size / 4;
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
@@ -283,8 +283,8 @@ export function setup(host) {
       }
     } else if (state.phase === "watch3") {
       const cam = getCameraPos();
-      state.x = cam.x + window.innerWidth / 4;
-      state.y = cam.y + window.innerHeight / 2;
+      state.x = cam.x + window.innerWidth / 4 + state.size / 4;
+      state.y = cam.y + window.innerHeight / 2 + state.size / 4;
 
       state.jitterTimer += dt;
       if (state.jitterTimer >= 0.25 && !state.death) {
