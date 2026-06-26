@@ -387,7 +387,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
-    desc: "Creates several implosions around the map that explode after a short duration.",
+    desc: "Void Implosions will start spawning. Bypasses shield.",
   },
   {
     name: "Oblivion",
@@ -494,7 +494,7 @@ const ENTITY_POOL = [
     spawn: () => spawnRealmweaver(entityHost),
     start: 0,
     src: "./ASSET/Enemies/RealmweaverIcon.png",
-    desc: " ",
+    desc: "Sweeps across the battlefield. Don't get caught in its path.",
     chaosOnly: true,
   },
   {
@@ -503,7 +503,7 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Cascade.png",
     rare: true,
-    desc: "Orbiting shards that summon homing cyan bullets and fast elliptical rams.",
+    desc: "Summons spiraling projectiles while swift rams streak across the arena. Keep moving.",
     chaosOnly: true,
   },
   {
@@ -512,7 +512,7 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/TheWind.png",
     rare: true,
-    desc: "It was the wind.",
+    desc: "Shakes your perception. Occasionally, reality slips much further.",
     chaosOnly: true,
   },
   {
