@@ -141,7 +141,6 @@ export function setup(host) {
         state.timer >= state.watchDuration - 0.5 &&
         state.timer < state.watchDuration
       ) {
-        state.jitterRot = 0;
         const prev = state.enemy;
         state.enemy = OperatorDanger;
         state.abilityLongerCooldown -= 30;
@@ -217,7 +216,6 @@ export function setup(host) {
         state.timer >= state.watch2Duration - 0.5 &&
         state.timer < state.watch2Duration
       ) {
-        state.jitterRot = 0;
         const prev = state.enemy;
         state.enemy = OperatorDanger;
         state.abilityLongerCooldown -= 30;
@@ -293,7 +291,6 @@ export function setup(host) {
         state.timer >= state.watch3Duration - 0.5 &&
         state.timer < state.watch3Duration
       ) {
-        state.jitterRot = 0;
         const prev = state.enemy;
         state.enemy = OperatorDanger;
         state.abilityLongerCooldown -= 30;

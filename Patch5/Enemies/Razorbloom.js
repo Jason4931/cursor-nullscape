@@ -60,6 +60,11 @@ export function setup(host, hardMode) {
         state.phase = "wait";
         state.sound = playSound(
           `./ASSET/Sound/Enemies/Razorbloom/Razorbloom_Warning.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
         );
         state.timer = 0;
         state.opacity = 1;
@@ -85,6 +90,11 @@ export function setup(host, hardMode) {
         state.phase = "warning";
         state.sound = playSound(
           `./ASSET/Sound/Enemies/Razorbloom/Razorbloom_Yell${hardMode ? "_Short" : ""}.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
         );
         state.timer = 0;
         state.opacity = 1;
@@ -100,7 +110,14 @@ export function setup(host, hardMode) {
       if (jumppadHit("get") || state.death) {
         if (state.sound) state.sound();
         state.phase = "done";
-        playSound("./ASSET/Sound/Enemies/Razorbloom/Razorbloom_Success.ogg");
+        playSound(
+          "./ASSET/Sound/Enemies/Razorbloom/Razorbloom_Success.ogg",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
+        );
         state.timer = 0;
         state.opacity = 1;
         state.t = 0;

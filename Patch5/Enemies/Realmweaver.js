@@ -6,8 +6,8 @@ enemy.src = "./ASSET/Enemies/Realmweaver.png";
 export function setup(host) {
   const state = {
     opacity: 1,
-    w: 2000,
-    h: 600,
+    w: 4000,
+    h: 1200,
     x: Math.random() * host.canvas.width,
     y: Math.random() * host.canvas.width,
     timer: 0,
