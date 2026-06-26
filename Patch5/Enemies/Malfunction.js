@@ -21,9 +21,9 @@ export function setup(host) {
     idleDuration: 0,
     spawnDuration: 0.5,
     disableDuration: 1,
-    watchDuration: 5.25,
-    watch2Duration: 3.25,
-    watch3Duration: 3.25,
+    watchDuration: 5.5,
+    watch2Duration: 3.5,
+    watch3Duration: 3.5,
     idleSound: null,
     attackSound: null,
     despawn: false,
@@ -138,7 +138,7 @@ export function setup(host) {
       }
 
       if (
-        state.timer >= state.watchDuration - 0.25 &&
+        state.timer >= state.watchDuration - 0.5 &&
         state.timer < state.watchDuration
       ) {
         state.jitterRot = 0;
@@ -214,7 +214,7 @@ export function setup(host) {
       }
 
       if (
-        state.timer >= state.watch2Duration - 0.25 &&
+        state.timer >= state.watch2Duration - 0.5 &&
         state.timer < state.watch2Duration
       ) {
         state.jitterRot = 0;
@@ -290,7 +290,7 @@ export function setup(host) {
       }
 
       if (
-        state.timer >= state.watch3Duration - 0.25 &&
+        state.timer >= state.watch3Duration - 0.5 &&
         state.timer < state.watch3Duration
       ) {
         state.jitterRot = 0;
