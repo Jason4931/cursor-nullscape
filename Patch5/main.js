@@ -67,6 +67,7 @@ import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
 import { setup as spawnTheWind } from "./Enemies/TheWind.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
+import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
 
 window.__MODULE_FAILED__ = false;
 
@@ -345,7 +346,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Enemies/Malfunction.png",
     unstackable: true,
-    desc: "Operator becomes Voidbound. Stay still 3 times to survive.",
+    desc: "Operator have 50% chance to become Voidbound. Stay still 3 times to survive.",
   },
   {
     name: "Telefragger",
@@ -486,6 +487,14 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/TheEye.png",
     desc: "Would you quit staring? it's rude.",
+    chaosOnly: true,
+  },
+  {
+    name: "Realmweaver",
+    spawn: () => spawnRealmweaver(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/RealmweaverIcon.png",
+    desc: " ",
     chaosOnly: true,
   },
   {
