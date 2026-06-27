@@ -44,7 +44,7 @@ x manta ray (?) - always circling the cursor at slow speed (average size)
 
 v cascade
 v the wind
-x black hole
+v black hole
 
 v hazard
 v seamine

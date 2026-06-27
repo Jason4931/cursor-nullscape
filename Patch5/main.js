@@ -66,6 +66,7 @@ import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
 import { setup as spawnTheWind } from "./Enemies/TheWind.js";
+import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
 
@@ -513,6 +514,15 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/TheWind.png",
     rare: true,
     desc: "Shakes your perception. Occasionally, reality slips much further.",
+    chaosOnly: true,
+  },
+  {
+    name: "Blackhole",
+    spawn: () => spawnBlackhole(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/Blackhole.png",
+    rare: true,
+    desc: "Distorts your surroundings and drags you in. Don't get consumed.",
     chaosOnly: true,
   },
   {
