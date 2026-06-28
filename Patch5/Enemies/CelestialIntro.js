@@ -17,6 +17,8 @@ video.addEventListener("loadedmetadata", () => {
 
 const BG = new Image();
 BG.src = "./ASSET/Misc/CelestialBG.png";
+const Flower = new Image();
+Flower.src = "./ASSET/Misc/CelestialFlower.png";
 const Title = new Image();
 Title.src = "./ASSET/Misc/CelestialTitle.png";
 
@@ -137,6 +139,7 @@ export function setup(host) {
     if (state.timer >= 31 && state.timer < 34) {
       const t = state.timer - 31;
       let scale = 0;
+      let flowerScale = 0;
       if (t <= 0.5) {
         const p = t / 0.5;
         scale = 1 - (1 - p) * (1 - p);
@@ -146,9 +149,21 @@ export function setup(host) {
         const p = (t - 2.5) / 0.5;
         scale = 1 - p * p;
       }
+      if (t <= 0.5) {
+        flowerScale = 0;
+      } else if (t <= 1) {
+        const p = (t - 0.5) / 0.5;
+        flowerScale = 1 - (1 - p) * (1 - p);
+      } else if (t <= 2) {
+        flowerScale = 1;
+      } else {
+        const p = (t - 2) / 1;
+        flowerScale = 1 - p * p;
+      }
 
       const w = 1000 * scale;
       const h = w / 3;
+      const flowerSize = 600 * flowerScale;
 
       const x = cam.x + window.innerWidth / 2;
       const y = cam.y + window.innerHeight / 2;
@@ -156,6 +171,15 @@ export function setup(host) {
       ctx.save();
       ctx.globalAlpha = 1;
       ctx.translate(x, y);
+      ctx.rotate(state.timer);
+      ctx.drawImage(
+        Flower,
+        -flowerSize / 2,
+        -flowerSize / 2,
+        flowerSize,
+        flowerSize,
+      );
+      ctx.rotate(-state.timer);
       ctx.drawImage(Title, -w / 2, -h / 2, w, h);
       ctx.restore();
     }

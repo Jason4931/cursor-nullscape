@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { actualCollectedCount } from "../main.js";
 
 let mainReality = false;
 let fastReality = false;
@@ -15,6 +16,7 @@ export function setup(host, fast = false) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (actualCollectedCount >= 5000) return;
 
     state.phaseT += dt;
 
@@ -145,6 +147,7 @@ export function setup(host, fast = false) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (actualCollectedCount >= 5000) return;
 
     ctx.save();
     ctx.globalAlpha = state.phase == "spawn" ? state.phaseT * 4 : 1;

@@ -156,7 +156,7 @@ export function setup(host) {
       s.circleRadius = 500;
 
       const margin = 1000;
-      const minDist = 4000;
+      const minDist = 3000;
 
       for (let i = 0; i < 5; i++) {
         while (true) {
@@ -648,6 +648,32 @@ export function setup(host) {
 
       ctx.fillText("🡒", 0, 0);
 
+      ctx.restore();
+    }
+
+    if (pylonDone >= 1) {
+      ctx.save();
+      ctx.resetTransform();
+      ctx.font = "48px Times New Roman";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const text = `${pylonDone}/5`;
+      const x = cam.x + window.innerWidth / 2;
+      const y = cam.y + window.innerHeight * 0.9;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(255,255,255,0.125)";
+      ctx.lineWidth = 9;
+      ctx.strokeText(text, x, y);
+      ctx.strokeStyle = "rgba(255,255,255,0.25)";
+      ctx.lineWidth = 6;
+      ctx.strokeText(text, x, y);
+      ctx.strokeStyle = "rgba(255,255,255,0.5)";
+      ctx.lineWidth = 3;
+      ctx.strokeText(text, x, y);
+
+      ctx.fillStyle = "magenta";
+      ctx.fillText(text, x, y);
       ctx.restore();
     }
 

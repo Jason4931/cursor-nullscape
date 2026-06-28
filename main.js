@@ -386,6 +386,7 @@ let settingsEnabled = true;
 let showBorder = JSON.parse(localStorage.getItem("border")) ?? true;
 let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
 let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
+let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
@@ -406,6 +407,7 @@ let musicVolume = localStorage.getItem("musicVolume")
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
+document.getElementById("toggle-timer").checked = showTimer;
 document.getElementById("toggle-floor").checked = showFloor;
 document.getElementById("toggle-border").checked = showBorder;
 document.getElementById("toggle-epileptic").checked = epilepticMode;
@@ -449,6 +451,10 @@ graphicsSlider.addEventListener("input", () => {
 });
 toggle("toggle-grids", (v) => {
   showGrids = v;
+});
+toggle("toggle-timer", (v) => {
+  showTimer = v;
+  document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
 });
 toggle("toggle-floor", (v) => {
   showFloor = v;
@@ -550,6 +556,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("border");
   localStorage.removeItem("floor");
   localStorage.removeItem("grids");
+  localStorage.removeItem("timer");
   localStorage.removeItem("reduced-motion");
   localStorage.removeItem("deaf-mode");
   localStorage.removeItem("epileptic");
@@ -566,6 +573,7 @@ document.getElementById("reset-settings").onclick = () => {
   showBorder = true;
   showFloor = true;
   showGrids = false;
+  showTimer = false;
   reducedMotion = false;
   deafMode = true;
   epilepticMode = false;
@@ -581,6 +589,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
+  document.getElementById("toggle-timer").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
   document.getElementById("toggle-deaf-mode").checked = true;
   document.getElementById("toggle-epileptic").checked = false;
@@ -596,6 +605,7 @@ document.getElementById("reset-settings").onclick = () => {
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
+  document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
   canvas.style.boxShadow =
     "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
   if (accurateCursor) {
@@ -860,7 +870,7 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.blur();
   }
   if (input === "suicide") {
-    death();
+    death("Suicide");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -1017,6 +1027,7 @@ const patternsState = new Map();
 canvas.style.animation = epilepticMode
   ? "bg-epileptic-lol 1s infinite"
   : "bg 60s infinite";
+document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
 canvas.style.boxShadow = showBorder
   ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
   : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
@@ -1055,7 +1066,7 @@ export function playSound(
   )
     return;
   const audio = new Audio(soundPath);
-  audio.playbackRate = rate;
+  audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {
     audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
   } else {
@@ -3407,6 +3418,25 @@ if (isMobile) {
   document.getElementById("intro-screen").style.display = "none";
   document.getElementById("mobile-screen").style.display = "flex";
 }
+let timerInterval = null;
+let startTime = 0;
+function startTimer() {
+  if (timerInterval) return;
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+    document.getElementById("timer").innerHTML = `${minutes}:${seconds}`;
+  }, 100);
+}
+export function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  setTimeout(() => {
+    document.getElementById("timer").style.bottom = "6vw";
+  }, 5000);
+}
 const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
@@ -3434,6 +3464,7 @@ const unlock = () => {
       pick.spawn();
     }
   }, 60000);
+  startTimer();
   loop();
 };
 window.addEventListener("click", unlock);

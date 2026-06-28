@@ -34,6 +34,15 @@ let phase = 1;
 export function setup(host, hardMode, truePattern = false) {
   const patternFall = [
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("FALL.");
+      },
+    },
+    {
       duration: 5.5,
       update: updateSlash,
       draw: drawSlash,
@@ -57,6 +66,15 @@ export function setup(host, hardMode, truePattern = false) {
   ];
   const patternFutile = [
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("FUTILE.");
+      },
+    },
+    {
       duration: 13,
       update: updateFutile,
       draw: drawFutile,
@@ -78,7 +96,34 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterSlash,
     },
   ];
+  const patternFutilePhase3 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("FUTILE.");
+      },
+    },
+    {
+      duration: 13,
+      update: updateFutile,
+      draw: drawFutile,
+      drawFront: drawFutileFront,
+      enter: enterFutile,
+    },
+  ];
   const patternCrumble = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CRUMBLE.");
+      },
+    },
     {
       duration: 3,
       update: updateCrumble,
@@ -103,6 +148,15 @@ export function setup(host, hardMode, truePattern = false) {
   ];
   const patternBitter = [
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("BITTER.");
+      },
+    },
+    {
       duration: 9,
       update: updateBitter,
       draw: drawBitter,
@@ -117,7 +171,66 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterImplosion,
     },
   ];
+  const patternBitterPhase3 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("BITTER.");
+      },
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 5.5,
+      update: updateSlash,
+      draw: drawSlash,
+      drawFront: drawSlashFront,
+      enter: enterSlash,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+  ];
   const patternCease = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CEASE.");
+      },
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+  ];
+  const patternCeasePhase3 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CEASE.");
+      },
+    },
     {
       duration: 3,
       update: updateCease,
@@ -132,8 +245,56 @@ export function setup(host, hardMode, truePattern = false) {
       drawFront: drawPizzaCutterCrumbleFront,
       enter: enterPizzaCutterCrumble,
     },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
+    },
+  ];
+  const patternSecondCeasePhase3 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CEASE.");
+      },
+    },
+    {
+      duration: 3,
+      update: updateCease,
+      draw: drawCease,
+      drawFront: drawCeaseFront,
+      enter: enterCease,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+    },
+    {
+      duration: 9,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
   ];
   const patternBoom = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("BOOM.");
+      },
+    },
     {
       duration: 3,
       update: updateImplosion,
@@ -144,11 +305,27 @@ export function setup(host, hardMode, truePattern = false) {
   ];
   const patternDeathInBloom = [
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("DEATH IN BLOOM.");
+      },
+    },
+    {
       duration: 23,
       update: updateDeathInBloom,
       draw: drawDeathInBloom,
       drawFront: drawDeathInBloomFront,
       enter: enterDeathInBloom,
+    },
+    {
+      duration: 3,
+      update: updateImplosion,
+      draw: drawImplosion,
+      drawFront: drawImplosionFront,
+      enter: enterImplosion,
     },
   ];
   const loopPatternPhase1 = [...patternFall, ...patternCrumble];
@@ -160,14 +337,23 @@ export function setup(host, hardMode, truePattern = false) {
   ];
   const loopPatternPhase3 = [
     ...patternDeathInBloom,
-    ...patternFutile,
-    ...patternCease,
-    ...patternBitter,
-    ...patternFutile,
-    ...patternCease,
+    ...patternFutilePhase3,
+    ...patternCeasePhase3,
+    ...patternBitterPhase3,
+    ...patternFutilePhase3,
+    ...patternSecondCeasePhase3,
     ...patternBoom,
   ];
   const loopPatternPhase4 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("NO ESCAPE.");
+      },
+    },
     {
       duration: 13,
       update: updateFutile,
@@ -202,6 +388,15 @@ export function setup(host, hardMode, truePattern = false) {
       draw: drawBitter,
       drawFront: drawBitterFront,
       enter: enterBitter,
+    },
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("SILENCE.");
+      },
     },
     {
       duration: 9,
@@ -239,6 +434,15 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterSuperPizzaCutter,
     },
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("BITTER.");
+      },
+    },
+    {
       duration: 9,
       update: updateBitter3Stars,
       draw: drawBitter3Stars,
@@ -260,6 +464,15 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterCease,
     },
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("DEATH IN BLOOM.");
+      },
+    },
+    {
       duration: 23,
       update: updateDeathInBloomCrumble,
       draw: drawDeathInBloomCrumble,
@@ -272,6 +485,15 @@ export function setup(host, hardMode, truePattern = false) {
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+    },
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CRUMBLE.");
+      },
     },
     {
       duration: 3,
@@ -302,6 +524,15 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterBitter,
     },
     {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("SILENCE.");
+      },
+    },
+    {
       duration: 3,
       update: updateImplosionBreaker,
       draw: drawImplosionBreaker,
@@ -324,10 +555,19 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 9,
-      update: updateBitter3Stars,
-      draw: drawBitter3Stars,
-      drawFront: drawBitter3StarsFront,
-      enter: enterBitter3Stars,
+      update: updateBitter,
+      draw: drawBitter,
+      drawFront: drawBitterFront,
+      enter: enterBitter,
+    },
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("DEATH IN BLOOM.");
+      },
     },
     {
       duration: 23,
@@ -748,7 +988,7 @@ export function setup(host, hardMode, truePattern = false) {
     stateSlash.prevMx = mouse.x;
     stateSlash.prevMy = mouse.y;
 
-    showText("FALL.");
+    if (truePattern == false) showText("FALL.");
   }
   function updateSlash(dt) {
     const mx = mouse.x;
@@ -956,7 +1196,7 @@ export function setup(host, hardMode, truePattern = false) {
     stateImplosion.spawnTimer = 0;
     stateImplosion.spawned = 0;
 
-    showText("BOOM.");
+    if (truePattern == false) showText("BOOM.");
   }
   function updateImplosion(dt) {
     const mx = mouse.x;
@@ -1603,7 +1843,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.trail = [];
     enterFixed(-1000, -1000);
 
-    showText("FUTILE.");
+    if (truePattern == false) showText("FUTILE.");
   }
   function updateFutile(dt) {
     const mx = mouse.x;
@@ -1938,7 +2178,7 @@ export function setup(host, hardMode, truePattern = false) {
       stateCrumble.circles.push(spawnCircle());
     }
 
-    showText("CRUMBLE.");
+    if (truePattern == false) showText("CRUMBLE.");
   }
   function updateCrumble(dt) {
     const mx = mouse.x;
@@ -2067,7 +2307,7 @@ export function setup(host, hardMode, truePattern = false) {
     stateBitter.cy = cy;
     enterFixed(cx, cy);
 
-    showText("BITTER.");
+    if (truePattern == false) showText("BITTER.");
   }
   function updateBitter(dt) {
     const mx = mouse.x;
@@ -2266,7 +2506,7 @@ export function setup(host, hardMode, truePattern = false) {
     };
     stateCease.positions = [];
 
-    showText("CEASE.");
+    if (truePattern == false) showText("CEASE.");
   }
   function updateCease(dt) {
     const mx = mouse.x;
@@ -2569,7 +2809,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.particles = [];
     s.pTimer = 0;
 
-    showText("DEATH IN BLOOM.");
+    if (truePattern == false) showText("DEATH IN BLOOM.");
   }
   function updateDeathInBloom(dt) {
     const mx = mouse.x;
@@ -3653,7 +3893,7 @@ export function setup(host, hardMode, truePattern = false) {
     stateBitter3Stars.extraT = 0;
     stateBitter3Stars.extraSpawned = 0;
 
-    showText("BITTER.");
+    if (truePattern == false) showText("BITTER.");
   }
   function updateBitter3Stars(dt) {
     const mx = mouse.x;
@@ -4048,7 +4288,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.crumbleT = 0;
     s.circles = [];
 
-    showText("DEATH IN BLOOM.");
+    if (truePattern == false) showText("DEATH IN BLOOM.");
   }
   function updateDeathInBloomCrumble(dt) {
     const mx = mouse.x;
@@ -5103,7 +5343,7 @@ export function setup(host, hardMode, truePattern = false) {
     stateFirstSilence.prevMx = mouse.x;
     stateFirstSilence.prevMy = mouse.y;
 
-    showText("SILENCE.");
+    if (truePattern == false) showText("SILENCE.");
   }
   function updateFirstSilence(dt) {
     const mx = mouse.x;
@@ -5906,7 +6146,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.rift = spawnFutileRift();
     s.trail = [];
 
-    showText("SILENCE.");
+    if (truePattern == false) showText("SILENCE.");
   }
   function updateSecondSilence(dt) {
     const mx = mouse.x;
@@ -7045,6 +7285,7 @@ export function setup(host, hardMode, truePattern = false) {
       state.screamT += dt;
       if (state.screamT >= 3) {
         state.scream = false;
+        state.patternTime = 100;
         state.enemyMode = "orbit";
       }
       return;

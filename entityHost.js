@@ -19,6 +19,7 @@ import {
   slowmode,
   ultrafastmode,
   lastAbilityCooldown,
+  stopTimer,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -328,6 +329,7 @@ const DEATH_MESSAGES = {
     "You were deleted.",
     "You fell into the void.",
   ],
+  Suicide: ["You died."],
   Unknown: [
     "You didn’t see it coming.",
     "Something found you first.",
@@ -395,6 +397,7 @@ export function death(name = "Unknown", color = "#f70000") {
     ability &&
     lastAbilityCooldown == 150 &&
     name != "Dozer" &&
+    name != "Suicide" &&
     name != "Void"
   ) {
     setParried(true);
@@ -436,11 +439,13 @@ export function death(name = "Unknown", color = "#f70000") {
   }
   if (
     name != "Catalyst" &&
+    name != "Suicide" &&
     Math.random() < Math.min(0.333, collectedCount / 15000)
   )
     return;
   dies = true;
   document.body.classList.add("player-dead");
+  stopTimer();
   setTimeout(() => {
     document.body.classList.remove("player-dead");
     const canvas = document.getElementById("screen");

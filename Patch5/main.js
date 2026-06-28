@@ -65,7 +65,7 @@ import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
-import { setup as spawnTheWind } from "./Enemies/TheWind.js";
+import { setup as spawnLaser } from "./Enemies/Laser.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
@@ -508,12 +508,12 @@ const ENTITY_POOL = [
     chaosOnly: true,
   },
   {
-    name: "TheWind",
-    spawn: () => spawnTheWind(entityHost),
+    name: "Laser",
+    spawn: () => spawnLaser(entityHost),
     start: 0,
-    src: "./ASSET/Enemies/TheWind.png",
+    src: "./ASSET/Enemies/Laser.png",
     rare: true,
-    desc: "Shakes your perception. Occasionally, reality slips much further.",
+    desc: "Randomly carves shrinking beams across the battlefield. Don't get caught in their path.",
     chaosOnly: true,
   },
   {
@@ -625,6 +625,7 @@ let settingsEnabled = true;
 let showBorder = JSON.parse(localStorage.getItem("border")) ?? true;
 let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
 let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
+let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
@@ -643,6 +644,7 @@ let musicVolume = localStorage.getItem("musicVolume")
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
+document.getElementById("toggle-timer").checked = showTimer;
 document.getElementById("toggle-floor").checked = showFloor;
 document.getElementById("toggle-border").checked = showBorder;
 document.getElementById("toggle-epileptic").checked = epilepticMode;
@@ -687,6 +689,10 @@ graphicsSlider.addEventListener("input", () => {
 });
 toggle("toggle-grids", (v) => {
   showGrids = v;
+});
+toggle("toggle-timer", (v) => {
+  showTimer = v;
+  document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
 });
 toggle("toggle-floor", (v) => {
   showFloor = v;
@@ -785,6 +791,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("border");
   localStorage.removeItem("floor");
   localStorage.removeItem("grids");
+  localStorage.removeItem("timer");
   localStorage.removeItem("reduced-motion");
   localStorage.removeItem("deaf-mode");
   localStorage.removeItem("epileptic");
@@ -800,6 +807,7 @@ document.getElementById("reset-settings").onclick = () => {
   showBorder = true;
   showFloor = true;
   showGrids = false;
+  showTimer = false;
   reducedMotion = false;
   deafMode = true;
   epilepticMode = false;
@@ -814,6 +822,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
+  document.getElementById("toggle-timer").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
   document.getElementById("toggle-deaf-mode").checked = true;
   document.getElementById("toggle-epileptic").checked = false;
@@ -828,6 +837,7 @@ document.getElementById("reset-settings").onclick = () => {
   graphicsSlider.value = 0;
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
+  document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
   canvas.style.boxShadow =
     "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
   if (accurateCursor) {
@@ -1114,7 +1124,7 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.blur();
   }
   if (input === "suicide") {
-    death();
+    death("Suicide");
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
@@ -1398,6 +1408,7 @@ const patternsState = new Map();
 canvas.style.animation = epilepticMode
   ? "bg-epileptic-lol 1s infinite"
   : "bg 60s infinite";
+document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
 canvas.style.boxShadow = showBorder
   ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
   : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
@@ -1436,7 +1447,7 @@ export function playSound(
   )
     return;
   const audio = new Audio(soundPath);
-  audio.playbackRate = rate;
+  audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {
     audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
   } else {
@@ -1700,6 +1711,9 @@ const musicList = [
   },
 ];
 let lobbyMusic = null;
+let celestialMusic = null;
+let forceCelestialMusic = false;
+let startCelestialMusic = false;
 let stopMusic = null;
 let lastMusicSrc = null;
 let currentMusic = null;
@@ -1731,16 +1745,18 @@ function playNextMusic() {
   lastMusicSrc = pick.src;
   currentMusic = pick;
 
-  stopMusic = playSound(
-    pick.src,
-    1,
-    { start: 0, end: 1 },
-    true,
-    () => {
-      playNextMusic();
-    },
-    false,
-  );
+  if (!forceCelestialMusic) {
+    stopMusic = playSound(
+      pick.src,
+      1,
+      { start: 0, end: 1 },
+      true,
+      () => {
+        playNextMusic();
+      },
+      false,
+    );
+  }
 }
 
 /* ===== HELPERS ===== */
@@ -2212,7 +2228,9 @@ export function spawnCelestialIntro() {
   activateShield();
   startCelestialIntro(entityHost);
   entities.forEach((e) => {
-    e();
+    if (typeof e === "function") {
+      e();
+    }
   });
   entities = [];
   disablespawn = true;
@@ -2221,9 +2239,15 @@ export function spawnCelestialIntro() {
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
+  forceCelestialMusic = true;
+  if (stopMusic) {
+    stopMusic();
+    stopMusic = null;
+  }
   setTimeout(() => {
     celestialBG = true;
-  }, 15000);
+    startCelestialMusic = true;
+  }, 30000);
   setTimeout(() => {
     disableCollect = false;
     spawnCelestial(entityHost, hardMode, true);
@@ -4155,16 +4179,6 @@ function updateCamera() {
     if (dx * dx + dy * dy < radius * radius) {
       giftPositions.splice(i, 1);
 
-      if (g.type === "tripmine") {
-        tripmineExplosion = {
-          x: g.x + TILE / 2,
-          y: g.y + TILE / 2,
-          t: performance.now(),
-        };
-        playSound("./ASSET/Sound/Enemies/Tripmine/subspace-tripmine.mp3");
-        continue;
-      }
-
       let insidePylon = false;
       for (const py of pylonLocations) {
         if (
@@ -4176,6 +4190,17 @@ function updateCamera() {
           insidePylon = true;
         }
       }
+
+      if (g.type === "tripmine" && !insidePylon) {
+        tripmineExplosion = {
+          x: g.x + TILE / 2,
+          y: g.y + TILE / 2,
+          t: performance.now(),
+        };
+        playSound("./ASSET/Sound/Enemies/Tripmine/subspace-tripmine.mp3");
+        continue;
+      }
+
       const value = (g.golden ? 4 : 1) * giftMultiplier;
       if (!disableCollect && !insidePylon && !stopCollect)
         actualCollectedCount += value;
@@ -4539,6 +4564,18 @@ function loop(now) {
       true,
       () => {
         lobbyMusic = null;
+      },
+      false,
+    );
+  }
+  if (forceCelestialMusic && startCelestialMusic && !celestialMusic) {
+    celestialMusic = playSound(
+      "./ASSET/Sound/Music/It_Doesn't_End_Here.mp3",
+      1,
+      { start: 0, end: 1 },
+      true,
+      () => {
+        celestialMusic = null;
       },
       false,
     );
@@ -5028,6 +5065,25 @@ if (isMobile) {
   document.getElementById("intro-screen").style.display = "none";
   document.getElementById("mobile-screen").style.display = "flex";
 }
+let timerInterval = null;
+let startTime = 0;
+function startTimer() {
+  if (timerInterval) return;
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+    document.getElementById("timer").innerHTML = `${minutes}:${seconds}`;
+  }, 100);
+}
+export function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  setTimeout(() => {
+    document.getElementById("timer").style.bottom = "6vw";
+  }, 5000);
+}
 const unlock = () => {
   if (isMobile) return;
   document.getElementById("intro-screen").style.display = "none";
@@ -5056,6 +5112,7 @@ const unlock = () => {
       entities.push(pick.spawn());
     }
   }, 60000);
+  startTimer();
   loop();
 };
 window.addEventListener("click", unlock);

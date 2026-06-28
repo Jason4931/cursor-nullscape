@@ -155,6 +155,21 @@
         }
       }
 
+      #timer {
+        position: absolute;
+        right: 1vw;
+        bottom: 1vw;
+        margin: 0;
+        color: #fff;
+        font-family: monospace;
+        font-size: 1.5vw;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1000;
+        opacity: 0%;
+        transition: all 1s ease;
+      }
+
       #counter {
         position: absolute;
         left: 1vw;
@@ -185,8 +200,8 @@
 
       #settings-btn {
         position: absolute;
-        right: 1vw;
-        bottom: 1vw;
+        right: 1.4vw;
+        bottom: 1.5vw;
         font-size: 4vw;
         cursor: pointer;
         user-select: none;
@@ -816,6 +831,7 @@
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
       <canvas id="entities-2" width="1920" height="1200"></canvas>
+      <p id="timer">00:00</p>
       <p id="counter">Gift(s) Collected: 0</p>
       <p id="lvl">Lvl 0</p>
       <div id="settings-btn">⚙</div>
@@ -920,6 +936,13 @@
           <span>Show grids</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-grids" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show timer</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-timer" />
             <span class="slider-toggle"></span>
           </label>
         </div>
