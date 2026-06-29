@@ -76,7 +76,10 @@ export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
 export const entityCanvas2 = document.getElementById("entities-2");
 const viewport = document.getElementById("viewport");
-const ctx = canvas.getContext("2d");
+let ctx;
+setTimeout(() => {
+  ctx = canvas.getContext("2d");
+}, 0);
 const entityCtx = entityCanvas.getContext("2d");
 const entityCtx2 = entityCanvas.getContext("2d");
 const counterEl = document.getElementById("counter");
