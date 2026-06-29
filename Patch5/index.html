@@ -1061,33 +1061,31 @@
       </div>
     </noscript>
     <script>
-      window.__MODULE_FAILED__ = true;
       window.addEventListener("load", async () => {
-        setTimeout(() => {
-          if (window.__MODULE_FAILED__) {
-            document.body.innerHTML = `
-              <div id="viewport">
-                <div id="intro-screen">
-                  <div id="intro-card">
-                    <h1>The game failed to load</h1>
+        try {
+          await import("./main.js");
+        } catch (e) {
+          document.body.innerHTML = `
+            <div id="viewport">
+              <div id="intro-screen">
+                <div id="intro-card">
+                  <h1>The game failed to load</h1>
 
-                    <p>
-                      Something in your browser is preventing it from running properly.
-                    </p>
+                  <p>
+                    Something in your browser is preventing it from running properly.
+                  </p>
 
-                    <ul style="color: #ccc">
-                      <li>Try reloading the page (Ctrl + F5)</li>
-                      <li>Try opening in a private/incognito window</li>
-                      <li>Disable browser extensions that may interfere with scripts</li>
-                    </ul>
-                  </div>
+                  <ul style="color: #ccc">
+                    <li>Try reloading the page (Ctrl + F5)</li>
+                    <li>Try opening in a private/incognito window</li>
+                    <li>Disable browser extensions that may interfere with scripts</li>
+                  </ul>
                 </div>
               </div>
-            `;
-          }
-        }, 3000);
-
-        await import("./main.js");
+            </div>
+          `;
+          console.error(e);
+        }
       });
     </script>
   </body>
