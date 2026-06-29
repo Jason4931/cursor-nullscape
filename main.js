@@ -1,3 +1,5 @@
+window.__MODULE_FAILED__ = false;
+
 import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
 import {
   createEntityHost,
@@ -46,8 +48,6 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
-
-window.__MODULE_FAILED__ = false;
 
 export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");

@@ -1068,34 +1068,32 @@
     </noscript>
     <script>
       window.__MODULE_FAILED__ = true;
-
-      setTimeout(() => {
-        if (window.__MODULE_FAILED__) {
-          document.body.innerHTML = `
-            <div id="viewport">
-              <div id="intro-screen">
-                <div id="intro-card">
-                  <h1>The game failed to load</h1>
-
-                  <p>
-                    Something in your browser is preventing it from running properly.
-                  </p>
-
-                  <ul style="color: #ccc">
-                    <li>Try reloading the page (Ctrl + F5)</li>
-                    <li>Try opening in a private/incognito window</li>
-                    <li>Disable browser extensions that may interfere with scripts</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }, 2000);
-    </script>
-    <script>
       window.addEventListener("load", async () => {
         await import("./main.js");
+
+        setTimeout(() => {
+          if (window.__MODULE_FAILED__) {
+            document.body.innerHTML = `
+              <div id="viewport">
+                <div id="intro-screen">
+                  <div id="intro-card">
+                    <h1>The game failed to load</h1>
+
+                    <p>
+                      Something in your browser is preventing it from running properly.
+                    </p>
+
+                    <ul style="color: #ccc">
+                      <li>Try reloading the page (Ctrl + F5)</li>
+                      <li>Try opening in a private/incognito window</li>
+                      <li>Disable browser extensions that may interfere with scripts</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        }, 1000);
       });
     </script>
   </body>
