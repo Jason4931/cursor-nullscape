@@ -288,8 +288,10 @@ export function setup(host) {
             state.realityCollapse[0] = spawnRealityCollapse(host, true);
             state.realityCollapse[1] = spawnRealityCollapse(host);
           } else if (pylonDone == 5) {
-            state.realityCollapse[0]();
-            state.realityCollapse[1]();
+            if (typeof state.realityCollapse[0] === "function") {
+              state.realityCollapse[0]();
+              state.realityCollapse[1]();
+            }
             s.circleRadius = 500;
             spawnCelestialIntro();
           }

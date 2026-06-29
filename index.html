@@ -1093,6 +1093,10 @@
         }
       }, 2000);
     </script>
-    <script type="module" src="./main.js"></script>
+    <script>
+      window.addEventListener("load", async () => {
+        await import("./main.js");
+      });
+    </script>
   </body>
 </html>

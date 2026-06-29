@@ -5,15 +5,17 @@ export function setup(host) {
     opacity: 1,
 
     currentPattern: {
-      duration: 3,
-      update: updatePattern1,
-      draw: drawPattern1,
-      enter: enterPattern1,
+      name: "Init",
     },
     patternTime: 0,
-
-    ellipseTimer: 0,
-    ellipses: [],
+  };
+  const burst = {
+    x: 0,
+    y: 0,
+    timer: 0,
+    ringRot: 0,
+    ringSpeed: 0.8,
+    particles: [],
   };
 
   function dist(a, b) {
@@ -25,18 +27,13 @@ export function setup(host) {
   let p1 = {
     origin: { x: 0, y: 0 },
     bullets: [],
-    cyanSpawnTimer: 0,
-    cyanSpawned: 0,
     rotationDir: 1,
   };
   function enterPattern1() {
     p1.bullets.length = 0;
-    p1.cyanSpawnTimer = 0;
-    p1.cyanSpawned = 0;
 
-    const angle = Math.random() * Math.PI * 2;
-    p1.origin.x = mouse.x + Math.cos(angle) * 600;
-    p1.origin.y = mouse.y + Math.sin(angle) * 600;
+    p1.origin.x = burst.x;
+    p1.origin.y = burst.y;
 
     p1.rotationDir = Math.random() < 0.5 ? -1 : 1;
 
@@ -46,7 +43,6 @@ export function setup(host) {
     for (let i = 0; i < count; i++) {
       const a = (i / count) * Math.PI * 2;
       p1.bullets.push({
-        type: "yellow",
         x: p1.origin.x,
         y: p1.origin.y,
         baseAngle: a,
@@ -60,102 +56,22 @@ export function setup(host) {
     }
   }
   function updatePattern1(dt) {
-    const cyanSpeed = 880;
     const turnRate = 2.5;
-
-    if (p1.cyanSpawned < 20) {
-      p1.cyanSpawnTimer += dt;
-      const spawnInterval = 1 / 20;
-
-      while (p1.cyanSpawnTimer >= spawnInterval && p1.cyanSpawned < 20) {
-        p1.cyanSpawnTimer -= spawnInterval;
-        p1.cyanSpawned++;
-
-        const offsetAngle = Math.random() * Math.PI * 2;
-        const offsetDist = Math.random() * 80;
-
-        const x = p1.origin.x + Math.cos(offsetAngle) * offsetDist;
-        const y = p1.origin.y + Math.sin(offsetAngle) * offsetDist;
-
-        const dx = mouse.x - x;
-        const dy = mouse.y - y;
-        const len = Math.hypot(dx, dy) || 1;
-
-        p1.bullets.push({
-          type: "cyan",
-          x,
-          y,
-          vx: (dx / len) * cyanSpeed,
-          vy: (dy / len) * cyanSpeed,
-          speed: cyanSpeed,
-          radius: 10,
-          life: 0,
-          maxLife: 3,
-          trail: [],
-        });
-      }
-    }
 
     for (let b of p1.bullets) {
       b.life += dt;
       b.speed += 40;
 
-      if (b.type === "yellow") {
-        b.angle = b.baseAngle + p1.rotationDir * b.life * 1.5;
+      b.angle = b.baseAngle + p1.rotationDir * b.life * 1.5;
 
-        b.x += Math.cos(b.angle) * b.speed * dt;
-        b.y += Math.sin(b.angle) * b.speed * dt;
-      } else {
-        const dx = mouse.x - b.x;
-        const dy = mouse.y - b.y;
+      b.x += Math.cos(b.angle) * b.speed * dt;
+      b.y += Math.sin(b.angle) * b.speed * dt;
 
-        const targetAngle = Math.atan2(dy, dx);
-        const currentAngle = Math.atan2(b.vy, b.vx);
-
-        let diff = targetAngle - currentAngle;
-
-        diff = ((diff + Math.PI) % (Math.PI * 2)) - Math.PI;
-
-        const maxTurn = turnRate * dt;
-        const newAngle =
-          currentAngle + Math.max(-maxTurn, Math.min(maxTurn, diff));
-
-        b.vx = Math.cos(newAngle) * b.speed;
-        b.vy = Math.sin(newAngle) * b.speed;
-
-        b.x += b.vx * dt;
-        b.y += b.vy * dt;
-      }
       b.trail.push({ x: b.x, y: b.y });
       if (b.trail.length > 12) b.trail.shift();
 
       if (dist(b, mouse) < b.radius) {
         death();
-      }
-    }
-
-    const cyan = p1.bullets.filter((b) => b.type === "cyan");
-
-    for (let i = 0; i < cyan.length; i++) {
-      for (let j = i + 1; j < cyan.length; j++) {
-        const a = cyan[i];
-        const b = cyan[j];
-
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const d = Math.hypot(dx, dy);
-        const minDist = a.radius + b.radius;
-
-        if (d > 0 && d < minDist) {
-          const overlap = (minDist - d) / 2;
-          const nx = dx / d;
-          const ny = dy / d;
-
-          a.x -= nx * overlap;
-          a.y -= ny * overlap;
-          b.x += nx * overlap;
-          b.y += ny * overlap;
-        }
       }
     }
 
@@ -170,29 +86,159 @@ export function setup(host) {
 
           ctx.beginPath();
           ctx.arc(t.x, t.y, b.radius * 0.8, 0, Math.PI * 2);
-          ctx.fillStyle =
-            b.type === "yellow"
-              ? `rgba(255,255,128,${alpha * 0.6})`
-              : `rgba(128,255,255,${alpha * 0.6})`;
+          ctx.fillStyle = `rgba(255,154,0,${alpha * 0.5})`;
           ctx.fill();
         }
       }
 
       ctx.beginPath();
+      const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius);
+      grad.addColorStop(0, "#ff9a00");
+      grad.addColorStop(1, "#ffff00");
       ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
 
-      if (b.type === "yellow") {
-        ctx.fillStyle = "#ffff88";
-      } else {
-        ctx.fillStyle = "#88ffff";
+  let p2 = {
+    origin: { x: 0, y: 0 },
+    bullets: [],
+    rotationDir: 1,
+  };
+  function enterPattern2() {
+    p2.bullets.length = 0;
+
+    p2.origin.x = burst.x;
+    p2.origin.y = burst.y;
+
+    p2.rotationDir = Math.random() < 0.5 ? -1 : 1;
+
+    const speed = 440;
+    const count = 20;
+    const quadrantRotation = (Math.floor(Math.random() * 8) * Math.PI) / 4;
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2;
+      const rotated = (a + quadrantRotation) % (Math.PI * 2);
+
+      const quadrant =
+        (rotated >= 0 && rotated < Math.PI / 2) ||
+        (rotated >= Math.PI && rotated < Math.PI * 1.5)
+          ? 1
+          : -1;
+
+      const nearestCardinal =
+        Math.round(rotated / (Math.PI / 2)) * (Math.PI / 2);
+      const offset = Math.abs(rotated - nearestCardinal);
+
+      const strength = Math.sin(offset * 2);
+
+      const curve = quadrant * strength;
+
+      p2.bullets.push({
+        x: p2.origin.x,
+        y: p2.origin.y,
+        angle: a,
+        speed,
+        curve,
+        radius: 20,
+        life: 0,
+        maxLife: 3,
+        trail: [],
+      });
+    }
+  }
+  function updatePattern2(dt) {
+    for (const b of p2.bullets) {
+      b.life += dt;
+      b.speed += 40;
+
+      b.angle += b.curve * 1.5 * dt;
+
+      b.x += Math.cos(b.angle) * b.speed * dt;
+      b.y += Math.sin(b.angle) * b.speed * dt;
+
+      b.trail.push({ x: b.x, y: b.y });
+      while (b.trail.length > 12) b.trail.shift();
+
+      if (dist(b, mouse) < b.radius) {
+        death();
+      }
+    }
+
+    p2.bullets = p2.bullets.filter((b) => b.life < b.maxLife);
+  }
+  function drawPattern2(ctx) {
+    for (let b of p2.bullets) {
+      if (b.trail) {
+        for (let i = 0; i < b.trail.length; i++) {
+          const t = b.trail[i];
+          const alpha = i / b.trail.length;
+
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, b.radius * 0.8, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(39,167,216,${alpha * 0.5})`;
+          ctx.fill();
+        }
       }
 
+      ctx.beginPath();
+      const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius);
+      grad.addColorStop(0, "#27a7d8");
+      grad.addColorStop(1, "#27ffff");
+      ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
       ctx.fill();
     }
   }
 
   function resetPattern() {
     state.patternTime = 0;
+
+    if (state.currentPattern.name == "Init") {
+      state.currentPattern =
+        Math.random() < 0.5
+          ? {
+              duration: 3,
+              name: "Blue",
+              update: updatePattern2,
+              draw: drawPattern2,
+              enter: enterPattern2,
+            }
+          : {
+              duration: 3,
+              name: "Yellow",
+              update: updatePattern1,
+              draw: drawPattern1,
+              enter: enterPattern1,
+            };
+    } else if (state.currentPattern.name == "Yellow") {
+      state.currentPattern = {
+        duration: 3,
+        name: "Blue",
+        update: updatePattern2,
+        draw: drawPattern2,
+        enter: enterPattern2,
+      };
+    } else {
+      state.currentPattern = {
+        duration: 3,
+        name: "Yellow",
+        update: updatePattern1,
+        draw: drawPattern1,
+        enter: enterPattern1,
+      };
+    }
+
+    const angle = Math.random() * Math.PI * 2;
+    burst.x = mouse.x + Math.cos(angle) * 600;
+    burst.y = mouse.y + Math.sin(angle) * 600;
+
+    burst.timer = 0;
+    burst.ringRot = 0;
+    burst.ringSpeed = 0.8;
+    burst.particles.length = 0;
+
     state.currentPattern.enter?.();
   }
 
@@ -203,98 +249,98 @@ export function setup(host) {
 
     state.patternTime += dt;
 
-    if (state.patternTime >= state.currentPattern.duration) {
+    if (state.patternTime >= state.currentPattern.duration + 3) {
       resetPattern();
     }
 
-    state.ellipseTimer += dt;
+    burst.timer += dt;
+    burst.ringSpeed += dt * 4;
+    burst.ringRot += burst.ringSpeed * dt;
+    const a = Math.random() * Math.PI * 2;
+    const r = 260 + Math.random() * 120;
+    burst.particles.push({
+      x: burst.x + Math.cos(a) * r,
+      y: burst.y + Math.sin(a) * r,
+      color: Math.random() < 0.5 ? "#ffff00" : "#27ffff",
+      alpha: 0,
+    });
+    for (const p of burst.particles) {
+      const dx = burst.x - p.x;
+      const dy = burst.y - p.y;
+      const d = Math.hypot(dx, dy);
 
-    const spawnInterval = 0.333;
-    const speed = 1800;
+      const speed = 480;
 
-    while (state.ellipseTimer >= spawnInterval) {
-      state.ellipseTimer -= spawnInterval;
+      p.x += (dx / d) * speed * dt;
+      p.y += (dy / d) * speed * dt;
 
-      const angle = Math.random() * Math.PI * 2;
-      const x = mouse.x + Math.cos(angle) * 2500;
-      const y = mouse.y + Math.sin(angle) * 2500;
+      p.alpha = 1 - d / 380;
 
-      const dx = mouse.x - x;
-      const dy = mouse.y - y;
-      const len = Math.hypot(dx, dy) || 1;
+      if (d < 10) {
+        const a = Math.random() * Math.PI * 2;
+        const r = 260 + Math.random() * 120;
 
-      const dirX = dx / len;
-      const dirY = dy / len;
-
-      state.ellipses.push({
-        x,
-        y,
-        vx: dirX * speed,
-        vy: dirY * speed,
-        angle: Math.atan2(dirY, dirX),
-        life: 0,
-        maxLife: 3,
-        width: 80,
-        height: 6,
-      });
-    }
-
-    for (let e of state.ellipses) {
-      e.life += dt;
-      e.x += e.vx * dt;
-      e.y += e.vy * dt;
-
-      const dx = mouse.x - e.x;
-      const dy = mouse.y - e.y;
-
-      const cos = Math.cos(-e.angle);
-      const sin = Math.sin(-e.angle);
-
-      const localX = dx * cos - dy * sin;
-      const localY = dx * sin + dy * cos;
-
-      const value =
-        (localX * localX) / (e.width * e.width) +
-        (localY * localY) / (e.height * e.height);
-
-      if (value <= 1) {
-        death();
+        p.x = burst.x + Math.cos(a) * r;
+        p.y = burst.y + Math.sin(a) * r;
+        p.color =
+          Math.random() < (state.currentPattern.name == "Yellow" ? 0.9 : 0.1)
+            ? "#ffff00"
+            : "#27ffff";
       }
     }
 
-    state.ellipses = state.ellipses.filter((e) => e.life < e.maxLife);
-
-    state.currentPattern.update(dt);
+    if (state.patternTime >= 3) state.currentPattern.update(dt);
   }
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     ctx.save();
-    ctx.globalAlpha =
-      state.patternTime >= 2.75 ? (3 - state.patternTime) * 4 : 1;
 
-    for (let e of state.ellipses) {
-      ctx.save();
-      ctx.globalAlpha = 1;
-
-      ctx.translate(e.x, e.y);
-      ctx.rotate(e.angle);
-
+    ctx.save();
+    const grow =
+      burst.timer < 3
+        ? Math.min(burst.timer, 1)
+        : Math.max(0, (3.5 - burst.timer) * 2);
+    const scale = 1 - Math.pow(1 - grow, 3);
+    ctx.translate(burst.x, burst.y);
+    ctx.scale(scale, scale);
+    ctx.save();
+    ctx.rotate(burst.ringRot);
+    ctx.scale(0.25, 1);
+    ctx.beginPath();
+    ctx.arc(0, 0, 100, 0, Math.PI * 2);
+    ctx.strokeStyle = "#27ffff";
+    ctx.lineWidth = 14;
+    ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.rotate(-burst.ringRot * 1.2);
+    ctx.scale(1, 0.25);
+    ctx.beginPath();
+    ctx.arc(0, 0, 100, 0, Math.PI * 2);
+    ctx.strokeStyle = "#ffff00";
+    ctx.lineWidth = 14;
+    ctx.stroke();
+    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(30, 30 + (burst.timer - 3) * 100), 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    for (const p of burst.particles) {
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
       ctx.beginPath();
-      ctx.ellipse(0, 0, e.width, e.height, 0, 0, Math.PI * 2);
-
-      ctx.fillStyle = "#ccffcc";
+      ctx.arc(p.x - burst.x, p.y - burst.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
       ctx.fill();
-
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#88ff88";
-      ctx.stroke();
-
-      ctx.restore();
     }
+    ctx.globalAlpha = 1;
+    ctx.restore();
 
-    state.currentPattern.draw(ctx);
+    ctx.globalAlpha =
+      state.patternTime >= 5.75 ? (6 - state.patternTime) * 4 : 1;
+
+    if (state.patternTime >= 3) state.currentPattern.draw(ctx);
 
     ctx.restore();
   }

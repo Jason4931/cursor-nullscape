@@ -16,6 +16,8 @@ export function setup(host) {
     life: 9 + Math.random(),
 
     scale: 0,
+    lineTimer: [0, 0.25, 0.5, 0.75],
+    lineDuration: 1,
   };
 
   relocate();
@@ -23,6 +25,12 @@ export function setup(host) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
+    for (let i = 0; i < 4; i++) {
+      state.lineTimer[i] += dt;
+      if (state.lineTimer[i] >= state.lineDuration) {
+        state.lineTimer[i] -= state.lineDuration;
+      }
+    }
     state.timer += dt;
     state.rotation += dt;
 
@@ -84,6 +92,16 @@ export function setup(host) {
 
     ctx.translate(state.x, state.y);
     ctx.scale(state.scale, state.scale);
+
+    for (let i = 0; i < 4; i++) {
+      const t = state.lineTimer[i] / state.lineDuration;
+      const r = 2000 * (1 - t * t);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,255,255,${1 - r / 2000})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
 
     ctx.save();
     ctx.rotate(state.rotation);

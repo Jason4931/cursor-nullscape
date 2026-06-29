@@ -46,7 +46,6 @@ import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
-import { setup as spawnCascade } from "./Enemies/Cascade.js";
 
 window.__MODULE_FAILED__ = false;
 
@@ -797,12 +796,6 @@ topLeftInput.addEventListener("input", () => {
   if (input === "revive") {
     revive();
     soundStopped = false;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "cascade") {
-    spawnCascade(entityHost);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();

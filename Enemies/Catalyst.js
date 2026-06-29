@@ -101,8 +101,8 @@ export function setup(host) {
   }
 
   function update(dt) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (despawnCatalyst) return;
-    if (!Number.isFinite(mouse.x)) return;
 
     if (beaconed) {
       state.phase = "scream";
@@ -330,6 +330,7 @@ export function setup(host) {
   }
 
   function draw(ctx) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (despawnCatalyst) return;
     ctx.save();
 

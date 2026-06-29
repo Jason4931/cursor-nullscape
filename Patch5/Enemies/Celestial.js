@@ -7426,17 +7426,18 @@ export function setup(host, hardMode, truePattern = false) {
       ctx.save();
       ctx.translate(state.enemyX, state.enemyY);
 
+      function randomBrightColor(alpha) {
+        const r = Math.floor(Math.random() * 128) + 128;
+        const g = Math.floor(Math.random() * 128);
+        const b = Math.floor(Math.random() * 128) + 128;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
       const grad = ctx.createRadialGradient(0, 0, baseR * 0.2, 0, 0, baseR);
-      grad.addColorStop(0, "rgba(255, 0, 255, 0)");
-      grad.addColorStop(0.65, "rgba(255, 0, 255, 0.1)");
-      grad.addColorStop(0.66, "rgba(255, 0, 255, 0.25)");
-      grad.addColorStop(0.7, "rgba(255, 0, 255, 0.25)");
-      grad.addColorStop(0.71, "rgba(255, 0, 255, 0.1)");
-      grad.addColorStop(0.8, "rgba(255, 0, 255, 0.1)");
-      grad.addColorStop(0.81, "rgba(255, 0, 255, 0.5)");
-      grad.addColorStop(0.9, "rgba(255, 0, 255, 0.5)");
-      grad.addColorStop(0.91, "rgba(255, 0, 255, 0.1)");
-      grad.addColorStop(1, "rgba(255, 0, 255, 0.25)");
+      let point = 0;
+      while (point <= 1) {
+        grad.addColorStop(point, randomBrightColor(Math.random()));
+        point += Math.random() * 0.1;
+      }
 
       ctx.fillStyle = grad;
       ctx.beginPath();

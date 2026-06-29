@@ -495,7 +495,7 @@ const ENTITY_POOL = [
     spawn: () => spawnRealmweaver(entityHost),
     start: 0,
     src: "./ASSET/Enemies/RealmweaverIcon.png",
-    desc: "Sweeps across the battlefield. Don't get caught in its path.",
+    desc: "A colossal serpent. Don't let it touch you.",
     chaosOnly: true,
   },
   {
@@ -504,7 +504,7 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Cascade.png",
     rare: true,
-    desc: "Summons spiraling projectiles while swift rams streak across the arena. Keep moving.",
+    desc: "Alternates between two spiraling bullet patterns.",
     chaosOnly: true,
   },
   {
@@ -513,7 +513,7 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Laser.png",
     rare: true,
-    desc: "Randomly carves shrinking beams across the battlefield. Don't get caught in their path.",
+    desc: "Projects deadly lasers. Avoid their path.",
     chaosOnly: true,
   },
   {
@@ -522,7 +522,7 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Blackhole.png",
     rare: true,
-    desc: "Distorts your surroundings and drags you in. Don't get consumed.",
+    desc: "Pulls you in. Don't get too close.",
     chaosOnly: true,
   },
   {
