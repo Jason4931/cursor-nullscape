@@ -1069,8 +1069,6 @@
     <script>
       window.__MODULE_FAILED__ = true;
       window.addEventListener("load", async () => {
-        await import("./main.js");
-
         setTimeout(() => {
           if (window.__MODULE_FAILED__) {
             document.body.innerHTML = `
@@ -1094,6 +1092,8 @@
             `;
           }
         }, 1000);
+
+        await import("./main.js");
       });
     </script>
   </body>

@@ -1,5 +1,3 @@
-window.__MODULE_FAILED__ = false;
-
 import {
   AllPatterns,
   PATTERNS,
@@ -71,6 +69,8 @@ import { setup as spawnLaser } from "./Enemies/Laser.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
+
+window.__MODULE_FAILED__ = false;
 
 export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
