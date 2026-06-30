@@ -105,10 +105,10 @@ export function setup(host) {
 
     ctx.save();
     ctx.rotate(state.rotation);
-    ctx.scale(1.7, 0.45);
+    ctx.scale(2, 0.5);
     ctx.beginPath();
     ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
-    ctx.lineWidth = state.radius * 0.1;
+    ctx.lineWidth = state.radius * 0.2;
     ctx.strokeStyle = "#fff";
     ctx.stroke();
     ctx.restore();
