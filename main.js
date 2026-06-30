@@ -2157,6 +2157,7 @@ function placeSuper(sx, sy, pattern) {
           sy,
           passageGoldPattern: passageGoldPattern > 0,
           diorite: pattern[y][x] === 10 || pattern[y][x] === 14,
+          collapsing: [false, false],
         });
       }
 
@@ -2411,7 +2412,15 @@ function drawGrid() {
       }
     }
 
-    if (corrupted) {
+    if (t.collapsing[1]) {
+      ctx.fillStyle = showFloor ? "#fff" : "#fff1";
+      ctx.fillRect(
+        t.x + (Math.random() - 0.5) * 5,
+        t.y + (Math.random() - 0.5) * 5,
+        TILE,
+        TILE,
+      );
+    } else if (corrupted) {
       ctx.fillStyle = showFloor
         ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
         : `rgba(120, 0, 0, 0.066)`;
@@ -2478,6 +2487,62 @@ function drawGrid() {
         ctx.fillStyle = showFloor ? "#888" : "#8881";
         ctx.fillRect(t.x + h, t.y + h, h, h);
       }
+    }
+
+    if (t.collapsing[0]) {
+      ctx.strokeStyle = showFloor ? "#fff" : "#fff1";
+      ctx.lineWidth = Math.max(1, TILE * 0.05);
+
+      const rand = (n) => {
+        const x = Math.sin(Math.random() * 1000 + n * 91.73) * 43758.5453;
+        return x - Math.floor(x);
+      };
+
+      const side = Math.floor(rand(0) * 4);
+
+      let x, y, dx, dy;
+
+      if (side === 0) {
+        x = t.x;
+        y = t.y + rand(1) * TILE;
+        dx = 1;
+        dy = 0;
+      } else if (side === 1) {
+        x = t.x + TILE;
+        y = t.y + rand(1) * TILE;
+        dx = -1;
+        dy = 0;
+      } else if (side === 2) {
+        x = t.x + rand(1) * TILE;
+        y = t.y;
+        dx = 0;
+        dy = 1;
+      } else {
+        x = t.x + rand(1) * TILE;
+        y = t.y + TILE;
+        dx = 0;
+        dy = -1;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+
+      for (let i = 0; i < 6; i++) {
+        x += dx * TILE * 0.15 + (rand(i + 2) - 0.5) * TILE * 0.2;
+        y += dy * TILE * 0.15 + (rand(i + 20) - 0.5) * TILE * 0.2;
+        ctx.lineTo(x, y);
+
+        if (rand(i + 40) < 0.35) {
+          ctx.moveTo(x, y);
+          ctx.lineTo(
+            x + (rand(i + 60) - 0.5) * TILE * 0.3,
+            y + (rand(i + 80) - 0.5) * TILE * 0.3,
+          );
+          ctx.moveTo(x, y);
+        }
+      }
+
+      ctx.stroke();
     }
   }
   if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
@@ -3464,8 +3529,21 @@ document.getElementById("intro-screen").addEventListener("click", unlock);
 setInterval(() => {
   for (const [key, p] of patternsState) {
     if (p.passageGoldPattern) {
-      destroyPattern(p);
-      patternsState.delete(key);
+      for (const tile of floorTiles) {
+        if (tile.sx === p.sx && tile.sy === p.sy) {
+          tile.collapsing = [true, false];
+        }
+      }
+      setTimeout(() => {
+        for (const tile of floorTiles) {
+          if (tile.sx === p.sx && tile.sy === p.sy) {
+            tile.collapsing = [false, true];
+          }
+        }
+        setTimeout(() => {
+          destroyPattern(p);
+        }, 1000);
+      }, 2000);
       break;
     }
   }
@@ -3479,8 +3557,21 @@ setInterval(() => {
   for (const [key, p] of patternsState) {
     const c = patternCenter(p.sx, p.sy);
     if (isOutside(c.x, c.y)) {
-      destroyPattern(p);
-      patternsState.delete(key);
+      for (const tile of floorTiles) {
+        if (tile.sx === p.sx && tile.sy === p.sy) {
+          tile.collapsing = [true, false];
+        }
+      }
+      setTimeout(() => {
+        for (const tile of floorTiles) {
+          if (tile.sx === p.sx && tile.sy === p.sy) {
+            tile.collapsing = [false, true];
+          }
+        }
+        setTimeout(() => {
+          destroyPattern(p);
+        }, 1000);
+      }, 2000);
       break;
     }
   }

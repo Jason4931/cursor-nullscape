@@ -27,7 +27,6 @@ vx void implosion
 vx oblivion
 vx razorbloom
 vx voidbound operator
-v reality collapse
 rare
 vx ponderer
 vx nil (considered separate from new nil)
@@ -51,7 +50,7 @@ v seamine
 v jumppad
 v grindrail
 v pylons
-v realitycollapse
+v reality collapse
 
 vx catalyst
 vx celestial
