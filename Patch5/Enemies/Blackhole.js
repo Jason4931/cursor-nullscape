@@ -109,14 +109,31 @@ export function setup(host) {
     ctx.beginPath();
     ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
     ctx.lineWidth = state.radius * 0.1;
-    ctx.strokeStyle = "#444";
+    ctx.strokeStyle = "#fff";
     ctx.stroke();
     ctx.restore();
 
+    const glow = ctx.createRadialGradient(
+      0,
+      0,
+      state.radius,
+      0,
+      0,
+      state.radius * 1.5,
+    );
+    glow.addColorStop(0, "rgba(255,255,255,0.5)");
+    glow.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.beginPath();
+    ctx.arc(0, 0, state.radius * 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
     ctx.beginPath();
     ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
     ctx.fillStyle = "#000";
     ctx.fill();
+    ctx.lineWidth = state.radius * 0.1;
+    ctx.strokeStyle = "#fff";
+    ctx.stroke();
 
     ctx.beginPath();
     ctx.arc(0, 0, state.radius * 0.82, 0, Math.PI * 2);

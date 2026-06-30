@@ -249,7 +249,7 @@ export function setup(host) {
 
     state.patternTime += dt;
 
-    if (state.patternTime >= state.currentPattern.duration + 3) {
+    if (state.patternTime >= state.currentPattern.duration + 2) {
       resetPattern();
     }
 
@@ -289,7 +289,7 @@ export function setup(host) {
       }
     }
 
-    if (state.patternTime >= 3) state.currentPattern.update(dt);
+    if (state.patternTime >= 2) state.currentPattern.update(dt);
   }
 
   function draw(ctx) {
@@ -299,9 +299,9 @@ export function setup(host) {
 
     ctx.save();
     const grow =
-      burst.timer < 3
-        ? Math.min(burst.timer, 1)
-        : Math.max(0, (3.5 - burst.timer) * 2);
+      burst.timer < 2
+        ? Math.min(burst.timer / 2, 1)
+        : Math.max(0, (2.5 - burst.timer) * 2);
     const scale = 1 - Math.pow(1 - grow, 3);
     ctx.translate(burst.x, burst.y);
     ctx.scale(scale, scale);
@@ -324,7 +324,7 @@ export function setup(host) {
     ctx.stroke();
     ctx.restore();
     ctx.beginPath();
-    ctx.arc(0, 0, Math.max(30, 30 + (burst.timer - 3) * 100), 0, Math.PI * 2);
+    ctx.arc(0, 0, Math.max(30, 30 + (burst.timer - 2) * 100), 0, Math.PI * 2);
     ctx.fillStyle = "white";
     ctx.fill();
     for (const p of burst.particles) {
@@ -338,9 +338,9 @@ export function setup(host) {
     ctx.restore();
 
     ctx.globalAlpha =
-      state.patternTime >= 5.75 ? (6 - state.patternTime) * 4 : 1;
+      state.patternTime >= 4.75 ? (5 - state.patternTime) * 4 : 1;
 
-    if (state.patternTime >= 3) state.currentPattern.draw(ctx);
+    if (state.patternTime >= 2) state.currentPattern.draw(ctx);
 
     ctx.restore();
   }

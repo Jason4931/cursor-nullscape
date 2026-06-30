@@ -2318,13 +2318,21 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = mx - s.cx;
     const dy = my - s.cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const maxDist = 2000;
+    const maxDist = 1600;
     if (dist > maxDist) {
       const nx = dx / dist;
       const ny = dy / dist;
 
       s.cx = mx - nx * maxDist;
       s.cy = my - ny * maxDist;
+
+      enterFixed(s.cx, s.cy, false);
+      for (const b of s.spokes) {
+        if (b.t <= 2) {
+          b.x = s.cx;
+          b.y = s.cy;
+        }
+      }
     }
 
     if (!s.spawned) {
@@ -2388,7 +2396,6 @@ export function setup(host, hardMode, truePattern = false) {
       s.t = 0;
       s.cycle++;
       if (s.cycle <= 3) shakeScreen();
-      if (s.cycle <= 2) enterFixed(s.cx, s.cy, false);
       s.spawned = false;
     }
   }
@@ -3918,13 +3925,21 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = mx - s.cx;
     const dy = my - s.cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const maxDist = 2000;
+    const maxDist = 1600;
     if (dist > maxDist) {
       const nx = dx / dist;
       const ny = dy / dist;
 
       s.cx = mx - nx * maxDist;
       s.cy = my - ny * maxDist;
+
+      enterFixed(s.cx, s.cy, false);
+      for (const b of s.spokes) {
+        if (b.t <= 2) {
+          b.x = s.cx;
+          b.y = s.cy;
+        }
+      }
     }
 
     if (!s.spawned) {
@@ -4040,7 +4055,6 @@ export function setup(host, hardMode, truePattern = false) {
       s.t = 0;
       s.cycle++;
       shakeScreen();
-      if (s.cycle <= 2) enterFixed(s.cx, s.cy, false);
       s.spawned = false;
     }
   }
