@@ -57,8 +57,8 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
   }
 
   function draw() {
-    let celestial;
-    let catalyst;
+    let celestial = [];
+    let catalyst = [];
     let celestialintro;
     let beacon;
     for (const e of entities) {
@@ -74,10 +74,10 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
       } else if (e.name === "Pylons") {
         continue;
       } else if (e.name === "Celestial") {
-        celestial = e;
+        celestial.push(e);
         continue;
       } else if (e.name === "Catalyst") {
-        catalyst = e;
+        catalyst.push(e);
         continue;
       } else if (e.name === "CelestialIntro") {
         celestialintro = e;
@@ -89,8 +89,12 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
         Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
       }
     }
-    celestial?.draw?.(ctx2);
-    catalyst?.draw?.(ctx2);
+    for (const e of celestial) {
+      e?.draw?.(ctx2);
+    }
+    for (const e of catalyst) {
+      e?.draw?.(ctx2);
+    }
     celestialintro?.draw?.(ctx2);
     beacon?.draw?.(ctx2);
   }

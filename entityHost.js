@@ -57,14 +57,14 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
   }
 
   function draw() {
-    let catalyst;
+    let catalyst = [];
     let beacon;
     for (const e of entities) {
       if (e.name === "Beacon") {
         beacon = e; // store for later
         continue;
       } else if (e.name === "Catalyst") {
-        catalyst = e;
+        catalyst.push(e);
         continue;
       }
       if (e.name === "Bell") {
@@ -73,7 +73,9 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
         Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
       }
     }
-    catalyst?.draw?.(ctx2);
+    for (const e of catalyst) {
+      e?.draw?.(ctx2);
+    }
     beacon?.draw?.(ctx2);
   }
 
