@@ -3,7 +3,7 @@ import { getCameraPos, moveCamera, TILE } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
-    timer: 100,
+    timer: 1,
     cooldown: 1,
     beams: [],
     stompers: [],
