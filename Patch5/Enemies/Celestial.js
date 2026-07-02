@@ -35,9 +35,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternFall = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("FALL.");
       },
@@ -67,9 +67,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternFutile = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("FUTILE.");
       },
@@ -99,9 +99,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternFutilePhase3 = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("FUTILE.");
       },
@@ -117,9 +117,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternCrumble = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("CRUMBLE.");
       },
@@ -149,9 +149,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternBitter = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("BITTER.");
       },
@@ -174,9 +174,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternBitterPhase3 = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("BITTER.");
       },
@@ -206,9 +206,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternCease = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("CEASE.");
       },
@@ -224,9 +224,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternCeasePhase3 = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("CEASE.");
       },
@@ -256,9 +256,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternSecondCeasePhase3 = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("CEASE.");
       },
@@ -288,9 +288,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternBoom = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("BOOM.");
       },
@@ -306,9 +306,9 @@ export function setup(host, hardMode, truePattern = false) {
   const patternDeathInBloom = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("DEATH IN BLOOM.");
       },
@@ -347,9 +347,9 @@ export function setup(host, hardMode, truePattern = false) {
   const loopPatternPhase4 = [
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("NO ESCAPE.");
       },
@@ -391,9 +391,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("SILENCE.");
       },
@@ -435,9 +435,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("BITTER.");
       },
@@ -465,9 +465,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("DEATH IN BLOOM.");
       },
@@ -488,9 +488,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("CRUMBLE.");
       },
@@ -525,9 +525,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("SILENCE.");
       },
@@ -562,9 +562,9 @@ export function setup(host, hardMode, truePattern = false) {
     },
     {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
       enter: () => {
         showText("DEATH IN BLOOM.");
       },
@@ -701,10 +701,10 @@ export function setup(host, hardMode, truePattern = false) {
 
     currentPattern: {
       duration: 0,
-      update: () => {},
-      draw: () => {},
-      drawFront: () => {},
-      enter: () => {},
+      update: () => { },
+      draw: () => { },
+      drawFront: () => { },
+      enter: () => { },
     },
     patternTime: 0,
     patternIndex: -1,
@@ -815,15 +815,15 @@ export function setup(host, hardMode, truePattern = false) {
     const x =
       mouse.x +
       Math.cos(angle) *
-        ((hardMode ? 0.5 : 0.667) +
-          Math.random() * (hardMode ? 0.667 : 0.333)) *
-        800;
+      ((hardMode ? 0.5 : 0.667) +
+        Math.random() * (hardMode ? 0.667 : 0.333)) *
+      800;
     const y =
       mouse.y +
       Math.sin(angle) *
-        ((hardMode ? 0.5 : 0.667) +
-          Math.random() * (hardMode ? 0.667 : 0.333)) *
-        800;
+      ((hardMode ? 0.5 : 0.667) +
+        Math.random() * (hardMode ? 0.667 : 0.333)) *
+      800;
 
     return {
       x,
@@ -2318,7 +2318,7 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = mx - s.cx;
     const dy = my - s.cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const maxDist = 1600;
+    const maxDist = 1800;
     if (dist > maxDist) {
       const nx = dx / dist;
       const ny = dy / dist;
@@ -3925,7 +3925,7 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = mx - s.cx;
     const dy = my - s.cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const maxDist = 1600;
+    const maxDist = 1800;
     if (dist > maxDist) {
       const nx = dx / dist;
       const ny = dy / dist;
