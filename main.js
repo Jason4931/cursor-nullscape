@@ -705,42 +705,47 @@ topLeftInput.addEventListener("input", () => {
     ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
     input.toLowerCase() === "catalyst" ||
     input.toLowerCase() === "seamine" ||
-    input.toLowerCase() === "jumppad";
+    input.toLowerCase() === "jumppad" ||
+    input.toLowerCase() === "spawnentityrate";
   if (entity) {
-    let spawned = 0;
-    const interval = setInterval(() => {
-      if (spawned >= spawnCount) {
-        clearInterval(interval);
-        return;
-      }
-      spawned++;
-      if (input.toLowerCase() === "catalyst") {
-        spawnCatalyst(entityHost);
-        spawnCatalystIntro();
-        registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
-      } else if (input.toLowerCase() === "seamine") {
-        spawnSeamine(entityHost, casualMode);
-      } else if (input.toLowerCase() === "jumppad") {
-        spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
-      } else if (entity.name === "Random") {
-        const randUnlocked = ENTITY_POOL.filter((e) => {
-          if (e.name === "Random") return false;
-          if (!enablePonderer && e.name === "Ponderer") return false;
-          if (collectedCount < e.start) return false;
-          if (e.unstackable) return false;
-          return true;
-        });
-        if (randUnlocked.length !== 0) {
-          let randPick =
-            randUnlocked[(Math.random() * randUnlocked.length) | 0];
-          randPick.spawn();
+    if (input.toLowerCase() === "spawnentityrate") {
+      spawnEntityRate = spawnCount;
+    } else {
+      let spawned = 0;
+      const interval = setInterval(() => {
+        if (spawned >= spawnCount) {
+          clearInterval(interval);
+          return;
+        }
+        spawned++;
+        if (input.toLowerCase() === "catalyst") {
+          spawnCatalyst(entityHost);
+          spawnCatalystIntro();
+          registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+        } else if (input.toLowerCase() === "seamine") {
+          spawnSeamine(entityHost, casualMode);
+        } else if (input.toLowerCase() === "jumppad") {
+          spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
+        } else if (entity.name === "Random") {
+          const randUnlocked = ENTITY_POOL.filter((e) => {
+            if (e.name === "Random") return false;
+            if (!enablePonderer && e.name === "Ponderer") return false;
+            if (collectedCount < e.start) return false;
+            if (e.unstackable) return false;
+            return true;
+          });
+          if (randUnlocked.length !== 0) {
+            let randPick =
+              randUnlocked[(Math.random() * randUnlocked.length) | 0];
+            randPick.spawn();
+            registerEntitySpawn(entity.name, entity.src);
+          }
+        } else {
+          entity.spawn();
           registerEntitySpawn(entity.name, entity.src);
         }
-      } else {
-        entity.spawn();
-        registerEntitySpawn(entity.name, entity.src);
-      }
-    }, 200);
+      }, spawnEntityRate);
+    }
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();

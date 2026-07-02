@@ -18,7 +18,7 @@ export function setup(host, casualMode, hardMode) {
     state.timer += dt;
 
     if (state.timer >= state.cooldown) {
-      state.timer = 0;
+      state.timer -= state.cooldown;
 
       const cam = getCameraPos();
 
