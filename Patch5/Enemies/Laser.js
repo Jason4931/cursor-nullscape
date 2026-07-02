@@ -1,7 +1,7 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, moveCamera, TILE } from "../main.js";
 
-export function setup(host) {
+export function setup(host, casualMode, hardMode) {
   const state = {
     timer: 100,
     cooldown: 1,
@@ -27,7 +27,7 @@ export function setup(host) {
       const screenX = Math.random() * window.innerWidth;
       const screenY = Math.random() * window.innerHeight;
 
-      if (Math.random() < 0.5) {
+      if (Math.random() < (hardMode ? 0 : casualMode ? 1 : 0.5)) {
         state.cooldown = 1;
         state.beams.push({
           t: 0,

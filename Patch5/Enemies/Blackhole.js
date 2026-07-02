@@ -1,7 +1,7 @@
 import { death, mouse } from "../entityHost.js";
 import { moveCamera } from "../main.js";
 
-export function setup(host) {
+export function setup(host, casualMode, hardMode) {
   const state = {
     opacity: 1,
 
@@ -69,10 +69,13 @@ export function setup(host) {
     const dy = state.y - mouse.y;
     const dist = Math.hypot(dx, dy);
 
-    const range = 2001;
+    const range = 2000;
 
     if (dist < range) {
-      const strength = Math.pow(1 - dist / range, 2) * 10;
+      const strength =
+        Math.pow(1 - dist / range, 2) *
+        10 *
+        (hardMode ? 2 : casualMode ? 0.5 : 1);
 
       moveCamera(-(dx / dist) * strength, -(dy / dist) * strength);
     }

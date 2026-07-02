@@ -498,7 +498,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Cascade",
-    spawn: () => spawnCascade(entityHost),
+    spawn: () => spawnCascade(entityHost, casualMode, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Cascade.png",
     rare: true,
@@ -507,7 +507,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Laser",
-    spawn: () => spawnLaser(entityHost),
+    spawn: () => spawnLaser(entityHost, casualMode, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Laser.png",
     rare: true,
@@ -516,7 +516,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Blackhole",
-    spawn: () => spawnBlackhole(entityHost),
+    spawn: () => spawnBlackhole(entityHost, casualMode, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Blackhole.png",
     rare: true,
@@ -1895,7 +1895,7 @@ function renderPanel() {
     const img = document.createElement("img");
     img.src = data.img;
     img.alt = name;
-    img.title = data.desc;
+    img.title = `${name}: ${data.desc}`;
 
     slot.appendChild(img);
 
