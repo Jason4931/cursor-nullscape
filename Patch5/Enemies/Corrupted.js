@@ -77,7 +77,7 @@ export function setup(host, casualMode, hardMode) {
           x: cam.x + screenX,
           y: cam.y + screenY,
           color: 1,
-          radius: TILE * 8,
+          radius: TILE * 5,
         });
       } else if (attack < 4 / attackCount) {
         state.cooldown = 1;
