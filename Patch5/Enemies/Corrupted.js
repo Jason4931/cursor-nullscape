@@ -100,7 +100,7 @@ export function setup(host, casualMode, hardMode) {
           radius: TILE * 0.5,
         });
       } else {
-        state.cooldown = 5;
+        state.cooldown = 3;
         const side = (Math.random() * 4) | 0;
         const reverse = Math.random() < 0.5;
         const r = TILE * 5;
@@ -110,39 +110,39 @@ export function setup(host, casualMode, hardMode) {
         let rotationSpeed = 2;
         switch (side) {
           case 0: {
-            const x = r;
+            const x = r * 0.5;
             startX = endX = x;
             startY = reverse ? window.innerHeight + outsideR : -outsideR;
             endY = reverse ? -outsideR : window.innerHeight + outsideR;
             rotation = Math.PI;
-            rotationSpeed = reverse ? -2 : 2;
+            rotationSpeed = reverse ? -4 : 4;
             break;
           }
           case 1: {
-            const x = window.innerWidth - r;
+            const x = window.innerWidth - r * 0.5;
             startX = endX = x;
             startY = reverse ? -outsideR : window.innerHeight + outsideR;
             endY = reverse ? window.innerHeight + outsideR : -outsideR;
             rotation = 0;
-            rotationSpeed = !reverse ? 2 : -2;
+            rotationSpeed = !reverse ? 4 : -4;
             break;
           }
           case 2: {
-            const y = r;
+            const y = r * 0.5;
             startY = endY = y;
             startX = reverse ? window.innerWidth + outsideR : -outsideR;
             endX = reverse ? -outsideR : window.innerWidth + outsideR;
             rotation = Math.PI / 2;
-            rotationSpeed = reverse ? 2 : -2;
+            rotationSpeed = reverse ? 4 : -4;
             break;
           }
           default: {
-            const y = window.innerHeight - r;
+            const y = window.innerHeight - r * 0.5;
             startY = endY = y;
             startX = reverse ? -outsideR : window.innerWidth + outsideR;
             endX = reverse ? window.innerWidth + outsideR : -outsideR;
             rotation = -Math.PI / 2;
-            rotationSpeed = !reverse ? -2 : 2;
+            rotationSpeed = !reverse ? -4 : 4;
             break;
           }
         }
@@ -298,7 +298,7 @@ export function setup(host, casualMode, hardMode) {
     for (const saw of state.saws) {
       saw.t += dt;
 
-      const p = Math.min(saw.t / 5, 1);
+      const p = Math.min(saw.t / 3, 1);
       const cam = getCameraPos();
       saw.x = cam.x + saw.startX + (saw.endX - saw.startX) * p;
       saw.y = cam.y + saw.startY + (saw.endY - saw.startY) * p;
@@ -311,7 +311,7 @@ export function setup(host, casualMode, hardMode) {
         death("Corrupted");
       }
 
-      if (saw.t >= 5) {
+      if (saw.t >= 3) {
         saw.dead = true;
         clean = true;
       }
