@@ -103,7 +103,7 @@ export function setup(host, casualMode, hardMode) {
         state.cooldown = 5;
         const side = (Math.random() * 4) | 0;
         const reverse = Math.random() < 0.5;
-        const r = TILE * 8;
+        const r = TILE * 5;
         const outsideR = r * 1.5;
         let startX, startY, endX, endY;
         let rotation = 0;
