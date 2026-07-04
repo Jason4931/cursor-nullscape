@@ -65,7 +65,7 @@ import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
-import { setup as spawnLaser } from "./Enemies/Laser.js";
+import { setup as spawnCorrupted } from "./Enemies/Corrupted.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
@@ -506,12 +506,12 @@ const ENTITY_POOL = [
     chaosOnly: true,
   },
   {
-    name: "Laser",
-    spawn: () => spawnLaser(entityHost, casualMode, hardMode),
+    name: "Corrupted",
+    spawn: () => spawnCorrupted(entityHost, casualMode, hardMode),
     start: 0,
-    src: "./ASSET/Enemies/Laser.png",
+    src: "./ASSET/Enemies/Corrupted.png",
     rare: true,
-    desc: "Projects deadly lasers. Avoid their path.",
+    desc: "Unleashes a barrage of unpredictable attacks.",
     chaosOnly: true,
   },
   {

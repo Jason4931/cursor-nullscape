@@ -42,7 +42,7 @@ x moth (?) - taking gift near cursor to slow down collection
 x manta ray (?) - always circling the cursor at slow speed (average size)
 
 v cascade
-v laser
+v corrupted
 v black hole
 
 v hazard
