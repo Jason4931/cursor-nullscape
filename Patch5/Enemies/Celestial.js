@@ -7160,7 +7160,7 @@ export function setup(host, hardMode, truePattern = false) {
 
     if (actualCollectedCount >= 10000) {
       phase = 4;
-    } else if (actualCollectedCount >= 8300) {
+    } else if (actualCollectedCount >= 8000) {
       phase = 3;
     } else if (actualCollectedCount >= 6000) {
       phase = 2;
