@@ -58,6 +58,9 @@ export function setup(host, hardMode) {
     startX2: 0,
     startY2: 0,
 
+    trails: [],
+    ballTrails: [],
+
     initialized: false,
   };
 
@@ -84,6 +87,28 @@ export function setup(host, hardMode) {
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
     state.enemy = state.layers[state.layer - 1];
+
+    if (state.state === "charging" || state.state === "charging2") {
+      state.trails.push({
+        x: state.x + Math.random() * 50 - 25,
+        y: state.y + Math.random() * 50 - 25,
+        age: 0,
+        image: state.enemy,
+      });
+      state.ballTrails.push({
+        x: state.x + Math.random() * 100 - 50,
+        y: state.y + Math.random() * 100 - 50,
+        age: 0,
+      });
+    }
+    for (const trail of state.trails) {
+      trail.age += dt;
+    }
+    for (const trail of state.ballTrails) {
+      trail.age += dt;
+    }
+    state.trails = state.trails.filter((t) => t.age < 0.5);
+    state.ballTrails = state.ballTrails.filter((t) => t.age < 0.5);
 
     state.timer += dt;
 
@@ -297,6 +322,36 @@ export function setup(host, hardMode) {
       }
     }
 
+    for (const trail of state.ballTrails) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.strokeStyle = "magenta";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(trail.x),
+        Math.round(trail.y),
+        Math.round((state.size / 2) * (0.5 * (1 - trail.age / 0.5))),
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+    for (const trail of state.trails) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+      ctx.translate(Math.round(trail.x), Math.round(trail.y));
+      ctx.drawImage(
+        trail.image,
+        Math.round((-state.size / 2) * 0.9),
+        Math.round((-state.size / 2) * 0.9),
+        Math.round(state.size * 0.9),
+        Math.round(state.size * 0.9),
+      );
+      ctx.restore();
+    }
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
     ctx.drawImage(

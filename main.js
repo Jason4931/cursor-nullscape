@@ -11,6 +11,7 @@ import {
   activateShield,
   shieldBroken,
   revive,
+  dies,
 } from "./entityHost.js";
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
@@ -676,6 +677,7 @@ window.addEventListener("keydown", (e) => {
     }
   }
 });
+let spawnEntityRate = 200;
 let disableProgression = false;
 let firstDisableProgression = false;
 let cheattimer = 0;

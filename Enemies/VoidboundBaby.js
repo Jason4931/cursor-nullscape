@@ -32,6 +32,8 @@ export function setup(host, hardMode) {
     startX2: 0,
     startY2: 0,
 
+    trails: [],
+
     initialized: false,
   };
 
@@ -54,6 +56,18 @@ export function setup(host, hardMode) {
       randomSpawn();
       state.initialized = true;
     }
+
+    if (state.state === "charging" || state.state === "charging2") {
+      state.trails.push({
+        x: state.x + Math.random() * 50 - 25,
+        y: state.y + Math.random() * 50 - 25,
+        age: 0,
+      });
+    }
+    for (const trail of state.trails) {
+      trail.age += dt;
+    }
+    state.trails = state.trails.filter((t) => t.age < 0.5);
 
     state.timer += dt;
 
@@ -236,6 +250,19 @@ export function setup(host, hardMode) {
     const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
     const rot = (Math.random() - 0.5) * rotJitter * 2;
 
+    for (const trail of state.trails) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+      ctx.translate(Math.round(trail.x), Math.round(trail.y));
+      ctx.drawImage(
+        enemy,
+        Math.round((-state.size / 2) * 0.75),
+        Math.round((-state.size / 2) * 0.75),
+        Math.round(state.size * 0.75),
+        Math.round(state.size * 0.75),
+      );
+      ctx.restore();
+    }
     ctx.save();
     ctx.translate(drawX, drawY);
     ctx.rotate(rot);
