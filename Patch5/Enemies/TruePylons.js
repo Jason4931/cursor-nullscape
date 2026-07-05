@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { TILE, canvas, getCameraPos, spawnCelestialEnding } from "../main.js";
+import { pylonLocations } from "./Pylons.js";
 const rawpattern = [
   [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -125,7 +126,6 @@ const pattern = rawpattern.map((row, y) =>
   }),
 );
 let pylonDone = 0;
-let pylonLocations = [];
 export function setup(host) {
   const state = {
     opacity: 1,
