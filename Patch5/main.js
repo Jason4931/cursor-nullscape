@@ -16,6 +16,7 @@ import {
   activateShield,
   shieldBroken,
   revive,
+  dies,
 } from "./entityHost.js";
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
@@ -223,6 +224,8 @@ let celestialBGstate = {
     vy: (Math.random() - 0.5) * 0.02,
   })),
 };
+export let onCelestial = false;
+let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
@@ -1031,6 +1034,56 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
+  if (input === "highrise") {
+    highriseEnabled = !highriseEnabled;
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  if (input === "icetile") {
+    isIceTileEnabled = true;
+    changePatterns("ice");
+    ROTATED_PATTERNS = PATTERNS.map((base) => {
+      const r0 = base;
+      const r1 = rotateMatrix90(r0);
+      const r2 = rotateMatrix90(r1);
+      const r3 = rotateMatrix90(r2);
+      return [r0, r1, r2, r3];
+    });
+    setTimeout(() => {
+      changePatterns();
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
+    }, 6000);
+    setInterval(() => {
+      changePatterns("ice");
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
+      setTimeout(() => {
+        changePatterns();
+        ROTATED_PATTERNS = PATTERNS.map((base) => {
+          const r0 = base;
+          const r1 = rotateMatrix90(r0);
+          const r2 = rotateMatrix90(r1);
+          const r3 = rotateMatrix90(r2);
+          return [r0, r1, r2, r3];
+        });
+      }, 6000);
+    }, 60000);
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
   if (input === "commandlist") {
     document.getElementById("spawn-input-commands").style.opacity = 1;
     topLeftInput.value = "";
@@ -1782,6 +1835,17 @@ export function moveCamera(x, y, instant = false) {
   }
 }
 export function isCursorOnFloor(custom) {
+  for (const py of pylonLocations) {
+    if (
+      mouse.x >= py[0] - (27 * TILE) / 2 &&
+      mouse.x < py[0] + (27 * TILE) / 2 &&
+      mouse.y >= py[1] - (27 * TILE) / 2 &&
+      mouse.y < py[1] + (27 * TILE) / 2
+    ) {
+      return true;
+    }
+  }
+  if (onCelestialIntro) return true;
   for (const t of floorTiles) {
     if (custom) {
       if (
@@ -1828,16 +1892,6 @@ export function isCursorOnFloor(custom) {
         }
         return true;
       }
-    }
-  }
-  for (const py of pylonLocations) {
-    if (
-      mouse.x >= py[0] - (27 * TILE) / 2 &&
-      mouse.x < py[0] + (27 * TILE) / 2 &&
-      mouse.y >= py[1] - (27 * TILE) / 2 &&
-      mouse.y < py[1] + (27 * TILE) / 2
-    ) {
-      return true;
     }
   }
   return false;
@@ -2229,7 +2283,10 @@ function spawnCatalystIntro() {
   }, 15000);
 }
 export function spawnCelestialIntro() {
+  onCelestial = true;
+  onCelestialIntro = true;
   disableCollect = true;
+  activateShield();
   activateShield();
   startCelestialIntro(entityHost);
   entities.forEach((e) => {
@@ -2240,7 +2297,7 @@ export function spawnCelestialIntro() {
   entities = [];
   disablespawn = true;
   highriseEnabled = false;
-  actualCollectedCount = 3500;
+  actualCollectedCount = 5000;
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
@@ -2254,6 +2311,7 @@ export function spawnCelestialIntro() {
     startCelestialMusic = true;
   }, 30000);
   setTimeout(() => {
+    onCelestialIntro = false;
     disableCollect = false;
     spawnCelestial(entityHost, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
@@ -4609,6 +4667,11 @@ function loop(now) {
   }
 
   loop.lastTime = now;
+
+  if (dies) {
+    requestAnimationFrame(loop);
+    return;
+  }
 
   entityCanvas.width = window.innerWidth;
   entityCanvas.height = window.innerHeight;

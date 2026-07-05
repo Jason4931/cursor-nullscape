@@ -3035,6 +3035,11 @@ function loop(now) {
 
   loop.lastTime = now;
 
+  if (dies) {
+    requestAnimationFrame(loop);
+    return;
+  }
+
   entityCanvas.width = window.innerWidth;
   entityCanvas.height = window.innerHeight;
   entityCanvas2.width = window.innerWidth;

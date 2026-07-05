@@ -358,7 +358,7 @@ function getDeathMessage(name) {
   return list[(Math.random() * list.length) | 0];
 }
 
-let dies = false;
+export let dies = false;
 let toggleDeath = true;
 let immortality = false;
 let springerImmortality = false;
