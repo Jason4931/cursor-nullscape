@@ -116,6 +116,10 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
+    if (hardMode) {
+      state.opacity -= dt;
+      if (state.opacity < 0) state.opacity = 0;
+    }
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
     state.enemy = state.layers[state.layer - 1];
@@ -131,6 +135,8 @@ export function setup(host, hardMode) {
 
     /* ===== MOVE ===== */
     if (state.mode === "move") {
+      state.opacity += dt * 4;
+      if (state.opacity > 1) state.opacity = 1;
       const t = Math.min(state.timer / state.DASH_TIME, 1);
       const e = easeOut(t);
 
@@ -154,6 +160,7 @@ export function setup(host, hardMode) {
         state.shotsFired < (hardMode ? 4 : 3) &&
         state.timer >= interval * state.shotsFired
       ) {
+        state.opacity = 1;
         firePellet();
         state.shootCirc = 0;
         if (!state.layerChange[0]) {
@@ -295,6 +302,7 @@ export function setup(host, hardMode) {
 
     ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
     for (const p of state.pellets) {
+      ctx.globalAlpha = 1;
       for (const t of p.trail) {
         ctx.beginPath();
         ctx.arc(Math.round(t.x), Math.round(t.y), 8, 0, Math.PI * 2);
