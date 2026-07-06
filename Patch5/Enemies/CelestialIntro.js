@@ -307,7 +307,7 @@ export function setup(host) {
       if (floatingText.t >= flickerStart) {
         ctx.fillStyle = Math.random() > 0.5 ? "white" : "black";
       } else {
-        ctx.fillStyle = "magenta";
+        ctx.fillStyle = "#ff0088";
       }
 
       let globalIndex = 0;
@@ -397,10 +397,10 @@ export function setup(host) {
       } else if (t <= 1) {
         const p = (t - 0.5) / 0.5;
         flowerScale = 1 - (1 - p) * (1 - p);
-      } else if (t <= 2) {
+      } else if (t <= 2.5) {
         flowerScale = 1;
       } else {
-        const p = (t - 2) / 1;
+        const p = (t - 2.5) / 0.5;
         flowerScale = 1 - p * p;
       }
 
