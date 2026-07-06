@@ -257,7 +257,7 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        if (actualCollectedCount >= 11000) state.MAX_DASH_DIST = 10000;
+        if (actualCollectedCount >= 12000) state.MAX_DASH_DIST = 10000;
         const d = Math.hypot(dx, dy) || 1;
 
         if (d > state.MAX_DASH_DIST) {

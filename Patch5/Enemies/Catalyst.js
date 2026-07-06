@@ -314,7 +314,7 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        if (actualCollectedCount >= 11000) {
+        if (actualCollectedCount >= 12000) {
           state.MAX_DASH_DIST = 10000;
           if (!state.layerChange) {
             state.layers = Catalyst_Shock;

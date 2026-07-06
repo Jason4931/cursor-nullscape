@@ -779,7 +779,9 @@ export function setup(host, hardMode, truePattern = false) {
   function checkDeath(text = "Celestial") {
     if (!state.deathSound) {
       playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Kill_Sound.ogg`,
+        Math.random() < 0.5
+          ? `./ASSET/Sound/Enemies/Celestial/Celestial_Kill_Sound.ogg`
+          : `./ASSET/Sound/Enemies/Celestial/Kill_Variation_2.ogg`,
         undefined,
         undefined,
         undefined,
@@ -799,7 +801,7 @@ export function setup(host, hardMode, truePattern = false) {
     floatingText.duration = 2;
     floatingText.active = true;
     playSound(
-      `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
+      `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
       undefined,
       undefined,
       undefined,
@@ -7309,18 +7311,58 @@ export function setup(host, hardMode, truePattern = false) {
       let scream = false;
       if (state.lastPhase === 0 && phase === 1) {
         scream = true;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Screams/Celestial_screams_really_loudly.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
         state.loopPattern = loopPatternPhase1;
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 1 && phase === 2) {
         scream = true;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Screams/Scream_Variation_1.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
         state.loopPattern = loopPatternPhase2;
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 2 && phase === 3) {
         scream = true;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Screams/Scream_Variation_2.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
         state.loopPattern = loopPatternPhase3;
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 3 && phase === 4) {
         scream = true;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Screams/Roar_Phase2.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Celestial_Beacon_Fakeout.ogg`,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
         startCelestialPhase4();
         state.loopPattern = loopPatternPhase4;
         state.patternIndex = state.loopPattern.length;

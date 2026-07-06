@@ -1712,7 +1712,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
         desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
       };
     } else if (
-      collectedCount >= (hardMode ? 11000 : 5500) &&
+      collectedCount >= (hardMode ? 12000 : 6000) &&
       !spawnedBeacon &&
       !disableProgression
     ) {
@@ -1720,7 +1720,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       pick = {
         name: "Beacon",
         spawn: () => spawnBeacon(entityHost, deafMode),
-        start: 5500,
+        start: 6000,
       };
     } else {
       const weighted = [];
@@ -1893,11 +1893,11 @@ export function activatePurgatory() {
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
-  if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
-    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+  if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
   } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-    counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+    counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
     lvlEl.textContent = `lvl 100`;
   } else {
     counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -1937,11 +1937,11 @@ export function activateChance() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
-        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+      if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
       } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
         counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -1980,11 +1980,11 @@ export function activateProtection() {
     collectedCount = hardMode
       ? actualCollectedCount
       : Math.floor(actualCollectedCount / 2);
-    if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
-      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+    if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
+      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
+      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
     } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-      counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+      counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
       lvlEl.textContent = `lvl 100`;
     } else {
       counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -2785,11 +2785,11 @@ function updateCamera() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      if (latestCollectedCount >= (hardMode ? 11000 : 5500)) {
-        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 900}`;
-        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 9}`;
+      if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
+        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
+        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
       } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Gift(s) Collected: ${-11000 + Math.floor(Math.random() * 22000)}`;
+        counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
         counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -2852,9 +2852,9 @@ function updateCamera() {
         if (
           unlocked.length > 0 &&
           (!disablespawn ||
-            (collectedCount >= (hardMode ? 11000 : 5500) &&
-              collectedCount <= (hardMode ? 11199 : 5599))) &&
-          (spawnedCatalyst ? collectedCount >= (hardMode ? 11000 : 5500) : true)
+            (collectedCount >= (hardMode ? 12000 : 6000) &&
+              collectedCount <= (hardMode ? 12199 : 6099))) &&
+          (spawnedCatalyst ? collectedCount >= (hardMode ? 12000 : 6000) : true)
         ) {
           let pick;
           if (
@@ -2872,7 +2872,7 @@ function updateCamera() {
               desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
             };
           } else if (
-            collectedCount >= (hardMode ? 11000 : 5500) &&
+            collectedCount >= (hardMode ? 12000 : 6000) &&
             !spawnedBeacon &&
             !disableProgression
           ) {
@@ -2880,7 +2880,7 @@ function updateCamera() {
             pick = {
               name: "Beacon",
               spawn: () => spawnBeacon(entityHost, deafMode),
-              start: 5500,
+              start: 6000,
             };
           } else {
             const weighted = [];
@@ -3292,7 +3292,7 @@ function loop(now) {
   }
 
   //holy beacon
-  if (collectedCount >= (hardMode ? 11000 : 5500) && !transformAllGift) {
+  if (collectedCount >= (hardMode ? 12000 : 6000) && !transformAllGift) {
     transformAllGift = true;
     allGold = true;
     giftPositions.forEach((gift) => {

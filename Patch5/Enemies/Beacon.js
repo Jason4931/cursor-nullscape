@@ -2,20 +2,19 @@ import { mouse, toggleImmortality } from "../entityHost.js";
 import { onFinalContact, TILE, getCameraPos } from "../main.js";
 
 export function setup(host, deafMode) {
-  const TEXT_DELAY = 6.667;
-  const HOLD_AFTER_LAST = 6.6667;
+  const TEXT_DELAY = 8.333;
+  const HOLD_AFTER_LAST = 8.333;
 
   const messages = [
     {
-      text: "You saw through the illusion built from all your burdens.",
-      y: -180,
+      text: "Do you hear it?",
+      y: -140,
     },
     {
-      text: "You chose to remain, despite everything that chased you.",
-      y: -70,
+      text: "Our hearts beat as one.",
+      y: 0,
     },
-    { text: "You were not deceived. You refused the false paradise.", y: 40 },
-    { text: "You endured. And you can endure again.", y: 150 },
+    { text: "We will meet again.", y: 140 },
   ];
 
   const SIZE = 3 * TILE;

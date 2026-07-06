@@ -59,10 +59,10 @@ export function setup(host) {
     function showText(text) {
       floatingText.text = text;
       floatingText.t = 0;
-      floatingText.duration = 5;
+      floatingText.duration = 4.9;
       floatingText.active = true;
       playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
+        `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
         undefined,
         undefined,
         undefined,
@@ -108,68 +108,28 @@ export function setup(host) {
     }
     if (state.timer >= 2 && !state.sound[0]) {
       state.sound[0] = true;
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
       showText(
         "YOU REMIND ME OF A\nFLOWER THAT HAD\nREACHED FULL BLOOM IN\nTHE GARDENS.",
       );
     }
     if (state.timer >= 6.9 && !state.sound[1]) {
       state.sound[1] = true;
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
       showText(
         "IT CHASED THE\nIMPOSSIBLE BY\nBLOSSOMING UNDER THE\nHARSHEST CONDITIONS.",
       );
     }
     if (state.timer >= 11.8 && !state.sound[2]) {
       state.sound[2] = true;
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
       showText(
         "YET IT WAS THAT PRIDE\nTHAT CAUSED IT TO ROT FROM\nTHE INSIDE OUT.",
       );
     }
     if (state.timer >= 16.7 && !state.sound[3]) {
       state.sound[3] = true;
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
       showText("EVEN IF YOU BELIEVE IN\nYOUR OWN PETALS,");
     }
     if (state.timer >= 21.6 && !state.sound[4]) {
       state.sound[4] = true;
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
       state.layers = Celestial_CocoonEyesOpening;
       state.layer = 0;
       showText("YOU SHALL WILT IN THIS\nDANCE WITH ME.");
