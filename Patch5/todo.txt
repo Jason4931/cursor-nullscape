@@ -51,7 +51,7 @@ v jumppad
 v grindrail
 v pylons
 v reality collapse
+v celestial intro
 
 vx catalyst
 vx celestial
-x celestial intro

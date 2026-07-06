@@ -23,11 +23,47 @@ const CelestialDeathFont = new FontFace(
 await CelestialDeathFont.load();
 document.fonts.add(CelestialDeathFont);
 
-const Celestial = [];
+const Celestial_Idle = [];
 for (let i = 1; i <= 25; i++) {
   const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Layer ${i}.png`;
-  Celestial.push(img);
+  img.src = `./ASSET/Enemies/Celestial/Celestial_Idle/Layer ${i}.png`;
+  Celestial_Idle.push(img);
+}
+const Celestial_CutterStart = [];
+for (let i = 1; i <= 60; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterStart/Layer ${i}.png`;
+  Celestial_CutterStart.push(img);
+}
+const Celestial_CutterLoop = [];
+for (let i = 1; i <= 60; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterLoop/Layer ${i}.png`;
+  Celestial_CutterLoop.push(img);
+}
+const Celestial_CutterEnd = [];
+for (let i = 1; i <= 60; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterEnd/Layer ${i}.png`;
+  Celestial_CutterEnd.push(img);
+}
+const Celestial_Swing = [];
+for (let i = 1; i <= 25; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_Swing/Layer ${i}.png`;
+  Celestial_Swing.push(img);
+}
+const Celestial_SwingFlipped = [];
+for (let i = 1; i <= 25; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_SwingFlipped/Layer ${i}.png`;
+  Celestial_SwingFlipped.push(img);
+}
+const Celestial_FinalSwing = [];
+for (let i = 1; i <= 25; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Celestial/Celestial_FinalSwing/Layer ${i}.png`;
+  Celestial_FinalSwing.push(img);
 }
 
 let phase = 1;
@@ -710,9 +746,11 @@ export function setup(host, hardMode, truePattern = false) {
     patternIndex: -1,
     loopPattern: !truePattern ? specificDevOnly : loopPatternPhase1,
 
-    layers: Celestial,
+    layers: Celestial_Idle,
     enemy: null,
     layer: 0,
+    returnLayer: false,
+    nextLayer: null,
 
     enemyX: mouse.x + 600,
     enemyY: mouse.y,
@@ -732,6 +770,12 @@ export function setup(host, hardMode, truePattern = false) {
     shakeStrength: 0,
   };
 
+  function changeEnemy(layer, loop = false, nextLayer) {
+    state.layers = layer;
+    state.layer = 0;
+    state.returnLayer = !loop;
+    state.nextLayer = nextLayer;
+  }
   function checkDeath(text = "Celestial") {
     if (!state.deathSound) {
       playSound(
@@ -979,6 +1023,7 @@ export function setup(host, hardMode, truePattern = false) {
     cycle: 0,
     prevMx: 0,
     prevMy: 0,
+    flipped: 1,
   };
   function enterSlash() {
     enterOrbit();
@@ -1006,6 +1051,7 @@ export function setup(host, hardMode, truePattern = false) {
     const cycle = stateSlash.cycle;
 
     if (stateSlash.timer === 0) {
+      stateSlash.change = false;
       if (cycle === 3) {
         if (!hardMode) {
           const base = Math.random() * Math.PI * 2;
@@ -1040,6 +1086,17 @@ export function setup(host, hardMode, truePattern = false) {
     }
 
     stateSlash.timer += dt;
+    if (stateSlash.timer >= (cycle < 3 ? 0.25 : 0.75) && !stateSlash.change) {
+      stateSlash.change = true;
+      if (cycle === 3) {
+        changeEnemy(Celestial_FinalSwing);
+      } else if (cycle < 3) {
+        stateSlash.flipped *= -1;
+        changeEnemy(
+          stateSlash.flipped < 0 ? Celestial_Swing : Celestial_SwingFlipped,
+        );
+      }
+    }
 
     const DURATIONS = [1, 1, 1, 1.5];
     if (stateSlash.timer >= DURATIONS[cycle]) {
@@ -1377,6 +1434,9 @@ export function setup(host, hardMode, truePattern = false) {
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
     statePizzaCutter.cx = cx;
     statePizzaCutter.cy = cy;
+    changeEnemy(Celestial_CutterStart, false, () => {
+      changeEnemy(Celestial_CutterLoop, true);
+    });
     enterFixed(cx, cy);
   }
   function updatePizzaCutter(dt) {
@@ -1429,12 +1489,21 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
+    if (
+      statePizzaCutter.t >= 1.75 &&
+      statePizzaCutter.cycle == 3 &&
+      !statePizzaCutter.change
+    ) {
+      statePizzaCutter.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
     if (statePizzaCutter.t >= 2) {
       statePizzaCutter.t = 0;
       statePizzaCutter.cycle++;
       shakeScreen();
       if (statePizzaCutter.cycle < 4) {
         statePizzaCutter.spawned = false;
+        statePizzaCutter.change = false;
       }
     }
   }
@@ -1561,7 +1630,9 @@ export function setup(host, hardMode, truePattern = false) {
     statePizzaCutterCrumble.cx = cx;
     statePizzaCutterCrumble.cy = cy;
     enterFixed(cx, cy);
-
+    changeEnemy(Celestial_CutterStart, false, () => {
+      changeEnemy(Celestial_CutterLoop, true);
+    });
     statePizzaCutterCrumble.circles = [];
   }
   function updatePizzaCutterCrumble(dt) {
@@ -1617,12 +1688,21 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
+    if (
+      statePizzaCutterCrumble.t >= 1.75 &&
+      statePizzaCutterCrumble.cycle == 3 &&
+      !statePizzaCutterCrumble.change
+    ) {
+      statePizzaCutterCrumble.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
     if (statePizzaCutterCrumble.t >= 2) {
       statePizzaCutterCrumble.t = 0;
       statePizzaCutterCrumble.cycle++;
       shakeScreen(2);
       if (statePizzaCutterCrumble.cycle < 4) {
         statePizzaCutterCrumble.spawned = false;
+        statePizzaCutterCrumble.change = false;
       }
     }
 
@@ -2512,6 +2592,7 @@ export function setup(host, hardMode, truePattern = false) {
       y: mouse.y,
     };
     stateCease.positions = [];
+    stateCease.change = false;
 
     if (truePattern == false) showText("CEASE.");
   }
@@ -2554,6 +2635,10 @@ export function setup(host, hardMode, truePattern = false) {
       const c = stateCease.circle;
 
       c.t += dt;
+      if (c.t >= 1.25 && !c.change) {
+        c.change = true;
+        changeEnemy(Celestial_FinalSwing);
+      }
 
       if (c.t < 0.5) {
         const p = c.t / 0.5;
@@ -3273,6 +3358,8 @@ export function setup(host, hardMode, truePattern = false) {
     s.t = 0;
     s.spawned = false;
     s.blades = [];
+    s.startChange = false;
+    s.change = false;
 
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
@@ -3317,6 +3404,16 @@ export function setup(host, hardMode, truePattern = false) {
     const s = stateSuperPizzaCutter;
 
     s.t += dt;
+    if (s.t >= 3 && !s.startChange) {
+      s.startChange = true;
+      changeEnemy(Celestial_CutterStart, false, () => {
+        changeEnemy(Celestial_CutterLoop, true);
+      });
+    }
+    if (s.t >= 6.75 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
 
     const p = Math.min(1, s.t / 2);
     const eased = 1 - (1 - p) * (1 - p);
@@ -5333,6 +5430,9 @@ export function setup(host, hardMode, truePattern = false) {
     stateFirstSilence.cx = cx;
     stateFirstSilence.cy = cy;
     enterFixed(cx, cy);
+    changeEnemy(Celestial_CutterStart, false, () => {
+      changeEnemy(Celestial_CutterLoop, true);
+    });
 
     stateFirstSilence.circles = [];
 
@@ -5425,12 +5525,21 @@ export function setup(host, hardMode, truePattern = false) {
       }
     }
 
+    if (
+      stateFirstSilence.t >= 1.75 &&
+      stateFirstSilence.cycle == 3 &&
+      !stateFirstSilence.change
+    ) {
+      stateFirstSilence.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
     if (stateFirstSilence.t >= 2) {
       stateFirstSilence.t = 0;
       stateFirstSilence.cycle++;
       shakeScreen(stateFirstSilence.cycle % 2 == 0 ? 2 : 3);
       if (stateFirstSilence.cycle < 4) {
         stateFirstSilence.spawned = false;
+        stateFirstSilence.change = false;
       }
     }
 
@@ -6159,6 +6268,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.snake = null;
     s.rift = spawnFutileRift();
     s.trail = [];
+    s.change = false;
 
     if (truePattern == false) showText("SILENCE.");
   }
@@ -6168,6 +6278,10 @@ export function setup(host, hardMode, truePattern = false) {
     const s = stateSecondSilence;
 
     s.t += dt;
+    if (s.t >= 1.75 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_FinalSwing);
+    }
     s.pTimer += dt;
 
     const follow = 1 - Math.exp(-0.8 * dt);
@@ -7235,8 +7349,19 @@ export function setup(host, hardMode, truePattern = false) {
     }
 
     state.layer++;
-    if (state.layer > state.layers.length) state.layer = 1;
-    state.enemy = state.layers[state.layer - 1];
+    if (state.layer > state.layers.length) {
+      state.layer = 1;
+      if (state.returnLayer) {
+        state.returnLayer = false;
+        if (state.nextLayer) {
+          state.nextLayer();
+          state.nextLayer = null;
+        } else {
+          state.layers = Celestial_Idle;
+        }
+      }
+    }
+    state.enemy = state.layers[Math.max(0, state.layer - 1)];
 
     state.enemyTrail.push({
       x: state.enemyX + (Math.random() - 0.5) * 300,
@@ -7543,7 +7668,7 @@ export function setup(host, hardMode, truePattern = false) {
 
         ctx.restore();
 
-        offsetX += charWidth * 0.9;
+        offsetX += charWidth;
       }
 
       ctx.restore();
