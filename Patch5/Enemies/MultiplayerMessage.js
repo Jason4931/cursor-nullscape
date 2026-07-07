@@ -4,6 +4,7 @@ import { getCameraPos, playSound } from "../main.js";
 export function setup(host, value) {
   const state = {
     show: false,
+    t: 0,
   };
   const floatingText = {
     text: "",
@@ -14,6 +15,8 @@ export function setup(host, value) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (state.t >= 5) return;
+    state.t += dt;
 
     function showText(text) {
       floatingText.text = text;
@@ -22,11 +25,6 @@ export function setup(host, value) {
       floatingText.active = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        "50",
       );
     }
     if (floatingText.active) {
@@ -43,6 +41,7 @@ export function setup(host, value) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (state.t >= 5) return;
 
     ctx.save();
     const cam = getCameraPos();

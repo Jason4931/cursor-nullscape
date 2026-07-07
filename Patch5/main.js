@@ -1041,7 +1041,7 @@ topLeftInput.addEventListener("input", () => {
     topLeftInput.style.display = "none";
     topLeftInput.blur();
   }
-  const msgMatch = rawInput.match(/^msg\{([\s\S]*)\}$/);
+  const msgMatch = topLeftInput.value.trim().match(/^msg\{([\s\S]*)\}$/i);
   if (msgMatch) {
     const value = msgMatch[1];
     setMessage(value);
