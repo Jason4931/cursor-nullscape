@@ -4,7 +4,7 @@ import { getCameraPos, playSound } from "../main.js";
 export function setup(host, value) {
   const state = {
     show: false,
-  }
+  };
   const floatingText = {
     text: "",
     t: 0,
@@ -18,7 +18,7 @@ export function setup(host, value) {
     function showText(text) {
       floatingText.text = text;
       floatingText.t = 0;
-      floatingText.duration = 4.9;
+      floatingText.duration = 5;
       floatingText.active = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
