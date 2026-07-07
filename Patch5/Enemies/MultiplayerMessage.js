@@ -1,7 +1,7 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound } from "../main.js";
 
-export function setup(host, value) {
+export function setup(host, value, color = "#ff0088") {
   const state = {
     show: false,
     t: 0,
@@ -76,7 +76,7 @@ export function setup(host, value) {
       if (floatingText.t >= flickerStart) {
         ctx.fillStyle = Math.random() > 0.5 ? "white" : "black";
       } else {
-        ctx.fillStyle = "#ff0088";
+        ctx.fillStyle = color;
       }
 
       let globalIndex = 0;

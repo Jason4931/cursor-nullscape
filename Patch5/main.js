@@ -879,9 +879,12 @@ let lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
 setInterval(async () => {
   let value = (await getMessage()).replace(/^"|"$/g, "");
   value = value.replace(/05d74d9c-32e8-44a6-9847-d989954f62b1/g, "\n");
+  const match = value.match(/^\[([^\]]+)\]([\s\S]*)$/);
+  const color = match ? match[1] : "#ff0088";
+  const text = match ? match[2] : value;
   if (value !== lastValue && value !== "ce5f87fe-78ea-4779-9530-6c842ca30da6") {
     lastValue = value;
-    multiplayerMessage(entityHost, value);
+    multiplayerMessage(entityHost, text, color);
   }
 }, 1000);
 
