@@ -1921,7 +1921,7 @@ export function isCursorOnFloor(custom) {
           t.wall[0] ||
           (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)
         )
-          if (t.wall[1] == 6) {
+          if (t.wall[1] == 6 || t.wall[1] == 66) {
             wallScale = 0.5;
           } else if (t.wall[1] == 36) {
             wallScale = 0;
@@ -2952,7 +2952,8 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 38 ||
         pattern[y][x] === 39 ||
         pattern[y][x] === 41 ||
-        pattern[y][x] === 42
+        pattern[y][x] === 42 ||
+        pattern[y][x] === 66
       ) {
         floorTiles.push({
           x: wx,
@@ -2967,7 +2968,10 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 15 ||
             pattern[y][x] === 16,
           garden: pattern[y][x] === 13,
-          wall: [pattern[y][x] === 6 || pattern[y][x] === 36, pattern[y][x]],
+          wall: [
+            pattern[y][x] === 6 || pattern[y][x] === 36 || pattern[y][x] === 66,
+            pattern[y][x],
+          ],
           ice:
             pattern[y][x] === 21 ||
             pattern[y][x] === 22 ||
@@ -3673,7 +3677,7 @@ function drawGrid() {
         ctx.fillStyle = showFloor ? "#800" : "#8001";
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else if (t.wall[0]) {
-        if (t.wall[1] == 6) {
+        if (t.wall[1] == 6 || t.wall[1] == 66) {
           ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
         } else if (t.wall[1] == 36) {
           ctx.fillStyle = showFloor ? "#444" : "#4441";
@@ -4108,6 +4112,15 @@ function drawGrid() {
           ctx.fill();
         }
       }
+    }
+    if (t.wall[0] && t.wall[1] == 66) {
+      const size = TILE * 1.5;
+      ctx.save();
+      ctx.translate(t.x + size * 0.333, t.y + size * 0.333);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
+      ctx.fillRect(-size * 0.5, -size * 0.5, size, size);
+      ctx.restore();
     }
   }
   if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
