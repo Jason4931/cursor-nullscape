@@ -1058,7 +1058,7 @@ export function setup(host, hardMode, truePattern = false) {
       if (cycle === 3) {
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
-          0.9,
+          0.75,
           undefined,
           undefined,
           undefined,
@@ -1108,7 +1108,7 @@ export function setup(host, hardMode, truePattern = false) {
         );
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Variation_${Math.random() < 0.5 ? "1" : "2"}.ogg`,
-          0.9,
+          0.75,
           undefined,
           undefined,
           undefined,
@@ -5226,6 +5226,10 @@ export function setup(host, hardMode, truePattern = false) {
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            3,
+          );
         }
         c.phase = 2;
         c.r -= dt * 600;
@@ -5975,7 +5979,7 @@ export function setup(host, hardMode, truePattern = false) {
     ) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
-        0.9,
+        0.75,
         undefined,
         undefined,
         undefined,
@@ -6794,7 +6798,7 @@ export function setup(host, hardMode, truePattern = false) {
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
-        0.9,
+        0.75,
         undefined,
         undefined,
         undefined,
