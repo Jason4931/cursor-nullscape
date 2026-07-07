@@ -2718,7 +2718,7 @@ export function activateChance() {
       break;
     case 2:
       // + gift multiplier x2
-      giftMultiplier = 2;
+      giftMultiplier *= 2;
       alreadyBenefitChanced[0] = true;
       break;
     case 3:
@@ -4404,7 +4404,10 @@ function updateCamera() {
         continue;
       }
 
-      const value = (g.golden ? 4 : 1) * giftMultiplier;
+      const value =
+        giftMultiplier >= 1
+          ? (g.golden ? 4 : 1) * giftMultiplier
+          : (g.golden ? 4 : 1) * (Math.random() < giftMultiplier ? 1 : 0);
       if (!disableCollect && !insidePylon && !stopCollect)
         actualCollectedCount += value;
       collectedCount = hardMode

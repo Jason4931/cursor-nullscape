@@ -15,13 +15,13 @@ export function setup(host, value, color = "#ff0088") {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.t >= 5) return;
+    if (state.t >= Math.max(5, value.length / 4)) return;
     state.t += dt;
 
     function showText(text) {
       floatingText.text = text;
       floatingText.t = 0;
-      floatingText.duration = 5;
+      floatingText.duration = Math.max(5, value.length / 4);
       floatingText.active = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
@@ -46,7 +46,7 @@ export function setup(host, value, color = "#ff0088") {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (state.t >= 5) return;
+    if (state.t >= Math.max(5, value.length / 4)) return;
 
     ctx.save();
     const cam = getCameraPos();
