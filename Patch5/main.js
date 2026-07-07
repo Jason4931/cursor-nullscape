@@ -213,13 +213,13 @@ let celestialBGstate = {
     x: Math.random(),
     y: Math.random(),
     size: Math.random() < 0.9 ? 1 : 2,
-    color: Math.random() < 0.8 ? "#fff" : "#88aaff",
+    color: Math.random() < 0.75 ? "#fff" : "#88aaff",
   })),
   blobs: Array.from({ length: 20 }, () => ({
     x: Math.random(),
     y: Math.random(),
     r: 200 + Math.random() * 400,
-    type: Math.random() < 0.6 ? "magenta" : "blue",
+    type: Math.random() < 0.5 ? "magenta" : "blue",
     vx: (Math.random() - 0.5) * 0.02,
     vy: (Math.random() - 0.5) * 0.02,
   })),
@@ -874,6 +874,13 @@ let lagDebt = 0;
 let lagFactor = 1;
 
 /* ===== EVENTS ===== */
+export function celestialDIBmultiplier(v) {
+  if (v) {
+    giftMultiplier *= 0.5;
+  } else {
+    giftMultiplier *= 2;
+  }
+}
 window.addEventListener("keydown", (e) => {
   if (e.repeat) return;
   if (e.key === "?" && e.shiftKey && e.ctrlKey) {
@@ -2306,16 +2313,16 @@ export function spawnCelestialIntro() {
     stopMusic();
     stopMusic = null;
   }
-  setTimeout(() => {
-    celestialBG = true;
-    startCelestialMusic = true;
-  }, 30000);
+}
+export function spawnCelestialAfterIntro() {
+  celestialBG = true;
+  startCelestialMusic = true;
   setTimeout(() => {
     onCelestialIntro = false;
     disableCollect = false;
     spawnCelestial(entityHost, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
-  }, 31000);
+  }, 1000);
 }
 export function startCelestialPhase4() {
   spawnTruePylons(entityHost);
@@ -3214,6 +3221,28 @@ function drawGrid() {
         ctx.fillStyle = s.color;
         ctx.fillRect(x, y, s.size, s.size);
       }
+
+      const centerX = cam.x + w / 2;
+      const centerY = cam.y + h / 2;
+      const lookStrength = -0.05;
+      const cx = centerX + (mouse.x - centerX) * lookStrength;
+      const cy = centerY + (mouse.y - centerY) * lookStrength;
+      const grad = ctx.createRadialGradient(
+        cx,
+        cy,
+        0,
+        cx,
+        cy,
+        Math.min(w, h) * 0.5,
+      );
+      grad.addColorStop(0, "rgba(0, 0, 0, 1)");
+      grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
+      grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, Math.min(w, h) * 0.5, 0, Math.PI * 2);
+      ctx.fill();
     }
     const cam = getCameraPos();
     drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound } from "../main.js";
+import { getCameraPos, playSound, spawnCelestialAfterIntro } from "../main.js";
 
 const Celestial_Cocoon = [];
 for (let i = 1; i <= 30; i++) {
@@ -30,7 +30,7 @@ export function setup(host) {
   const state = {
     BGopacity: 1,
     VidStart: false,
-    sound: [false, false, false, false, false, false],
+    sound: [false, false, false, false, false, false, false],
     timer: 0,
     circles: [],
     layers: Celestial_Cocoon,
@@ -138,6 +138,10 @@ export function setup(host) {
       state.sound[5] = true;
       state.layers = Celestial_CocoonBreakFree;
       state.layer = 0;
+    }
+    if (state.timer >= 30 && !state.sound[6]) {
+      state.sound[6] = true;
+      spawnCelestialAfterIntro();
     }
     state.timer += dt;
   }

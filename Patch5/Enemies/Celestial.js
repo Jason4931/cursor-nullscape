@@ -7,6 +7,7 @@ import {
   soundStopped,
   actualCollectedCount,
   startCelestialPhase4,
+  celestialDIBmultiplier,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -1055,6 +1056,14 @@ export function setup(host, hardMode, truePattern = false) {
     if (stateSlash.timer === 0) {
       stateSlash.change = false;
       if (cycle === 3) {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
         if (!hardMode) {
           const base = Math.random() * Math.PI * 2;
           const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
@@ -1096,6 +1105,14 @@ export function setup(host, hardMode, truePattern = false) {
         stateSlash.flipped *= -1;
         changeEnemy(
           stateSlash.flipped < 0 ? Celestial_Swing : Celestial_SwingFlipped,
+        );
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Variation_${Math.random() < 0.5 ? "1" : "2"}.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
         );
       }
     }
@@ -1287,6 +1304,10 @@ export function setup(host, hardMode, truePattern = false) {
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            3,
+          );
         }
         c.phase = 2;
         c.r -= dt * 600;
@@ -1447,6 +1468,14 @@ export function setup(host, hardMode, truePattern = false) {
     statePizzaCutter.t += dt;
 
     if (!statePizzaCutter.spawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       statePizzaCutter.spokes.push(spawnPizza());
       statePizzaCutter.spawned = true;
     }
@@ -1506,6 +1535,23 @@ export function setup(host, hardMode, truePattern = false) {
       if (statePizzaCutter.cycle < 4) {
         statePizzaCutter.spawned = false;
         statePizzaCutter.change = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
       }
     }
   }
@@ -1643,6 +1689,14 @@ export function setup(host, hardMode, truePattern = false) {
     statePizzaCutterCrumble.t += dt;
 
     if (!statePizzaCutterCrumble.spawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       statePizzaCutterCrumble.spokes.push(spawnPizza(statePizzaCutterCrumble));
       for (let i = 0; i < 300; i++) {
         statePizzaCutterCrumble.circles.push(spawnCircle(2));
@@ -1705,6 +1759,23 @@ export function setup(host, hardMode, truePattern = false) {
       if (statePizzaCutterCrumble.cycle < 4) {
         statePizzaCutterCrumble.spawned = false;
         statePizzaCutterCrumble.change = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
       }
     }
 
@@ -1936,6 +2007,25 @@ export function setup(host, hardMode, truePattern = false) {
     s.rift.t += dt;
 
     const r = s.rift;
+    if (r.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Start.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (r.t >= 1 && r.t <= 1 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
     if (r.t < 0.25) {
       const p = r.t / 0.25;
       r.scale = 1 - (1 - p) * (1 - p);
@@ -2252,6 +2342,7 @@ export function setup(host, hardMode, truePattern = false) {
 
   const stateCrumble = {
     circles: [],
+    t: 0,
   };
   function enterCrumble() {
     enterOrbit();
@@ -2266,6 +2357,10 @@ export function setup(host, hardMode, truePattern = false) {
     const mx = mouse.x;
     const my = mouse.y;
     let needsCompact = false;
+    stateCrumble.t += dt;
+    if (stateCrumble.t >= 2 && stateCrumble.t <= 2 + dt) {
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+    }
     for (const c of stateCrumble.circles) {
       c.t += dt;
 
@@ -2474,10 +2569,30 @@ export function setup(host, hardMode, truePattern = false) {
 
     s.spokes = s.spokes.filter((b) => b.active);
 
+    if (s.t >= 0.5 && s.t <= 0.5 + dt && s.cycle <= 2) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
-      if (s.cycle <= 3) shakeScreen();
+      if (s.cycle <= 3) {
+        shakeScreen();
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Shoot.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
       s.spawned = false;
     }
   }
@@ -2604,6 +2719,17 @@ export function setup(host, hardMode, truePattern = false) {
     stateCease.timer += dt;
     stateCease.rapidTimer += dt;
 
+    if (stateCease.timer <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
     const interval = 0.5 / (hardMode ? 60 : 40);
     while (
       stateCease.rapidTimer >= interval &&
@@ -2652,6 +2778,14 @@ export function setup(host, hardMode, truePattern = false) {
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
         }
         c.r -= dt * 800;
         if (c.r <= 0) {
@@ -2902,6 +3036,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.ey = mouse.y;
     s.particles = [];
     s.pTimer = 0;
+    celestialDIBmultiplier(true);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -2921,14 +3056,7 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = s.ex - s.cx;
     const dy = s.ey - s.cy;
 
-    const targetAngle = Math.atan2(dy, dx);
-    let diff = targetAngle - s.angle;
-    if (diff > Math.PI) diff -= Math.PI * 2;
-    if (diff < -Math.PI) diff += Math.PI * 2;
-    const maxDiff = s.t < 1 ? 10 : 0.1;
-    if (diff > maxDiff) diff = maxDiff;
-    if (diff < -maxDiff) diff = -maxDiff;
-    s.angle += diff;
+    s.angle += Math.atan2(dy, dx) - s.angle;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -3049,13 +3177,34 @@ export function setup(host, hardMode, truePattern = false) {
     }
     if (needsCompact) compact(s.particles);
 
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Charge.ogg`,
+        1.1,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 5 && s.t <= 5 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Firing.ogg`,
+        0.706,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
     if (s.t >= 5 && s.t < 22) {
       s.w = Math.random() * 50 + (hardMode ? 750 : 575);
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
-      if (s.w <= 0) {
+      if (s.w <= 0 && s.active) {
         s.w = 0;
+        celestialDIBmultiplier(false);
         s.active = false;
       }
     }
@@ -3415,6 +3564,52 @@ export function setup(host, hardMode, truePattern = false) {
     if (s.t >= 6.75 && !s.change) {
       s.change = true;
       changeEnemy(Celestial_CutterEnd);
+    }
+
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 2 && s.t <= 2 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Swordprep.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 3 && s.t <= 3 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 7 && s.t <= 7 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
     }
 
     const p = Math.min(1, s.t / 2);
@@ -4017,6 +4212,14 @@ export function setup(host, hardMode, truePattern = false) {
         angle: s.lastAng,
         count: hardMode ? 8 : 6,
       });
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       s.lastAng += Math.random() * 0.2 + 0.2;
       s.extraSpawned++;
     }
@@ -4150,10 +4353,39 @@ export function setup(host, hardMode, truePattern = false) {
         }
       }
     }
+    if (s.t >= 0.5 && s.t <= 0.5 + dt && s.cycle <= 2) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 1.5 && s.t <= 1.5 + dt && s.cycle == 3) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
       shakeScreen();
+      if (s.cycle <= 3) {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Shoot.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
       s.spawned = false;
     }
   }
@@ -4400,6 +4632,7 @@ export function setup(host, hardMode, truePattern = false) {
 
     s.crumbleT = 0;
     s.circles = [];
+    celestialDIBmultiplier(true);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -4419,14 +4652,7 @@ export function setup(host, hardMode, truePattern = false) {
     const dx = s.ex - s.cx;
     const dy = s.ey - s.cy;
 
-    const targetAngle = Math.atan2(dy, dx);
-    let diff = targetAngle - s.angle;
-    if (diff > Math.PI) diff -= Math.PI * 2;
-    if (diff < -Math.PI) diff += Math.PI * 2;
-    const maxDiff = s.t < 1 ? 10 : 0.1;
-    if (diff > maxDiff) diff = maxDiff;
-    if (diff < -maxDiff) diff = -maxDiff;
-    s.angle += diff;
+    s.angle += Math.atan2(dy, dx) - s.angle;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -4555,13 +4781,34 @@ export function setup(host, hardMode, truePattern = false) {
     }
     if (needsCompact) compact(s.particles);
 
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Charge.ogg`,
+        1.1,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 5 && s.t <= 5 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Firing.ogg`,
+        0.706,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
     if (s.t >= 5 && s.t < 22) {
       s.w = Math.random() * 50 + (hardMode ? 750 : 575);
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
-      if (s.w <= 0) {
+      if (s.w <= 0 && s.active) {
         s.w = 0;
+        celestialDIBmultiplier(false);
         s.active = false;
       }
     }
@@ -5467,6 +5714,14 @@ export function setup(host, hardMode, truePattern = false) {
     stateFirstSilence.t += dt;
 
     if (!stateFirstSilence.spawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       stateFirstSilence.spokes.push(spawnPizza(stateFirstSilence));
       for (let i = 0; i < 300; i++) {
         stateFirstSilence.circles.push(spawnCircle(2));
@@ -5542,6 +5797,23 @@ export function setup(host, hardMode, truePattern = false) {
       if (stateFirstSilence.cycle < 4) {
         stateFirstSilence.spawned = false;
         stateFirstSilence.change = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
       }
     }
 
@@ -5701,6 +5973,14 @@ export function setup(host, hardMode, truePattern = false) {
       stateFirstSilence.timer <= 5.5 &&
       stateFirstSilence.beams.length == 0
     ) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       if (!hardMode) {
         const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
@@ -6271,6 +6551,7 @@ export function setup(host, hardMode, truePattern = false) {
     s.rift = spawnFutileRift();
     s.trail = [];
     s.change = false;
+    celestialDIBmultiplier(true);
 
     if (truePattern == false) showText("SILENCE.");
   }
@@ -6434,13 +6715,34 @@ export function setup(host, hardMode, truePattern = false) {
     }
     if (needsCompact) compact(s.particles);
 
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Silence_Charge.ogg`,
+        1.25,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 5 && s.t <= 5 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Silence_Firing.ogg`,
+        0.667,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
     if (s.t >= 5 && s.t < 14) {
       s.w = Math.random() * 50 + (hardMode ? 450 : 367);
     }
     if (s.t >= 14) {
       s.w -= dt * 1000;
-      if (s.w <= 0) {
+      if (s.w <= 0 && s.active) {
         s.w = 0;
+        celestialDIBmultiplier(false);
         s.active = false;
       }
     }
@@ -6490,6 +6792,14 @@ export function setup(host, hardMode, truePattern = false) {
     const py = my + mvy;
 
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
       if (!hardMode) {
         const base = Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
@@ -6571,6 +6881,25 @@ export function setup(host, hardMode, truePattern = false) {
     }
 
     const r = s.rift;
+    if (r.t >= 0.01 && r.t <= 0.01 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Start.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (r.t >= 1 && r.t <= 1 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
     if (r.t < 0.25) {
       const p = r.t / 0.25;
       r.scale = 1 - (1 - p) * (1 - p);

@@ -558,6 +558,12 @@ export function death(name = "Unknown", color = "#f70000") {
 
 export function revive() {
   dies = false;
+  if (!immortality) {
+    immortality = true;
+    setTimeout(() => {
+      immortality = false;
+    }, 1000);
+  }
   const canvas = document.getElementById("screen");
   const entityCanvas = document.getElementById("entities");
   const screen = document.getElementById("death-screen");
