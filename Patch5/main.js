@@ -885,6 +885,8 @@ setInterval(async () => {
   if (value !== lastValue && value !== "ce5f87fe-78ea-4779-9530-6c842ca30da6") {
     lastValue = value;
     multiplayerMessage(entityHost, text, color);
+  } else if (value === "ce5f87fe-78ea-4779-9530-6c842ca30da6") {
+    lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
   }
 }, 1000);
 
