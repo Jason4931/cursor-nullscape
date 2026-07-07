@@ -35,7 +35,12 @@ export function setup(host, value) {
     }
     if (!state.show) {
       state.show = true;
-      showText(value);
+      showText(
+        value
+          .split("\n")
+          .map((line) => line.replace(/(.{1,40})(\s|$)/g, "$1\n").trim())
+          .join("\n"),
+      );
     }
   }
 
