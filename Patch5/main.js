@@ -4114,13 +4114,14 @@ function drawGrid() {
       }
     }
     if (t.wall[0] && t.wall[1] == 66) {
-      const size = TILE * 1.5;
-      ctx.save();
-      ctx.translate(t.x + size * 0.333, t.y + size * 0.333);
-      ctx.rotate(Math.PI / 4);
       ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
-      ctx.fillRect(-size * 0.5, -size * 0.5, size, size);
-      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
+      ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
+      ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
+      ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
+      ctx.closePath();
+      ctx.fill();
     }
   }
   if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
