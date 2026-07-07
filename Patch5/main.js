@@ -1047,7 +1047,7 @@ topLeftInput.addEventListener("input", () => {
     setMessage(value);
     setTimeout(() => {
       setMessage("ce5f87fe-78ea-4779-9530-6c842ca30da6");
-    }, 1000);
+    }, 1010);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
