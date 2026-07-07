@@ -70,6 +70,7 @@ import { setup as spawnCorrupted } from "./Enemies/Corrupted.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
+import { setup as multiplayerMessage } from "./Enemies/MultiplayerMessage.js";
 
 export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
@@ -855,6 +856,35 @@ document.getElementById("reset-settings").onclick = () => {
   RENDER_RADIUS = RESPAWN_RADIUS * 1.3;
 };
 
+/* ===== MULTIPLAYER MESSAGE ===== */
+const APP_KEY = "esi7ythq";
+const KEY = "message";
+async function getMessage() {
+  const res = await fetch(
+    `https://keyvalue.immanuel.co/api/KeyVal/GetValue/${APP_KEY}/${KEY}`,
+  );
+  return await res.text();
+}
+async function setMessage(value) {
+  if (value == "") return;
+  value = value.replace(/\\n/g, "05d74d9c-32e8-44a6-9847-d989954f62b1");
+  await fetch(
+    `https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/${APP_KEY}/${KEY}/${encodeURIComponent(value)}`,
+    {
+      method: "POST",
+    },
+  );
+}
+let lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
+setInterval(async () => {
+  let value = (await getMessage()).replace(/^"|"$/g, "");
+  value = value.replace(/05d74d9c-32e8-44a6-9847-d989954f62b1/g, "\n");
+  if (value !== lastValue && value !== "ce5f87fe-78ea-4779-9530-6c842ca30da6") {
+    lastValue = value;
+    multiplayerMessage(entityHost, value);
+  }
+}, 1000);
+
 /* ===== CONFIG ===== */
 canvas.width = 10000;
 canvas.height = 10000;
@@ -1007,6 +1037,17 @@ topLeftInput.addEventListener("input", () => {
         }
       }, spawnEntityRate);
     }
+    topLeftInput.value = "";
+    topLeftInput.style.display = "none";
+    topLeftInput.blur();
+  }
+  const msgMatch = rawInput.match(/^msg\{([\s\S]*)\}$/);
+  if (msgMatch) {
+    const value = msgMatch[1];
+    setMessage(value);
+    setTimeout(() => {
+      setMessage("ce5f87fe-78ea-4779-9530-6c842ca30da6");
+    }, 1000);
     topLeftInput.value = "";
     topLeftInput.style.display = "none";
     topLeftInput.blur();
