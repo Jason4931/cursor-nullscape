@@ -1100,61 +1100,56 @@ topLeftInput.addEventListener("keydown", function (event) {
       input.toLowerCase() === "seamine" ||
       input.toLowerCase() === "jumppad" ||
       input.toLowerCase() === "realitycollapse" ||
-      input.toLowerCase() === "grindrail" ||
-      input.toLowerCase() === "spawnentityrate";
+      input.toLowerCase() === "grindrail";
     if (entity) {
-      if (input.toLowerCase() === "spawnentityrate") {
-        spawnEntityRate = spawnCount;
-      } else {
-        let spawned = 0;
-        const interval = setInterval(() => {
-          if (spawned >= spawnCount) {
-            clearInterval(interval);
-            return;
-          }
-          spawned++;
-          if (input.toLowerCase() === "catalyst") {
-            spawnCatalyst(entityHost);
-            spawnCatalystIntro();
-            registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
-          } else if (input.toLowerCase() === "pylons") {
-            spawnPylons(entityHost);
-          } else if (input.toLowerCase() === "truepylons") {
-            spawnTruePylons(entityHost);
-          } else if (input.toLowerCase() === "seamine") {
-            spawnSeamine(entityHost, casualMode, hardMode);
-          } else if (input.toLowerCase() === "jumppad") {
-            spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
-          } else if (input.toLowerCase() === "realitycollapse") {
-            spawnRealityCollapse(entityHost, true);
-            spawnRealityCollapse(entityHost);
-          } else if (entity.name === "Random") {
-            const randUnlocked = chaosMode
-              ? ENTITY_POOL.filter((e) => {
-                  if (e.name === "Celestial" || e.name === "Catalyst")
-                    return false;
-                  if (e.name === "Random") return false;
-                  return true;
-                })
-              : ENTITY_POOL.filter((e) => {
-                  if (e.chaosOnly) return false;
-                  if (e.name === "Random") return false;
-                  if (collectedCount < e.start) return false;
-                  if (e.unstackable) return false;
-                  return true;
-                });
-            if (randUnlocked.length !== 0) {
-              let randPick =
-                randUnlocked[(Math.random() * randUnlocked.length) | 0];
-              entities.push(randPick.spawn());
-              registerEntitySpawn(entity.name, entity.src);
-            }
-          } else {
-            entities.push(entity.spawn());
+      let spawned = 0;
+      const interval = setInterval(() => {
+        if (spawned >= spawnCount) {
+          clearInterval(interval);
+          return;
+        }
+        spawned++;
+        if (input.toLowerCase() === "catalyst") {
+          spawnCatalyst(entityHost);
+          spawnCatalystIntro();
+          registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+        } else if (input.toLowerCase() === "pylons") {
+          spawnPylons(entityHost);
+        } else if (input.toLowerCase() === "truepylons") {
+          spawnTruePylons(entityHost);
+        } else if (input.toLowerCase() === "seamine") {
+          spawnSeamine(entityHost, casualMode, hardMode);
+        } else if (input.toLowerCase() === "jumppad") {
+          spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
+        } else if (input.toLowerCase() === "realitycollapse") {
+          spawnRealityCollapse(entityHost, true);
+          spawnRealityCollapse(entityHost);
+        } else if (entity.name === "Random") {
+          const randUnlocked = chaosMode
+            ? ENTITY_POOL.filter((e) => {
+                if (e.name === "Celestial" || e.name === "Catalyst")
+                  return false;
+                if (e.name === "Random") return false;
+                return true;
+              })
+            : ENTITY_POOL.filter((e) => {
+                if (e.chaosOnly) return false;
+                if (e.name === "Random") return false;
+                if (collectedCount < e.start) return false;
+                if (e.unstackable) return false;
+                return true;
+              });
+          if (randUnlocked.length !== 0) {
+            let randPick =
+              randUnlocked[(Math.random() * randUnlocked.length) | 0];
+            entities.push(randPick.spawn());
             registerEntitySpawn(entity.name, entity.src);
           }
-        }, spawnEntityRate);
-      }
+        } else {
+          entities.push(entity.spawn());
+          registerEntitySpawn(entity.name, entity.src);
+        }
+      }, spawnEntityRate);
       topLeftInput.value = "";
     }
     const msgMatch = topLeftInput.value.trim().match(/^msg\(([\s\S]*)\)$/i);
@@ -1355,7 +1350,12 @@ topLeftInput.addEventListener("keydown", function (event) {
         break;
       }
     }
-    const patternMatch = input.match(/^pattern(\d+)spawn$/);
+    const entityspawndelayMatch = input.match(/^entityspawndelay\((\d+)\)$/);
+    if (entityspawndelayMatch) {
+      spawnEntityRate = parseInt(entityspawndelayMatch[1], 10);
+      topLeftInput.value = "";
+    }
+    const patternMatch = input.match(/^patternspawn\((\d+)\)$/);
     if (patternMatch) {
       const index = parseInt(patternMatch[1], 10);
       const base = AllPatterns[index];
