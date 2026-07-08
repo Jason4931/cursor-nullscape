@@ -2019,7 +2019,7 @@ export function setup(host, hardMode, truePattern = false) {
     } else if (r.t >= 1 && r.t <= 1 + dt) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
-        0.9,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -6897,7 +6897,7 @@ export function setup(host, hardMode, truePattern = false) {
     } else if (r.t >= 1 && r.t <= 1 + dt) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
-        0.9,
+        undefined,
         undefined,
         undefined,
         undefined,

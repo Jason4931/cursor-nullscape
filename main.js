@@ -692,243 +692,214 @@ const altars = [
 ];
 export let soundStopped = false;
 const topLeftInput = document.getElementById("spawn-input");
-topLeftInput.addEventListener("input", () => {
-  let rawInput = topLeftInput.value.trim().toLowerCase();
-  if (rawInput === "\\") topLeftInput.value = "";
-  const match = rawInput.match(/^(\d+)(.+)$/);
-  let spawnCount = 1;
-  let input = rawInput;
-  if (match) {
-    spawnCount = parseInt(match[1], 10);
-    input = match[2];
-  }
-  if (input === "\\") topLeftInput.value = "";
-  const entity =
-    ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
-    input.toLowerCase() === "catalyst" ||
-    input.toLowerCase() === "seamine" ||
-    input.toLowerCase() === "jumppad" ||
-    input.toLowerCase() === "spawnentityrate";
-  if (entity) {
-    if (input.toLowerCase() === "spawnentityrate") {
-      spawnEntityRate = spawnCount;
-    } else {
-      let spawned = 0;
-      const interval = setInterval(() => {
-        if (spawned >= spawnCount) {
-          clearInterval(interval);
-          return;
-        }
-        spawned++;
-        if (input.toLowerCase() === "catalyst") {
-          spawnCatalyst(entityHost);
-          spawnCatalystIntro();
-          registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
-        } else if (input.toLowerCase() === "seamine") {
-          spawnSeamine(entityHost, casualMode);
-        } else if (input.toLowerCase() === "jumppad") {
-          spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
-        } else if (entity.name === "Random") {
-          const randUnlocked = ENTITY_POOL.filter((e) => {
-            if (e.name === "Random") return false;
-            if (!enablePonderer && e.name === "Ponderer") return false;
-            if (collectedCount < e.start) return false;
-            if (e.unstackable) return false;
-            return true;
-          });
-          if (randUnlocked.length !== 0) {
-            let randPick =
-              randUnlocked[(Math.random() * randUnlocked.length) | 0];
-            randPick.spawn();
+topLeftInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    let rawInput = topLeftInput.value.trim().toLowerCase();
+    if (rawInput === "\\") topLeftInput.value = "";
+    const match = rawInput.match(/^(\d+)(.+)$/);
+    let spawnCount = 1;
+    let input = rawInput;
+    if (match) {
+      spawnCount = parseInt(match[1], 10);
+      input = match[2];
+    }
+    if (input === "\\") topLeftInput.value = "";
+    const entity =
+      ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
+      input.toLowerCase() === "catalyst" ||
+      input.toLowerCase() === "seamine" ||
+      input.toLowerCase() === "jumppad" ||
+      input.toLowerCase() === "spawnentityrate";
+    if (entity) {
+      if (input.toLowerCase() === "spawnentityrate") {
+        spawnEntityRate = spawnCount;
+      } else {
+        let spawned = 0;
+        const interval = setInterval(() => {
+          if (spawned >= spawnCount) {
+            clearInterval(interval);
+            return;
+          }
+          spawned++;
+          if (input.toLowerCase() === "catalyst") {
+            spawnCatalyst(entityHost);
+            spawnCatalystIntro();
+            registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+          } else if (input.toLowerCase() === "seamine") {
+            spawnSeamine(entityHost, casualMode);
+          } else if (input.toLowerCase() === "jumppad") {
+            spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
+          } else if (entity.name === "Random") {
+            const randUnlocked = ENTITY_POOL.filter((e) => {
+              if (e.name === "Random") return false;
+              if (!enablePonderer && e.name === "Ponderer") return false;
+              if (collectedCount < e.start) return false;
+              if (e.unstackable) return false;
+              return true;
+            });
+            if (randUnlocked.length !== 0) {
+              let randPick =
+                randUnlocked[(Math.random() * randUnlocked.length) | 0];
+              randPick.spawn();
+              registerEntitySpawn(entity.name, entity.src);
+            }
+          } else {
+            entity.spawn();
             registerEntitySpawn(entity.name, entity.src);
           }
-        } else {
-          entity.spawn();
-          registerEntitySpawn(entity.name, entity.src);
-        }
-      }, spawnEntityRate);
-    }
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "toggledeath") {
-    toggleToggleDeath();
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "disablespawn") {
-    disablespawn = !disablespawn;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "disableknockback") {
-    disableKnockback = !disableKnockback;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "shield") {
-    activateShield();
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "commandlist") {
-    document.getElementById("spawn-input-commands").style.opacity = 1;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "biggerradius") {
-    if (HIT_RADIUS === GIFT_SIZE) {
-      HIT_RADIUS = GIFT_SIZE * 10;
-    } else {
-      HIT_RADIUS = GIFT_SIZE;
-    }
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "immunebell") {
-    immunebell = !immunebell;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "revive") {
-    revive();
-    soundStopped = false;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "oneofeach") {
-    spawnBell(entityHost, hardMode, immunebell);
-    spawnMart(entityHost, hardMode);
-    spawnBaby(entityHost, hardMode);
-    spawnICBM(entityHost, hardMode);
-    spawnSkinwalker(entityHost, skinwalkerCount++, hardMode);
-    spawnSpringer(entityHost, hardMode);
-    spawnFlesh(entityHost, hardMode);
-    spawnNIL(entityHost);
-    spawnGuardian(entityHost, hardMode);
-    spawnDozer(entityHost, hardMode);
-    spawnTelefragger(entityHost, hardMode, deafMode);
-    spawnKookoo(entityHost);
-    spawnVoidImplosions(entityHost);
-    spawnSorrow(entityHost);
-    spawnDoombringer(entityHost);
-    spawnVoidboundBaby(entityHost, hardMode);
-    spawnPonderer(entityHost, hardMode);
-    spawnVoidboundGuardian(entityHost, hardMode);
-    spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
-    spawnCadence(entityHost, hardMode, deafMode);
-    spawnCatalyst(entityHost);
-    spawnCatalystIntro();
-    registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
-    registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
-    registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
-    registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
-    registerEntitySpawn("Skinwalker", "./ASSET/Enemies/Skinwalker.png");
-    registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
-    registerEntitySpawn("Flesh", "./ASSET/Enemies/Flesh.png");
-    registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
-    registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
-    registerEntitySpawn("Dozer", "./ASSET/Enemies/Dozer.png");
-    registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
-    registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
-    registerEntitySpawn("VoidImplosions", "./ASSET/Curses/VoidImplosions.png");
-    registerEntitySpawn("Sorrow", "./ASSET/Curses/Sorrow.png");
-    registerEntitySpawn("Doombringer", "./ASSET/Curses/Doombringer.png");
-    registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
-    registerEntitySpawn("Ponderer", "./ASSET/Enemies/Ponderer.png");
-    registerEntitySpawn(
-      "VoidboundGuardian",
-      "./ASSET/Enemies/VoidboundGuardian.png",
-    );
-    registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
-    registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
-    registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "youwillnotsurvivethis") {
-    let i = 0;
-    let interval = setInterval(() => {
-      i++;
-      spawnGlitch(entityHost, true);
-      if (i >= 10) clearInterval(interval);
-    }, 100);
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "suicide") {
-    death("Suicide");
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "slowmode") {
-    slowmode = !slowmode;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  if (input === "ultrafastmode") {
-    ultrafastmode = !ultrafastmode;
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
-  }
-  for (const altar of altars) {
-    if (input === altar.name) {
-      altar.activate();
-
+        }, spawnEntityRate);
+      }
       topLeftInput.value = "";
-      topLeftInput.style.display = "none";
-      topLeftInput.blur();
-
-      break;
     }
-  }
-  const patternMatch = input.match(/^pattern(\d+)spawn$/);
-  if (patternMatch) {
-    const index = parseInt(patternMatch[1], 10);
-    const base = AllPatterns[index];
-    if (!base) return;
-
-    const sx = Math.floor(mouse.x / (SUPER_TILE * TILE));
-    const sy = Math.floor(mouse.y / (SUPER_TILE * TILE));
-
-    // find existing pattern at this super tile
-    let target = null;
-    for (const p of patternsState.values()) {
-      if (p.sx === sx && p.sy === sy) {
-        target = p;
+    if (input === "toggledeath") {
+      toggleToggleDeath();
+      topLeftInput.value = "";
+    }
+    if (input === "disablespawn") {
+      disablespawn = !disablespawn;
+      topLeftInput.value = "";
+    }
+    if (input === "disableknockback") {
+      disableKnockback = !disableKnockback;
+      topLeftInput.value = "";
+    }
+    if (input === "shield") {
+      activateShield();
+      topLeftInput.value = "";
+    }
+    if (input === "commandlist") {
+      document.getElementById("spawn-input-commands").style.opacity = 1;
+      topLeftInput.value = "";
+    }
+    if (input === "biggerradius") {
+      if (HIT_RADIUS === GIFT_SIZE) {
+        HIT_RADIUS = GIFT_SIZE * 10;
+      } else {
+        HIT_RADIUS = GIFT_SIZE;
+      }
+      topLeftInput.value = "";
+    }
+    if (input === "immunebell") {
+      immunebell = !immunebell;
+      topLeftInput.value = "";
+    }
+    if (input === "revive") {
+      revive();
+      soundStopped = false;
+      topLeftInput.value = "";
+    }
+    if (input === "oneofeach") {
+      spawnBell(entityHost, hardMode, immunebell);
+      spawnMart(entityHost, hardMode);
+      spawnBaby(entityHost, hardMode);
+      spawnICBM(entityHost, hardMode);
+      spawnSkinwalker(entityHost, skinwalkerCount++, hardMode);
+      spawnSpringer(entityHost, hardMode);
+      spawnFlesh(entityHost, hardMode);
+      spawnNIL(entityHost);
+      spawnGuardian(entityHost, hardMode);
+      spawnDozer(entityHost, hardMode);
+      spawnTelefragger(entityHost, hardMode, deafMode);
+      spawnKookoo(entityHost);
+      spawnVoidImplosions(entityHost);
+      spawnSorrow(entityHost);
+      spawnDoombringer(entityHost);
+      spawnVoidboundBaby(entityHost, hardMode);
+      spawnPonderer(entityHost, hardMode);
+      spawnVoidboundGuardian(entityHost, hardMode);
+      spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode);
+      spawnCadence(entityHost, hardMode, deafMode);
+      spawnCatalyst(entityHost);
+      spawnCatalystIntro();
+      registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
+      registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
+      registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
+      registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBM.png");
+      registerEntitySpawn("Skinwalker", "./ASSET/Enemies/Skinwalker.png");
+      registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
+      registerEntitySpawn("Flesh", "./ASSET/Enemies/Flesh.png");
+      registerEntitySpawn("NIL", "./ASSET/Enemies/NIL.png");
+      registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
+      registerEntitySpawn("Dozer", "./ASSET/Enemies/Dozer.png");
+      registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
+      registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
+      registerEntitySpawn(
+        "VoidImplosions",
+        "./ASSET/Curses/VoidImplosions.png",
+      );
+      registerEntitySpawn("Sorrow", "./ASSET/Curses/Sorrow.png");
+      registerEntitySpawn("Doombringer", "./ASSET/Curses/Doombringer.png");
+      registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
+      registerEntitySpawn("Ponderer", "./ASSET/Enemies/Ponderer.png");
+      registerEntitySpawn(
+        "VoidboundGuardian",
+        "./ASSET/Enemies/VoidboundGuardian.png",
+      );
+      registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/Voidbreaker.png");
+      registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
+      registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+      topLeftInput.value = "";
+    }
+    if (input === "youwillnotsurvivethis") {
+      let i = 0;
+      let interval = setInterval(() => {
+        i++;
+        spawnGlitch(entityHost, true);
+        if (i >= 10) clearInterval(interval);
+      }, 100);
+      topLeftInput.value = "";
+    }
+    if (input === "suicide") {
+      death("Suicide");
+      topLeftInput.value = "";
+    }
+    if (input === "slowmode") {
+      slowmode = !slowmode;
+      topLeftInput.value = "";
+    }
+    if (input === "ultrafastmode") {
+      ultrafastmode = !ultrafastmode;
+      topLeftInput.value = "";
+    }
+    for (const altar of altars) {
+      if (input === altar.name) {
+        altar.activate();
+        topLeftInput.value = "";
         break;
       }
     }
+    const patternMatch = input.match(/^pattern(\d+)spawn$/);
+    if (patternMatch) {
+      const index = parseInt(patternMatch[1], 10);
+      const base = AllPatterns[index];
+      if (!base) return;
 
-    if (target) {
-      destroyPattern(target);
+      const sx = Math.floor(mouse.x / (SUPER_TILE * TILE));
+      const sy = Math.floor(mouse.y / (SUPER_TILE * TILE));
 
-      for (let y = 0; y < target.ph; y++) {
-        for (let x = 0; x < target.pw; x++) {
-          superOccupied[target.sy + y][target.sx + x] = false;
+      // find existing pattern at this super tile
+      let target = null;
+      for (const p of patternsState.values()) {
+        if (p.sx === sx && p.sy === sy) {
+          target = p;
+          break;
         }
       }
+
+      if (target) {
+        destroyPattern(target);
+
+        for (let y = 0; y < target.ph; y++) {
+          for (let x = 0; x < target.pw; x++) {
+            superOccupied[target.sy + y][target.sx + x] = false;
+          }
+        }
+      }
+
+      placeSuper(sx, sy, base);
+
+      topLeftInput.value = "";
     }
-
-    placeSuper(sx, sy, base);
-
-    topLeftInput.value = "";
-    topLeftInput.style.display = "none";
-    topLeftInput.blur();
   }
 });
 let reducedMotionHoldActive = false;
@@ -3423,7 +3394,7 @@ function loop(now) {
   document.getElementById("spawn-input").style.display === "block"
     ? (document.getElementById("spawn-input-text").style.display = "block")
     : (document.getElementById("spawn-input-text").style.display = "none");
-  document.getElementById("spawn-input-commands").style.opacity -= 0.003;
+  document.getElementById("spawn-input-commands").style.opacity -= 0.001;
   if (disableProgression) {
     if (!firstDisableProgression) {
       cheattimer = 300;

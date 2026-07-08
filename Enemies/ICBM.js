@@ -3,10 +3,13 @@ import { playSound } from "../main.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
+const explode = new Image();
+explode.src = "./ASSET/Misc/Explode.png";
 
 export function setup(host, hardMode) {
   const state = {
     opacity: 0,
+    explodeOpacity: 0,
     x: 0,
     y: 0,
     size: 100,
@@ -128,12 +131,14 @@ export function setup(host, hardMode) {
     } else if (state.phase === "idle") {
       const fadeT = Math.min(state.timer * 4, 1);
       state.opacity = 1 - fadeT;
+      state.explodeOpacity = 1 - Math.min(state.timer * 2, 1);
       state.circleOpacity = 0.75 - (fadeT * 3) / 4;
 
       if (state.timer >= state.idleDuration) {
         state.timer = 0;
         state.phase = "lock";
         state.opacity = 0;
+        state.explodeOpacity = 0;
         state.circleOpacity = 0;
         state.currentSize = state.size * 2;
       }
@@ -186,6 +191,20 @@ export function setup(host, hardMode) {
       ctx.rotate((state.rotation * Math.PI) / 180);
       const s = Math.round(state.currentSize);
       ctx.drawImage(missile, -Math.round(s / 2), -Math.round(s / 2), s, s);
+      ctx.restore();
+
+      ctx.save();
+      ctx.globalAlpha = state.explodeOpacity;
+      ctx.translate(Math.round(state.x), Math.round(state.y));
+      ctx.scale(1 - state.timer, 1 - state.timer);
+      ctx.rotate(state.timer * Math.PI * 2);
+      ctx.drawImage(
+        explode,
+        -Math.round(s * 1.5),
+        -Math.round(s * 1.5),
+        s * 3,
+        s * 3,
+      );
       ctx.restore();
     }
 

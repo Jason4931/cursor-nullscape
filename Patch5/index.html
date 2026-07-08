@@ -824,7 +824,8 @@
         highrise<br />
         icetile<br />
         oneofeach<br />
-        msg{[#fff]text}<br />
+        msg{{[#fff]text}}<br />
+        globalspawn{entityname}<br />
         <span style="opacity: 1%">youwillnotsurvivethis</span>
       </p>
       <div id="entity-panel">
@@ -947,6 +948,13 @@
           <span>Show timer</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-timer" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show players</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-players" checked />
             <span class="slider-toggle"></span>
           </label>
         </div>
