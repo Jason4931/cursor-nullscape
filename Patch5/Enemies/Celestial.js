@@ -68,7 +68,12 @@ for (let i = 1; i <= 25; i++) {
 }
 
 let phase = 1;
-export function setup(host, hardMode, truePattern = false) {
+export function setup(
+  host,
+  hardMode,
+  truePattern = false,
+  silenceOnly = false,
+) {
   const patternFall = [
     {
       duration: 0,
@@ -614,6 +619,22 @@ export function setup(host, hardMode, truePattern = false) {
       enter: enterDeathInBloomCrumble,
     },
   ];
+  const silenceOnlyPattern = [
+    {
+      duration: 9,
+      update: updateFirstSilence,
+      draw: drawFirstSilence,
+      drawFront: drawFirstSilenceFront,
+      enter: enterFirstSilence,
+    },
+    {
+      duration: 18,
+      update: updateSecondSilence,
+      draw: drawSecondSilence,
+      drawFront: drawSecondSilenceFront,
+      enter: enterSecondSilence,
+    },
+  ];
   const specificDevOnly = [
     {
       duration: 5.5,
@@ -745,7 +766,11 @@ export function setup(host, hardMode, truePattern = false) {
     },
     patternTime: 0,
     patternIndex: -1,
-    loopPattern: !truePattern ? specificDevOnly : loopPatternPhase1,
+    loopPattern: !truePattern
+      ? silenceOnly
+        ? silenceOnlyPattern
+        : specificDevOnly
+      : loopPatternPhase1,
 
     layers: Celestial_Idle,
     enemy: null,

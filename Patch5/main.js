@@ -1182,6 +1182,10 @@ topLeftInput.addEventListener("keydown", function (event) {
         topLeftInput.value = "";
       }
     }
+    if (input === "silencecelestial") {
+      spawnCelestial(entityHost, hardMode, false, true);
+      topLeftInput.value = "";
+    }
     if (input === "truecelestial" || input === "spawncelestialintro") {
       spawnCelestialIntro();
       topLeftInput.value = "";
