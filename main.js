@@ -3350,8 +3350,8 @@ function loop(now) {
       if (tipstimer > 550) color = "#ff0a0a";
       if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
     } else if (tipstimer > 204) {
-      text = "Press E to parry a death.";
-      text2 = "Press R to boost movement.";
+      text = "Press E or R to boost movement.";
+      text2 = "Alternatively use R to parry option.";
       if (tipstimer > 376) color = "#ff0a0a";
       if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
     } else if (tipstimer > 30) {
