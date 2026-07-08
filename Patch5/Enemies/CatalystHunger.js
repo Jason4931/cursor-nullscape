@@ -179,7 +179,7 @@ export function setup(host, overshootBrake) {
         r = 15 * (1 - eased);
       }
 
-      ctx.strokeStyle = "magenta";
+      ctx.strokeStyle = "rgb(255,0,192)";
       ctx.lineWidth = 18;
       ctx.fillStyle = "black";
       ctx.beginPath();

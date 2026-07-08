@@ -197,7 +197,6 @@ export function setup(host, hardMode) {
       ctx.globalAlpha = state.explodeOpacity;
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.scale(1 - state.timer, 1 - state.timer);
-      ctx.rotate(state.timer * Math.PI * 2);
       ctx.drawImage(
         explode,
         -Math.round(s * 1.5),

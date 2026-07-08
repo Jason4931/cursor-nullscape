@@ -92,7 +92,7 @@ let entities = [];
 
 const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
-const cheatDetector = true;
+let cheatDetector = true;
 
 /* ===== DIFFICULTY ===== */
 const beaten =
@@ -1021,6 +1021,7 @@ export function celestialDIBmultiplier(v) {
     giftMultiplier *= 2;
   }
 }
+let bypassCheatCount = 0;
 window.addEventListener("keydown", (e) => {
   if (e.repeat) return;
   if (e.key === "?" && e.shiftKey && e.ctrlKey) {
@@ -1033,6 +1034,12 @@ window.addEventListener("keydown", (e) => {
       topLeftInput.value = "";
       topLeftInput.style.display = "none";
       topLeftInput.blur();
+    }
+  }
+  if (e.key === "|" && e.shiftKey && e.ctrlKey) {
+    bypassCheatCount++;
+    if (bypassCheatCount >= 10) {
+      cheatDetector = false;
     }
   }
   if (e.key.toLowerCase() === "m") {
@@ -1150,7 +1157,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       }
       topLeftInput.value = "";
     }
-    const msgMatch = topLeftInput.value.trim().match(/^msg\{([\s\S]*)\}$/i);
+    const msgMatch = topLeftInput.value.trim().match(/^msg\(([\s\S]*)\)$/i);
     if (msgMatch) {
       const value = msgMatch[1];
       set("crnsc-message", value);
@@ -1175,19 +1182,19 @@ topLeftInput.addEventListener("keydown", function (event) {
         topLeftInput.value = "";
       }
     }
-    if (input === "spawncelestialintro") {
+    if (input === "truecelestial" || input === "spawncelestialintro") {
       spawnCelestialIntro();
       topLeftInput.value = "";
     }
-    if (input === "toggledeath") {
+    if (input === "toggledeath" || input === "noclip") {
       toggleToggleDeath();
       topLeftInput.value = "";
     }
-    if (input === "disablespawn") {
+    if (input === "disablespawn" || input === "togglespawn") {
       disablespawn = !disablespawn;
       topLeftInput.value = "";
     }
-    if (input === "disableknockback") {
+    if (input === "disableknockback" || input === "toggleknockback") {
       disableKnockback = !disableKnockback;
       topLeftInput.value = "";
     }
@@ -1257,7 +1264,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       immunebell = !immunebell;
       topLeftInput.value = "";
     }
-    if (input === "revive") {
+    if (input === "revive" || input === "rev") {
       revive();
       soundStopped = false;
       topLeftInput.value = "";
@@ -1337,7 +1344,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       slowmode = !slowmode;
       topLeftInput.value = "";
     }
-    if (input === "ultrafastmode") {
+    if (input === "ultrafastmode" || input === "fastmode") {
       ultrafastmode = !ultrafastmode;
       topLeftInput.value = "";
     }

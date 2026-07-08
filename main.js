@@ -751,15 +751,15 @@ topLeftInput.addEventListener("keydown", function (event) {
       }
       topLeftInput.value = "";
     }
-    if (input === "toggledeath") {
+    if (input === "toggledeath" || input === "noclip") {
       toggleToggleDeath();
       topLeftInput.value = "";
     }
-    if (input === "disablespawn") {
+    if (input === "disablespawn" || input === "togglespawn") {
       disablespawn = !disablespawn;
       topLeftInput.value = "";
     }
-    if (input === "disableknockback") {
+    if (input === "disableknockback" || input === "toggleknockback") {
       disableKnockback = !disableKnockback;
       topLeftInput.value = "";
     }
@@ -783,7 +783,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       immunebell = !immunebell;
       topLeftInput.value = "";
     }
-    if (input === "revive") {
+    if (input === "revive" || input === "rev") {
       revive();
       soundStopped = false;
       topLeftInput.value = "";
@@ -857,7 +857,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       slowmode = !slowmode;
       topLeftInput.value = "";
     }
-    if (input === "ultrafastmode") {
+    if (input === "ultrafastmode" || input === "fastmode") {
       ultrafastmode = !ultrafastmode;
       topLeftInput.value = "";
     }
