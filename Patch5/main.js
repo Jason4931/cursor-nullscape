@@ -558,7 +558,7 @@ const ProgressionEvents = [
     level: 6,
     title: "The humidity rises...",
     desc: "All Marts have their default size increased.",
-    activate: () => { }, //all mart 2x size (default size = 2)
+    activate: () => {}, //all mart 2x size (default size = 2)
   },
   {
     level: 8,
@@ -580,13 +580,13 @@ const ProgressionEvents = [
     level: 14,
     title: "A sickly sweet odor fills the air, the hivemind grows stronger...",
     desc: "Flesh has further range.",
-    activate: () => { }, //flesh range 2x ((TILE * 6) ** 2)
+    activate: () => {}, //flesh range 2x ((TILE * 6) ** 2)
   },
   {
     level: 16,
     title: "The sound of sirens blaring pierce your ears...",
     desc: "More ICBMs now appear.",
-    activate: () => { }, //spawn 5 icbm (timed separately)
+    activate: () => {}, //spawn 5 icbm (timed separately)
   },
   {
     level: 18,
@@ -594,19 +594,19 @@ const ProgressionEvents = [
     desc: "Highrise towers begin to appear.",
     title2: "The humidity rises...",
     desc2: "Marts will grow in size.",
-    activate: () => { }, //all mart +1 size per 60s (and first activate)
+    activate: () => {}, //all mart +1 size per 60s (and first activate)
   },
   {
     level: 20,
     title: "The ground beneath you rumbles...",
     desc: "More Springers now appear.",
-    activate: () => { }, //spawn 5 springer (timed separately)
+    activate: () => {}, //spawn 5 springer (timed separately)
   },
   {
     level: 25,
     title: "The sound of footsteps echoes behind you...",
     desc: "More Husks join the congaline.",
-    activate: () => { }, //spawn 5 husk (timed little separately)
+    activate: () => {}, //spawn 5 husk (timed little separately)
   },
   {
     level: 50,
@@ -977,7 +977,7 @@ if (showPlayers) {
                 y: player.pos.y,
               },
             });
-          } catch { }
+          } catch {}
         }
 
         playersToDraw = newPlayersToDraw;
@@ -1124,18 +1124,18 @@ topLeftInput.addEventListener("keydown", function (event) {
           } else if (entity.name === "Random") {
             const randUnlocked = chaosMode
               ? ENTITY_POOL.filter((e) => {
-                if (e.name === "Celestial" || e.name === "Catalyst")
-                  return false;
-                if (e.name === "Random") return false;
-                return true;
-              })
+                  if (e.name === "Celestial" || e.name === "Catalyst")
+                    return false;
+                  if (e.name === "Random") return false;
+                  return true;
+                })
               : ENTITY_POOL.filter((e) => {
-                if (e.chaosOnly) return false;
-                if (e.name === "Random") return false;
-                if (collectedCount < e.start) return false;
-                if (e.unstackable) return false;
-                return true;
-              });
+                  if (e.chaosOnly) return false;
+                  if (e.name === "Random") return false;
+                  if (collectedCount < e.start) return false;
+                  if (e.unstackable) return false;
+                  return true;
+                });
             if (randUnlocked.length !== 0) {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
@@ -1157,7 +1157,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       setTimeout(() => {
         set("crnsc-message", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
         lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
-      }, 1100);
+      }, 1000);
       topLeftInput.value = "";
     }
     if (input.toLowerCase().startsWith("globalspawn")) {
@@ -1171,7 +1171,7 @@ topLeftInput.addEventListener("keydown", function (event) {
         setTimeout(() => {
           set("crnsc-spawnentity", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
           lastValueEntity = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
-        }, 1100);
+        }, 1000);
         topLeftInput.value = "";
       }
     }
@@ -1662,7 +1662,7 @@ export function playSound(
     const endTime = clip.end * audio.duration;
 
     audio.currentTime = startTime;
-    audio.play().catch(() => { });
+    audio.play().catch(() => {});
 
     const stopAt = () => {
       if (stopped) return;
@@ -1924,10 +1924,10 @@ function playNextMusic() {
   const pool = candidates.length
     ? candidates
     : musicList.filter((m) => {
-      if (actualCollectedCount < m.start) return false;
-      if (m.end !== 0 && actualCollectedCount > m.end) return false;
-      return true;
-    });
+        if (actualCollectedCount < m.start) return false;
+        if (m.end !== 0 && actualCollectedCount > m.end) return false;
+        return true;
+      });
 
   if (pool.length === 0) return;
 
@@ -2480,17 +2480,17 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
   let name = null;
   const unlocked = chaosMode
     ? ENTITY_POOL.filter((e) => {
-      if (e.name === "Celestial" || e.name === "Catalyst") return false;
-      if (exceptEntity && e.name === exceptEntity) return false;
-      return true;
-    })
+        if (e.name === "Celestial" || e.name === "Catalyst") return false;
+        if (exceptEntity && e.name === exceptEntity) return false;
+        return true;
+      })
     : ENTITY_POOL.filter((e) => {
-      if (e.chaosOnly) return false;
-      if (collectedCount < e.start) return false;
-      if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
-      if (exceptEntity && e.name === exceptEntity) return false;
-      return true;
-    });
+        if (e.chaosOnly) return false;
+        if (collectedCount < e.start) return false;
+        if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+        if (exceptEntity && e.name === exceptEntity) return false;
+        return true;
+      });
 
   if (unlocked.length > 0) {
     let pick;
@@ -2538,17 +2538,17 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     if (pick.name === "Random") {
       const randUnlocked = chaosMode
         ? ENTITY_POOL.filter((e) => {
-          if (e.name === "Celestial" || e.name === "Catalyst") return false;
-          if (e.name === "Random") return false;
-          return true;
-        })
+            if (e.name === "Celestial" || e.name === "Catalyst") return false;
+            if (e.name === "Random") return false;
+            return true;
+          })
         : ENTITY_POOL.filter((e) => {
-          if (e.chaosOnly) return false;
-          if (e.name === "Random") return false;
-          if (collectedCount < e.start) return false;
-          if (e.unstackable) return false;
-          return true;
-        });
+            if (e.chaosOnly) return false;
+            if (e.name === "Random") return false;
+            if (collectedCount < e.start) return false;
+            if (e.unstackable) return false;
+            return true;
+          });
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
@@ -3062,32 +3062,32 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 29,
           highrise: [
             pattern[y][x] === 31 ||
-            pattern[y][x] === 32 ||
-            pattern[y][x] === 33 ||
-            pattern[y][x] === 34 ||
-            pattern[y][x] === 35 ||
-            pattern[y][x] === 37 ||
-            pattern[y][x] === 38 ||
-            pattern[y][x] === 39 ||
-            pattern[y][x] === 41 ||
-            pattern[y][x] === 42,
+              pattern[y][x] === 32 ||
+              pattern[y][x] === 33 ||
+              pattern[y][x] === 34 ||
+              pattern[y][x] === 35 ||
+              pattern[y][x] === 37 ||
+              pattern[y][x] === 38 ||
+              pattern[y][x] === 39 ||
+              pattern[y][x] === 41 ||
+              pattern[y][x] === 42,
             pattern[y][x],
           ],
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
-            Math.min(
-              0.05,
-              Math.max(0.01, Number(graphicsSlider.value) * 0.025),
-            ) *
-            (pattern[y][x] === 13 ? 5 : 1),
+              Math.min(
+                0.05,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.025),
+              ) *
+                (pattern[y][x] === 13 ? 5 : 1),
             Math.random(),
             Math.random(),
             Math.random() <
-            Math.min(
-              0.05,
-              Math.max(0.01, Number(graphicsSlider.value) * 0.025),
-            ),
+              Math.min(
+                0.05,
+                Math.max(0.01, Number(graphicsSlider.value) * 0.025),
+              ),
             Math.random() < 0.5,
           ],
           collapsing: [false, false],
@@ -3128,17 +3128,17 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                hardMode
-                  ? 0.000125 * (collectedCount - 500)
-                  : 0.00025 * (collectedCount - 500),
-                0.5, // 0-50%
-              )
+                  hardMode
+                    ? 0.000125 * (collectedCount - 500)
+                    : 0.00025 * (collectedCount - 500),
+                  0.5, // 0-50%
+                )
               : Math.min(
-                hardMode
-                  ? 0.00005 * (collectedCount - 500)
-                  : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
-              ))
+                  hardMode
+                    ? 0.00005 * (collectedCount - 500)
+                    : 0.0001 * (collectedCount - 500),
+                  0.1, // 0-10%
+                ))
           )
             type = "tripmine";
           else type = "gift"; // 100-90%
@@ -4530,23 +4530,23 @@ function updateCamera() {
       }
       if (
         Math.floor(collectedCount / 100) >
-        Math.floor(lastEntitySpawnAt / 100) ||
+          Math.floor(lastEntitySpawnAt / 100) ||
         (!hardMode && collectedCount >= 50 && lastEntitySpawnAt < 50)
       ) {
         lastEntitySpawnAt = collectedCount;
 
         const unlocked = chaosMode
           ? ENTITY_POOL.filter((e) => {
-            if (e.name === "Celestial" || e.name === "Catalyst") return false;
-            return true;
-          })
+              if (e.name === "Celestial" || e.name === "Catalyst") return false;
+              return true;
+            })
           : ENTITY_POOL.filter((e) => {
-            if (e.chaosOnly) return false;
-            if (collectedCount < e.start) return false;
-            if (e.unstackable && spawnedUnstackables.has(e.name))
-              return false;
-            return true;
-          });
+              if (e.chaosOnly) return false;
+              if (collectedCount < e.start) return false;
+              if (e.unstackable && spawnedUnstackables.has(e.name))
+                return false;
+              return true;
+            });
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
@@ -4648,18 +4648,18 @@ function updateCamera() {
           if (pick.name === "Random") {
             const randUnlocked = chaosMode
               ? ENTITY_POOL.filter((e) => {
-                if (e.name === "Celestial" || e.name === "Catalyst")
-                  return false;
-                if (e.name === "Random") return false;
-                return true;
-              })
+                  if (e.name === "Celestial" || e.name === "Catalyst")
+                    return false;
+                  if (e.name === "Random") return false;
+                  return true;
+                })
               : ENTITY_POOL.filter((e) => {
-                if (e.chaosOnly) return false;
-                if (e.name === "Random") return false;
-                if (collectedCount < e.start) return false;
-                if (e.unstackable) return false;
-                return true;
-              });
+                  if (e.chaosOnly) return false;
+                  if (e.name === "Random") return false;
+                  if (collectedCount < e.start) return false;
+                  if (e.unstackable) return false;
+                  return true;
+                });
             if (randUnlocked.length !== 0) {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
@@ -5114,7 +5114,7 @@ function loop(now) {
       w * 0.5,
       20,
       (lastAbilityCooldown == 75 ? 2 : 1) *
-      (lastAbilityCooldown - abilityCooldown),
+        (lastAbilityCooldown - abilityCooldown),
     );
   if (parried && parry) {
     if (!soundParry) {
@@ -5274,9 +5274,9 @@ function loop(now) {
     tipstimer > 0 &&
     (localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[1],
-        10,
-      ) < 25
+          localStorage.getItem("highest-level-reached").split(" ")[1],
+          10,
+        ) < 25
       : true) &&
     !disableProgression
   ) {
@@ -5444,7 +5444,7 @@ const unlock = () => {
     panel.classList.toggle("open", panelOpen);
   }
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => { });
+    document.documentElement.requestFullscreen().catch(() => {});
   }
   if (windowClicked) return;
   windowClicked = true;
@@ -5638,9 +5638,9 @@ export function setStars() {
   if (!casualMode) {
     const highest = localStorage.getItem("highest-level-reached")
       ? parseInt(
-        localStorage.getItem("highest-level-reached").split(" ")[0],
-        10,
-      )
+          localStorage.getItem("highest-level-reached").split(" ")[0],
+          10,
+        )
       : 0;
     if (actualCollectedCount > highest)
       localStorage.setItem(
