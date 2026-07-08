@@ -18,8 +18,8 @@ import {
   setParried,
   slowmode,
   ultrafastmode,
-  lastAbilityCooldown,
   stopTimer,
+  usedAbility,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -397,7 +397,7 @@ export function death(name = "Unknown", color = "#f70000") {
   if (dies || immortality || springerImmortality) return;
   if (
     ability &&
-    lastAbilityCooldown == 150 &&
+    usedAbility == "r" &&
     name != "Dozer" &&
     name != "Suicide" &&
     name != "Void"

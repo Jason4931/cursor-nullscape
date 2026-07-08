@@ -230,7 +230,7 @@ let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let ability = false;
-export let lastAbilityCooldown = 150;
+export let usedAbility = null;
 export let slowmode = false;
 export let ultrafastmode = false;
 let abilityCooldown = 0;
@@ -1048,20 +1048,25 @@ window.addEventListener("keydown", (e) => {
   }
   if (abilityCooldown == 0 && !slowness) {
     if (e.key.toLowerCase() === "e") {
-      abilityCooldown = 150;
-      lastAbilityCooldown = 150;
+      abilityCooldown = 45;
       ability = true;
       setTimeout(() => {
         ability = false;
       }, 500);
-    } else if (e.key.toLowerCase() === "r") {
-      abilityCooldown = 75;
-      lastAbilityCooldown = 75;
+      usedAbility = "e";
       speedBoostScale = 2;
+    } else if (e.key.toLowerCase() === "r") {
+      abilityCooldown = 45;
       ability = true;
       setTimeout(() => {
         ability = false;
       }, 500);
+      if (!parry) {
+        usedAbility = "e";
+        speedBoostScale = 2;
+      } else {
+        usedAbility = "r";
+      }
     }
   }
 });
@@ -5098,7 +5103,7 @@ function loop(now) {
 
   function drawCooldownBar(x, y, width, height, cooldown) {
     ctx.save();
-    const percent = Math.max(0, Math.min(cooldown / 150, 1));
+    const percent = Math.max(0, Math.min(cooldown / 45, 1));
     ctx.globalAlpha = 0.6;
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
@@ -5120,8 +5125,7 @@ function loop(now) {
       screenY + h - 40,
       w * 0.5,
       20,
-      (lastAbilityCooldown == 75 ? 2 : 1) *
-        (lastAbilityCooldown - abilityCooldown),
+      45 - abilityCooldown,
     );
   if (parried && parry) {
     if (!soundParry) {
@@ -5313,8 +5317,8 @@ function loop(now) {
       if (tipstimer > 550) color = "#ff0a0a";
       if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
     } else if (tipstimer > 204) {
-      text = "Press E to parry a death.";
-      text2 = "Press R to boost movement.";
+      text = "Press E or R to boost movement.";
+      text2 = "Alternatively use R to parry option.";
       if (tipstimer > 376) color = "#ff0a0a";
       if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
     } else if (tipstimer > 30) {
