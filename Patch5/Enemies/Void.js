@@ -9,7 +9,7 @@ export function setup(host, enableVoid, showFloor) {
   function update(dt) {
     if (!isCursorOnFloor()) {
       state.offFloorTime += dt;
-      if (state.offFloorTime >= (showFloor ? 1 : 2) * (enableVoid ? 6 : 60)) {
+      if (state.offFloorTime >= (showFloor ? 1 : 1.5) * (enableVoid ? 6 : 60)) {
         death("Void");
         state.offFloorTime = -60;
       }

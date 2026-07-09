@@ -195,35 +195,12 @@ let disableKnockback = false;
 let immunebell = false;
 let deathOpacity = 0;
 let lastCursorInfectAt = 0;
-let OblivionActive = 0;
-let OblivionActivestate = {
-  blobs: Array.from({ length: 20 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    r: 200 + Math.random() * 400,
-    vx: (Math.random() - 0.5) * 0.1,
-    vy: (Math.random() - 0.5) * 0.1,
-  })),
-};
 let huskCount = 0;
 let highestEntitySpawned = [];
+let OblivionActive = 0;
+let scrollOblivion = 0;
 let celestialBG = false;
-let celestialBGstate = {
-  stars: Array.from({ length: 120 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    size: Math.random() < 0.9 ? 1 : 2,
-    color: Math.random() < 0.75 ? "#fff" : "#88aaff",
-  })),
-  blobs: Array.from({ length: 20 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    r: 200 + Math.random() * 400,
-    type: Math.random() < 0.5 ? "magenta" : "blue",
-    vx: (Math.random() - 0.5) * 0.02,
-    vy: (Math.random() - 0.5) * 0.02,
-  })),
-};
+let scrollCelestial = 0;
 export let onCelestial = false;
 let onCelestialIntro = false;
 const pickedOnce = new Set();
@@ -614,6 +591,10 @@ const ProgressionEvents = [
   },
 ];
 
+const oblivionBGimg = new Image();
+oblivionBGimg.src = "./ASSET/Misc/OblivionBG.png";
+const celestialBGimg = new Image();
+celestialBGimg.src = "./ASSET/Misc/CelestialBG.png";
 const skybox = new Image();
 skybox.src = "./ASSET/Misc/Skybox.png";
 let scrollSkybox = 0;
@@ -3322,103 +3303,78 @@ function drawGrid() {
     ctx.restore();
   }
   if (OblivionActive) {
-    for (const b of OblivionActivestate.blobs) {
-      b.x += b.vx;
-      b.y += b.vy;
-
-      if (b.x < 0) b.x += 1;
-      if (b.x > 1) b.x -= 1;
-      if (b.y < 0) b.y += 1;
-      if (b.y > 1) b.y -= 1;
+    scrollOblivion -= 20;
+    if (scrollOblivion <= -window.innerHeight) {
+      scrollOblivion += window.innerHeight;
     }
-    function drawSpaceBG(ctx, cam, w, h) {
-      ctx.save();
-      ctx.globalAlpha = OblivionActive;
-      ctx.fillStyle = "rgba(255, 0, 255, 0.25)";
-      ctx.fillRect(cam.x, cam.y, w, h);
-
-      for (const b of OblivionActivestate.blobs) {
-        const gx = cam.x + b.x * w;
-        const gy = cam.y + b.y * h;
-
-        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, b.r);
-
-        grad.addColorStop(0, "rgba(255, 0, 200, 0.1)");
-        grad.addColorStop(0.35, "rgba(160, 0, 255, 0.064)");
-        grad.addColorStop(0.7, "rgba(90, 0, 140, 0.036)");
-        grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(cam.x, cam.y, w, h);
-      }
-      ctx.restore();
-    }
-    const cam = getCameraPos();
-    drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);
+    ctx.save();
+    ctx.globalAlpha = OblivionActive * 0.5;
+    ctx.drawImage(
+      oblivionBGimg,
+      -camX,
+      -camY + scrollOblivion,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    ctx.drawImage(
+      oblivionBGimg,
+      -camX,
+      -camY + scrollOblivion + window.innerHeight,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    ctx.restore();
   }
   if (celestialBG) {
-    for (const b of celestialBGstate.blobs) {
-      b.x += b.vx;
-      b.y += b.vy;
-
-      if (b.x < 0) b.x += 1;
-      if (b.x > 1) b.x -= 1;
-      if (b.y < 0) b.y += 1;
-      if (b.y > 1) b.y -= 1;
+    scrollCelestial -= 5;
+    if (scrollCelestial <= -window.innerWidth) {
+      scrollCelestial += window.innerWidth;
     }
-    function drawSpaceBG(ctx, cam, w, h) {
-      ctx.fillStyle = "#000";
-      ctx.fillRect(cam.x, cam.y, w, h);
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.drawImage(
+      celestialBGimg,
+      -camX + scrollCelestial,
+      -camY,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    ctx.drawImage(
+      celestialBGimg,
+      -camX + scrollCelestial + window.innerWidth,
+      -camY,
+      window.innerWidth,
+      window.innerHeight,
+    );
 
-      for (const b of celestialBGstate.blobs) {
-        const gx = cam.x + b.x * w;
-        const gy = cam.y + b.y * h;
-
-        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, b.r);
-
-        if (b.type === "magenta") {
-          grad.addColorStop(0, "rgba(255, 0, 200, 0.25)");
-        } else {
-          grad.addColorStop(0, "rgba(0, 120, 255, 0.25)");
-        }
-        grad.addColorStop(1, "rgba(0,0,0,0)");
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(cam.x, cam.y, w, h);
-      }
-
-      for (const s of celestialBGstate.stars) {
-        const x = cam.x + s.x * w;
-        const y = cam.y + s.y * h;
-
-        ctx.fillStyle = s.color;
-        ctx.fillRect(x, y, s.size, s.size);
-      }
-
-      const centerX = cam.x + w / 2;
-      const centerY = cam.y + h / 2;
-      const lookStrength = -0.05;
-      const cx = centerX + (mouse.x - centerX) * lookStrength;
-      const cy = centerY + (mouse.y - centerY) * lookStrength;
-      const grad = ctx.createRadialGradient(
-        cx,
-        cy,
-        0,
-        cx,
-        cy,
-        Math.min(w, h) * 0.5,
-      );
-      grad.addColorStop(0, "rgba(0, 0, 0, 1)");
-      grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
-      grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, Math.min(w, h) * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    const cam = getCameraPos();
-    drawSpaceBG(ctx, cam, window.innerWidth, window.innerHeight);
+    const centerX = -camX + window.innerWidth / 2;
+    const centerY = -camY + window.innerHeight / 2;
+    const lookStrength = -0.05;
+    const cx = centerX + (mouse.x - centerX) * lookStrength;
+    const cy = centerY + (mouse.y - centerY) * lookStrength;
+    const grad = ctx.createRadialGradient(
+      cx,
+      cy,
+      0,
+      cx,
+      cy,
+      Math.min(window.innerWidth, window.innerHeight) * 0.5,
+    );
+    grad.addColorStop(0, "rgba(0, 0, 0, 1)");
+    grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
+    grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
+    grad.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(
+      cx,
+      cy,
+      Math.min(window.innerWidth, window.innerHeight) * 0.5,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    ctx.restore();
   }
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)

@@ -20,7 +20,7 @@ for (let i = 1; i <= 30 * 1.5; i++) {
   Celestial_CocoonBreakFree.push(img);
 }
 const BG = new Image();
-BG.src = "./ASSET/Misc/CelestialBG.png";
+BG.src = "./ASSET/Misc/CelestialIntroBG.png";
 const Flower = new Image();
 Flower.src = "./ASSET/Misc/CelestialFlower.png";
 const Title = new Image();
