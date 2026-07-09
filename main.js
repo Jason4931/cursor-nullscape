@@ -637,7 +637,7 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
-let giftMultiplier = 1;
+export let giftMultiplier = 1;
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
@@ -1626,7 +1626,6 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 function spawnCatalystIntro() {
   SHAKE = true;
-  giftMultiplier *= 0.5;
   finalPatterns(true);
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
@@ -2787,7 +2786,10 @@ function updateCamera() {
         continue;
       }
 
-      const value = (g.golden ? 4 : 1) * giftMultiplier;
+      const value =
+        giftMultiplier >= 1
+          ? (g.golden ? 4 : 1) * giftMultiplier
+          : (g.golden ? 4 : 1) * (Math.random() < giftMultiplier ? 1 : 0);
       if (!disableCollect) actualCollectedCount += value;
       collectedCount = hardMode
         ? actualCollectedCount
@@ -3589,7 +3591,6 @@ setInterval(() => {
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
-  giftMultiplier *= 2;
   beaconed = true;
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";

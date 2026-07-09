@@ -1014,7 +1014,7 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
-let giftMultiplier = 1;
+export let giftMultiplier = 1;
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;
@@ -1026,13 +1026,6 @@ let lagDebt = 0;
 let lagFactor = 1;
 
 /* ===== EVENTS ===== */
-export function celestialDIBmultiplier(v) {
-  if (v) {
-    giftMultiplier *= 0.5;
-  } else {
-    giftMultiplier *= 2;
-  }
-}
 let bypassCheatCount = 0;
 window.addEventListener("keydown", (e) => {
   if (e.repeat) return;
@@ -2399,7 +2392,6 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 function spawnCatalystIntro() {
   SHAKE = true;
-  giftMultiplier *= 0.5;
   changePatterns("final");
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
@@ -5573,7 +5565,6 @@ setInterval(() => {
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
-  giftMultiplier *= 2;
   beaconed = true;
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";

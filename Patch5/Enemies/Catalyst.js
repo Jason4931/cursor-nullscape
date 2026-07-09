@@ -5,6 +5,7 @@ import {
   playSound,
   beaconed,
   actualCollectedCount,
+  giftMultiplier,
 } from "../main.js";
 
 const CatalystOptim = [];
@@ -201,7 +202,7 @@ export function setup(host) {
     state.randomLaughT += dt;
     if (state.randomLaughT >= state.randomLaugh) {
       state.randomLaughT = 0;
-      state.randomLaugh = 6 + Math.random() * 5;
+      state.randomLaugh = 5 + Math.random() * 5;
       playSound(
         "./ASSET/Sound/Enemies/Catalyst/CataLaughter.mp3",
         undefined,
@@ -213,6 +214,9 @@ export function setup(host) {
     }
 
     if (state.phase === "initDarken") {
+      if (state.timer <= dt) {
+        giftMultiplier *= 0.5;
+      }
       if (state.timer >= 3) {
         state.timer = 0;
         state.phase = "waitSpawn";
@@ -222,6 +226,7 @@ export function setup(host) {
 
     if (state.phase === "waitSpawn") {
       if (state.timer >= 7) {
+        giftMultiplier *= 2;
         const p = randNearCursor();
         state.x = p.x;
         state.y = p.y;

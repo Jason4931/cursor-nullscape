@@ -7,7 +7,7 @@ import {
   soundStopped,
   actualCollectedCount,
   startCelestialPhase4,
-  celestialDIBmultiplier,
+  giftMultiplier,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -3138,7 +3138,7 @@ export function setup(
     s.ey = mouse.y;
     s.particles = [];
     s.pTimer = 0;
-    celestialDIBmultiplier(true);
+    giftMultiplier *= 0.5;
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -3323,7 +3323,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        celestialDIBmultiplier(false);
+        giftMultiplier *= 2;
         s.active = false;
       }
     }
@@ -4782,7 +4782,7 @@ export function setup(
 
     s.crumbleT = 0;
     s.circles = [];
-    celestialDIBmultiplier(true);
+    giftMultiplier *= 0.5;
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -4975,7 +4975,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        celestialDIBmultiplier(false);
+        giftMultiplier *= 2;
         s.active = false;
       }
     }
@@ -6723,7 +6723,7 @@ export function setup(
     s.rift = spawnFutileRift();
     s.trail = [];
     s.change = false;
-    celestialDIBmultiplier(true);
+    giftMultiplier *= 0.5;
 
     if (truePattern == false) showText("SILENCE.");
   }
@@ -6931,7 +6931,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        celestialDIBmultiplier(false);
+        giftMultiplier *= 2;
         s.active = false;
       }
     }
