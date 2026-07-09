@@ -10,7 +10,7 @@ import {
 const Oblivion_Convergence_Particles = new Image();
 Oblivion_Convergence_Particles.src =
   "./ASSET/Curses/Oblivion_Convergence_Particles.png";
-export function setup(host) {
+export function setup(host, showFloor) {
   const state = {
     time: 0,
     phase: 3,
@@ -47,12 +47,12 @@ export function setup(host) {
         const t = Math.min(state.offFloorTime / 2, 1);
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Oblivion/Oblivion_Active_In-Game.ogg",
-          undefined,
+          (showFloor ? 1 : 0.5) * 1.25,
           { start: t, end: 1 },
         );
       }
       if (!isCursorOnFloor()) {
-        state.offFloorTime += dt;
+        state.offFloorTime += (showFloor ? 1 : 0.5) * dt;
         if (state.offFloorTime >= 2 && !state.death) {
           state.death = true;
           death("Oblivion");
@@ -60,7 +60,7 @@ export function setup(host) {
           playSound("./ASSET/Sound/Enemies/Oblivion/Oblivion_Death.ogg");
         }
       } else {
-        state.offFloorTime -= 2 * dt;
+        state.offFloorTime -= (showFloor ? 1 : 0.5) * 2 * dt;
         if (state.offFloorTime < 0) state.offFloorTime = 0;
         if (state.sound && state.soundTime >= 0.1) {
           state.sound();

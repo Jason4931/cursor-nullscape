@@ -613,6 +613,22 @@ export function setup(host) {
 
       if (s.circleRadius > 0) {
         ctx.save();
+        const glow = 100;
+        const grad = ctx.createRadialGradient(
+          cx,
+          cy,
+          s.circleRadius,
+          cx,
+          cy,
+          s.circleRadius + glow,
+        );
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, s.circleRadius + glow, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.beginPath();
         ctx.arc(cx, cy, s.circleRadius, 0, Math.PI * 2);
 
@@ -620,7 +636,7 @@ export function setup(host) {
         ctx.fill();
 
         ctx.strokeStyle = "magenta";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.restore();

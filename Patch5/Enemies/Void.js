@@ -1,7 +1,7 @@
 import { death } from "../entityHost.js";
 import { isCursorOnFloor, getCameraPos, setVoidScale } from "../main.js";
 
-export function setup(host, enableVoid) {
+export function setup(host, enableVoid, showFloor) {
   const state = {
     offFloorTime: 0,
   };
@@ -9,7 +9,7 @@ export function setup(host, enableVoid) {
   function update(dt) {
     if (!isCursorOnFloor()) {
       state.offFloorTime += dt;
-      if (state.offFloorTime >= (enableVoid ? 6 : 60)) {
+      if (state.offFloorTime >= (showFloor ? 1 : 2) * (enableVoid ? 6 : 60)) {
         death("Void");
         state.offFloorTime = -60;
       }

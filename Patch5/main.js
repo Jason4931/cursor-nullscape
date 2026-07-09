@@ -182,7 +182,6 @@ let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
 let spawnedPylon = false;
 let spawnedCatalyst = false;
-let spawnedBeacon = false;
 let jumppadActive = false;
 let SHAKE = false;
 let transformAllGift = false;
@@ -394,7 +393,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Oblivion",
-    spawn: () => spawnOblivion(entityHost),
+    spawn: () => spawnOblivion(entityHost, showFloor),
     start: 1000,
     src: "./ASSET/Curses/Oblivion.png",
     unstackable: true,
@@ -615,6 +614,9 @@ const ProgressionEvents = [
   },
 ];
 
+const skybox = new Image();
+skybox.src = "./ASSET/Misc/Skybox.png";
+let scrollSkybox = 0;
 const gift = new Image();
 gift.src = "./ASSET/Misc/Gifts.png";
 const goldGift = new Image();
@@ -627,6 +629,7 @@ let settingsEnabled = true;
 let showBorder = JSON.parse(localStorage.getItem("border")) ?? true;
 let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
 let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
+let showSkybox = JSON.parse(localStorage.getItem("skybox")) ?? true;
 let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
 let showPlayers = JSON.parse(localStorage.getItem("players")) ?? false;
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
@@ -647,6 +650,7 @@ let musicVolume = localStorage.getItem("musicVolume")
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-grids").checked = showGrids;
+document.getElementById("toggle-skybox").checked = showSkybox;
 document.getElementById("toggle-timer").checked = showTimer;
 document.getElementById("toggle-players").checked = showPlayers;
 document.getElementById("toggle-floor").checked = showFloor;
@@ -694,6 +698,9 @@ graphicsSlider.addEventListener("input", () => {
 toggle("toggle-grids", (v) => {
   showGrids = v;
 });
+toggle("toggle-skybox", (v) => {
+  showSkybox = v;
+});
 toggle("toggle-timer", (v) => {
   showTimer = v;
   document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
@@ -707,8 +714,8 @@ toggle("toggle-floor", (v) => {
 toggle("toggle-border", (v) => {
   showBorder = v;
   canvas.style.boxShadow = showBorder
-    ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
-    : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
+    ? "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)"
+    : "0 0 0px rgba(255, 0, 0, 0), 0 0 0px rgba(255, 0, 0, 0), inset 0 0 0px rgba(255, 0, 0, 0)";
 });
 toggle("toggle-epileptic", (v) => {
   epilepticMode = v;
@@ -798,6 +805,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("border");
   localStorage.removeItem("floor");
   localStorage.removeItem("grids");
+  localStorage.removeItem("skybox");
   localStorage.removeItem("timer");
   localStorage.removeItem("players");
   localStorage.removeItem("reduced-motion");
@@ -815,6 +823,7 @@ document.getElementById("reset-settings").onclick = () => {
   showBorder = true;
   showFloor = true;
   showGrids = false;
+  showSkybox = true;
   showTimer = false;
   showPlayers = false;
   reducedMotion = false;
@@ -831,6 +840,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-border").checked = true;
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
+  document.getElementById("toggle-skybox").checked = true;
   document.getElementById("toggle-timer").checked = false;
   document.getElementById("toggle-players").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
@@ -849,7 +859,7 @@ document.getElementById("reset-settings").onclick = () => {
   canvas.style.animation = "bg 60s infinite";
   document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
   canvas.style.boxShadow =
-    "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)";
+    "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)";
   if (accurateCursor) {
     canvas.style.cursor = "none";
     entityCanvas.style.cursor = "none";
@@ -884,6 +894,8 @@ async function get(key) {
 }
 let lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
 let lastValueEntity = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
+set("crnsc-message", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
+set("crnsc-spawnentity", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
 setInterval(async () => {
   //message
   let value = await get("crnsc-message");
@@ -1287,7 +1299,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
       spawnKookoo(entityHost);
       spawnVoidImplosions(entityHost);
-      spawnOblivion(entityHost);
+      spawnOblivion(entityHost, showFloor);
       spawnRazorbloom(entityHost, hardMode);
       spawnVoidboundBaby(entityHost, hardMode);
       spawnPonderer(entityHost, hardMode);
@@ -1621,8 +1633,8 @@ canvas.style.animation = epilepticMode
   : "bg 60s infinite";
 document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
 canvas.style.boxShadow = showBorder
-  ? "0 0 240px rgba(255, 0, 0, 0.5), 0 0 240px rgba(255, 0, 0, 0.5), inset 0 0 240px rgba(255, 0, 0, 0.5)"
-  : "0 0 240px rgba(255, 0, 0, 0.1), 0 0 240px rgba(255, 0, 0, 0.1), inset 0 0 240px rgba(255, 0, 0, 0.1)";
+  ? "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)"
+  : "0 0 0px rgba(255, 0, 0, 0), 0 0 0px rgba(255, 0, 0, 0), inset 0 0 0px rgba(255, 0, 0, 0)";
 RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 if (graphicsSlider.value === "0") setGraphicsLow();
 else if (graphicsSlider.value === "1") setGraphicsMedium();
@@ -1671,8 +1683,6 @@ export function playSound(
     );
   }
 
-  let stopped = false;
-
   audio.addEventListener("loadedmetadata", () => {
     const startTime = clip.start * audio.duration;
     const endTime = clip.end * audio.duration;
@@ -1681,8 +1691,6 @@ export function playSound(
     audio.play().catch(() => {});
 
     const stopAt = () => {
-      if (stopped) return;
-
       if (audio.currentTime >= endTime) {
         stop();
         if (onEnd) onEnd();
@@ -1695,15 +1703,14 @@ export function playSound(
   });
 
   function stop() {
-    if (stopped) return;
     audio.pause();
+    audio.src = "";
     if (Number.isFinite(audio.duration)) {
       audio.currentTime = clip.start * audio.duration;
     } else {
       audio.currentTime = 0;
     }
     activeSounds.delete(entry);
-    stopped = true;
   }
   const entry = { stop, audio };
   if (
@@ -1739,7 +1746,13 @@ export function stopAllSounds() {
     requestAnimationFrame(fade);
   }
 
-  activeSounds.clear();
+  setTimeout(() => {
+    for (const { audio } of activeSounds) {
+      audio.pause();
+      audio.src = "";
+    }
+    activeSounds.clear();
+  }, fadeDuration);
 }
 const musicList = [
   //Volume 1
@@ -1912,13 +1925,18 @@ const musicList = [
   },
   {
     start: 5000,
-    end: 0,
+    end: 10000,
     src: "./ASSET/Sound/Music/Insurmountable_Abyss.mp3",
   },
   {
     start: 3000,
     end: 4099,
     src: "./ASSET/Sound/Music/It_Doesn't_End_Here.mp3",
+  },
+  {
+    start: 10000,
+    end: 0,
+    src: "./ASSET/Sound/Music/AudioTHISWORLDWILLCOLLAPSE.ogg",
   },
 ];
 let lobbyMusic = null;
@@ -2381,6 +2399,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 }
 function spawnCatalystIntro() {
   SHAKE = true;
+  giftMultiplier *= 0.5;
   changePatterns("final");
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
@@ -2519,17 +2538,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
         start: 5000,
         src: "./ASSET/Enemies/CatalystIcon.png",
         desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
-      };
-    } else if (
-      collectedCount >= (hardMode ? 12000 : 6000) &&
-      !spawnedBeacon &&
-      !disableProgression
-    ) {
-      spawnedBeacon = true;
-      pick = {
-        name: "Beacon",
-        spawn: () => spawnBeacon(entityHost, deafMode),
-        start: 6000,
       };
     } else {
       const weighted = [];
@@ -2759,11 +2767,11 @@ export function activatePurgatory() {
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
-  if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
-    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
-    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
-  } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-    counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
+  if (
+    latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+    latestCollectedCount <= (hardMode ? 12500 : 6250)
+  ) {
+    counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
     lvlEl.textContent = `lvl 100`;
   } else {
     counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -2803,11 +2811,11 @@ export function activateChance() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
-        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
-        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
-      } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
+      if (
+        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+        latestCollectedCount <= (hardMode ? 12500 : 6250)
+      ) {
+        counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
         counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -2846,11 +2854,11 @@ export function activateProtection() {
     collectedCount = hardMode
       ? actualCollectedCount
       : Math.floor(actualCollectedCount / 2);
-    if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
-      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
-      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
-    } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-      counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
+    if (
+      latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+      latestCollectedCount <= (hardMode ? 12500 : 6250)
+    ) {
+      counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
       lvlEl.textContent = `lvl 100`;
     } else {
       counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -3298,6 +3306,29 @@ function drawGrid() {
   // entityCtx.clearRect(visibleX, visibleY, visibleW * 0.01, visibleH * 0.01);
   entityCanvas.width = entityCanvas.width;
 
+  if (showSkybox && !epilepticMode) {
+    scrollSkybox -= 5;
+    if (scrollSkybox <= -window.innerWidth) {
+      scrollSkybox += window.innerWidth;
+    }
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(
+      skybox,
+      -camX + scrollSkybox,
+      -camY,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    ctx.drawImage(
+      skybox,
+      -camX + scrollSkybox + window.innerWidth,
+      -camY,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    ctx.restore();
+  }
   if (OblivionActive) {
     for (const b of OblivionActivestate.blobs) {
       b.x += b.vx;
@@ -3399,828 +3430,832 @@ function drawGrid() {
   }
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)
-  const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
-  const floorSet = new Set(floorTiles.map((t) => key(t.x, t.y)));
-  for (const t of floorTiles) {
-    if (
-      t.x + TILE < visibleX ||
-      t.x > visibleX + visibleW ||
-      t.y + TILE < visibleY ||
-      t.y > visibleY + visibleH
-    )
-      continue;
+  if (showFloor) {
+    const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
+    const floorSet = new Set(floorTiles.map((t) => key(t.x, t.y)));
+    for (const t of floorTiles) {
+      if (
+        t.x + TILE < visibleX ||
+        t.x > visibleX + visibleW ||
+        t.y + TILE < visibleY ||
+        t.y > visibleY + visibleH
+      )
+        continue;
 
-    const cx = t.x + TILE / 2;
-    const cy = t.y + TILE / 2;
+      const cx = t.x + TILE / 2;
+      const cy = t.y + TILE / 2;
 
-    const dx = cx - mouse.x;
-    const dy = cy - mouse.y;
-    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+      const dx = cx - mouse.x;
+      const dy = cy - mouse.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
-    let corrupted = false;
-    let blocked = false;
+      let corrupted = false;
+      let blocked = false;
 
-    for (const z of cleanseZones) {
-      const zx = cx - z.x;
-      const zy = cy - z.y;
-      if (zx * zx + zy * zy < z.r * z.r) {
-        blocked = true;
-        break;
-      }
-    }
-
-    if (!blocked) {
-      for (const f of fleshPositions) {
-        const ddx = cx - f.x;
-        const ddy = cy - f.y;
-        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
-          corrupted = true;
+      for (const z of cleanseZones) {
+        const zx = cx - z.x;
+        const zy = cy - z.y;
+        if (zx * zx + zy * zy < z.r * z.r) {
+          blocked = true;
           break;
         }
       }
-    }
 
-    const left = floorSet.has(key(t.x - TILE, t.y));
-    const right = floorSet.has(key(t.x + TILE, t.y));
-    const up = floorSet.has(key(t.x, t.y - TILE));
-    const down = floorSet.has(key(t.x, t.y + TILE));
-    const isEdge = !left || !right || !up || !down;
-    if (!t.diorite && !t.wood && !t.ice && isEdge && !t.collapsing[1]) {
-      ctx.fillStyle = showFloor
-        ? t.wall[0] || t.highrise[0]
-          ? "#222"
-          : corrupted || t.passageGoldPattern || t.deco[4]
-            ? "#800"
-            : "#666"
-        : "#6661";
-      ctx.fillRect(t.x - TILE * 0.1, t.y - TILE * 0.1, TILE * 1.2, TILE * 1.2);
-    }
-    if (t.ice) {
-      const h = TILE / 2;
+      if (!blocked) {
+        for (const f of fleshPositions) {
+          const ddx = cx - f.x;
+          const ddy = cy - f.y;
+          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+            corrupted = true;
+            break;
+          }
+        }
+      }
 
-      // top-left
-      // ctx.fillStyle = showFloor ? "#77f" : "#77f1";
-      // ctx.fillRect(t.x - h, t.y - h, h, h);
-      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
-      ctx.fillRect(t.x + h, t.y - h, h, h);
-      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
-      ctx.fillRect(t.x - h, t.y + h, h, h);
-      ctx.fillStyle = showFloor ? "#77f" : "#77f1";
-      ctx.fillRect(t.x + h, t.y + h, h, h);
+      const left = floorSet.has(key(t.x - TILE, t.y));
+      const right = floorSet.has(key(t.x + TILE, t.y));
+      const up = floorSet.has(key(t.x, t.y - TILE));
+      const down = floorSet.has(key(t.x, t.y + TILE));
+      const isEdge = !left || !right || !up || !down;
+      if (!t.diorite && !t.wood && !t.ice && isEdge && !t.collapsing[1]) {
+        ctx.fillStyle =
+          t.wall[0] || t.highrise[0]
+            ? "#222"
+            : corrupted || t.passageGoldPattern || t.deco[4]
+              ? "#800"
+              : "#666";
+        ctx.fillRect(
+          t.x - TILE * 0.1,
+          t.y - TILE * 0.1,
+          TILE * 1.2,
+          TILE * 1.2,
+        );
+      }
+      if (t.ice) {
+        const h = TILE / 2;
 
-      // top-right
-      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
-      ctx.fillRect(t.x, t.y - h, h, h);
-      // ctx.fillStyle = showFloor ? "#88f" : "#88f1";
-      // ctx.fillRect(t.x + 2 * h, t.y - h, h, h);
-      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
-      ctx.fillRect(t.x, t.y + h, h, h);
-      ctx.fillStyle = showFloor ? "#88f" : "#88f1";
-      ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
+        // top-left
+        ctx.fillStyle = "#77f";
+        ctx.fillRect(t.x + h, t.y - h, h, h);
+        ctx.fillRect(t.x - h, t.y + h, h, h);
+        ctx.fillRect(t.x + h, t.y + h, h, h);
 
-      // bottom-left
-      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
-      ctx.fillRect(t.x - h, t.y, h, h);
-      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
-      ctx.fillRect(t.x + h, t.y, h, h);
-      // ctx.fillStyle = showFloor ? "#87f" : "#87f1";
-      // ctx.fillRect(t.x - h, t.y + 2 * h, h, h);
-      ctx.fillStyle = showFloor ? "#87f" : "#87f1";
-      ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
+        // top-right
+        ctx.fillStyle = "#88f";
+        ctx.fillRect(t.x, t.y - h, h, h);
+        ctx.fillRect(t.x, t.y + h, h, h);
+        ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
 
-      // bottom-right
-      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
-      ctx.fillRect(t.x, t.y, h, h);
-      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
-      ctx.fillRect(t.x + 2 * h, t.y, h, h);
-      ctx.fillStyle = showFloor ? "#98f" : "#98f1";
-      ctx.fillRect(t.x, t.y + 2 * h, h, h);
-      // ctx.fillStyle = showFloor ? "#98f" : "#98f1";
-      // ctx.fillRect(t.x + 2 * h, t.y + 2 * h, h, h);
-    }
-  }
-  for (const t of floorTiles) {
-    if (
-      t.x + TILE < visibleX ||
-      t.x > visibleX + visibleW ||
-      t.y + TILE < visibleY ||
-      t.y > visibleY + visibleH
-    )
-      continue;
+        // bottom-left
+        ctx.fillStyle = "#87f";
+        ctx.fillRect(t.x - h, t.y, h, h);
+        ctx.fillRect(t.x + h, t.y, h, h);
+        ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
 
-    const cx = t.x + TILE / 2;
-    const cy = t.y + TILE / 2;
-
-    const dx = cx - mouse.x;
-    const dy = cy - mouse.y;
-    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
-
-    let corrupted = false;
-    let blocked = false;
-
-    for (const z of cleanseZones) {
-      const zx = cx - z.x;
-      const zy = cy - z.y;
-      if (zx * zx + zy * zy < z.r * z.r) {
-        blocked = true;
-        break;
+        // bottom-right
+        ctx.fillStyle = "#98f";
+        ctx.fillRect(t.x, t.y, h, h);
+        ctx.fillRect(t.x + 2 * h, t.y, h, h);
+        ctx.fillRect(t.x, t.y + 2 * h, h, h);
       }
     }
+    for (const t of floorTiles) {
+      if (
+        t.x + TILE < visibleX ||
+        t.x > visibleX + visibleW ||
+        t.y + TILE < visibleY ||
+        t.y > visibleY + visibleH
+      )
+        continue;
 
-    if (!blocked) {
-      for (const f of fleshPositions) {
-        const ddx = cx - f.x;
-        const ddy = cy - f.y;
-        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
-          corrupted = true;
+      const cx = t.x + TILE / 2;
+      const cy = t.y + TILE / 2;
+
+      const dx = cx - mouse.x;
+      const dy = cy - mouse.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+
+      let corrupted = false;
+      let blocked = false;
+
+      for (const z of cleanseZones) {
+        const zx = cx - z.x;
+        const zy = cy - z.y;
+        if (zx * zx + zy * zy < z.r * z.r) {
+          blocked = true;
           break;
         }
       }
-    }
 
-    const left = floorSet.has(key(t.x - TILE, t.y));
-    const right = floorSet.has(key(t.x + TILE, t.y));
-    const up = floorSet.has(key(t.x, t.y - TILE));
-    const down = floorSet.has(key(t.x, t.y + TILE));
-    const isEdge = !left || !right || !up || !down;
-    if (
-      !t.diorite &&
-      !t.wood &&
-      !t.ice &&
-      isEdge &&
-      t.deco[4] &&
-      !t.wall[0] &&
-      !t.highrise[0] &&
-      !t.collapsing[1]
-    ) {
-      ctx.save();
-
-      // center of tile (IMPORTANT)
-      ctx.translate(t.x + TILE / 2, t.y + TILE / 2);
-      ctx.scale(0.5, 0.5);
-
-      const half = TILE * 1.75;
-      const step = TILE * 0.8; // evenly spaced across edge
-
-      const placements = [];
-
-      // top edge (facing up)
-      for (let i = -1; i <= 1; i++) {
-        placements.push([
-          i * step,
-          -half + 10 * Math.abs(i),
-          -Math.PI / 2 + (i * Math.PI) / 6,
-        ]);
+      if (!blocked) {
+        for (const f of fleshPositions) {
+          const ddx = cx - f.x;
+          const ddy = cy - f.y;
+          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+            corrupted = true;
+            break;
+          }
+        }
       }
 
-      // bottom edge (facing down)
-      for (let i = -1; i <= 1; i++) {
-        placements.push([
-          i * step,
-          half - 10 * Math.abs(i),
-          Math.PI / 2 - (i * Math.PI) / 6,
-        ]);
-      }
-
-      // left edge (facing left)
-      for (let i = -1; i <= 1; i++) {
-        placements.push([
-          -half + 10 * Math.abs(i),
-          i * step,
-          Math.PI - (i * Math.PI) / 6,
-        ]);
-      }
-
-      // right edge (facing right)
-      for (let i = -1; i <= 1; i++) {
-        placements.push([
-          half - 10 * Math.abs(i),
-          i * step,
-          0 + (i * Math.PI) / 6,
-        ]);
-      }
-
-      for (const [ox, oy, rot] of placements) {
+      const left = floorSet.has(key(t.x - TILE, t.y));
+      const right = floorSet.has(key(t.x + TILE, t.y));
+      const up = floorSet.has(key(t.x, t.y - TILE));
+      const down = floorSet.has(key(t.x, t.y + TILE));
+      const isEdge = !left || !right || !up || !down;
+      if (
+        !t.diorite &&
+        !t.wood &&
+        !t.ice &&
+        isEdge &&
+        t.deco[4] &&
+        !t.wall[0] &&
+        !t.highrise[0] &&
+        !t.collapsing[1]
+      ) {
         ctx.save();
-        ctx.translate(ox, oy);
-        ctx.rotate(rot + Math.PI / 2);
 
-        // leaf shape
-        ctx.beginPath();
-        ctx.moveTo(0, -20);
-        ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
-        ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
-        ctx.closePath();
+        // center of tile (IMPORTANT)
+        ctx.translate(t.x + TILE / 2, t.y + TILE / 2);
+        ctx.scale(0.5, 0.5);
 
-        ctx.fillStyle = "#900";
-        ctx.fill();
+        const half = TILE * 1.75;
+        const step = TILE * 0.8; // evenly spaced across edge
 
-        ctx.strokeStyle = "#700";
-        ctx.lineWidth = 4;
-        ctx.stroke();
+        const placements = [];
 
-        // center vein
-        ctx.beginPath();
-        ctx.moveTo(0, -20);
-        ctx.lineTo(0, 25);
-        ctx.stroke();
+        // top edge (facing up)
+        for (let i = -1; i <= 1; i++) {
+          placements.push([
+            i * step,
+            -half + 10 * Math.abs(i),
+            -Math.PI / 2 + (i * Math.PI) / 6,
+          ]);
+        }
 
-        // side veins
-        let last = 0.5;
-        for (let i = -2; i <= 2; i++) {
+        // bottom edge (facing down)
+        for (let i = -1; i <= 1; i++) {
+          placements.push([
+            i * step,
+            half - 10 * Math.abs(i),
+            Math.PI / 2 - (i * Math.PI) / 6,
+          ]);
+        }
+
+        // left edge (facing left)
+        for (let i = -1; i <= 1; i++) {
+          placements.push([
+            -half + 10 * Math.abs(i),
+            i * step,
+            Math.PI - (i * Math.PI) / 6,
+          ]);
+        }
+
+        // right edge (facing right)
+        for (let i = -1; i <= 1; i++) {
+          placements.push([
+            half - 10 * Math.abs(i),
+            i * step,
+            0 + (i * Math.PI) / 6,
+          ]);
+        }
+
+        for (const [ox, oy, rot] of placements) {
+          ctx.save();
+          ctx.translate(ox, oy);
+          ctx.rotate(rot + Math.PI / 2);
+
+          // leaf shape
           ctx.beginPath();
-          ctx.moveTo(0, i * 8);
-          ctx.lineTo(last * 15, i * 8 + 5);
+          ctx.moveTo(0, -20);
+          ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
+          ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
+          ctx.closePath();
+
+          ctx.fillStyle = "#900";
+          ctx.fill();
+
+          ctx.strokeStyle = "#700";
+          ctx.lineWidth = 4;
           ctx.stroke();
-          last *= -1;
+
+          // center vein
+          ctx.beginPath();
+          ctx.moveTo(0, -20);
+          ctx.lineTo(0, 25);
+          ctx.stroke();
+
+          // side veins
+          let last = 0.5;
+          for (let i = -2; i <= 2; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, i * 8);
+            ctx.lineTo(last * 15, i * 8 + 5);
+            ctx.stroke();
+            last *= -1;
+          }
+
+          ctx.restore();
         }
 
         ctx.restore();
       }
-
-      ctx.restore();
     }
-  }
-  for (const t of floorTiles) {
-    if (
-      t.x + TILE < visibleX ||
-      t.x > visibleX + visibleW ||
-      t.y + TILE < visibleY ||
-      t.y > visibleY + visibleH
-    )
-      continue;
-    const cx = t.x + TILE / 2;
-    const cy = t.y + TILE / 2;
+    for (const t of floorTiles) {
+      if (
+        t.x + TILE < visibleX ||
+        t.x > visibleX + visibleW ||
+        t.y + TILE < visibleY ||
+        t.y > visibleY + visibleH
+      )
+        continue;
+      const cx = t.x + TILE / 2;
+      const cy = t.y + TILE / 2;
 
-    const dx = cx - mouse.x;
-    const dy = cy - mouse.y;
-    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+      const dx = cx - mouse.x;
+      const dy = cy - mouse.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
-    let corrupted = false;
-    let blocked = false;
+      let corrupted = false;
+      let blocked = false;
 
-    for (const z of cleanseZones) {
-      const zx = cx - z.x;
-      const zy = cy - z.y;
-      if (zx * zx + zy * zy < z.r * z.r) {
-        blocked = true;
-        break;
-      }
-    }
-    if (!blocked) {
-      for (const f of fleshPositions) {
-        const fx = f.x;
-        const fy = f.y;
-
-        const ddx = cx - fx;
-        const ddy = cy - fy;
-
-        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
-          corrupted = true;
+      for (const z of cleanseZones) {
+        const zx = cx - z.x;
+        const zy = cy - z.y;
+        if (zx * zx + zy * zy < z.r * z.r) {
+          blocked = true;
           break;
         }
       }
-    }
-
-    // cursor inside this tile and certain distance from flesh?
-    if (corrupted) {
-      const insideTile =
-        mouse.x >= t.x &&
-        mouse.x <= t.x + TILE &&
-        mouse.y >= t.y &&
-        mouse.y <= t.y + TILE;
-
-      if (insideTile) {
-        let nearFlesh = false;
-
+      if (!blocked) {
         for (const f of fleshPositions) {
-          if (!f.fromFlesh) continue;
+          const fx = f.x;
+          const fy = f.y;
 
-          const dx = mouse.x - f.x;
-          const dy = mouse.y - f.y;
-          const radius = 1000;
+          const ddx = cx - fx;
+          const ddy = cy - fy;
 
-          if (dx * dx + dy * dy <= radius * radius) {
-            nearFlesh = true;
+          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+            corrupted = true;
             break;
           }
         }
+      }
 
-        if (nearFlesh || Math.random() < 0.1) {
-          cursorOnCorruptedTile = true;
+      // cursor inside this tile and certain distance from flesh?
+      if (corrupted) {
+        const insideTile =
+          mouse.x >= t.x &&
+          mouse.x <= t.x + TILE &&
+          mouse.y >= t.y &&
+          mouse.y <= t.y + TILE;
+
+        if (insideTile) {
+          let nearFlesh = false;
+
+          for (const f of fleshPositions) {
+            if (!f.fromFlesh) continue;
+
+            const dx = mouse.x - f.x;
+            const dy = mouse.y - f.y;
+            const radius = 1000;
+
+            if (dx * dx + dy * dy <= radius * radius) {
+              nearFlesh = true;
+              break;
+            }
+          }
+
+          if (nearFlesh || Math.random() < 0.1) {
+            cursorOnCorruptedTile = true;
+          }
         }
       }
-    }
 
-    if (t.collapsing[1]) {
-      ctx.fillStyle = showFloor ? "#fff" : "#fff1";
-      ctx.fillRect(
-        t.x + (Math.random() - 0.5) * 5,
-        t.y + (Math.random() - 0.5) * 5,
-        TILE,
-        TILE,
-      );
-    } else if (corrupted) {
-      ctx.fillStyle = showFloor
-        ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
-        : `rgba(120, 0, 0, 0.066)`;
-      ctx.fillRect(t.x, t.y, TILE, TILE);
-    } else {
-      if (t.passageGoldPattern) {
-        const h = TILE / 2;
-
-        // top-left
-        ctx.fillStyle = showFloor ? "#800" : "#8001";
-        ctx.fillRect(t.x, t.y, h, h);
-
-        // top-right
-        ctx.fillStyle = showFloor ? "#600" : "#6001";
-        ctx.fillRect(t.x + h, t.y, h, h);
-
-        // bottom-left
-        ctx.fillStyle = showFloor ? "#600" : "#6001";
-        ctx.fillRect(t.x, t.y + h, h, h);
-
-        // bottom-right
-        ctx.fillStyle = showFloor ? "#800" : "#8001";
-        ctx.fillRect(t.x + h, t.y + h, h, h);
-      } else if (t.diorite) {
-        const h = TILE / 2;
-
-        // top-left
-        ctx.fillStyle = showFloor ? "#778" : "#7781";
-        ctx.fillRect(t.x, t.y, h, h);
-
-        // top-right
-        ctx.fillStyle = showFloor ? "#658" : "#6581";
-        ctx.fillRect(t.x + h, t.y, h, h);
-
-        // bottom-left
-        ctx.fillStyle = showFloor ? "#557" : "#5571";
-        ctx.fillRect(t.x, t.y + h, h, h);
-
-        // bottom-right
-        ctx.fillStyle = showFloor ? "#446" : "#4461";
-        ctx.fillRect(t.x + h, t.y + h, h, h);
-      } else if (t.wood) {
-        const h = TILE / 2;
-
-        // left
-        ctx.fillStyle = showFloor ? "#844" : "#8441";
-        ctx.fillRect(t.x, t.y, h, TILE);
-
-        // right
-        ctx.fillStyle = showFloor ? "#744" : "#7441";
-        ctx.fillRect(t.x + h, t.y, h, TILE);
-      } else if (t.garden) {
-        ctx.fillStyle = showFloor ? "#800" : "#8001";
+      if (t.collapsing[1]) {
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(
+          t.x + (Math.random() - 0.5) * 5,
+          t.y + (Math.random() - 0.5) * 5,
+          TILE,
+          TILE,
+        );
+      } else if (corrupted) {
+        ctx.fillStyle = `rgba(${90 + Math.random() * 60}, 0, 0, 1)`;
         ctx.fillRect(t.x, t.y, TILE, TILE);
-      } else if (t.wall[0]) {
-        if (t.wall[1] == 6 || t.wall[1] == 66) {
-          ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
-        } else if (t.wall[1] == 36) {
-          ctx.fillStyle = showFloor ? "#444" : "#4441";
-        }
-        ctx.fillRect(t.x, t.y, TILE, TILE);
-      } else if (t.ice) {
-      } else if (t.highrise[0]) {
-        if (t.highrise[1] == 31 || t.highrise[1] == 32 || t.highrise[1] == 39) {
-          ctx.fillStyle = showFloor ? "#888" : "#8881";
-          ctx.fillRect(t.x, t.y, TILE, TILE);
-          ctx.fillStyle = showFloor ? "#222" : "#2221";
-          ctx.fillRect(
-            t.x - TILE * 0.01,
-            t.y + TILE * 0.05,
-            TILE * 0.46,
-            TILE * 0.4,
-          );
-          ctx.fillRect(
-            t.x + TILE * 0.55,
-            t.y + TILE * 0.05,
-            TILE * 0.46,
-            TILE * 0.4,
-          );
-          ctx.fillRect(
-            t.x + TILE * 0.05,
-            t.y + TILE * 0.55,
-            TILE * 0.9,
-            TILE * 0.4,
-          );
-        }
-        if (t.highrise[1] == 33) {
-          ctx.fillStyle = showFloor ? "#444" : "#4441";
-          ctx.fillRect(t.x, t.y, TILE, TILE);
-          ctx.fillStyle = showFloor ? "#222" : "#2221";
-          ctx.fillRect(
-            t.x + TILE * 0.125,
-            t.y + TILE * 0.125,
-            TILE * 0.75,
-            TILE * 0.75,
-          );
-        }
-        if (t.highrise[1] == 34 || t.highrise[1] == 35) {
-          const h = TILE / 2;
-          ctx.fillStyle = showFloor ? "#800" : "#8001";
-          ctx.fillRect(t.x, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#700" : "#2001";
-          ctx.fillRect(t.x + h, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#700" : "#2001";
-          ctx.fillRect(t.x, t.y + h, h, h);
-          ctx.fillStyle = showFloor ? "#800" : "#8001";
-          ctx.fillRect(t.x + h, t.y + h, h, h);
-        }
-        if (t.highrise[1] == 37) {
-          const h = TILE / 2;
-          ctx.fillStyle = showFloor ? "#999" : "#9991";
-          ctx.fillRect(t.x, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#888" : "#8881";
-          ctx.fillRect(t.x + h, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#777" : "#7771";
-          ctx.fillRect(t.x, t.y + h, h, h);
-          ctx.fillStyle = showFloor ? "#666" : "#6661";
-          ctx.fillRect(t.x + h, t.y + h, h, h);
-        }
-        if (t.highrise[1] == 38) {
-          const h = TILE / 2;
-          const rand1 = Math.floor(4 + Math.random() * 5);
-          const rand2 = Math.floor(4 + Math.random() * 5);
-          ctx.fillStyle = showFloor ? `#f${rand1}0` : "#f801";
-          ctx.fillRect(t.x, t.y, h, h);
-          ctx.fillStyle = showFloor ? `#f${rand2}0` : "#f801";
-          ctx.fillRect(t.x + h, t.y, h, h);
-          ctx.fillStyle = showFloor ? `#f${rand2}0` : "#f801";
-          ctx.fillRect(t.x, t.y + h, h, h);
-          ctx.fillStyle = showFloor ? `#f${rand1}0` : "#f801";
-          ctx.fillRect(t.x + h, t.y + h, h, h);
-        }
-        if (t.highrise[1] == 41 || t.highrise[1] == 42) {
-          const h = TILE / 2;
-          ctx.fillStyle = showFloor ? "#444" : "#4441";
-          ctx.fillRect(t.x, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#222" : "#2221";
-          ctx.fillRect(t.x + h, t.y, h, h);
-          ctx.fillStyle = showFloor ? "#222" : "#2221";
-          ctx.fillRect(t.x, t.y + h, h, h);
-          ctx.fillStyle = showFloor ? "#444" : "#4441";
-          ctx.fillRect(t.x + h, t.y + h, h, h);
-        }
       } else {
-        const h = TILE / 2;
+        if (t.passageGoldPattern) {
+          const h = TILE / 2;
 
-        // top-left
-        ctx.fillStyle = showFloor ? "#888" : "#8881";
-        ctx.fillRect(t.x, t.y, h, h);
+          // top-left
+          ctx.fillStyle = "#800";
+          ctx.fillRect(t.x, t.y, h, h);
 
-        // top-right
-        ctx.fillStyle = showFloor ? "#222" : "#2221";
-        ctx.fillRect(t.x + h, t.y, h, h);
+          // top-right
+          ctx.fillStyle = "#600";
+          ctx.fillRect(t.x + h, t.y, h, h);
 
-        // bottom-left
-        ctx.fillStyle = showFloor ? "#222" : "#2221";
-        ctx.fillRect(t.x, t.y + h, h, h);
+          // bottom-left
+          ctx.fillStyle = "#600";
+          ctx.fillRect(t.x, t.y + h, h, h);
 
-        // bottom-right
-        ctx.fillStyle = showFloor ? "#888" : "#8881";
-        ctx.fillRect(t.x + h, t.y + h, h, h);
-      }
-    }
+          // bottom-right
+          ctx.fillStyle = "#800";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+        } else if (t.diorite) {
+          const h = TILE / 2;
 
-    if (t.collapsing[0]) {
-      ctx.strokeStyle = showFloor ? "#fff" : "#fff1";
-      ctx.lineWidth = Math.max(1, TILE * 0.05);
+          // top-left
+          ctx.fillStyle = "#778";
+          ctx.fillRect(t.x, t.y, h, h);
 
-      const rand = (n) => {
-        const x = Math.sin(Math.random() * 1000 + n * 91.73) * 43758.5453;
-        return x - Math.floor(x);
-      };
+          // top-right
+          ctx.fillStyle = "#658";
+          ctx.fillRect(t.x + h, t.y, h, h);
 
-      const side = Math.floor(rand(0) * 4);
+          // bottom-left
+          ctx.fillStyle = "#557";
+          ctx.fillRect(t.x, t.y + h, h, h);
 
-      let x, y, dx, dy;
+          // bottom-right
+          ctx.fillStyle = "#446";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+        } else if (t.wood) {
+          const h = TILE / 2;
 
-      if (side === 0) {
-        x = t.x;
-        y = t.y + rand(1) * TILE;
-        dx = 1;
-        dy = 0;
-      } else if (side === 1) {
-        x = t.x + TILE;
-        y = t.y + rand(1) * TILE;
-        dx = -1;
-        dy = 0;
-      } else if (side === 2) {
-        x = t.x + rand(1) * TILE;
-        y = t.y;
-        dx = 0;
-        dy = 1;
-      } else {
-        x = t.x + rand(1) * TILE;
-        y = t.y + TILE;
-        dx = 0;
-        dy = -1;
-      }
+          // left
+          ctx.fillStyle = "#844";
+          ctx.fillRect(t.x, t.y, h, TILE);
 
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+          // right
+          ctx.fillStyle = "#744";
+          ctx.fillRect(t.x + h, t.y, h, TILE);
+        } else if (t.garden) {
+          ctx.fillStyle = "#800";
+          ctx.fillRect(t.x, t.y, TILE, TILE);
+        } else if (t.wall[0]) {
+          if (t.wall[1] == 6 || t.wall[1] == 66) {
+            ctx.fillStyle = "#aaa";
+          } else if (t.wall[1] == 36) {
+            ctx.fillStyle = "#444";
+          }
+          ctx.fillRect(t.x, t.y, TILE, TILE);
+        } else if (t.ice) {
+        } else if (t.highrise[0]) {
+          if (
+            t.highrise[1] == 31 ||
+            t.highrise[1] == 32 ||
+            t.highrise[1] == 39
+          ) {
+            ctx.fillStyle = "#888";
+            ctx.fillRect(t.x, t.y, TILE, TILE);
+            ctx.fillStyle = "#222";
+            ctx.fillRect(
+              t.x - TILE * 0.01,
+              t.y + TILE * 0.05,
+              TILE * 0.46,
+              TILE * 0.4,
+            );
+            ctx.fillRect(
+              t.x + TILE * 0.55,
+              t.y + TILE * 0.05,
+              TILE * 0.46,
+              TILE * 0.4,
+            );
+            ctx.fillRect(
+              t.x + TILE * 0.05,
+              t.y + TILE * 0.55,
+              TILE * 0.9,
+              TILE * 0.4,
+            );
+          }
+          if (t.highrise[1] == 33) {
+            ctx.fillStyle = "#444";
+            ctx.fillRect(t.x, t.y, TILE, TILE);
+            ctx.fillStyle = "#222";
+            ctx.fillRect(
+              t.x + TILE * 0.125,
+              t.y + TILE * 0.125,
+              TILE * 0.75,
+              TILE * 0.75,
+            );
+          }
+          if (t.highrise[1] == 34 || t.highrise[1] == 35) {
+            const h = TILE / 2;
+            ctx.fillStyle = "#800";
+            ctx.fillRect(t.x, t.y, h, h);
+            ctx.fillStyle = "#700";
+            ctx.fillRect(t.x + h, t.y, h, h);
+            ctx.fillStyle = "#700";
+            ctx.fillRect(t.x, t.y + h, h, h);
+            ctx.fillStyle = "#800";
+            ctx.fillRect(t.x + h, t.y + h, h, h);
+          }
+          if (t.highrise[1] == 37) {
+            const h = TILE / 2;
+            ctx.fillStyle = "#999";
+            ctx.fillRect(t.x, t.y, h, h);
+            ctx.fillStyle = "#888";
+            ctx.fillRect(t.x + h, t.y, h, h);
+            ctx.fillStyle = "#777";
+            ctx.fillRect(t.x, t.y + h, h, h);
+            ctx.fillStyle = "#666";
+            ctx.fillRect(t.x + h, t.y + h, h, h);
+          }
+          if (t.highrise[1] == 38) {
+            const h = TILE / 2;
+            const rand1 = Math.floor(4 + Math.random() * 5);
+            const rand2 = Math.floor(4 + Math.random() * 5);
+            ctx.fillStyle = `#f${rand1}0`;
+            ctx.fillRect(t.x, t.y, h, h);
+            ctx.fillStyle = `#f${rand2}0`;
+            ctx.fillRect(t.x + h, t.y, h, h);
+            ctx.fillStyle = `#f${rand2}0`;
+            ctx.fillRect(t.x, t.y + h, h, h);
+            ctx.fillStyle = `#f${rand1}0`;
+            ctx.fillRect(t.x + h, t.y + h, h, h);
+          }
+          if (t.highrise[1] == 41 || t.highrise[1] == 42) {
+            const h = TILE / 2;
+            ctx.fillStyle = "#444";
+            ctx.fillRect(t.x, t.y, h, h);
+            ctx.fillStyle = "#222";
+            ctx.fillRect(t.x + h, t.y, h, h);
+            ctx.fillStyle = "#222";
+            ctx.fillRect(t.x, t.y + h, h, h);
+            ctx.fillStyle = "#444";
+            ctx.fillRect(t.x + h, t.y + h, h, h);
+          }
+        } else {
+          const h = TILE / 2;
 
-      for (let i = 0; i < 6; i++) {
-        x += dx * TILE * 0.15 + (rand(i + 2) - 0.5) * TILE * 0.2;
-        y += dy * TILE * 0.15 + (rand(i + 20) - 0.5) * TILE * 0.2;
-        ctx.lineTo(x, y);
+          // top-left
+          ctx.fillStyle = "#888";
+          ctx.fillRect(t.x, t.y, h, h);
 
-        if (rand(i + 40) < 0.35) {
-          ctx.moveTo(x, y);
-          ctx.lineTo(
-            x + (rand(i + 60) - 0.5) * TILE * 0.3,
-            y + (rand(i + 80) - 0.5) * TILE * 0.3,
-          );
-          ctx.moveTo(x, y);
+          // top-right
+          ctx.fillStyle = "#222";
+          ctx.fillRect(t.x + h, t.y, h, h);
+
+          // bottom-left
+          ctx.fillStyle = "#222";
+          ctx.fillRect(t.x, t.y + h, h, h);
+
+          // bottom-right
+          ctx.fillStyle = "#888";
+          ctx.fillRect(t.x + h, t.y + h, h, h);
         }
       }
 
-      ctx.stroke();
-    }
-  }
-  for (const t of floorTiles) {
-    if (
-      t.x + TILE < visibleX ||
-      t.x > visibleX + visibleW ||
-      t.y + TILE < visibleY ||
-      t.y > visibleY + visibleH
-    )
-      continue;
+      if (t.collapsing[0]) {
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = Math.max(1, TILE * 0.05);
 
-    const cx = t.x + TILE / 2;
-    const cy = t.y + TILE / 2;
+        const rand = (n) => {
+          const x = Math.sin(Math.random() * 1000 + n * 91.73) * 43758.5453;
+          return x - Math.floor(x);
+        };
 
-    const dx = cx - mouse.x;
-    const dy = cy - mouse.y;
-    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+        const side = Math.floor(rand(0) * 4);
 
-    let corrupted = false;
-    let blocked = false;
+        let x, y, dx, dy;
 
-    for (const z of cleanseZones) {
-      const zx = cx - z.x;
-      const zy = cy - z.y;
-      if (zx * zx + zy * zy < z.r * z.r) {
-        blocked = true;
-        break;
-      }
-    }
-
-    if (!blocked) {
-      for (const f of fleshPositions) {
-        const ddx = cx - f.x;
-        const ddy = cy - f.y;
-        if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
-          corrupted = true;
-          break;
+        if (side === 0) {
+          x = t.x;
+          y = t.y + rand(1) * TILE;
+          dx = 1;
+          dy = 0;
+        } else if (side === 1) {
+          x = t.x + TILE;
+          y = t.y + rand(1) * TILE;
+          dx = -1;
+          dy = 0;
+        } else if (side === 2) {
+          x = t.x + rand(1) * TILE;
+          y = t.y;
+          dx = 0;
+          dy = 1;
+        } else {
+          x = t.x + rand(1) * TILE;
+          y = t.y + TILE;
+          dx = 0;
+          dy = -1;
         }
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+
+        for (let i = 0; i < 6; i++) {
+          x += dx * TILE * 0.15 + (rand(i + 2) - 0.5) * TILE * 0.2;
+          y += dy * TILE * 0.15 + (rand(i + 20) - 0.5) * TILE * 0.2;
+          ctx.lineTo(x, y);
+
+          if (rand(i + 40) < 0.35) {
+            ctx.moveTo(x, y);
+            ctx.lineTo(
+              x + (rand(i + 60) - 0.5) * TILE * 0.3,
+              y + (rand(i + 80) - 0.5) * TILE * 0.3,
+            );
+            ctx.moveTo(x, y);
+          }
+        }
+
+        ctx.stroke();
       }
     }
-
-    if (
-      !corrupted &&
-      !t.diorite &&
-      !t.wood &&
-      !t.collapsing[1] &&
-      t.deco[0] &&
-      t.deco[1] &&
-      showFloor
-    ) {
-      let variant = 1;
-      if (t.deco[2] > 0.667) variant = 3;
-      else if (t.deco[2] > 0.333) variant = 2;
-      else variant = 1;
+    for (const t of floorTiles) {
+      if (
+        t.x + TILE < visibleX ||
+        t.x > visibleX + visibleW ||
+        t.y + TILE < visibleY ||
+        t.y > visibleY + visibleH
+      )
+        continue;
 
       const cx = t.x + TILE / 2;
       const cy = t.y + TILE / 2;
-      const s = TILE * 0.5;
 
-      const r = t.garden ? (t.deco[5] ? 0.6 : 0.8) : t.deco[3]; // stable random
+      const dx = cx - mouse.x;
+      const dy = cy - mouse.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
 
-      if (r < 0.2) {
-        const drawVase = (ox, oy) => {
-          ctx.fillStyle = "#886655";
-          ctx.beginPath();
-          ctx.ellipse(ox, oy - s * 0.3, s * 0.5, s * 0.2, 0, 0, Math.PI * 2);
-          ctx.fill();
+      let corrupted = false;
+      let blocked = false;
 
-          ctx.fillStyle = "#664433";
-          ctx.beginPath();
-          ctx.moveTo(ox - s * 0.5, oy - s * 0.3);
-          ctx.lineTo(ox + s * 0.5, oy - s * 0.3);
-          ctx.lineTo(ox + s * 0.25, oy + s * 0.5);
-          ctx.lineTo(ox - s * 0.25, oy + s * 0.5);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.fillStyle = "#553322";
-          ctx.beginPath();
-          ctx.ellipse(ox, oy + s * 0.5, s * 0.25, s * 0.12, 0, 0, Math.PI * 2);
-          ctx.fill();
-        };
-
-        if (variant === 1) {
-          drawVase(cx, cy);
-        } else if (variant === 2) {
-          drawVase(cx - TILE * 0.15, cy + TILE * 0.08);
-          drawVase(cx + TILE * 0.15, cy - TILE * 0.08);
-        } else {
-          drawVase(cx, cy - TILE * 0.12);
-          drawVase(cx - TILE * 0.22, cy + TILE * 0.12);
-          drawVase(cx + TILE * 0.22, cy + TILE * 0.06);
+      for (const z of cleanseZones) {
+        const zx = cx - z.x;
+        const zy = cy - z.y;
+        if (zx * zx + zy * zy < z.r * z.r) {
+          blocked = true;
+          break;
         }
-      } else if (r < 0.4) {
-        const drawBox = (ox, oy) => {
-          const size = s;
+      }
 
-          ctx.fillStyle = "#775533";
-          ctx.fillRect(ox - size / 2, oy - size / 2, size, size);
-
-          ctx.strokeStyle = "#442200";
-          ctx.lineWidth = 2;
-          ctx.strokeRect(ox - size / 2, oy - size / 2, size, size);
-
-          ctx.beginPath();
-          ctx.moveTo(ox - size / 2, oy - size / 2);
-          ctx.lineTo(ox + size / 2, oy + size / 2);
-          ctx.moveTo(ox + size / 2, oy - size / 2);
-          ctx.lineTo(ox - size / 2, oy + size / 2);
-          ctx.stroke();
-        };
-
-        if (variant === 1) {
-          drawBox(cx, cy);
-        } else if (variant === 2) {
-          drawBox(cx - TILE * 0.17, cy + TILE * 0.09);
-          drawBox(cx + TILE * 0.17, cy - TILE * 0.09);
-        } else {
-          drawBox(cx, cy - TILE * 0.14);
-          drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
-          drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
+      if (!blocked) {
+        for (const f of fleshPositions) {
+          const ddx = cx - f.x;
+          const ddy = cy - f.y;
+          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+            corrupted = true;
+            break;
+          }
         }
-      } else if (r < 0.6) {
-        const drawPillar = (cx, cy, w, h, d) => {
-          ctx.fillStyle = "#aaa";
+      }
+
+      if (
+        !corrupted &&
+        !t.diorite &&
+        !t.wood &&
+        !t.collapsing[1] &&
+        t.deco[0] &&
+        t.deco[1]
+      ) {
+        let variant = 1;
+        if (t.deco[2] > 0.667) variant = 3;
+        else if (t.deco[2] > 0.333) variant = 2;
+        else variant = 1;
+
+        const cx = t.x + TILE / 2;
+        const cy = t.y + TILE / 2;
+        const s = TILE * 0.5;
+
+        const r = t.garden ? (t.deco[5] ? 0.6 : 0.8) : t.deco[3]; // stable random
+
+        if (r < 0.2) {
+          const drawVase = (ox, oy) => {
+            ctx.fillStyle = "#886655";
+            ctx.beginPath();
+            ctx.ellipse(ox, oy - s * 0.3, s * 0.5, s * 0.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "#664433";
+            ctx.beginPath();
+            ctx.moveTo(ox - s * 0.5, oy - s * 0.3);
+            ctx.lineTo(ox + s * 0.5, oy - s * 0.3);
+            ctx.lineTo(ox + s * 0.25, oy + s * 0.5);
+            ctx.lineTo(ox - s * 0.25, oy + s * 0.5);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#553322";
+            ctx.beginPath();
+            ctx.ellipse(
+              ox,
+              oy + s * 0.5,
+              s * 0.25,
+              s * 0.12,
+              0,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+          };
+
+          if (variant === 1) {
+            drawVase(cx, cy);
+          } else if (variant === 2) {
+            drawVase(cx - TILE * 0.15, cy + TILE * 0.08);
+            drawVase(cx + TILE * 0.15, cy - TILE * 0.08);
+          } else {
+            drawVase(cx, cy - TILE * 0.12);
+            drawVase(cx - TILE * 0.22, cy + TILE * 0.12);
+            drawVase(cx + TILE * 0.22, cy + TILE * 0.06);
+          }
+        } else if (r < 0.4) {
+          const drawBox = (ox, oy) => {
+            const size = s;
+
+            ctx.fillStyle = "#775533";
+            ctx.fillRect(ox - size / 2, oy - size / 2, size, size);
+
+            ctx.strokeStyle = "#442200";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(ox - size / 2, oy - size / 2, size, size);
+
+            ctx.beginPath();
+            ctx.moveTo(ox - size / 2, oy - size / 2);
+            ctx.lineTo(ox + size / 2, oy + size / 2);
+            ctx.moveTo(ox + size / 2, oy - size / 2);
+            ctx.lineTo(ox - size / 2, oy + size / 2);
+            ctx.stroke();
+          };
+
+          if (variant === 1) {
+            drawBox(cx, cy);
+          } else if (variant === 2) {
+            drawBox(cx - TILE * 0.17, cy + TILE * 0.09);
+            drawBox(cx + TILE * 0.17, cy - TILE * 0.09);
+          } else {
+            drawBox(cx, cy - TILE * 0.14);
+            drawBox(cx - TILE * 0.21, cy + TILE * 0.14);
+            drawBox(cx + TILE * 0.21, cy + TILE * 0.07);
+          }
+        } else if (r < 0.6) {
+          const drawPillar = (cx, cy, w, h, d) => {
+            ctx.fillStyle = "#aaa";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - h); // top peak
+            ctx.lineTo(cx + w, cy - h + d);
+            ctx.lineTo(cx, cy - h + d * 2);
+            ctx.lineTo(cx - w, cy - h + d);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#666";
+            ctx.beginPath();
+            ctx.moveTo(cx - w, cy - h + d);
+            ctx.lineTo(cx, cy - h + d * 2);
+            ctx.lineTo(cx, cy + d * 2);
+            ctx.lineTo(cx - w, cy + d);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#555";
+            ctx.beginPath();
+            ctx.moveTo(cx + w, cy - h + d);
+            ctx.lineTo(cx, cy - h + d * 2);
+            ctx.lineTo(cx, cy + d * 2);
+            ctx.lineTo(cx + w, cy + d);
+            ctx.closePath();
+            ctx.fill();
+          };
+
+          drawPillar(cx, cy - TILE * 0.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
+          drawPillar(cx, cy - TILE * 0.25, TILE * 0.2, TILE * 1.7, TILE * 0.1);
+          drawPillar(cx, cy - TILE * 2.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
+        } else if (r < 0.8) {
+          ctx.fillStyle = "#4a2b1a";
+          ctx.fillRect(
+            cx - TILE * 0.1,
+            cy - TILE * 0.45,
+            TILE * 0.2,
+            TILE * 0.5,
+          );
+
+          ctx.fillStyle = "rgba(0,0,0,0.2)";
           ctx.beginPath();
-          ctx.moveTo(cx, cy - h); // top peak
-          ctx.lineTo(cx + w, cy - h + d);
-          ctx.lineTo(cx, cy - h + d * 2);
-          ctx.lineTo(cx - w, cy - h + d);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.fillStyle = "#666";
-          ctx.beginPath();
-          ctx.moveTo(cx - w, cy - h + d);
-          ctx.lineTo(cx, cy - h + d * 2);
-          ctx.lineTo(cx, cy + d * 2);
-          ctx.lineTo(cx - w, cy + d);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.fillStyle = "#555";
-          ctx.beginPath();
-          ctx.moveTo(cx + w, cy - h + d);
-          ctx.lineTo(cx, cy - h + d * 2);
-          ctx.lineTo(cx, cy + d * 2);
-          ctx.lineTo(cx + w, cy + d);
-          ctx.closePath();
-          ctx.fill();
-        };
-
-        drawPillar(cx, cy - TILE * 0.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
-        drawPillar(cx, cy - TILE * 0.25, TILE * 0.2, TILE * 1.7, TILE * 0.1);
-        drawPillar(cx, cy - TILE * 2.1, TILE * 0.4, TILE * 0.25, TILE * 0.2);
-      } else if (r < 0.8) {
-        ctx.fillStyle = "#4a2b1a";
-        ctx.fillRect(cx - TILE * 0.1, cy - TILE * 0.45, TILE * 0.2, TILE * 0.5);
-
-        ctx.fillStyle = "rgba(0,0,0,0.2)";
-        ctx.beginPath();
-        ctx.ellipse(
-          cx,
-          cy + TILE * 0.1,
-          TILE * 0.4,
-          TILE * 0.2,
-          0,
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-
-        const drawLeaves = (topY, w, y) => {
-          ctx.fillStyle = "#700";
-          ctx.beginPath();
-          ctx.moveTo(cx, topY);
-          ctx.lineTo(cx - w, cy - y);
-          ctx.lineTo(cx, cy - y);
-          ctx.closePath();
-          ctx.fill();
-
-          ctx.fillStyle = "#900";
-          ctx.beginPath();
-          ctx.moveTo(cx, topY);
-          ctx.lineTo(cx + w, cy - y);
-          ctx.lineTo(cx, cy - y);
-          ctx.closePath();
-          ctx.fill();
-        };
-        drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
-        drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
-        drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
-      } else if (r < 0.9) {
-        const r = TILE * 0.2;
-
-        ctx.fillStyle = "rgba(0,0,0,0.15)";
-        ctx.beginPath();
-        ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#700";
-
-        ctx.beginPath();
-        ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#900";
-
-        ctx.beginPath();
-        ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = "#774433";
-        ctx.beginPath();
-        ctx.moveTo(cx - s * 0.4, cy + s * 0.2);
-        ctx.lineTo(cx + s * 0.4, cy + s * 0.2);
-        ctx.lineTo(cx + s * 0.25, cy + s * 0.6);
-        ctx.lineTo(cx - s * 0.25, cy + s * 0.6);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.fillStyle = "#332211";
-        ctx.beginPath();
-        ctx.ellipse(cx, cy + s * 0.2, s * 0.35, s * 0.12, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = "#5a5";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy + s * 0.2);
-        ctx.lineTo(cx, cy - s * 0.2);
-        ctx.stroke();
-
-        ctx.fillStyle = "#f55";
-        ctx.beginPath();
-        ctx.arc(cx, cy - s * 0.3, s * 0.15, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#faa";
-        for (let i = 0; i < 4; i++) {
-          const angle = (i * Math.PI) / 2;
-          ctx.beginPath();
-          ctx.arc(
-            cx + Math.cos(angle) * s * 0.2,
-            cy - s * 0.3 + Math.sin(angle) * s * 0.2,
-            s * 0.08,
+          ctx.ellipse(
+            cx,
+            cy + TILE * 0.1,
+            TILE * 0.4,
+            TILE * 0.2,
+            0,
             0,
             Math.PI * 2,
           );
           ctx.fill();
+
+          const drawLeaves = (topY, w, y) => {
+            ctx.fillStyle = "#700";
+            ctx.beginPath();
+            ctx.moveTo(cx, topY);
+            ctx.lineTo(cx - w, cy - y);
+            ctx.lineTo(cx, cy - y);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#900";
+            ctx.beginPath();
+            ctx.moveTo(cx, topY);
+            ctx.lineTo(cx + w, cy - y);
+            ctx.lineTo(cx, cy - y);
+            ctx.closePath();
+            ctx.fill();
+          };
+          drawLeaves(cy - TILE * 1, TILE * 0.4, TILE * 0.35);
+          drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
+          drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
+        } else if (r < 0.9) {
+          const r = TILE * 0.2;
+
+          ctx.fillStyle = "rgba(0,0,0,0.15)";
+          ctx.beginPath();
+          ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#700";
+
+          ctx.beginPath();
+          ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#900";
+
+          ctx.beginPath();
+          ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = "#774433";
+          ctx.beginPath();
+          ctx.moveTo(cx - s * 0.4, cy + s * 0.2);
+          ctx.lineTo(cx + s * 0.4, cy + s * 0.2);
+          ctx.lineTo(cx + s * 0.25, cy + s * 0.6);
+          ctx.lineTo(cx - s * 0.25, cy + s * 0.6);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = "#332211";
+          ctx.beginPath();
+          ctx.ellipse(cx, cy + s * 0.2, s * 0.35, s * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "#5a5";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy + s * 0.2);
+          ctx.lineTo(cx, cy - s * 0.2);
+          ctx.stroke();
+
+          ctx.fillStyle = "#f55";
+          ctx.beginPath();
+          ctx.arc(cx, cy - s * 0.3, s * 0.15, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#faa";
+          for (let i = 0; i < 4; i++) {
+            const angle = (i * Math.PI) / 2;
+            ctx.beginPath();
+            ctx.arc(
+              cx + Math.cos(angle) * s * 0.2,
+              cy - s * 0.3 + Math.sin(angle) * s * 0.2,
+              s * 0.08,
+              0,
+              Math.PI * 2,
+            );
+            ctx.fill();
+          }
         }
       }
-    }
-    if (t.wall[0] && t.wall[1] == 66) {
-      ctx.fillStyle = showFloor ? "#aaa" : "#aaa1";
-      ctx.beginPath();
-      ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
-      ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
-      ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
-      ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
-      ctx.closePath();
-      ctx.fill();
+      if (t.wall[0] && t.wall[1] == 66) {
+        ctx.fillStyle = "#aaa";
+        ctx.beginPath();
+        ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
+        ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
+        ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
+        ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
+        ctx.closePath();
+        ctx.fill();
+      }
     }
   }
   if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
@@ -4284,20 +4319,22 @@ function drawGrid() {
   }
 
   // optional grid overlay (kept)
-  ctx.strokeStyle = showGrids ? "#fff" : "#fff1";
-  ctx.lineWidth = showGrids ? 3 : 1;
-  const stepX = canvas.width / GRID_DIVS;
-  const stepY = canvas.height / GRID_DIVS;
-  for (let i = 1; i < GRID_DIVS; i++) {
-    ctx.beginPath();
-    ctx.moveTo(i * stepX, 0);
-    ctx.lineTo(i * stepX, canvas.height);
-    ctx.stroke();
+  if (showGrids) {
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 3;
+    const stepX = canvas.width / GRID_DIVS;
+    const stepY = canvas.height / GRID_DIVS;
+    for (let i = 1; i < GRID_DIVS; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * stepX, 0);
+      ctx.lineTo(i * stepX, canvas.height);
+      ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(0, i * stepY);
-    ctx.lineTo(canvas.width, i * stepY);
-    ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * stepY);
+      ctx.lineTo(canvas.width, i * stepY);
+      ctx.stroke();
+    }
   }
 }
 
@@ -4529,11 +4566,11 @@ function updateCamera() {
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
-      if (latestCollectedCount >= (hardMode ? 12000 : 6000)) {
-        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount - 1900}`;
-        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50)) - 19}`;
-      } else if (latestCollectedCount >= (hardMode ? 10000 : 5000)) {
-        counterEl.textContent = `Gift(s) Collected: ${-12000 + Math.floor(Math.random() * 24000)}`;
+      if (
+        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+        latestCollectedCount <= (hardMode ? 12500 : 6250)
+      ) {
+        counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
         lvlEl.textContent = `lvl 100`;
       } else {
         counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
@@ -4566,7 +4603,7 @@ function updateCamera() {
 
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
-          spawnVoid(entityHost, enableVoid);
+          spawnVoid(entityHost, enableVoid, showFloor);
           spawnJumpPad(entityHost, 2000);
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
@@ -4611,9 +4648,9 @@ function updateCamera() {
         if (
           unlocked.length > 0 &&
           (!disablespawn ||
-            (collectedCount >= (hardMode ? 12000 : 6000) &&
-              collectedCount <= (hardMode ? 12199 : 6099))) &&
-          (spawnedCatalyst ? collectedCount >= (hardMode ? 12000 : 6000) : true)
+            (collectedCount >= (hardMode ? 12500 : 6250) &&
+              collectedCount <= (hardMode ? 12699 : 6349))) &&
+          (spawnedCatalyst ? collectedCount >= (hardMode ? 12500 : 6250) : true)
         ) {
           let pick;
           if (
@@ -4629,17 +4666,6 @@ function updateCamera() {
               start: 5000,
               src: "./ASSET/Enemies/CatalystIcon.png",
               desc: "למה לבזבז את כל הזמן הזה באור? תהיה איתי בחושך.",
-            };
-          } else if (
-            collectedCount >= (hardMode ? 12000 : 6000) &&
-            !spawnedBeacon &&
-            !disableProgression
-          ) {
-            spawnedBeacon = true;
-            pick = {
-              name: "Beacon",
-              spawn: () => spawnBeacon(entityHost, deafMode),
-              start: 6000,
             };
           } else {
             const weighted = [];
@@ -5151,7 +5177,7 @@ function loop(now) {
   }
 
   //holy beacon
-  if (collectedCount >= (hardMode ? 12000 : 6000) && !transformAllGift) {
+  if (collectedCount >= (hardMode ? 12500 : 6250) && !transformAllGift) {
     transformAllGift = true;
     allGold = true;
     giftPositions.forEach((gift) => {
@@ -5159,6 +5185,9 @@ function loop(now) {
         gift.golden = true;
       }
     });
+    if (!disableProgression) {
+      spawnBeacon(entityHost, deafMode);
+    }
   }
 
   //mart merge
@@ -5544,6 +5573,7 @@ setInterval(() => {
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
+  giftMultiplier *= 2;
   beaconed = true;
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";

@@ -221,7 +221,7 @@ export function setup(host) {
     }
 
     if (state.phase === "waitSpawn") {
-      if (state.timer >= 2) {
+      if (state.timer >= 7) {
         const p = randNearCursor();
         state.x = p.x;
         state.y = p.y;
@@ -314,7 +314,7 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        if (actualCollectedCount >= 12000) {
+        if (actualCollectedCount >= 12500) {
           state.MAX_DASH_DIST = 10000;
           if (!state.layerChange) {
             state.layers = Catalyst_Shock;
@@ -323,7 +323,7 @@ export function setup(host) {
             setTimeout(() => {
               state.layers = CatalystOptim;
               state.layer = state.layers.length;
-            }, 1000);
+            }, 3000);
           }
         }
         const d = Math.hypot(dx, dy) || 1;

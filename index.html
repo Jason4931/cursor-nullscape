@@ -52,9 +52,9 @@
         transition: background-color 0.2s ease;
         animation: bg 60s infinite;
         box-shadow:
-          0 0 240px rgba(255, 0, 0, 0.5),
-          0 0 240px rgba(255, 0, 0, 0.5),
-          inset 0 0 240px rgba(255, 0, 0, 0.5);
+          0 0 240px rgba(255, 0, 0, 1),
+          0 0 240px rgba(255, 0, 0, 1),
+          inset 0 0 240px rgba(255, 0, 0, 1);
       }
 
       canvas .entities {
@@ -62,10 +62,6 @@
         left: 0;
         top: 0;
         z-index: 1000;
-        box-shadow:
-          0 0 240px rgba(255, 255, 0, 0.5),
-          0 0 240px rgba(255, 255, 0, 0.5),
-          inset 0 0 240px rgba(255, 255, 0, 0.5);
       }
 
       canvas .entities-2 {
@@ -73,10 +69,6 @@
         left: 0;
         top: 0;
         z-index: 1000;
-        box-shadow:
-          0 0 240px rgba(255, 255, 0, 0.5),
-          0 0 240px rgba(255, 255, 0, 0.5),
-          inset 0 0 240px rgba(255, 255, 0, 0.5);
       }
 
       #screen,
@@ -931,6 +923,13 @@
           <span>Show grids</span>
           <label class="toggle">
             <input type="checkbox" id="toggle-grids" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Show skybox</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-skybox" checked />
             <span class="slider-toggle"></span>
           </label>
         </div>

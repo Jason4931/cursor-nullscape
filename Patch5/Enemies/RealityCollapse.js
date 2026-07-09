@@ -201,8 +201,8 @@ export function setup(host, fast = false) {
           );
           const edge = thickness / (thickness + glow);
           grad.addColorStop(0, "rgba(255, 0, 255, 0)");
-          grad.addColorStop(0.5 - edge * 0.5, "rgba(255, 0, 255, 0.5)");
-          grad.addColorStop(0.5 + edge * 0.5, "rgba(255, 0, 255, 0.5)");
+          grad.addColorStop(0.5 - edge * 0.5, "rgba(255, 0, 255, 1)");
+          grad.addColorStop(0.5 + edge * 0.5, "rgba(255, 0, 255, 1)");
           grad.addColorStop(1, "rgba(255, 0, 255, 0)");
 
           ctx.fillStyle = grad;
@@ -222,7 +222,7 @@ export function setup(host, fast = false) {
           ctx.closePath();
 
           ctx.strokeStyle = "magenta";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
       }

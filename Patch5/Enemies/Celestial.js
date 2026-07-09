@@ -1212,7 +1212,7 @@ export function setup(
       const alpha = armed ? 1 : 0.5;
 
       ctx.globalAlpha = alpha;
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
 
       if (!armed) {
         ctx.strokeStyle = "transparent";
@@ -1233,7 +1233,7 @@ export function setup(
           -b.width / 2,
         );
         gradTop.addColorStop(0, "rgba(255,0,192,0)");
-        gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
         ctx.fillStyle = gradTop;
         ctx.fillRect(x, -b.width / 2 - glow, len, glow);
@@ -1244,7 +1244,7 @@ export function setup(
           0,
           b.width / 2 + glow,
         );
-        gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
         gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = gradBot;
@@ -1367,11 +1367,11 @@ export function setup(
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.stroke();
         const glow = 200;
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -1382,12 +1382,12 @@ export function setup(
         const spikes = 6;
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.rotate(c.r);
         const glow = 200;
         const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -1606,20 +1606,20 @@ export function setup(
         if (isLethal) {
           ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
 
           const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
 
           const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
@@ -1867,20 +1867,20 @@ export function setup(
         if (isLethal) {
           ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
 
           const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
 
           const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
@@ -1920,7 +1920,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -1929,7 +1929,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -2144,7 +2144,7 @@ export function setup(
 
       const glowSize = 300;
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -2167,7 +2167,7 @@ export function setup(
       ctx.closePath();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -2180,7 +2180,7 @@ export function setup(
 
       const glowSize = 100;
       const glow = ctx.createRadialGradient(0, 0, p.r, 0, 0, p.r + glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -2191,7 +2191,7 @@ export function setup(
       ctx.beginPath();
       ctx.arc(0, 0, p.r, 0, Math.PI * 2);
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.rotate(p.a);
@@ -2207,7 +2207,7 @@ export function setup(
           0,
         );
         grad.addColorStop(0, "rgba(255,0,192,0)");
-        grad.addColorStop(1, `rgba(255,0,192,0.5)`);
+        grad.addColorStop(1, `rgba(255,0,192,1)`);
 
         ctx.fillStyle = grad;
         ctx.fillRect(-len / 2 - glowSize, -w / 2, glowSize, w);
@@ -2218,14 +2218,59 @@ export function setup(
           len / 2 + glowSize,
           0,
         );
-        grad2.addColorStop(0, `rgba(255,0,192,0.5)`);
+        grad2.addColorStop(0, `rgba(255,0,192,1)`);
         grad2.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad2;
         ctx.fillRect(len / 2, -w / 2, glowSize, w);
 
+        const topGrad = ctx.createLinearGradient(
+          0,
+          -w / 2 - glowSize,
+          0,
+          -w / 2,
+        );
+        topGrad.addColorStop(0, "rgba(255,0,192,0)");
+        topGrad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(-len / 2 - 1, -w / 2 - glowSize, len + 2, glowSize);
+
+        const bottomGrad = ctx.createLinearGradient(
+          0,
+          w / 2,
+          0,
+          w / 2 + glowSize,
+        );
+        bottomGrad.addColorStop(0, "#ff00cc");
+        bottomGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = bottomGrad;
+        ctx.fillRect(-len / 2 - 1, w / 2, len + 2, glowSize);
+
+        const points = [
+          [-len / 2, -w / 2, -1.0083, -0.9983],
+          [len / 2, -w / 2, 0.0083, -0.9983],
+          [-len / 2, w / 2, -1.0083, -0.0017],
+          [len / 2, w / 2, 0.0083, -0.0017],
+        ];
+        for (const [x, y, ox, oy] of points) {
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+
+          grad.addColorStop(0, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(
+            x + ox * glowSize,
+            y + oy * glowSize,
+            glowSize,
+            glowSize,
+          );
+        }
+
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.strokeRect(-len / 2, -w / 2, len, w);
       }
 
@@ -2317,9 +2362,10 @@ export function setup(
 
       ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
 
-      const glowSize = 200;
+      const glowSize = 300;
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(0.5, "rgba(255,0,192,0.75)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -2345,7 +2391,7 @@ export function setup(
       ctx.fill();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -2439,7 +2485,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -2448,7 +2494,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -2644,20 +2690,50 @@ export function setup(
 
           const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
 
           const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
           ctx.fillRect(drawX, w / 2, len, glow);
 
+          const leftGrad = ctx.createLinearGradient(-glow, 0, 0, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(-glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(len, 0, len + glow, 0);
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [0, -w / 2, -0.9983, -1.0083],
+            [len, -w / 2, -0.0017, -1.0083],
+            [0, w / 2, -0.9983, 0.0083],
+            [len, w / 2, -0.0017, 0.0083],
+          ];
+          for (const [x, y, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(x + ox * glow, y + oy * glow, glow, glow);
+          }
+
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           ctx.beginPath();
           ctx.rect(drawX, -w / 2, len, w);
@@ -2897,7 +2973,7 @@ export function setup(
       } else {
         ctx.strokeStyle = "#ff00cc";
       }
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
 
       const dx = mouse.x - b.x;
       const dy = mouse.y - b.y;
@@ -2916,7 +2992,7 @@ export function setup(
           -b.width / 2,
         );
         gradTop.addColorStop(0, "rgba(255,0,192,0)");
-        gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
         ctx.fillStyle = gradTop;
         ctx.fillRect(drawX, -b.width / 2 - glow, len, glow);
@@ -2927,7 +3003,7 @@ export function setup(
           0,
           b.width / 2 + glow,
         );
-        gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
         gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = gradBot;
@@ -2961,7 +3037,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -2970,7 +3046,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -3056,6 +3132,7 @@ export function setup(
     enterFixed(s.cx, s.cy);
     s.w = hardMode ? 800 : 625;
     s.angle = 0;
+    s.prevAngle = 0;
 
     s.ex = mouse.x;
     s.ey = mouse.y;
@@ -3082,6 +3159,8 @@ export function setup(
     const dy = s.ey - s.cy;
 
     s.angle += Math.atan2(dy, dx) - s.angle;
+    const angleDelta = s.angle - s.prevAngle;
+    s.prevAngle = s.angle;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -3172,6 +3251,21 @@ export function setup(
       p.t += dt;
 
       if (p.ellipse) {
+        const c = Math.cos(angleDelta);
+        const sA = Math.sin(angleDelta);
+
+        const rx = p.x - s.cx;
+        const ry = p.y - s.cy;
+
+        p.x = s.cx + rx * c - ry * sA;
+        p.y = s.cy + rx * sA + ry * c;
+
+        const rvx = p.vx;
+        const rvy = p.vy;
+
+        p.vx = rvx * c - rvy * sA;
+        p.vy = rvx * sA + rvy * c;
+
         const accel = 200 * dt;
         p.vx += Math.cos(s.angle) * accel;
         p.vy += Math.sin(s.angle) * accel;
@@ -3244,14 +3338,14 @@ export function setup(
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         if (!p.ellipse) {
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
 
@@ -3326,7 +3420,7 @@ export function setup(
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = randLineWidth;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -3340,7 +3434,7 @@ export function setup(
 
       ctx.save();
       ctx.globalAlpha =
-        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (isLethal ? Math.random() * 0.25 + 0.75 : 0.05) *
         (s.t < 0.25 ? s.t * 4 : 1);
 
       let grad = ctx.createLinearGradient(
@@ -3476,7 +3570,7 @@ export function setup(
           ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 9;
+          ctx.lineWidth = 1;
           ctx.stroke();
 
           ctx.fillStyle = "black";
@@ -3879,7 +3973,7 @@ export function setup(
       ctx.translate(b.x * 0.05, 0);
 
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -3918,7 +4012,7 @@ export function setup(
       ctx.closePath();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -3930,7 +4024,7 @@ export function setup(
 
       const glowSize = 100;
       const glow = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -3941,7 +4035,7 @@ export function setup(
       ctx.beginPath();
       ctx.arc(0, 0, c.r, 0, Math.PI * 2);
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -3978,7 +4072,7 @@ export function setup(
             if (isLethal) {
               ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
               ctx.strokeStyle = "#ff00cc";
-              ctx.lineWidth = 18;
+              ctx.lineWidth = 1;
 
               const drawX = Math.max(x, sp.offset);
               const glow = 100;
@@ -3990,7 +4084,7 @@ export function setup(
                 -w / 2,
               );
               gradTop.addColorStop(0, "rgba(255,0,192,0)");
-              gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+              gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
               ctx.fillStyle = gradTop;
               ctx.fillRect(drawX, -w / 2 - glow, len, glow);
@@ -4001,7 +4095,7 @@ export function setup(
                 0,
                 w / 2 + glow,
               );
-              gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+              gradBot.addColorStop(0, "rgba(255,0,192,1)");
               gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
               ctx.fillStyle = gradBot;
@@ -4044,7 +4138,7 @@ export function setup(
           const glow = 100;
 
           const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-          grad.addColorStop(0, "rgba(255,0,192,0.5)");
+          grad.addColorStop(0, "rgba(255,0,192,1)");
           grad.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = grad;
@@ -4053,7 +4147,7 @@ export function setup(
           ctx.fill();
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           ctx.beginPath();
           ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -4452,7 +4546,7 @@ export function setup(
           const glow = 100;
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           const gradTop = ctx.createLinearGradient(
             drawX,
@@ -4461,7 +4555,7 @@ export function setup(
             -w / 2,
           );
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
@@ -4472,7 +4566,7 @@ export function setup(
             drawX,
             w / 2 + glow,
           );
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
@@ -4508,20 +4602,50 @@ export function setup(
 
           const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
 
           const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
           ctx.fillRect(drawX, w / 2, len, glow);
 
+          const leftGrad = ctx.createLinearGradient(-glow, 0, 0, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(-glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(len, 0, len + glow, 0);
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [0, -w / 2, -0.9983, -1.0083],
+            [len, -w / 2, -0.0017, -1.0083],
+            [0, w / 2, -0.9983, 0.0083],
+            [len, w / 2, -0.0017, 0.0083],
+          ];
+          for (const [x, y, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(x + ox * glow, y + oy * glow, glow, glow);
+          }
+
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           ctx.beginPath();
           ctx.rect(drawX, -w / 2, len, w);
@@ -4649,6 +4773,7 @@ export function setup(
     enterFixed(s.cx, s.cy);
     s.w = hardMode ? 800 : 625;
     s.angle = 0;
+    s.prevAngle = 0;
 
     s.ex = mouse.x;
     s.ey = mouse.y;
@@ -4678,6 +4803,8 @@ export function setup(
     const dy = s.ey - s.cy;
 
     s.angle += Math.atan2(dy, dx) - s.angle;
+    const angleDelta = s.angle - s.prevAngle;
+    s.prevAngle = s.angle;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -4776,6 +4903,21 @@ export function setup(
       p.t += dt;
 
       if (p.ellipse) {
+        const c = Math.cos(angleDelta);
+        const sA = Math.sin(angleDelta);
+
+        const rx = p.x - s.cx;
+        const ry = p.y - s.cy;
+
+        p.x = s.cx + rx * c - ry * sA;
+        p.y = s.cy + rx * sA + ry * c;
+
+        const rvx = p.vx;
+        const rvy = p.vy;
+
+        p.vx = rvx * c - rvy * sA;
+        p.vy = rvx * sA + rvy * c;
+
         const accel = 200 * dt;
         p.vx += Math.cos(s.angle) * accel;
         p.vy += Math.sin(s.angle) * accel;
@@ -4889,14 +5031,14 @@ export function setup(
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         if (!p.ellipse) {
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
 
@@ -4971,7 +5113,7 @@ export function setup(
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = randLineWidth;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -5029,7 +5171,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -5038,7 +5180,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -5133,7 +5275,7 @@ export function setup(
           ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 9;
+          ctx.lineWidth = 1;
           ctx.stroke();
 
           ctx.fillStyle = "black";
@@ -5395,11 +5537,11 @@ export function setup(
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.stroke();
         const glow = 200;
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -5410,12 +5552,12 @@ export function setup(
         const spikes = 6;
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.rotate(c.r);
         const glow = 200;
         const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -5492,7 +5634,7 @@ export function setup(
       ctx.translate(tipOffset * 0.25, 0);
 
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -5531,7 +5673,7 @@ export function setup(
       ctx.closePath();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -6107,20 +6249,20 @@ export function setup(
         if (isLethal) {
           ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
 
           const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
           gradTop.addColorStop(0, "rgba(255,0,192,0)");
-          gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
           ctx.fillStyle = gradTop;
           ctx.fillRect(drawX, -w / 2 - glow, len, glow);
 
           const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
-          gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
           gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = gradBot;
@@ -6160,7 +6302,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -6169,7 +6311,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -6225,7 +6367,7 @@ export function setup(
       ctx.translate(tipOffset * 0.25, 0);
 
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -6264,7 +6406,7 @@ export function setup(
       ctx.closePath();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -6287,7 +6429,7 @@ export function setup(
       const alpha = armed ? 1 : 0.5;
 
       ctx.globalAlpha = alpha;
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
 
       if (!armed) {
         ctx.strokeStyle = "transparent";
@@ -6308,7 +6450,7 @@ export function setup(
           -b.width / 2,
         );
         gradTop.addColorStop(0, "rgba(255,0,192,0)");
-        gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
         ctx.fillStyle = gradTop;
         ctx.fillRect(x, -b.width / 2 - glow, len, glow);
@@ -6319,7 +6461,7 @@ export function setup(
           0,
           b.width / 2 + glow,
         );
-        gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
         gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = gradBot;
@@ -6559,6 +6701,7 @@ export function setup(
     s.w = hardMode ? 500 : 417;
     s.angle = 0;
     s.baseAngle = Math.random() * Math.PI * 2;
+    s.prevAngle = 0;
     s.dir = Math.random() < 0.5;
 
     s.ex = mouse.x;
@@ -6614,6 +6757,8 @@ export function setup(
 
       s.angle = angleAt5 + rotSpeed2 * t2 * dirSign;
     }
+    const angleDelta = s.angle - s.prevAngle;
+    s.prevAngle = s.angle;
 
     const mvx = mx - s.prevMx;
     const mvy = my - s.prevMy;
@@ -6714,6 +6859,21 @@ export function setup(
       p.t += dt;
 
       if (p.ellipse) {
+        const c = Math.cos(angleDelta);
+        const sA = Math.sin(angleDelta);
+
+        const rx = p.x - s.cx;
+        const ry = p.y - s.cy;
+
+        p.x = s.cx + rx * c - ry * sA;
+        p.y = s.cy + rx * sA + ry * c;
+
+        const rvx = p.vx;
+        const rvy = p.vy;
+
+        p.vx = rvx * c - rvy * sA;
+        p.vy = rvx * sA + rvy * c;
+
         const accel = 200 * dt;
         p.vx += Math.cos(s.angle) * accel;
         p.vy += Math.sin(s.angle) * accel;
@@ -7022,14 +7182,14 @@ export function setup(
         ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         if (!p.ellipse) {
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 18;
+          ctx.lineWidth = 1;
           ctx.stroke();
         }
 
@@ -7104,7 +7264,7 @@ export function setup(
         ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = randLineWidth;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
@@ -7160,7 +7320,7 @@ export function setup(
 
       const glowSize = 300;
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -7183,7 +7343,7 @@ export function setup(
       ctx.closePath();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -7196,7 +7356,7 @@ export function setup(
 
       const glowSize = 100;
       const glow = ctx.createRadialGradient(0, 0, p.r, 0, 0, p.r + glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
 
       ctx.fillStyle = glow;
@@ -7207,7 +7367,7 @@ export function setup(
       ctx.beginPath();
       ctx.arc(0, 0, p.r, 0, Math.PI * 2);
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.rotate(p.a);
@@ -7223,7 +7383,7 @@ export function setup(
           0,
         );
         grad.addColorStop(0, "rgba(255,0,192,0)");
-        grad.addColorStop(1, `rgba(255,0,192,0.5)`);
+        grad.addColorStop(1, `rgba(255,0,192,1)`);
 
         ctx.fillStyle = grad;
         ctx.fillRect(-len / 2 - glowSize, -w / 2, glowSize, w);
@@ -7234,14 +7394,59 @@ export function setup(
           len / 2 + glowSize,
           0,
         );
-        grad2.addColorStop(0, `rgba(255,0,192,0.5)`);
+        grad2.addColorStop(0, `rgba(255,0,192,1)`);
         grad2.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad2;
         ctx.fillRect(len / 2, -w / 2, glowSize, w);
 
+        const topGrad = ctx.createLinearGradient(
+          0,
+          -w / 2 - glowSize,
+          0,
+          -w / 2,
+        );
+        topGrad.addColorStop(0, "rgba(255,0,192,0)");
+        topGrad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(-len / 2 - 1, -w / 2 - glowSize, len + 2, glowSize);
+
+        const bottomGrad = ctx.createLinearGradient(
+          0,
+          w / 2,
+          0,
+          w / 2 + glowSize,
+        );
+        bottomGrad.addColorStop(0, "#ff00cc");
+        bottomGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = bottomGrad;
+        ctx.fillRect(-len / 2 - 1, w / 2, len + 2, glowSize);
+
+        const points = [
+          [-len / 2, -w / 2, -1.0083, -0.9983],
+          [len / 2, -w / 2, 0.0083, -0.9983],
+          [-len / 2, w / 2, -1.0083, -0.0017],
+          [len / 2, w / 2, 0.0083, -0.0017],
+        ];
+        for (const [x, y, ox, oy] of points) {
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+
+          grad.addColorStop(0, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(
+            x + ox * glowSize,
+            y + oy * glowSize,
+            glowSize,
+            glowSize,
+          );
+        }
+
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.strokeRect(-len / 2, -w / 2, len, w);
       }
 
@@ -7260,7 +7465,7 @@ export function setup(
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,0.5)");
+        grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = grad;
@@ -7269,7 +7474,7 @@ export function setup(
         ctx.fill();
 
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -7299,7 +7504,7 @@ export function setup(
       const alpha = armed ? 1 : 0.5;
 
       ctx.globalAlpha = alpha;
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
 
       if (!armed) {
         ctx.strokeStyle = "transparent";
@@ -7320,7 +7525,7 @@ export function setup(
           -b.width / 2,
         );
         gradTop.addColorStop(0, "rgba(255,0,192,0)");
-        gradTop.addColorStop(1, "rgba(255,0,192,0.5)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
 
         ctx.fillStyle = gradTop;
         ctx.fillRect(x, -b.width / 2 - glow, len, glow);
@@ -7331,7 +7536,7 @@ export function setup(
           0,
           b.width / 2 + glow,
         );
-        gradBot.addColorStop(0, "rgba(255,0,192,0.5)");
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
         gradBot.addColorStop(1, "rgba(255,0,192,0)");
 
         ctx.fillStyle = gradBot;
@@ -7426,7 +7631,7 @@ export function setup(
           ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
 
           ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 9;
+          ctx.lineWidth = 1;
           ctx.stroke();
 
           ctx.fillStyle = "black";
@@ -7581,9 +7786,10 @@ export function setup(
 
       ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
 
-      const glowSize = 200;
+      const glowSize = 300;
       const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
-      glow.addColorStop(0, "rgba(255,0,192,0.5)");
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(0.5, "rgba(255,0,192,0.75)");
       glow.addColorStop(1, "rgba(255,0,192,0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -7609,7 +7815,7 @@ export function setup(
       ctx.fill();
 
       ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 18;
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.restore();
@@ -7669,6 +7875,10 @@ export function setup(
       let scream = false;
       if (state.lastPhase === 0 && phase === 1) {
         scream = true;
+        changeEnemy(Celestial_Idle);
+        setTimeout(() => {
+          changeEnemy(Celestial_Idle);
+        }, 1000);
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Screams/Celestial_screams_really_loudly.ogg`,
           undefined,
@@ -7681,6 +7891,10 @@ export function setup(
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 1 && phase === 2) {
         scream = true;
+        changeEnemy(Celestial_Idle);
+        setTimeout(() => {
+          changeEnemy(Celestial_Idle);
+        }, 1000);
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Screams/Scream_Variation_1.ogg`,
           undefined,
@@ -7693,6 +7907,10 @@ export function setup(
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 2 && phase === 3) {
         scream = true;
+        changeEnemy(Celestial_Idle);
+        setTimeout(() => {
+          changeEnemy(Celestial_Idle);
+        }, 1000);
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Screams/Scream_Variation_2.ogg`,
           undefined,
@@ -7705,6 +7923,10 @@ export function setup(
         state.patternIndex = state.loopPattern.length;
       } else if (state.lastPhase === 3 && phase === 4) {
         scream = true;
+        changeEnemy(Celestial_Idle);
+        setTimeout(() => {
+          changeEnemy(Celestial_Idle);
+        }, 1000);
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Screams/Roar_Phase2.ogg`,
           undefined,
@@ -7926,7 +8148,7 @@ export function setup(
 
         const glowSize = 100;
         const glow = ctx.createRadialGradient(0, 0, t.r, 0, 0, t.r + glowSize);
-        glow.addColorStop(0, "rgba(255,0,192,0.5)");
+        glow.addColorStop(0, "rgba(255,0,192,1)");
         glow.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
@@ -7936,7 +8158,7 @@ export function setup(
         ctx.beginPath();
         ctx.arc(0, 0, t.r, 0, Math.PI * 2);
         ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 18;
+        ctx.lineWidth = 1;
         ctx.stroke();
 
         ctx.restore();

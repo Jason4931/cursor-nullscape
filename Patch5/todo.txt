@@ -55,7 +55,3 @@ v celestial intro
 
 vx catalyst
 vx celestial
-
-scrolling background skybox image (+option)
-celestial no more outline
-celestial reset animation onscream

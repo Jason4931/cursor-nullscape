@@ -8,7 +8,7 @@ import {
   playSound,
 } from "../main.js";
 
-export function setup(host) {
+export function setup(host, showFloor) {
   const state = {
     time: 0,
     phase: 0,
@@ -40,12 +40,12 @@ export function setup(host) {
         const t = Math.min(state.offFloorTime / 3.5, 1);
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Sorrow/SorrowNewSound.wav",
-          2.286,
+          (showFloor ? 1 : 0.5) * 2.286,
           { start: t, end: 1 },
         );
       }
       if (!isCursorOnFloor()) {
-        state.offFloorTime += dt;
+        state.offFloorTime += (showFloor ? 1 : 0.5) * dt;
         if (state.offFloorTime >= 3.5 && !state.death) {
           state.death = true;
           death("Sorrow");
@@ -53,7 +53,7 @@ export function setup(host) {
           playSound("./ASSET/Sound/Enemies/Sorrow/SorrowDeathEffect.mp3.mpeg");
         }
       } else {
-        state.offFloorTime -= 1.75 * dt;
+        state.offFloorTime -= (showFloor ? 1 : 0.5) * 1.75 * dt;
         if (state.offFloorTime < 0) state.offFloorTime = 0;
         if (state.sound && state.soundTime >= 0.5) {
           state.sound();
