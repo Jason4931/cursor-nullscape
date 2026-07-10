@@ -16,6 +16,7 @@ for (let i = 1; i <= 2; i++) {
   Huskspawn.push(img);
 }
 
+export let legionActive = [false];
 export function setup(host, stack, hardMode) {
   const state = {
     opacity: 1,
@@ -165,22 +166,36 @@ export function setup(host, stack, hardMode) {
 
     const px = -state.dirY;
     const py = state.dirX;
-    const positions = hardMode
-      ? [
-          {
-            x: state.x + px * state.pairOffset,
-            y: state.y + py * state.pairOffset,
-          },
-          {
-            x: state.x,
-            y: state.y,
-          },
-          {
-            x: state.x - px * state.pairOffset,
-            y: state.y - py * state.pairOffset,
-          },
-        ]
-      : [{ x: state.x, y: state.y }];
+    let positions = [];
+    if (legionActive[0]) {
+      const count = 2 * (hardMode ? 20 : 10);
+      const start = -(count - 1) / 2;
+
+      for (let i = 0; i < count; i++) {
+        const off = (start + i) * state.pairOffset;
+        positions.push({
+          x: state.x + px * off,
+          y: state.y + py * off,
+        });
+      }
+    } else if (hardMode) {
+      positions = [
+        {
+          x: state.x + px * state.pairOffset,
+          y: state.y + py * state.pairOffset,
+        },
+        {
+          x: state.x,
+          y: state.y,
+        },
+        {
+          x: state.x - px * state.pairOffset,
+          y: state.y - py * state.pairOffset,
+        },
+      ];
+    } else {
+      positions = [{ x: state.x, y: state.y }];
+    }
     for (const p of positions) {
       const cx = mouse.x - p.x;
       const cy = mouse.y - p.y;
@@ -233,18 +248,32 @@ export function setup(host, stack, hardMode) {
 
     const px = -state.dirY;
     const py = state.dirX;
-    const positions = hardMode
-      ? [
-          {
-            x: state.x + px * state.pairOffset,
-            y: state.y + py * state.pairOffset,
-          },
-          {
-            x: state.x - px * state.pairOffset,
-            y: state.y - py * state.pairOffset,
-          },
-        ]
-      : [{ x: state.x, y: state.y }];
+    let positions = [];
+    if (legionActive[0]) {
+      const count = hardMode ? 20 : 10;
+      const start = -(count - 1) / 2;
+
+      for (let i = 0; i < count; i++) {
+        const off = (start + i) * state.pairOffset * 2;
+        positions.push({
+          x: state.x + px * off,
+          y: state.y + py * off,
+        });
+      }
+    } else if (hardMode) {
+      positions = [
+        {
+          x: state.x + px * state.pairOffset,
+          y: state.y + py * state.pairOffset,
+        },
+        {
+          x: state.x - px * state.pairOffset,
+          y: state.y - py * state.pairOffset,
+        },
+      ];
+    } else {
+      positions = [{ x: state.x, y: state.y }];
+    }
     for (const p of positions) {
       if (!state.whiteInit) {
         const grad = ctx.createRadialGradient(

@@ -180,50 +180,69 @@ export function setup(host, fast = false) {
 
         if (state.phase === "collapse") {
           const glow = 100;
+          const angle = Math.atan2(l.ny, l.nx);
+          const len = halfLen * 2;
+          const w = thickness * 2;
 
-          const gx1 = fx + perpX * (thickness + glow);
-          const gy1 = fy + perpY * (thickness + glow);
+          ctx.save();
+          ctx.translate(bx, by);
+          ctx.rotate(angle);
 
-          const gx2 = fx - perpX * (thickness + glow);
-          const gy2 = fy - perpY * (thickness + glow);
-
-          const gx3 = bx - perpX * (thickness + glow);
-          const gy3 = by - perpY * (thickness + glow);
-
-          const gx4 = bx + perpX * (thickness + glow);
-          const gy4 = by + perpY * (thickness + glow);
-
+          // Side glow
           const grad = ctx.createLinearGradient(
-            l.x + perpX * (thickness + glow),
-            l.y + perpY * (thickness + glow),
-            l.x - perpX * (thickness + glow),
-            l.y - perpY * (thickness + glow),
+            0,
+            -w / 2 - glow,
+            0,
+            w / 2 + glow,
           );
           const edge = thickness / (thickness + glow);
-          grad.addColorStop(0, "rgba(255, 0, 255, 0)");
-          grad.addColorStop(0.5 - edge * 0.5, "rgba(255, 0, 255, 1)");
-          grad.addColorStop(0.5 + edge * 0.5, "rgba(255, 0, 255, 1)");
-          grad.addColorStop(1, "rgba(255, 0, 255, 0)");
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.5 - edge * 0.5, "rgba(255,0,192,1)");
+          grad.addColorStop(0.5 + edge * 0.5, "rgba(255,0,192,1)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.moveTo(gx1, gy1);
-          ctx.lineTo(gx2, gy2);
-          ctx.lineTo(gx3, gy3);
-          ctx.lineTo(gx4, gy4);
-          ctx.closePath();
-          ctx.fill();
+          ctx.fillRect(0, -w / 2 - glow, len, w + glow * 2);
 
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.lineTo(x3, y3);
-          ctx.lineTo(x4, y4);
-          ctx.closePath();
+          // Left tip
+          const leftGrad = ctx.createLinearGradient(-glow, 0, 0, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
 
-          ctx.strokeStyle = "magenta";
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(-glow, -w / 2, glow, w);
+
+          // Right tip
+          const rightGrad = ctx.createLinearGradient(len, 0, len + glow, 0);
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(len, -w / 2, glow, w);
+
+          const points = [
+            [0, -w / 2, -0.998, -1],
+            [len, -w / 2, -0.002, -1],
+            [0, w / 2, -0.998, 0],
+            [len, w / 2, -0.002, 0],
+          ];
+
+          for (const [x, y, ox, oy] of points) {
+            const cornerGrad = ctx.createRadialGradient(x, y, 0, x, y, glow);
+
+            cornerGrad.addColorStop(0, "#ff00cc");
+            cornerGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = cornerGrad;
+            ctx.fillRect(x + ox * glow, y + oy * glow, glow, glow);
+          }
+
+          // Outline
+          ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
-          ctx.stroke();
+          ctx.strokeRect(0, -w / 2, len, w);
+
+          ctx.restore();
         }
       }
       for (const l of state.lines) {
@@ -268,13 +287,13 @@ export function setup(host, fast = false) {
             l.x - perpX * thickness,
             l.y - perpY * thickness,
           );
-          grad.addColorStop(0, "rgba(255,0,255,0)");
-          grad.addColorStop(0.25, "rgba(255,0,255,0.75)");
-          grad.addColorStop(0.333, "rgba(255,0,255,0.9)");
-          grad.addColorStop(0.5, "rgba(255,0,255,1)");
-          grad.addColorStop(0.667, "rgba(255,0,255,0.9)");
-          grad.addColorStop(0.75, "rgba(255,0,255,0.75)");
-          grad.addColorStop(1, "rgba(255,0,255,0)");
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.25, "rgba(255,0,192,0.75)");
+          grad.addColorStop(0.333, "rgba(255,0,192,0.9)");
+          grad.addColorStop(0.5, "rgba(255,0,192,1)");
+          grad.addColorStop(0.667, "rgba(255,0,192,0.9)");
+          grad.addColorStop(0.75, "rgba(255,0,192,0.75)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
 
           ctx.fillStyle = grad;
           ctx.fill();

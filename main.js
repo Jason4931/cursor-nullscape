@@ -637,7 +637,10 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
-export let giftMultiplier = 1;
+let giftMultiplier = 1;
+export function setGiftMultiplier(v) {
+  giftMultiplier *= v;
+}
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;

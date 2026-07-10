@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { getCameraPos, playSound } from "../main.js";
 
 const ICBM = [];
 for (let i = 1; i <= 7; i++) {
@@ -9,9 +9,12 @@ for (let i = 1; i <= 7; i++) {
 }
 const marker = new Image();
 marker.src = "./ASSET/Misc/ICBMMarker.png";
+const nuclearMarker = new Image();
+nuclearMarker.src = "./ASSET/Misc/NuclearBombMarker.png";
 const explode = new Image();
 explode.src = "./ASSET/Misc/Explode.png";
 
+export let nuclearBombActive = [false];
 export function setup(host, hardMode) {
   const state = {
     opacity: 0,
@@ -21,6 +24,7 @@ export function setup(host, hardMode) {
     size: 125,
     currentSize: 100,
     circleRadius: 40,
+    nuclearRadius: 0,
     maxCircleRadius: 210,
     rotation: 90,
     startY: 0,
@@ -54,6 +58,9 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    if (nuclearBombActive[0])
+      state.nuclearRadius = Math.max(window.innerWidth, window.innerHeight);
 
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
@@ -108,6 +115,10 @@ export function setup(host, hardMode) {
           Math.ceil(state.markerRotation / fullTurn) * fullTurn;
         state.timer = 0;
         state.phase = "deploy";
+        if (nuclearBombActive[0])
+          playSound(
+            "./ASSET/Sound/Enemies/ICBM/ICBM_BiggerBlast_Explosion.ogg",
+          );
         state.icbmstrikeSound = false;
         state.startY = state.lockPosY - 125;
         state.y = state.startY;
@@ -140,12 +151,15 @@ export function setup(host, hardMode) {
         const dx = mouse.x - state.lockPosX;
         const dy = mouse.y - state.lockPosY;
         const dist = Math.hypot(dx, dy);
-        if (dist <= state.circleRadius) {
+        if (
+          dist <=
+          (nuclearBombActive[0] ? state.nuclearRadius : state.circleRadius)
+        ) {
           death("ICBM");
         }
         state.timer = 0;
         state.phase = "idle";
-        state.idleDuration = 9 + Math.random();
+        state.idleDuration = (nuclearBombActive[0] ? 10 : 9) + Math.random();
       }
     } else if (state.phase === "idle") {
       const fadeT = Math.min(state.timer * 4, 1);
@@ -185,6 +199,19 @@ export function setup(host, hardMode) {
       const size = Math.round(state.circleRadius * 2);
       ctx.drawImage(marker, -size / 2, -size / 2, size, size);
 
+      if (state.nuclearRadius > 0 && nuclearBombActive[0]) {
+        ctx.globalAlpha *= 0.1;
+        ctx.rotate(-state.timer * Math.PI * 2);
+        const nuclearSize = Math.round(state.nuclearRadius * 2);
+        ctx.drawImage(
+          nuclearMarker,
+          -nuclearSize / 2,
+          -nuclearSize / 2,
+          nuclearSize,
+          nuclearSize,
+        );
+      }
+
       ctx.restore();
     }
 
@@ -207,6 +234,25 @@ export function setup(host, hardMode) {
         -Math.round(s * 1.5),
         s * 3,
         s * 3,
+      );
+      ctx.restore();
+    }
+
+    if (
+      nuclearBombActive[0] &&
+      state.phase === "idle" &&
+      state.idleDuration > 10
+    ) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * Math.max(0, Math.min(1, 8 - state.timer * 2));
+      const cam = getCameraPos();
+      ctx.fillStyle =
+        state.timer < 0.1 ? (Math.random() < 0.5 ? "green" : "blue") : "red";
+      ctx.fillRect(
+        Math.round(cam.x),
+        Math.round(cam.y),
+        Math.round(window.innerWidth),
+        Math.round(window.innerHeight),
       );
       ctx.restore();
     }

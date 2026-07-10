@@ -28,8 +28,8 @@ import { setup as spawnJumpPad } from "./Enemies/JumpPad.js";
 import { setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
 import { setup as spawnBaby } from "./Enemies/Baby.js";
-import { setup as spawnICBM } from "./Enemies/ICBM.js";
-import { setup as spawnHusk } from "./Enemies/Husk.js";
+import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
+import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
@@ -322,7 +322,7 @@ const ENTITY_POOL = [
     spawn: () => {
       malfunctionActive[0] = true;
     },
-    start: 1000,
+    start: 2000,
     src: "./ASSET/Enemies/Malfunction.png",
     unstackable: true,
     desc: "Operator have 50% chance to become Voidbound. Stay still 3 times to survive.",
@@ -474,6 +474,27 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/RealmweaverIcon.png",
     desc: "A colossal serpent. Don't let it touch you.",
+    chaosOnly: true,
+  },
+  {
+    name: "NuclearBomb",
+    spawn: () => {
+      nuclearBombActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/NuclearBomb.png",
+    rare: true,
+    desc: "Due to popular demand, the ICBM will now raze the entire map.",
+    chaosOnly: true,
+  },
+  {
+    name: "Legion",
+    spawn: () => {
+      legionActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Legion.png",
+    desc: "You and what... army... oh...",
     chaosOnly: true,
   },
   {
@@ -995,7 +1016,10 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
-export let giftMultiplier = 1;
+let giftMultiplier = 1;
+export function setGiftMultiplier(v) {
+  giftMultiplier *= v;
+}
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
 const GIFT_SIZE = 30;

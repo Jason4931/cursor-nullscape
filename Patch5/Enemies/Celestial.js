@@ -7,7 +7,7 @@ import {
   soundStopped,
   actualCollectedCount,
   startCelestialPhase4,
-  giftMultiplier,
+  setGiftMultiplier,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -1604,9 +1604,7 @@ export function setup(
         const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
-          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
+          ctx.globalAlpha = s.t >= 2.75 ? Math.min(0, (3 - s.t) * 4) : 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
@@ -1625,11 +1623,45 @@ export function setup(
           ctx.fillStyle = gradBot;
           ctx.fillRect(drawX, w / 2, len, glow);
 
-          ctx.beginPath();
-          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
-          ctx.stroke();
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
 
-          ctx.strokeStyle = "transparent";
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
         } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
@@ -1865,9 +1897,7 @@ export function setup(
         const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
-          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
+          ctx.globalAlpha = s.t >= 2.75 ? Math.min(0, (3 - s.t) * 4) : 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
@@ -1886,11 +1916,45 @@ export function setup(
           ctx.fillStyle = gradBot;
           ctx.fillRect(drawX, w / 2, len, glow);
 
-          ctx.beginPath();
-          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
-          ctx.stroke();
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
 
-          ctx.strokeStyle = "transparent";
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
         } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutterCrumble.cycle == 0 ? s.t * 3 : 0.75;
@@ -3138,7 +3202,7 @@ export function setup(
     s.ey = mouse.y;
     s.particles = [];
     s.pTimer = 0;
-    giftMultiplier *= 0.5;
+    setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -3323,7 +3387,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        giftMultiplier *= 2;
+        setGiftMultiplier(2);
         s.active = false;
       }
     }
@@ -4070,9 +4134,7 @@ export function setup(
             const len = BEAM_RADIUS * 2;
 
             if (isLethal) {
-              ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
-              ctx.strokeStyle = "#ff00cc";
-              ctx.lineWidth = 1;
+              ctx.globalAlpha = sp.t >= 4.75 ? Math.min(0, (5 - sp.t) * 4) : 1;
 
               const drawX = Math.max(x, sp.offset);
               const glow = 100;
@@ -4101,11 +4163,50 @@ export function setup(
               ctx.fillStyle = gradBot;
               ctx.fillRect(drawX, w / 2, len, glow);
 
-              ctx.beginPath();
-              ctx.rect(Math.max(x, sp.offset), -w / 2, len, w);
-              ctx.stroke();
+              const leftGrad = ctx.createLinearGradient(
+                drawX - glow,
+                0,
+                drawX,
+                0,
+              );
+              leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+              leftGrad.addColorStop(1, "#ff00cc");
 
-              ctx.strokeStyle = "transparent";
+              ctx.fillStyle = leftGrad;
+              ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+              const rightGrad = ctx.createLinearGradient(
+                drawX + len,
+                0,
+                drawX + len + glow,
+                0,
+              );
+              rightGrad.addColorStop(0, "#ff00cc");
+              rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = rightGrad;
+              ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+              const points = [
+                [drawX, -w / 2, -0.9983, -1.0083],
+                [drawX + len, -w / 2, -0.0017, -1.0083],
+                [drawX, w / 2, -0.9983, 0.0083],
+                [drawX + len, w / 2, -0.0017, 0.0083],
+              ];
+
+              for (const [px, py, ox, oy] of points) {
+                const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+                grad.addColorStop(0, "#ff00cc");
+                grad.addColorStop(1, "rgba(255,0,192,0)");
+
+                ctx.fillStyle = grad;
+                ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+              }
+
+              ctx.strokeStyle = "#ff00cc";
+              ctx.lineWidth = 1;
+              ctx.strokeRect(drawX, -w / 2, len, w);
             } else if (i < (hardMode ? 5 : 4)) {
               ctx.globalAlpha =
                 sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
@@ -4782,7 +4883,7 @@ export function setup(
 
     s.crumbleT = 0;
     s.circles = [];
-    giftMultiplier *= 0.5;
+    setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
   }
@@ -4975,7 +5076,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        giftMultiplier *= 2;
+        setGiftMultiplier(2);
         s.active = false;
       }
     }
@@ -6247,9 +6348,7 @@ export function setup(
         const len = BEAM_RADIUS * 2;
 
         if (isLethal) {
-          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
+          ctx.globalAlpha = s.t >= 2.75 ? Math.min(0, (3 - s.t) * 4) : 1;
 
           const drawX = Math.max(x, s.offset);
           const glow = 100;
@@ -6268,11 +6367,45 @@ export function setup(
           ctx.fillStyle = gradBot;
           ctx.fillRect(drawX, w / 2, len, glow);
 
-          ctx.beginPath();
-          ctx.rect(Math.max(x, s.offset), -w / 2, len, w);
-          ctx.stroke();
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
 
-          ctx.strokeStyle = "transparent";
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
         } else if (i < (hardMode ? 5 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && stateFirstSilence.cycle == 0 ? s.t * 3 : 0.75;
@@ -6723,7 +6856,7 @@ export function setup(
     s.rift = spawnFutileRift();
     s.trail = [];
     s.change = false;
-    giftMultiplier *= 0.5;
+    setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("SILENCE.");
   }
@@ -6931,7 +7064,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        giftMultiplier *= 2;
+        setGiftMultiplier(2);
         s.active = false;
       }
     }

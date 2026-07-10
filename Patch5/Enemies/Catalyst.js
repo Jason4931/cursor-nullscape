@@ -5,7 +5,7 @@ import {
   playSound,
   beaconed,
   actualCollectedCount,
-  giftMultiplier,
+  setGiftMultiplier,
 } from "../main.js";
 
 const CatalystOptim = [];
@@ -215,7 +215,7 @@ export function setup(host) {
 
     if (state.phase === "initDarken") {
       if (state.timer <= dt) {
-        giftMultiplier *= 0.5;
+        setGiftMultiplier(0.5);
       }
       if (state.timer >= 3) {
         state.timer = 0;
@@ -226,7 +226,7 @@ export function setup(host) {
 
     if (state.phase === "waitSpawn") {
       if (state.timer >= 7) {
-        giftMultiplier *= 2;
+        setGiftMultiplier(2);
         const p = randNearCursor();
         state.x = p.x;
         state.y = p.y;
