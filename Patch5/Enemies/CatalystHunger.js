@@ -172,6 +172,26 @@ export function setup(host, overshootBrake) {
       let r;
 
       if (p.t < 0.75) {
+        r = 25;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 25 * (1 - eased);
+      }
+
+      const glow = 25;
+      const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
+      grad.addColorStop(0, "rgba(255,0,192,1)");
+      grad.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
         r = 15;
       } else {
         const k = (p.t - 0.75) / 0.25;
@@ -179,12 +199,9 @@ export function setup(host, overshootBrake) {
         r = 15 * (1 - eased);
       }
 
-      ctx.strokeStyle = "rgb(255,0,192)";
-      ctx.lineWidth = 18;
       ctx.fillStyle = "black";
       ctx.beginPath();
       ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
-      ctx.stroke();
       ctx.fill();
     }
     for (const t of state.trail) {

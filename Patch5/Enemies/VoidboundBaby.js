@@ -325,7 +325,7 @@ export function setup(host, hardMode) {
     for (const trail of state.ballTrails) {
       ctx.save();
       ctx.fillStyle = "black";
-      ctx.strokeStyle = "magenta";
+      ctx.strokeStyle = "rgb(255,0,192)";
       ctx.lineWidth = 6;
       ctx.beginPath();
       ctx.arc(

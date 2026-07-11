@@ -108,7 +108,6 @@ export function setup(host, hardMode) {
       vy: (dy / len) * speed,
       born: performance.now(),
       trail: [],
-      trailTimer: 0,
     });
   }
 
@@ -197,15 +196,12 @@ export function setup(host, hardMode) {
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
 
-      p.trailTimer += dt;
-      if (p.trailTimer >= 0.1) {
-        p.trailTimer = 0;
-        p.trail.push({
-          x: p.x,
-          y: p.y,
-          life: 1,
-        });
-      }
+      p.trail.push({
+        x: p.x,
+        y: p.y,
+        life: 1,
+      });
+
       for (let i = p.trail.length - 1; i >= 0; i--) {
         const t = p.trail[i];
         t.life -= dt * 2;

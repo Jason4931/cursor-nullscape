@@ -401,10 +401,10 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidboundGuardian",
-    spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
+    spawn: () => spawnVoidboundGuardian(entityHost, casualMode, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
-    desc: "Bullets will begin to home in, much more agile.",
+    desc: "Bullets are much larger, and leave behind beams.",
   },
   {
     name: "Voidbreaker",
@@ -1301,7 +1301,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       spawnRazorbloom(entityHost, hardMode);
       spawnVoidboundBaby(entityHost, hardMode);
       spawnPonderer(entityHost, hardMode);
-      spawnVoidboundGuardian(entityHost, hardMode);
+      spawnVoidboundGuardian(entityHost, casualMode, hardMode);
       spawnVoidbreaker(entityHost, casualMode, hardMode);
       spawnCadence(entityHost, hardMode, deafMode);
       spawnSigil(entityHost);
