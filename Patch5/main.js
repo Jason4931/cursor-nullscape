@@ -2737,6 +2737,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
+      spawnJumpPad(entityHost, 2500);
       spawnJumpPad(entityHost, 3000);
       spawnSeamine(entityHost, casualMode, hardMode);
       spawnSeamine(entityHost, casualMode, hardMode);
@@ -4737,6 +4738,7 @@ function updateCamera() {
           }
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
+            spawnJumpPad(entityHost, 2500);
             spawnJumpPad(entityHost, 3000);
             spawnSeamine(entityHost, casualMode, hardMode);
             spawnSeamine(entityHost, casualMode, hardMode);
