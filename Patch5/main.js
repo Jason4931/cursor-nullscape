@@ -1305,6 +1305,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       spawnNIL(entityHost);
       spawnGuardian(entityHost, hardMode);
       spawnOperator(entityHost, hardMode);
+      malfunctionActive[0] = true;
       spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
       spawnKookoo(entityHost);
       spawnVoidImplosions(entityHost);
@@ -1330,6 +1331,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       registerEntitySpawn("NIL", "./ASSET/Enemies/NILIcon.png");
       registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
       registerEntitySpawn("Operator", "./ASSET/Enemies/Operator.png");
+      registerEntitySpawn("Malfunction", "./ASSET/Enemies/Malfunction.png");
       registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
       registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
       registerEntitySpawn(
