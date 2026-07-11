@@ -319,6 +319,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Malfunction",
+    altName: "Malf",
     spawn: () => {
       malfunctionActive[0] = true;
     },
@@ -329,6 +330,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Telefragger",
+    altName: "Tele",
     spawn: () => spawnTelefragger(entityHost, casualMode, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
@@ -336,6 +338,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Random",
+    altName: "???",
     start: 800,
     src: "./ASSET/Enemies/Random.png",
     desc: "Takes on the temporary form of a random enemy.",
@@ -362,6 +365,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidImplosions",
+    altName: "Vimps",
     spawn: () => spawnVoidImplosions(entityHost),
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
@@ -378,6 +382,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Razorbloom",
+    altName: "Razor",
     spawn: () => spawnRazorbloom(entityHost, hardMode),
     start: 1000,
     src: "./ASSET/Curses/Razorbloom.png",
@@ -386,6 +391,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidboundBaby",
+    altName: "VBB",
     spawn: () => spawnVoidboundBaby(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundBaby.png",
@@ -401,6 +407,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidboundGuardian",
+    altName: "VBG",
     spawn: () => spawnVoidboundGuardian(entityHost, casualMode, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
@@ -408,6 +415,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Voidbreaker",
+    altName: "VB",
     spawn: () => spawnVoidbreaker(entityHost, casualMode, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/VoidbreakerIcon.png",
@@ -415,6 +423,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Cadence",
+    altName: "Cad",
     spawn: () => spawnCadence(entityHost, hardMode, deafMode),
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
@@ -430,6 +439,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Scrapmaw",
+    altName: "Scrap",
     spawn: () => spawnScrapmaw(entityHost, casualMode, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/ScrapmawIcon.png",
@@ -1109,6 +1119,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     if (input === "\\") topLeftInput.value = "";
     const entity =
       ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
+      ENTITY_POOL.find((e) => e.altName?.toLowerCase() === input) ||
       input.toLowerCase() === "catalyst" ||
       input.toLowerCase() === "pylons" ||
       input.toLowerCase() === "truepylons" ||

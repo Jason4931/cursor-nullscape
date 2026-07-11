@@ -227,6 +227,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Skinwalker",
+    altName: "Skinwalk",
     spawn: () => spawnSkinwalker(entityHost, skinwalkerCount++, hardMode),
     start: 0,
     src: "./ASSET/Enemies/Skinwalker.png",
@@ -270,6 +271,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Telefragger",
+    altName: "Tele",
     spawn: () => spawnTelefragger(entityHost, hardMode, deafMode),
     start: 800,
     src: "./ASSET/Enemies/Telefragger.png",
@@ -277,6 +279,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Random",
+    altName: "???",
     start: 800,
     src: "./ASSET/Enemies/Random.png",
     desc: "Takes on the temporary form of a random enemy.",
@@ -303,6 +306,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidImplosions",
+    altName: "Vimps",
     spawn: () => spawnVoidImplosions(entityHost),
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
@@ -319,6 +323,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Doombringer",
+    altName: "Doom",
     spawn: () => spawnDoombringer(entityHost),
     start: 1000,
     src: "./ASSET/Curses/Doombringer.png",
@@ -327,6 +332,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidboundBaby",
+    altName: "VBB",
     spawn: () => spawnVoidboundBaby(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundBaby.png",
@@ -342,6 +348,7 @@ const ENTITY_POOL = [
   },
   {
     name: "VoidboundGuardian",
+    altName: "VBG",
     spawn: () => spawnVoidboundGuardian(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
@@ -349,6 +356,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Voidbreaker",
+    altName: "VB",
     spawn: () => spawnVoidbreaker(entityHost, voidbreakerCount++, hardMode),
     start: 1500,
     src: "./ASSET/Enemies/Voidbreaker.png",
@@ -356,6 +364,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Cadence",
+    altName: "Cad",
     spawn: () => spawnCadence(entityHost, hardMode, deafMode),
     start: 1500,
     src: "./ASSET/Enemies/Cadence.png",
@@ -724,6 +733,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     if (input === "\\") topLeftInput.value = "";
     const entity =
       ENTITY_POOL.find((e) => e.name.toLowerCase() === input) ||
+      ENTITY_POOL.find((e) => e.altName?.toLowerCase() === input) ||
       input.toLowerCase() === "catalyst" ||
       input.toLowerCase() === "seamine" ||
       input.toLowerCase() === "jumppad";
