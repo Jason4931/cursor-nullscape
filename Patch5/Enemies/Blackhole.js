@@ -98,7 +98,7 @@ export function setup(host, casualMode, hardMode) {
 
     for (let i = 0; i < 4; i++) {
       const t = state.lineTimer[i] / state.lineDuration;
-      const r = 2000 * (1 - t * t);
+      const r = Math.max(0, 2000 * (1 - t * t));
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,255,255,${1 - r / 2000})`;

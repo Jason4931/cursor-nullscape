@@ -20,7 +20,7 @@ vx voidbound baby
 vx cadence
 vx sigil
 vx voidbreaker
-x voidbound guardian
+vx voidbound guardian
 vx scrapmaw
 v random
 vx void implosion

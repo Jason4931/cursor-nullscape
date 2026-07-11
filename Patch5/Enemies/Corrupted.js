@@ -255,11 +255,15 @@ export function setup(host, casualMode, hardMode) {
           const a = rot + (i * Math.PI) / 6;
           const speed = TILE * 18;
 
+          const cam = getCameraPos();
+
           state.bullets.push({
             x: bomb.x,
             y: bomb.y,
             startX: bomb.x,
             startY: bomb.y,
+            startCamX: cam.x,
+            startCamY: cam.y,
             vx: Math.cos(a) * speed,
             vy: Math.sin(a) * speed,
             px: -Math.sin(a),
@@ -277,11 +281,23 @@ export function setup(host, casualMode, hardMode) {
     for (const bullet of state.bullets) {
       bullet.t += dt;
 
+      const cam = getCameraPos();
+
       const travelX = bullet.vx * bullet.t;
       const travelY = bullet.vy * bullet.t;
       const wobble = Math.sin(bullet.t * 16 + bullet.wobble) * TILE * 0.25;
-      bullet.x = bullet.startX + travelX + bullet.px * wobble;
-      bullet.y = bullet.startY + travelY + bullet.py * wobble;
+
+      bullet.x =
+        cam.x +
+        (bullet.startX - bullet.startCamX) +
+        travelX +
+        bullet.px * wobble;
+
+      bullet.y =
+        cam.y +
+        (bullet.startY - bullet.startCamY) +
+        travelY +
+        bullet.py * wobble;
 
       const dx = mouse.x - bullet.x;
       const dy = mouse.y - bullet.y;
