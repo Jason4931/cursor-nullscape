@@ -455,14 +455,14 @@ export function setup(host) {
               ctx.lineTo(0, 25);
               ctx.stroke();
 
-              let last = 0.5;
-              for (let i = -2; i <= 2; i++) {
-                ctx.beginPath();
-                ctx.moveTo(0, i * 8);
-                ctx.lineTo(last * 15, i * 8 + 5);
-                ctx.stroke();
-                last *= -1;
-              }
+              ctx.beginPath();
+              ctx.moveTo(0, 3);
+              ctx.lineTo(10, -5);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.moveTo(0, 10);
+              ctx.lineTo(-12, 2);
+              ctx.stroke();
 
               ctx.restore();
             }

@@ -33,13 +33,11 @@ vx nil (considered separate from new nil)
 chaos
 vx quartz
 vx fear/visage
-x locust/belchboy
+vx locust/belchboy
 vx big baby
 vx the eye
 
 vx realmweaver
-x moth (?) - taking gift near cursor to slow down collection
-x manta ray (?) - always circling the cursor at slow speed (average size)
 
 v cascade
 v corrupted

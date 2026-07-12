@@ -70,6 +70,7 @@ import { setup as spawnCorrupted } from "./Enemies/Corrupted.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";
 import { setup as spawnTheEye } from "./Enemies/TheEye.js";
 import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
+import { setup as spawnLocust } from "./Enemies/Locust.js";
 import { setup as multiplayerMessage } from "./Enemies/MultiplayerMessage.js";
 
 export const canvas = document.getElementById("screen");
@@ -484,6 +485,13 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/RealmweaverIcon.png",
     desc: "A colossal serpent. Don't let it touch you.",
+    chaosOnly: true,
+  },
+  {
+    name: "Locust",
+    altName: "Belchboy",
+    spawn: () => spawnLocust(entityHost),
+    start: 0,
     chaosOnly: true,
   },
   {
@@ -2093,16 +2101,18 @@ function registerEntitySpawn(name, imageSrc, temp = false) {
   const map = temp ? tempEntityCounts : entityCounts;
 
   let data = map.get(name);
-  if (!data) {
-    data = {
-      count: 0,
-      img: imageSrc,
-      desc: ENTITY_POOL.find((e) => e.name === name)?.desc || "",
-    };
-    map.set(name, data);
-  }
+  if (imageSrc) {
+    if (!data) {
+      data = {
+        count: 0,
+        img: imageSrc,
+        desc: ENTITY_POOL.find((e) => e.name === name)?.desc || "",
+      };
+      map.set(name, data);
+    }
 
-  data.count++;
+    data.count++;
+  }
 
   let total = 0;
   for (const d of entityCounts.values()) {
@@ -3632,14 +3642,14 @@ function drawGrid() {
           ctx.stroke();
 
           // side veins
-          let last = 0.5;
-          for (let i = -2; i <= 2; i++) {
-            ctx.beginPath();
-            ctx.moveTo(0, i * 8);
-            ctx.lineTo(last * 15, i * 8 + 5);
-            ctx.stroke();
-            last *= -1;
-          }
+          ctx.beginPath();
+          ctx.moveTo(0, 3);
+          ctx.lineTo(10, -5);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, 10);
+          ctx.lineTo(-12, 2);
+          ctx.stroke();
 
           ctx.restore();
         }
@@ -4152,44 +4162,44 @@ function drawGrid() {
           drawLeaves(cy - TILE * 1.2, TILE * 0.35, TILE * 0.6);
           drawLeaves(cy - TILE * 1.4, TILE * 0.3, TILE * 0.85);
         } else if (r < 0.9) {
-          const r = TILE * 0.2;
+          const r = TILE * 0.5;
 
-          ctx.fillStyle = "rgba(0,0,0,0.15)";
-          ctx.beginPath();
-          ctx.ellipse(cx, cy + r * 1.2, r * 1.8, r * 0.9, 0, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = "#700";
+          ctx.save();
+          ctx.translate(cx, cy + 5);
 
           ctx.beginPath();
-          ctx.arc(cx - r * 1.2, cy, r, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.rect(-r * 2, -r, r * 4, r * 1.2);
+          ctx.clip();
 
-          ctx.beginPath();
-          ctx.arc(cx + r * 1.2, cy, r, 0, Math.PI * 2);
-          ctx.fill();
+          function drawSpikeShape(scale) {
+            ctx.save();
+            ctx.scale(scale, scale);
 
-          ctx.beginPath();
-          ctx.arc(cx, cy - r * 0.6, r * 1.2, 0, Math.PI * 2);
-          ctx.fill();
+            ctx.beginPath();
+            const spikes = 10;
+            for (let i = 0; i < spikes * 2; i++) {
+              const a = (i / (spikes * 2)) * Math.PI * 2 - Math.PI / 2;
+              const rr = i & 1 ? r * 0.75 : r;
 
-          ctx.beginPath();
-          ctx.arc(cx - r * 0.6, cy - r * 0.6, r * 0.5, 0, Math.PI * 2);
-          ctx.fill();
+              const x = Math.cos(a) * rr;
+              const y = Math.sin(a) * rr;
 
-          ctx.beginPath();
-          ctx.arc(cx + r * 0.7, cy - r * 0.5, r * 0.4, 0, Math.PI * 2);
-          ctx.fill();
+              if (i === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+          }
 
           ctx.fillStyle = "#900";
+          drawSpikeShape(1);
 
-          ctx.beginPath();
-          ctx.arc(cx - r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.fillStyle = "#700";
+          drawSpikeShape(0.667);
 
-          ctx.beginPath();
-          ctx.arc(cx + r * 0.8, cy + r * 0.4, r * 0.9, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.restore();
         } else {
           ctx.fillStyle = "#774433";
           ctx.beginPath();
@@ -5093,7 +5103,6 @@ function loop(now) {
   // slowness
   if (slowness) {
     ctx.save();
-    // ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();

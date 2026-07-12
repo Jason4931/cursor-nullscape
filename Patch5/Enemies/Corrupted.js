@@ -29,30 +29,23 @@ export function setup(host, casualMode, hardMode) {
       const attack = Math.random();
       const attackCount = 5;
       if (attack < 1 / attackCount) {
-        state.cooldown = 1;
+        state.cooldown = 2;
         const angles = [0, Math.PI / 2, Math.PI / 4, -Math.PI / 4];
-        const screenX = Math.random() * window.innerWidth;
-        const screenY = Math.random() * window.innerHeight;
-        const angle = angles[(Math.random() * angles.length) | 0];
-        state.beams.push({
-          t: 0,
-          angle,
-          screenX,
-          screenY,
-          x: cam.x + screenX,
-          y: cam.y + screenY,
-        });
-        const screenX2 = Math.random() * window.innerWidth;
-        const screenY2 = Math.random() * window.innerHeight;
-        const angle2 = angles[(Math.random() * angles.length) | 0];
-        state.beams.push({
-          t: 0,
-          angle: angle2,
-          screenX: screenX2,
-          screenY: screenY2,
-          x: cam.x + screenX2,
-          y: cam.y + screenY2,
-        });
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const screenX = Math.random() * window.innerWidth;
+            const screenY = Math.random() * window.innerHeight;
+            const angle = angles[(Math.random() * angles.length) | 0];
+            state.beams.push({
+              t: 0,
+              angle,
+              screenX,
+              screenY,
+              x: cam.x + screenX,
+              y: cam.y + screenY,
+            });
+          }, i * 500);
+        }
       } else if (attack < 2 / attackCount) {
         state.cooldown = 2;
         const vertical = Math.random() < 0.5;
@@ -100,51 +93,121 @@ export function setup(host, casualMode, hardMode) {
           radius: TILE * 0.5,
         });
       } else {
-        state.cooldown = 3;
+        state.cooldown = 5;
         const side = (Math.random() * 4) | 0;
         const reverse = Math.random() < 0.5;
-        const r = TILE * 5;
+        const r = TILE * 4;
         const outsideR = r * 1.5;
+        let approachX, approachY, edgeX, edgeY;
         let startX, startY, endX, endY;
         let rotation = 0;
         let rotationSpeed = 2;
         switch (side) {
           case 0: {
-            const x = r * 0.5;
-            startX = endX = x;
-            startY = reverse ? window.innerHeight + outsideR : -outsideR;
+            // left wall
+            edgeX = startX = endX = r * 0.5;
+            edgeY = reverse ? window.innerHeight - r * 0.5 : r * 0.5;
+
+            approachX = window.innerWidth + outsideR;
+            approachY = edgeY;
+
+            startY = edgeY;
             endY = reverse ? -outsideR : window.innerHeight + outsideR;
+
             rotation = Math.PI;
             rotationSpeed = reverse ? -4 : 4;
             break;
           }
+
           case 1: {
-            const x = window.innerWidth - r * 0.5;
-            startX = endX = x;
-            startY = reverse ? -outsideR : window.innerHeight + outsideR;
+            // right wall
+            edgeX = startX = endX = window.innerWidth - r * 0.5;
+            edgeY = reverse ? r * 0.5 : window.innerHeight - r * 0.5;
+
+            approachX = -outsideR;
+            approachY = edgeY;
+
+            startY = edgeY;
             endY = reverse ? window.innerHeight + outsideR : -outsideR;
+
             rotation = 0;
-            rotationSpeed = !reverse ? 4 : -4;
+            rotationSpeed = reverse ? -4 : 4;
             break;
           }
+
           case 2: {
-            const y = r * 0.5;
-            startY = endY = y;
-            startX = reverse ? window.innerWidth + outsideR : -outsideR;
+            // top wall
+            edgeY = startY = endY = r * 0.5;
+            edgeX = reverse ? window.innerWidth - r * 0.5 : r * 0.5;
+
+            approachX = edgeX;
+            approachY = window.innerHeight + outsideR;
+
+            startX = edgeX;
             endX = reverse ? -outsideR : window.innerWidth + outsideR;
+
             rotation = Math.PI / 2;
             rotationSpeed = reverse ? 4 : -4;
             break;
           }
+
           default: {
-            const y = window.innerHeight - r * 0.5;
-            startY = endY = y;
-            startX = reverse ? -outsideR : window.innerWidth + outsideR;
+            // bottom wall
+            edgeY = startY = endY = window.innerHeight - r * 0.5;
+            edgeX = reverse ? r * 0.5 : window.innerWidth - r * 0.5;
+
+            approachX = edgeX;
+            approachY = -outsideR;
+
+            startX = edgeX;
             endX = reverse ? window.innerWidth + outsideR : -outsideR;
+
             rotation = -Math.PI / 2;
-            rotationSpeed = !reverse ? -4 : 4;
+            rotationSpeed = reverse ? 4 : -4;
             break;
           }
+        }
+        const beamCount = 5;
+        const spacing = beamCount * 10;
+        for (let i = 0; i < beamCount; i++) {
+          let beamScreenX, beamScreenY;
+
+          if (side === 0 || side === 1) {
+            beamScreenX = ((i + 1) * window.innerWidth) / (beamCount + 1);
+
+            if (side === 0) {
+              beamScreenY = reverse
+                ? window.innerHeight - i * spacing
+                : i * spacing;
+            } else {
+              beamScreenY = reverse
+                ? i * spacing
+                : window.innerHeight - i * spacing;
+            }
+          } else {
+            beamScreenY = ((i + 1) * window.innerHeight) / (beamCount + 1);
+
+            if (side === 2) {
+              beamScreenX = reverse
+                ? window.innerWidth - i * spacing
+                : i * spacing;
+            } else {
+              beamScreenX = reverse
+                ? i * spacing
+                : window.innerWidth - i * spacing;
+            }
+          }
+
+          setTimeout(() => {
+            state.beams.push({
+              t: 0,
+              angle: rotation,
+              screenX: beamScreenX,
+              screenY: beamScreenY,
+              x: cam.x + beamScreenX,
+              y: cam.y + beamScreenY,
+            });
+          }, i * 100);
         }
         state.saws.push({
           t: 0,
@@ -157,6 +220,11 @@ export function setup(host, casualMode, hardMode) {
           radius: r,
           rotation,
           rotationSpeed,
+          side,
+          approachX,
+          approachY,
+          edgeX,
+          edgeY,
         });
       }
 
@@ -314,11 +382,34 @@ export function setup(host, casualMode, hardMode) {
     for (const saw of state.saws) {
       saw.t += dt;
 
-      const p = Math.min(saw.t / 3, 1);
       const cam = getCameraPos();
-      saw.x = cam.x + saw.startX + (saw.endX - saw.startX) * p;
-      saw.y = cam.y + saw.startY + (saw.endY - saw.startY) * p;
-      saw.rotation += dt * saw.rotationSpeed;
+
+      if (saw.t >= 1 && saw.t < 2) {
+        let e;
+
+        if (saw.t < 1.5) {
+          const t = (saw.t - 1) / 0.5;
+          e = t * t;
+        } else if (saw.t < 1.833) {
+          const t = (saw.t - 1.5) / 0.167;
+
+          const bounce = 0.05;
+
+          e = 1 - bounce * (1 - (1 - t) * (1 - t));
+        } else {
+          e = 1;
+        }
+
+        saw.x = cam.x + saw.approachX + (saw.edgeX - saw.approachX) * e;
+        saw.y = cam.y + saw.approachY + (saw.edgeY - saw.approachY) * e;
+      } else {
+        const p = Math.min((saw.t - 2) / 3, 1);
+
+        saw.x = cam.x + saw.edgeX + (saw.endX - saw.edgeX) * p;
+        saw.y = cam.y + saw.edgeY + (saw.endY - saw.edgeY) * p;
+
+        saw.rotation += dt * saw.rotationSpeed;
+      }
 
       const dx = mouse.x - saw.x;
       const dy = mouse.y - saw.y;
@@ -327,7 +418,7 @@ export function setup(host, casualMode, hardMode) {
         death("Corrupted");
       }
 
-      if (saw.t >= 3) {
+      if (saw.t >= 5) {
         saw.dead = true;
         clean = true;
       }
