@@ -681,6 +681,6 @@ export function setup(host) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw, name: "Pylons" });
+  const unregister = host.register({ update, draw, name: "TruePylons" });
   return unregister;
 }

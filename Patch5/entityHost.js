@@ -59,8 +59,11 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
             e.name === "Catalyst" ||
             e.name === "CelestialCutscene" ||
             e.name === "Pylons" ||
+            e.name === "TruePylons" ||
             e.name === "Void" ||
-            e.name === "Seamine"
+            e.name === "Seamine" ||
+            e.name === "Jumppad" ||
+            e.name === "Grindrail"
           : true
       ) {
         e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
@@ -74,9 +77,8 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
     let celestialcutscene = [];
     let beacon;
     for (const e of entities) {
-      if (e.name === "Pylons") {
+      if (e.name === "Pylons" || e.name === "TruePylons") {
         e.draw?.(backctx);
-        break;
       }
     }
     for (const e of entities) {
@@ -86,14 +88,17 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
             e.name === "Catalyst" ||
             e.name === "CelestialCutscene" ||
             e.name === "Pylons" ||
+            e.name === "TruePylons" ||
             e.name === "Void" ||
-            e.name === "Seamine"
+            e.name === "Seamine" ||
+            e.name === "Jumppad" ||
+            e.name === "Grindrail"
           : true
       ) {
         if (e.name === "Beacon") {
-          beacon = e; // store for later
+          beacon = e;
           continue;
-        } else if (e.name === "Pylons") {
+        } else if (e.name === "Pylons" || e.name === "TruePylons") {
           continue;
         } else if (e.name === "Celestial") {
           celestial.push(e);

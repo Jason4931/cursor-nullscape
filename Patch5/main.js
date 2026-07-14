@@ -1696,7 +1696,9 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
-    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg"
+    soundPath !=
+      "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg"
   )
     return;
   const audio = new Audio(soundPath);
@@ -1748,7 +1750,9 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
-    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg"
+    soundPath !=
+      "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg"
   )
     activeSounds.add(entry);
 
@@ -2575,6 +2579,7 @@ export function spawnCelestialEnding() {
   }
   SHAKE = false;
   sfxVolume = originalVolume[1];
+  playSound(`./ASSET/Sound/Enemies/BeaconSpawn.ogg`);
   playSound(
     `./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg`,
     undefined,
@@ -5212,6 +5217,10 @@ function loop(now) {
   if (abilityCooldown < 0) abilityCooldown = 0;
   speedBoostScale -= 0.033;
   if (speedBoostScale < 1) speedBoostScale = 1;
+  const change = 1 / (30 * 120);
+  giftMultiplier +=
+    giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
+  if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
   grindrailScale -= 0.017;
   if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;
@@ -5282,6 +5291,7 @@ function loop(now) {
     });
     if (!disableProgression) {
       spawnBeacon(entityHost, deafMode);
+      playSound(`./ASSET/Sound/Enemies/BeaconSpawn.ogg`);
     }
   }
 

@@ -61,7 +61,7 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
     let beacon;
     for (const e of entities) {
       if (e.name === "Beacon") {
-        beacon = e; // store for later
+        beacon = e;
         continue;
       } else if (e.name === "Catalyst") {
         catalyst.push(e);

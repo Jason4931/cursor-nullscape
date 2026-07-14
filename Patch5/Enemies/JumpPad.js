@@ -131,6 +131,6 @@ export function setup(host, MAX_CURSOR_DISTANCE) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw });
+  const unregister = host.register({ update, draw, name: "Jumppad" });
   return unregister;
 }

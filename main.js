@@ -3248,6 +3248,10 @@ function loop(now) {
   if (abilityCooldown < 0) abilityCooldown = 0;
   speedBoostScale -= 0.033;
   if (speedBoostScale < 1) speedBoostScale = 1;
+  const change = 1 / (30 * 120);
+  giftMultiplier +=
+    giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
+  if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
@@ -3314,6 +3318,7 @@ function loop(now) {
     });
     if (!disableProgression) {
       spawnBeacon(entityHost, deafMode);
+      playSound(`./ASSET/Sound/Enemies/BeaconSpawn.ogg`);
     }
   }
 
