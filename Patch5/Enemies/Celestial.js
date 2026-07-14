@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import {
+  despawnCelestial,
   getCameraPos,
   canvas,
   moveCamera,
@@ -7970,6 +7971,7 @@ export function setup(
 
   function update(dtOrigin) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (despawnCelestial) return;
 
     if (actualCollectedCount >= 10000) {
       phase = 4;
@@ -7981,7 +7983,7 @@ export function setup(
       phase = 1;
     }
 
-    const dt = dtOrigin * (hardMode ? 1.016949153 : 1);
+    const dt = dtOrigin * (hardMode ? 1.01 : 1);
     const mx = mouse.x;
     const my = mouse.y;
 
@@ -8267,6 +8269,7 @@ export function setup(
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (despawnCelestial) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
@@ -8417,7 +8420,7 @@ export function setup(
         ctx.translate(baseX + offsetX + wobbleX, baseY + wobbleY);
 
         ctx.rotate(rot);
-        ctx.scale(scale * stretch, scale * 1.333);
+        ctx.scale(scale * stretch, scale);
 
         ctx.fillText(char, charWidth / 2, 0);
 

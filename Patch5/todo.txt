@@ -36,12 +36,14 @@ vx fear/visage
 vx locust/belchboy
 vx big baby
 vx the eye
-
 vx realmweaver
+vx legion
+vx nuclearbomb
 
 v cascade
 v corrupted
 v black hole
+x framed
 
 v hazard
 v seamine
@@ -50,6 +52,7 @@ v grindrail
 v pylons
 v reality collapse
 v celestial intro
+v celestial outro
 
 vx catalyst
 vx celestial

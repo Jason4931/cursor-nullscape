@@ -1,4 +1,4 @@
-import { mouse, toggleImmortality } from "../entityHost.js";
+import { mouse } from "../entityHost.js";
 import { onFinalContact, TILE, getCameraPos } from "../main.js";
 
 export function setup(host, deafMode) {
@@ -84,7 +84,6 @@ export function setup(host, deafMode) {
         state.touched = true;
         state.phase = "waitFinalBurst";
         state.timer = 0;
-        toggleImmortality(true);
         onFinalContact();
       }
     }

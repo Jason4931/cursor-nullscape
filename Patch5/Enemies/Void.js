@@ -42,6 +42,6 @@ export function setup(host, enableVoid, showFloor) {
 
     ctx.restore();
   }
-  const unregister = host.register({ update, draw });
+  const unregister = host.register({ update, draw, name: "Void" });
   return unregister;
 }

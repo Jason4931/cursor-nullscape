@@ -3607,6 +3607,7 @@ setInterval(() => {
 let originalVolume = [0, 0];
 export function onFinalContact() {
   beaconed = true;
+  toggleImmortality(true);
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";
   entityCanvas2.style.cursor = "none";

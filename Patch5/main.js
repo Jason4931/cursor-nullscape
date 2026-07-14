@@ -60,6 +60,7 @@ import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnCelestial } from "./Enemies/Celestial.js";
 import { setup as startCelestialIntro } from "./Enemies/CelestialIntro.js";
+import { setup as startCelestialOutro } from "./Enemies/CelestialOutro.js";
 import { pylonLocations, setup as spawnPylons } from "./Enemies/Pylons.js";
 import { setup as spawnTruePylons } from "./Enemies/TruePylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
@@ -89,7 +90,6 @@ const panel = document.getElementById("entity-panel");
 const content = document.getElementById("entity-panel-content");
 const entityCounts = new Map();
 const tempEntityCounts = new Map();
-let entities = [];
 
 const entityHost = createEntityHost(canvas, entityCtx, entityCtx2, ctx);
 let deafMode = JSON.parse(localStorage.getItem("deaf-mode")) ?? true;
@@ -167,6 +167,7 @@ let lastEntityPicked;
 let tripmineExplosion = null;
 let isSeamineEnabled = false;
 let isIceTileEnabled = false;
+let disableIceTile = false;
 let highriseEnabled = false;
 let spawnedVoid = false;
 let voidScale = 1;
@@ -202,6 +203,7 @@ let OblivionActive = 0;
 let scrollOblivion = 0;
 let celestialBG = false;
 let scrollCelestial = 0;
+export let stopAllEntity = false;
 export let onCelestial = false;
 let onCelestialIntro = false;
 const pickedOnce = new Set();
@@ -215,6 +217,7 @@ let parried = false;
 let soundParry = false;
 export let beaconed = false;
 export let despawnCatalyst = false;
+export let despawnCelestial = false;
 export let bellHit = { count: 0 };
 let martStack = [];
 export function MartStack(act, v) {
@@ -457,6 +460,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Visage",
+    altName: "Fear",
     spawn: () => spawnVisage(entityHost),
     start: 0,
     src: "./ASSET/Enemies/Visage.png",
@@ -940,7 +944,7 @@ setInterval(async () => {
     const entity = ENTITY_POOL.find(
       (e) => e.name.toLowerCase() === valueEntity,
     );
-    entities.push(entity.spawn());
+    entity.spawn();
     registerEntitySpawn(entity.name, entity.src);
   } else if (valueEntity === "ce5f87fe-78ea-4779-9530-6c842ca30da6") {
     lastValueEntity = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
@@ -1034,6 +1038,7 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
+let collectedCountBeforeCelestial = 0;
 let giftMultiplier = 1;
 export function setGiftMultiplier(v) {
   giftMultiplier *= v;
@@ -1176,11 +1181,11 @@ topLeftInput.addEventListener("keydown", function (event) {
           if (randUnlocked.length !== 0) {
             let randPick =
               randUnlocked[(Math.random() * randUnlocked.length) | 0];
-            entities.push(randPick.spawn());
+            randPick.spawn();
             registerEntitySpawn(entity.name, entity.src);
           }
         } else {
-          entities.push(entity.spawn());
+          entity.spawn();
           registerEntitySpawn(entity.name, entity.src);
         }
       }, spawnEntityRate);
@@ -1217,6 +1222,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     if (input === "truecelestial" || input === "spawncelestialintro") {
       spawnCelestialIntro();
+      // startCelestialOutro(entityHost);
       topLeftInput.value = "";
     }
     if (input === "toggledeath" || input === "noclip") {
@@ -1241,25 +1247,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     if (input === "icetile") {
       isIceTileEnabled = true;
-      changePatterns("ice");
-      ROTATED_PATTERNS = PATTERNS.map((base) => {
-        const r0 = base;
-        const r1 = rotateMatrix90(r0);
-        const r2 = rotateMatrix90(r1);
-        const r3 = rotateMatrix90(r2);
-        return [r0, r1, r2, r3];
-      });
-      setTimeout(() => {
-        changePatterns();
-        ROTATED_PATTERNS = PATTERNS.map((base) => {
-          const r0 = base;
-          const r1 = rotateMatrix90(r0);
-          const r2 = rotateMatrix90(r1);
-          const r3 = rotateMatrix90(r2);
-          return [r0, r1, r2, r3];
-        });
-      }, 6000);
-      setInterval(() => {
+      if (!disableIceTile) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -1278,6 +1266,28 @@ topLeftInput.addEventListener("keydown", function (event) {
             return [r0, r1, r2, r3];
           });
         }, 6000);
+      }
+      setInterval(() => {
+        if (!disableIceTile) {
+          changePatterns("ice");
+          ROTATED_PATTERNS = PATTERNS.map((base) => {
+            const r0 = base;
+            const r1 = rotateMatrix90(r0);
+            const r2 = rotateMatrix90(r1);
+            const r3 = rotateMatrix90(r2);
+            return [r0, r1, r2, r3];
+          });
+          setTimeout(() => {
+            changePatterns();
+            ROTATED_PATTERNS = PATTERNS.map((base) => {
+              const r0 = base;
+              const r1 = rotateMatrix90(r0);
+              const r2 = rotateMatrix90(r1);
+              const r3 = rotateMatrix90(r2);
+              return [r0, r1, r2, r3];
+            });
+          }, 6000);
+        }
       }, 60000);
       topLeftInput.value = "";
     }
@@ -1685,7 +1695,8 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataOnCollapse.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
-    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
+    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg"
   )
     return;
   const audio = new Audio(soundPath);
@@ -1736,7 +1747,8 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataOnCollapse.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataScream_v3.mp3" &&
     soundPath != "./ASSET/Sound/Enemies/Catalyst/CataCutsceneOnBeacon.mp3" &&
-    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3"
+    soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
+    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg"
   )
     activeSounds.add(entry);
 
@@ -2481,18 +2493,17 @@ export function spawnCelestialIntro() {
   activateShield();
   activateShield();
   startCelestialIntro(entityHost);
-  entities.forEach((e) => {
-    if (typeof e === "function") {
-      e();
-    }
-  });
-  entities = [];
+  stopAllEntity = true;
   disablespawn = true;
+  disableIceTile = true;
   highriseEnabled = false;
+  collectedCountBeforeCelestial = actualCollectedCount;
   actualCollectedCount = 5000;
   collectedCount = hardMode
     ? actualCollectedCount
     : Math.floor(actualCollectedCount / 2);
+  counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
+  lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   forceCelestialMusic = true;
   if (stopMusic) {
     stopMusic();
@@ -2505,6 +2516,11 @@ export function spawnCelestialAfterIntro() {
   setTimeout(() => {
     onCelestialIntro = false;
     disableCollect = false;
+    if (chaosMode) {
+      spawnCatalyst(entityHost);
+      spawnCatalystIntro();
+      registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
+    }
     spawnCelestial(entityHost, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
   }, 1000);
@@ -2520,14 +2536,95 @@ export function startCelestialPhase4() {
   });
 }
 export function spawnCelestialEnding() {
-  // startCelestialEnding(entityHost)
+  if (disableProgression) return;
   stopCollect = false;
-  disablespawn = true;
+  onCelestial = false;
+  disableIceTile = false;
+  highriseEnabled = true;
+  forceCelestialMusic = false;
+  startCelestialMusic = false;
+  startCelestialOutro(entityHost);
+  toggleImmortality(true);
+  canvas.style.cursor = "none";
+  entityCanvas.style.cursor = "none";
+  entityCanvas2.style.cursor = "none";
+  disableCollect = true;
+  originalVolume = [musicVolume, sfxVolume];
+  changePatterns("normal");
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
+  stopAllSounds();
+  musicVolume = 0;
+  sfxVolume = 0;
+  localStorage.setItem("GameBeaten", `${new Date()}`);
+  setStars();
+  if (casualMode) {
+    localStorage.setItem("win-casual", `${new Date()}`);
+  } else if (hardMode) {
+    localStorage.removeItem("win-casual");
+    localStorage.removeItem("win-normal");
+    localStorage.setItem("win-hard", `${new Date()}`);
+  } else {
+    localStorage.removeItem("win-casual");
+    localStorage.setItem("win-normal", `${new Date()}`);
+  }
+  SHAKE = false;
+  sfxVolume = originalVolume[1];
+  playSound(
+    `./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg`,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    "50",
+  );
+  sfxVolume = 0;
+  setTimeout(() => {
+    if (chaosMode) {
+      despawnCatalyst = true;
+    }
+    despawnCelestial = true;
+    actualCollectedCount = collectedCountBeforeCelestial;
+    latestCollectedCount = collectedCountBeforeCelestial;
+    collectedCount = hardMode
+      ? actualCollectedCount
+      : Math.floor(actualCollectedCount / 2);
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+    lastEntitySpawnAt = collectedCount;
+  }, 2000);
+  console.log(onCelestial);
+}
+export function spawnCelestialAfterEnding() {
+  stopAllEntity = false;
+  soundStopped = false;
+  for (const [key, p] of patternsState) {
+    destroyPattern(p);
+    patternsState.delete(key);
+  }
+  celestialBG = false;
+  musicVolume = originalVolume[0];
+  sfxVolume = originalVolume[1];
   allGold = false;
-  // despawn celestial and true pylon
-  // destroy all pattern
-  // spawn back all entity after cutscene
-  // 4s of immortallity after cutscene
+  disablespawn = false;
+  if (accurateCursor) {
+    canvas.style.cursor = "none";
+    entityCanvas.style.cursor = "none";
+    entityCanvas2.style.cursor = "none";
+  } else {
+    canvas.style.cursor = "auto";
+    entityCanvas.style.cursor = "auto";
+    entityCanvas2.style.cursor = "auto";
+  }
+  setTimeout(() => {
+    disableCollect = false;
+    toggleImmortality(false);
+  }, 2000);
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;
@@ -2596,7 +2693,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
-        entities.push(unregister);
         if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
         if (temp && typeof unregister === "function") {
           setTimeout(() => {
@@ -2635,7 +2731,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else if (pick.name === "Catalyst") {
       const unregister = pick.spawn();
-      entities.push(unregister);
       if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
@@ -2673,7 +2768,6 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else {
       const unregister = pick.spawn();
-      entities.push(unregister);
       if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
@@ -2719,25 +2813,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     }
     if (collectedCount >= 800 && !isIceTileEnabled) {
       isIceTileEnabled = true;
-      changePatterns("ice");
-      ROTATED_PATTERNS = PATTERNS.map((base) => {
-        const r0 = base;
-        const r1 = rotateMatrix90(r0);
-        const r2 = rotateMatrix90(r1);
-        const r3 = rotateMatrix90(r2);
-        return [r0, r1, r2, r3];
-      });
-      setTimeout(() => {
-        changePatterns();
-        ROTATED_PATTERNS = PATTERNS.map((base) => {
-          const r0 = base;
-          const r1 = rotateMatrix90(r0);
-          const r2 = rotateMatrix90(r1);
-          const r3 = rotateMatrix90(r2);
-          return [r0, r1, r2, r3];
-        });
-      }, 6000);
-      setInterval(() => {
+      if (!disableIceTile) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -2756,6 +2832,28 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
             return [r0, r1, r2, r3];
           });
         }, 6000);
+      }
+      setInterval(() => {
+        if (!disableIceTile) {
+          changePatterns("ice");
+          ROTATED_PATTERNS = PATTERNS.map((base) => {
+            const r0 = base;
+            const r1 = rotateMatrix90(r0);
+            const r2 = rotateMatrix90(r1);
+            const r3 = rotateMatrix90(r2);
+            return [r0, r1, r2, r3];
+          });
+          setTimeout(() => {
+            changePatterns();
+            ROTATED_PATTERNS = PATTERNS.map((base) => {
+              const r0 = base;
+              const r1 = rotateMatrix90(r0);
+              const r2 = rotateMatrix90(r1);
+              const r3 = rotateMatrix90(r2);
+              return [r0, r1, r2, r3];
+            });
+          }, 6000);
+        }
       }, 60000);
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
@@ -4616,7 +4714,7 @@ function updateCamera() {
                 return;
               }
 
-              entities.push(pick.spawn());
+              pick.spawn();
               registerEntitySpawn(pick.name, pick.src);
               spawned++;
             }, 200);
@@ -4702,16 +4800,13 @@ function updateCamera() {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
               const unregister = randPick.spawn();
-              entities.push(unregister);
               trackHighestEntity(unregister, pick.start, pick.name);
             }
           } else if (pick.name === "Catalyst") {
             const unregister = pick.spawn();
-            entities.push(unregister);
             trackHighestEntity(unregister, pick.start, pick.name);
           } else {
             const unregister = pick.spawn();
-            entities.push(unregister);
             trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
@@ -4720,25 +4815,7 @@ function updateCamera() {
           }
           if (collectedCount >= 800 && !isIceTileEnabled) {
             isIceTileEnabled = true;
-            changePatterns("ice");
-            ROTATED_PATTERNS = PATTERNS.map((base) => {
-              const r0 = base;
-              const r1 = rotateMatrix90(r0);
-              const r2 = rotateMatrix90(r1);
-              const r3 = rotateMatrix90(r2);
-              return [r0, r1, r2, r3];
-            });
-            setTimeout(() => {
-              changePatterns();
-              ROTATED_PATTERNS = PATTERNS.map((base) => {
-                const r0 = base;
-                const r1 = rotateMatrix90(r0);
-                const r2 = rotateMatrix90(r1);
-                const r3 = rotateMatrix90(r2);
-                return [r0, r1, r2, r3];
-              });
-            }, 6000);
-            setInterval(() => {
+            if (!disableIceTile) {
               changePatterns("ice");
               ROTATED_PATTERNS = PATTERNS.map((base) => {
                 const r0 = base;
@@ -4757,6 +4834,28 @@ function updateCamera() {
                   return [r0, r1, r2, r3];
                 });
               }, 6000);
+            }
+            setInterval(() => {
+              if (!disableIceTile) {
+                changePatterns("ice");
+                ROTATED_PATTERNS = PATTERNS.map((base) => {
+                  const r0 = base;
+                  const r1 = rotateMatrix90(r0);
+                  const r2 = rotateMatrix90(r1);
+                  const r3 = rotateMatrix90(r2);
+                  return [r0, r1, r2, r3];
+                });
+                setTimeout(() => {
+                  changePatterns();
+                  ROTATED_PATTERNS = PATTERNS.map((base) => {
+                    const r0 = base;
+                    const r1 = rotateMatrix90(r0);
+                    const r2 = rotateMatrix90(r1);
+                    const r3 = rotateMatrix90(r2);
+                    return [r0, r1, r2, r3];
+                  });
+                }, 6000);
+              }
             }, 60000);
           }
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
@@ -5501,7 +5600,7 @@ const unlock = () => {
       actualCollectedCount > 100
     ) {
       const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
-      entities.push(pick.spawn());
+      pick.spawn();
     }
   }, 60000);
   startTimer();
@@ -5569,7 +5668,9 @@ setInterval(() => {
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
+  if (disableProgression) return;
   beaconed = true;
+  toggleImmortality(true);
   canvas.style.cursor = "none";
   entityCanvas.style.cursor = "none";
   entityCanvas2.style.cursor = "none";
@@ -5614,18 +5715,16 @@ export function onFinalContact() {
     musicVolume = 0;
     sfxVolume = 0;
     localStorage.setItem("GameBeaten", `${new Date()}`);
-    if (!disableProgression) {
-      setStars();
-      if (casualMode) {
-        localStorage.setItem("win-casual", `${new Date()}`);
-      } else if (hardMode) {
-        localStorage.removeItem("win-casual");
-        localStorage.removeItem("win-normal");
-        localStorage.setItem("win-hard", `${new Date()}`);
-      } else {
-        localStorage.removeItem("win-casual");
-        localStorage.setItem("win-normal", `${new Date()}`);
-      }
+    setStars();
+    if (casualMode) {
+      localStorage.setItem("win-casual", `${new Date()}`);
+    } else if (hardMode) {
+      localStorage.removeItem("win-casual");
+      localStorage.removeItem("win-normal");
+      localStorage.setItem("win-hard", `${new Date()}`);
+    } else {
+      localStorage.removeItem("win-casual");
+      localStorage.setItem("win-normal", `${new Date()}`);
     }
     SHAKE = false;
     setTimeout(() => {

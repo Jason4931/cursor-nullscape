@@ -84,7 +84,6 @@ export function setup(host, deafMode) {
         state.touched = true;
         state.phase = "waitFinalBurst";
         state.timer = 0;
-        toggleImmortality(true);
         onFinalContact();
       }
     }

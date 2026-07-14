@@ -20,6 +20,7 @@ import {
   ultrafastmode,
   stopTimer,
   usedAbility,
+  stopAllEntity,
 } from "./main.js";
 export function updateMouseWorld(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -52,14 +53,25 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 
   function update(dt) {
     for (const e of [...entities]) {
-      e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
+      if (
+        stopAllEntity
+          ? e.name === "Celestial" ||
+            e.name === "Catalyst" ||
+            e.name === "CelestialCutscene" ||
+            e.name === "Pylons" ||
+            e.name === "Void" ||
+            e.name === "Seamine"
+          : true
+      ) {
+        e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
+      }
     }
   }
 
   function draw() {
     let celestial = [];
     let catalyst = [];
-    let celestialintro;
+    let celestialcutscene = [];
     let beacon;
     for (const e of entities) {
       if (e.name === "Pylons") {
@@ -68,25 +80,36 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
       }
     }
     for (const e of entities) {
-      if (e.name === "Beacon") {
-        beacon = e; // store for later
-        continue;
-      } else if (e.name === "Pylons") {
-        continue;
-      } else if (e.name === "Celestial") {
-        celestial.push(e);
-        continue;
-      } else if (e.name === "Catalyst") {
-        catalyst.push(e);
-        continue;
-      } else if (e.name === "CelestialIntro") {
-        celestialintro = e;
-        continue;
-      }
-      if (e.name === "Bell") {
-        e.draw?.(backctx);
-      } else {
-        Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
+      if (
+        stopAllEntity
+          ? e.name === "Celestial" ||
+            e.name === "Catalyst" ||
+            e.name === "CelestialCutscene" ||
+            e.name === "Pylons" ||
+            e.name === "Void" ||
+            e.name === "Seamine"
+          : true
+      ) {
+        if (e.name === "Beacon") {
+          beacon = e; // store for later
+          continue;
+        } else if (e.name === "Pylons") {
+          continue;
+        } else if (e.name === "Celestial") {
+          celestial.push(e);
+          continue;
+        } else if (e.name === "Catalyst") {
+          catalyst.push(e);
+          continue;
+        } else if (e.name === "CelestialCutscene") {
+          celestialcutscene.push(e);
+          continue;
+        }
+        if (e.name === "Bell") {
+          e.draw?.(backctx);
+        } else {
+          Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
+        }
       }
     }
     for (const e of celestial) {
@@ -95,7 +118,9 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
     for (const e of catalyst) {
       e?.draw?.(ctx2);
     }
-    celestialintro?.draw?.(ctx2);
+    for (const e of celestialcutscene) {
+      e?.draw?.(ctx2);
+    }
     beacon?.draw?.(ctx2);
   }
 
@@ -522,9 +547,9 @@ export function death(name = "Unknown", color = "#f70000") {
     text.style.color = color;
     if (name === "Celestial") {
       text.style.color = "#d05e8b";
-      text.style.fontSize = "5vw";
-      text.style.top = "2.25vw";
-      text.style.left = "0.5vw";
+      text.style.fontSize = "4vw";
+      text.style.top = "2vw";
+      text.style.left = "0.25vw";
       text.style.fontFamily = "CelestialDeathFont";
     }
     if (name === "Visage") {

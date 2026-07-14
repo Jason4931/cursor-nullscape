@@ -29,7 +29,6 @@ Title.src = "./ASSET/Misc/CelestialTitle.png";
 export function setup(host) {
   const state = {
     BGopacity: 1,
-    VidStart: false,
     sound: [false, false, false, false, false, false, false],
     timer: 0,
     circles: [],
@@ -301,7 +300,7 @@ export function setup(host) {
       const baseY = cam.y + window.innerHeight * 0.667;
 
       const lines = floatingText.text.split("\n");
-      const lineHeight = textWeight * 0.75;
+      const lineHeight = textWeight;
       const totalHeight = (lines.length - 1) * lineHeight;
 
       const stretchPhase = Math.min(floatingText.t / 0.1, 1);
@@ -371,7 +370,7 @@ export function setup(host) {
 
           ctx.translate(baseX + offsetX + wobbleX, lineY + wobbleY);
           ctx.rotate(rot);
-          ctx.scale(scale * stretch, scale * 1.333);
+          ctx.scale(scale * stretch, scale);
 
           ctx.fillText(char, charWidth / 2, 0);
 
@@ -446,6 +445,6 @@ export function setup(host) {
     ctx.restore();
   }
 
-  const unregister = host.register({ update, draw, name: "CelestialIntro" });
+  const unregister = host.register({ update, draw, name: "CelestialCutscene" });
   return unregister;
 }

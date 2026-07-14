@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, canvas, getCameraPos, spawnCelestialEnding } from "../main.js";
+import {
+  TILE,
+  canvas,
+  despawnCelestial,
+  getCameraPos,
+  spawnCelestialEnding,
+} from "../main.js";
 import { pylonLocations } from "./Pylons.js";
 const rawpattern = [
   [
@@ -136,6 +142,7 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (despawnCelestial) return;
     const s = state;
 
     if (!s.generated) {
@@ -305,6 +312,7 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (despawnCelestial) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
@@ -592,16 +600,16 @@ export function setup(host) {
         const grad = ctx.createRadialGradient(
           cx,
           cy,
-          s.circleRadius,
+          p.circleRadius,
           cx,
           cy,
-          s.circleRadius + glow,
+          p.circleRadius + glow,
         );
         grad.addColorStop(0, "rgba(255,0,192,1)");
         grad.addColorStop(1, "rgba(255,0,192,0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(cx, cy, s.circleRadius + glow, 0, Math.PI * 2);
+        ctx.arc(cx, cy, p.circleRadius + glow, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.beginPath();
