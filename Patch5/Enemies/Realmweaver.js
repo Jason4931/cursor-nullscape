@@ -45,7 +45,7 @@ export function setup(host) {
     if (Math.cos(state.angle) < 0) {
       localY = -localY;
     }
-    if (Math.abs(localX) <= halfW && Math.abs(localY) <= halfH * 0.5) {
+    if (Math.abs(localX) <= halfW * 0.75 && Math.abs(localY) <= halfH * 0.25) {
       death("Realmweaver");
     }
   }
