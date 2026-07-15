@@ -318,7 +318,7 @@ const ENTITY_POOL = [
   {
     name: "Sorrow",
     spawn: () => spawnSorrow(entityHost, showFloor),
-    start: 1000,
+    start: 2000,
     src: "./ASSET/Curses/Sorrow.png",
     unstackable: true,
     desc: "When the rain starts, get above something, those in the air will quickly melt away.",

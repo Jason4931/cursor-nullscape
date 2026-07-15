@@ -381,7 +381,7 @@ const ENTITY_POOL = [
   {
     name: "Oblivion",
     spawn: () => spawnOblivion(entityHost, showFloor),
-    start: 1000,
+    start: 2000,
     src: "./ASSET/Curses/Oblivion.png",
     unstackable: true,
     desc: "When the convergence starts, get above something, those in the air will quickly be obliterated.",
