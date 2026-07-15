@@ -416,7 +416,7 @@ const ENTITY_POOL = [
     name: "VoidboundGuardian",
     altName: "VBG",
     spawn: () => spawnVoidboundGuardian(entityHost, casualMode, hardMode),
-    start: 1200,
+    start: 1500,
     src: "./ASSET/Enemies/VoidboundGuardian.png",
     desc: "Bullets are much larger, and leave behind beams.",
   },

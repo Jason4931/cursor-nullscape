@@ -118,6 +118,7 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function update(dt) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     state.layerspeed += dt;
     if (
       state.layerspeed >= 1 / Math.pow(state.instruments.length + 1, 2) ||
@@ -321,6 +322,7 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function draw(ctx) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     ctx.save();
 
     if (state.mode === "agro" || state.mode === "idleWait") {

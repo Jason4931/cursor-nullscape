@@ -81,6 +81,7 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function update(dt) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     state.timer += dt;
     if (
       state.instruments.length >= 1 &&
@@ -269,6 +270,7 @@ export function setup(host, hardMode, deafMode) {
   }
 
   function draw(ctx) {
+    if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     ctx.save();
 
     if (state.mode === "agro") {
