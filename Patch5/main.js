@@ -2092,14 +2092,12 @@ export function isCursorOnFloor(custom) {
         if (t.highrise[0] && t.highrise[1] == 38) {
           scorched = true;
           scorchedTime++;
-          cameraRadius = 0.5;
           if (scorchedTime >= 30) {
             death("Hazards");
           }
           clearTimeout(scorchedTimeout);
           scorchedTimeout = setTimeout(() => {
             scorched = false;
-            cameraRadius = 0.4;
             scorchedTime = 0;
           }, 10000);
         }
@@ -4487,6 +4485,7 @@ function updateCamera() {
     edgeFactorX = 1;
     edgeFactorY = 1;
   } else {
+    cameraRadius = spaceHeld ? 0.5 : 0.4;
     if (mouse._clientX < w * cameraRadius) {
       vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
       edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
@@ -4529,10 +4528,11 @@ function updateCamera() {
 
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.333 : 1;
-  const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
+  const settingScale = settingsPanel.style.display === "block" ? 0.01 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
   const extremeScale = hardMode ? 0.667 : 1;
   const ultrafastScale = ultrafastmode ? 3 : 1;
+  const spaceHeldScale = spaceHeld ? 1.5 : 1;
   isCursorOnFloor();
   if (iceEffect) {
     camVX +=
@@ -4548,6 +4548,7 @@ function updateCamera() {
       speedBoostScale *
       extremeScale *
       ultrafastScale *
+      spaceHeldScale *
       0.1;
     camVY +=
       vy *
@@ -4562,6 +4563,7 @@ function updateCamera() {
       speedBoostScale *
       extremeScale *
       ultrafastScale *
+      spaceHeldScale *
       0.1;
   } else {
     camX +=
@@ -4576,7 +4578,8 @@ function updateCamera() {
       disableCollectScale *
       speedBoostScale *
       extremeScale *
-      ultrafastScale;
+      ultrafastScale *
+      spaceHeldScale;
     camY +=
       vy *
       motionScale *
@@ -4589,7 +4592,8 @@ function updateCamera() {
       disableCollectScale *
       speedBoostScale *
       extremeScale *
-      ultrafastScale;
+      ultrafastScale *
+      spaceHeldScale;
   }
 
   const lim = getLimits();

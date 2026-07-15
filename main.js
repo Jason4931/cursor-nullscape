@@ -2688,6 +2688,7 @@ function updateCamera() {
 
   MAX_SPEED = 25 + collectedCount / 200;
 
+  cameraRadius = spaceHeld ? 0.5 : 0.4;
   if (mouse._clientX < w * cameraRadius) {
     vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
     edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
@@ -2724,9 +2725,10 @@ function updateCamera() {
 
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.333 : 1;
-  const settingScale = settingsPanel.style.display === "block" ? 0.1 : 1;
+  const settingScale = settingsPanel.style.display === "block" ? 0.01 : 1;
   const disableCollectScale = disableCollect ? 0.01 : 1;
   const ultrafastScale = ultrafastmode ? 3 : 1;
+  const spaceHeldScale = spaceHeld ? 1.5 : 1;
   camX +=
     vx *
     motionScale *
@@ -2736,7 +2738,8 @@ function updateCamera() {
     seamineScale *
     disableCollectScale *
     speedBoostScale *
-    ultrafastScale;
+    ultrafastScale *
+    spaceHeldScale;
   camY +=
     vy *
     motionScale *
@@ -2746,7 +2749,8 @@ function updateCamera() {
     seamineScale *
     disableCollectScale *
     speedBoostScale *
-    ultrafastScale;
+    ultrafastScale *
+    spaceHeldScale;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
