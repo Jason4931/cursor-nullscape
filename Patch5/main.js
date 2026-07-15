@@ -4485,7 +4485,7 @@ function updateCamera() {
     edgeFactorX = 1;
     edgeFactorY = 1;
   } else {
-    cameraRadius = spaceHeld ? 0.5 : 0.4;
+    cameraRadius = spaceHeld ? 0.49 : 0.4;
     if (mouse._clientX < w * cameraRadius) {
       vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
       edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
@@ -4672,9 +4672,9 @@ function updateCamera() {
       }
 
       const value =
-        giftMultiplier >= 1
-          ? (g.golden ? 4 : 1) * giftMultiplier
-          : (g.golden ? 4 : 1) * (Math.random() < giftMultiplier ? 1 : 0);
+        (g.golden ? 4 : 1) *
+        (Math.floor(giftMultiplier) +
+          (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect && !insidePylon && !stopCollect)
         actualCollectedCount += value;
       collectedCount = hardMode
