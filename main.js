@@ -1956,7 +1956,7 @@ export function activateChance() {
       break;
     case 1:
       // - random enemy 4
-      for (let i = 0; i < 4; i++) ENTITY_SPAWN();
+      for (let i = 0; i < 4; i++) ENTITY_SPAWN(true);
       break;
     case 2:
       // + gift multiplier x2
@@ -2208,11 +2208,11 @@ function placeSuper(sx, sy, pattern) {
                 hardMode
                   ? 0.00005 * (collectedCount - 500)
                   : 0.0001 * (collectedCount - 500),
-                0.1, // 0-10%
+                0.05, // 0-5%
               ))
           )
             type = "tripmine";
-          else type = "gift"; // 100-90%
+          else type = "gift"; // 100-95%
         } else {
           type = "gift"; // original
         }
