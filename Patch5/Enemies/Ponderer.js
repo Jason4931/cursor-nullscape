@@ -157,9 +157,9 @@ export function setup(host, hardMode) {
     const size = Math.round(state.size);
     ctx.drawImage(
       enemy,
+      Math.round(-size * 0.4),
       Math.round(-size * 0.5),
-      Math.round(-size * 0.5),
-      size,
+      size * 0.8,
       size,
     );
 

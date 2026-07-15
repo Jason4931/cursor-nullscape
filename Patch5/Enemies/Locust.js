@@ -10,7 +10,7 @@ export function setup(host) {
   const SPEED = 3000;
   const TRIGGER_TIME = 0.5;
   const BLACK_TIME = 0.5;
-  const SIZE = 300;
+  const SIZE = 200;
 
   const state = {
     x: 0,

@@ -52,7 +52,7 @@ export function setup(host) {
     dashStarted: false,
     camShakeX: 0,
     camShakeY: 0,
-    MAX_DASH_DIST: 630,
+    MAX_DASH_DIST: 800,
 
     beaconWaveRadius: 0,
     beaconWaveOpacity: 1,

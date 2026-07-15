@@ -367,8 +367,8 @@ export function setup(host, casualMode, hardMode) {
         travelY +
         bullet.py * wobble;
 
-      const dx = mouse.x - bullet.x;
-      const dy = mouse.y - bullet.y;
+      const dx = mouse._clientX - bullet.x;
+      const dy = mouse._clientY - bullet.y;
 
       if (dx * dx + dy * dy <= bullet.radius * bullet.radius) {
         death("Corrupted");
@@ -411,8 +411,8 @@ export function setup(host, casualMode, hardMode) {
         saw.rotation += dt * saw.rotationSpeed;
       }
 
-      const dx = mouse.x - saw.x;
-      const dy = mouse.y - saw.y;
+      const dx = mouse._clientX - saw.x;
+      const dy = mouse._clientY - saw.y;
 
       if (dx * dx + dy * dy <= saw.radius * saw.radius) {
         death("Corrupted");
@@ -445,8 +445,8 @@ export function setup(host, casualMode, hardMode) {
       const nx = -Math.sin(beam.angle);
       const ny = Math.cos(beam.angle);
 
-      const dx = mouse.x - beam.x;
-      const dy = mouse.y - beam.y;
+      const dx = mouse._clientX - beam.x;
+      const dy = mouse._clientY - beam.y;
 
       if (Math.abs(dx * nx + dy * ny) <= width * 0.5) {
         death("Corrupted");
@@ -502,7 +502,7 @@ export function setup(host, casualMode, hardMode) {
           y1 = bottom;
         }
 
-        if (mouse.x >= x0 && mouse.x <= x1 && mouse.y >= y0 && mouse.y <= y1) {
+        if (mouse._clientX >= x0 && mouse._clientX <= x1 && mouse._clientY >= y0 && mouse._clientY <= y1) {
           death("Corrupted");
         }
       } else {
@@ -518,7 +518,7 @@ export function setup(host, casualMode, hardMode) {
           x1 = right;
         }
 
-        if (mouse.x >= x0 && mouse.x <= x1 && mouse.y >= y0 && mouse.y <= y1) {
+        if (mouse._clientX >= x0 && mouse._clientX <= x1 && mouse._clientY >= y0 && mouse._clientY <= y1) {
           death("Corrupted");
         }
       }
@@ -534,8 +534,8 @@ export function setup(host, casualMode, hardMode) {
         radius = circle.radius * (1 - t * t);
       }
 
-      const dx = mouse.x - circle.x;
-      const dy = mouse.y - circle.y;
+      const dx = mouse._clientX - circle.x;
+      const dy = mouse._clientY - circle.y;
 
       if (dx * dx + dy * dy <= radius * radius) {
         death("Corrupted");
