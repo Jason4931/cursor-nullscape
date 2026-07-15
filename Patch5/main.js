@@ -5065,7 +5065,7 @@ function loop(now) {
   }
 
   //shiftlock
-  shiftlockEase += 0.1;
+  shiftlockEase += 0.133;
   if (shiftlockEase > 1) shiftlockEase = 1;
   if (spaceHeld || shiftlockEase < 1) {
     ctx.strokeStyle = "white";
