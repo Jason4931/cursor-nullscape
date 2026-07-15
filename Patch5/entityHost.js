@@ -21,20 +21,31 @@ import {
   stopTimer,
   usedAbility,
   stopAllEntity,
+  spaceHeld,
+  shiftlockEase,
 } from "./main.js";
-export function updateMouseWorld(canvas) {
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
+export function updateMouseWorld(canvas, camX, camY) {
+  if (!spaceHeld) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
 
-  const dirX = mouse._clientX - prevMouse.x;
-  const dirY = mouse._clientY - prevMouse.y;
-  const len = Math.hypot(dirX, dirY) || 1;
-  const rawX = (mouse._clientX - rect.left) * scaleX;
-  const rawY = (mouse._clientY - rect.top) * scaleY;
+    const dirX = mouse._clientX - prevMouse.x;
+    const dirY = mouse._clientY - prevMouse.y;
+    const len = Math.hypot(dirX, dirY) || 1;
+    const targetX =
+      (mouse._clientX - rect.left) * scaleX + (dirX / len) * TILE * 0.5;
+    const targetY =
+      (mouse._clientY - rect.top) * scaleY + (dirY / len) * TILE * 0.5;
 
-  mouse.x = rawX + (dirX / len) * TILE * 0.5;
-  mouse.y = rawY + (dirY / len) * TILE * 0.5;
+    mouse.x += (targetX - mouse.x) * shiftlockEase;
+    mouse.y += (targetY - mouse.y) * shiftlockEase;
+  } else {
+    const targetX = -camX + window.innerWidth / 2;
+    const targetY = -camY + window.innerHeight / 2;
+    mouse.x += (targetX - mouse.x) * shiftlockEase;
+    mouse.y += (targetY - mouse.y) * shiftlockEase;
+  }
 
   prevMouse.x = mouse._clientX;
   prevMouse.y = mouse._clientY;

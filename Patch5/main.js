@@ -208,6 +208,8 @@ export let onCelestial = false;
 let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+export let spaceHeld = false;
+export let shiftlockEase = 1;
 export let ability = false;
 export let usedAbility = null;
 export let slowmode = false;
@@ -1079,6 +1081,10 @@ window.addEventListener("keydown", (e) => {
     panelOpen = !panelOpen;
     panel.classList.toggle("open", panelOpen);
   }
+  if (e.key === " " && !e.repeat) {
+    spaceHeld = true;
+    shiftlockEase = 0;
+  }
   if (abilityCooldown == 0 && !slowness) {
     if (e.key.toLowerCase() === "e") {
       abilityCooldown = 45;
@@ -1450,6 +1456,11 @@ window.addEventListener("keydown", (e) => {
   reducedMotion = !reducedMotionBeforeHold;
 });
 window.addEventListener("keyup", (e) => {
+  if (e.key === " ") {
+    spaceHeld = false;
+    shiftlockEase = 0;
+  }
+
   if (!reducedMotionHoldActive) return;
   if (e.key !== "Shift" && e.key !== "Control") return;
 
@@ -5053,8 +5064,41 @@ function loop(now) {
     playNextMusic();
   }
 
+  //shiftlock
+  shiftlockEase += 0.1;
+  if (shiftlockEase > 1) shiftlockEase = 1;
+  if (spaceHeld || shiftlockEase < 1) {
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 12, 0, Math.PI * 2);
+    ctx.stroke();
+    const tInner = 12;
+    const tOuter = 18;
+    const tX = [0, 0, -1, 1];
+    const tY = [-1, 1, 0, 0];
+    for (let i = 0; i < 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(mouse.x + tX[i] * tInner, mouse.y + tY[i] * tInner);
+      ctx.lineTo(mouse.x + tX[i] * tOuter, mouse.y + tY[i] * tOuter);
+      ctx.stroke();
+    }
+    const dotX = mouse._clientX - camX;
+    const dotY = mouse._clientY - camY;
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(mouse.x, mouse.y);
+    ctx.lineTo(dotX, dotY);
+    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
   // simple cursor
-  if (accurateCursor) {
+  if (accurateCursor || spaceHeld || shiftlockEase < 1) {
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, 8, 0, Math.PI * 2);
     ctx.fillStyle = "white";
@@ -5456,7 +5500,7 @@ function loop(now) {
       if (tipstimer < 549 && tipstimer > 547) color = "#ff0a0a";
     } else if (tipstimer > 204) {
       text = "Press E or R to boost movement.";
-      text2 = "Alternatively use R to parry option.";
+      text2 = "Hold Space for centered movement.";
       if (tipstimer > 376) color = "#ff0a0a";
       if (tipstimer < 375 && tipstimer > 373) color = "#ff0a0a";
     } else if (tipstimer > 30) {
