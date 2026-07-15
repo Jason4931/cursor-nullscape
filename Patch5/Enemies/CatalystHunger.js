@@ -282,5 +282,5 @@ export function setup(host, overshootBrake) {
     ctx.restore();
   }
 
-  return host.register({ update, draw });
+  return host.register({ update, draw, name: "Catalyst" });
 }

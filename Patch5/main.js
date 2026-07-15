@@ -408,6 +408,7 @@ const ENTITY_POOL = [
     spawn: () => spawnPonderer(entityHost, hardMode),
     start: 1200,
     src: "./ASSET/Enemies/PondererIcon.png",
+    unstackable: true,
     rare: true,
     desc: "Focus on it. Don't let the clock tick down.",
   },
