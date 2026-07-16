@@ -9,7 +9,8 @@ export function setup(host, casualMode, hardMode) {
     opacity: 1,
     phase: "idle",
     phaseT: 0,
-    idleDuration: (casualMode ? 30 : 20) + Math.random(),
+    // idleDuration: (casualMode ? 30 : 20) + Math.random(),
+    idleDuration: 0,
 
     appearLine: null,
     attackData: null,
@@ -23,7 +24,7 @@ export function setup(host, casualMode, hardMode) {
 
     for (const lz of state.lasers) {
       lz.t += dt;
-      if (lz.t >= lz.life * 0.5 && lz.t <= lz.life * 0.55) {
+      if (lz.t >= lz.life - 0.5 && lz.t <= lz.life - 0.4) {
         const halfLen = 20000;
 
         const ax = lz.x + lz.nx * halfLen;
@@ -48,11 +49,11 @@ export function setup(host, casualMode, hardMode) {
 
         const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
 
-        if (dist < 10) {
+        if (dist < 7) {
           death("Scrapmaw");
         }
       }
-      if (lz.t >= 2) {
+      if (lz.t >= lz.life) {
         state.lasers = state.lasers.filter((x) => x !== lz);
       }
     }
@@ -110,27 +111,29 @@ export function setup(host, casualMode, hardMode) {
         const baseAng = Math.atan2(dy, dx);
         const rand = 0.25 + Math.random() * 0.5;
         const ang = baseAng + Math.PI * rand;
-        const laserCount = 30 * (1 - Math.abs(0.5 - rand));
+        const nx = Math.cos(ang);
+        const ny = Math.sin(ang);
+        const px = -ny;
+        const py = nx;
+        const midX = (l.cx + l.tx) * 0.5;
+        const midY = (l.cy + l.ty) * 0.5;
+        const width = Math.abs(dx * px + dy * py) * 3;
+        const laserCount = 60;
+        const spacing = (width / (laserCount - 1)) * 1.5;
         for (let i = 0; i < laserCount; i++) {
-          const p = (i / (laserCount - 1)) * 2;
-
-          const x = l.cx + dx * p;
-          const y = l.cy + dy * p;
-
+          const offset = (i - (laserCount - 1) / 2) * spacing;
           lasers.push({
-            x,
-            y,
+            x: midX + px * offset,
+            y: midY + py * offset,
             ang,
-            nx: Math.cos(ang),
-            ny: Math.sin(ang),
+            nx,
+            ny,
             t: 0,
             life: 2,
           });
         }
         state.lasers = lasers;
 
-        const midX = (l.cx + l.tx) * 0.5;
-        const midY = (l.cy + l.ty) * 0.5;
         const targetX = midX - l.nx;
         const targetY = midY - l.ny;
 
@@ -147,8 +150,6 @@ export function setup(host, casualMode, hardMode) {
 
         state.phase = "attack";
         state.phaseT = 0;
-        playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerCharging.ogg");
-        playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerFire.ogg");
       }
     }
     if (state.phase === "attack") {
@@ -174,11 +175,8 @@ export function setup(host, casualMode, hardMode) {
       }
 
       const reachTime = 0.4;
-      const totalTime = 1.0;
 
       a.t += dt;
-
-      const p = Math.min(1, a.t / a.life);
 
       const dx = a.targetX - a.startX;
       const dy = a.targetY - a.startY;
@@ -200,7 +198,13 @@ export function setup(host, casualMode, hardMode) {
         a.y = a.targetY + ny * 200 * driftT;
       }
 
-      if (state.phaseT >= 1) {
+      if (state.phaseT >= 0.5 && !state.laserAudio) {
+        state.laserAudio = true;
+        playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerCharging.ogg");
+        playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerFire.ogg");
+      }
+
+      if (state.phaseT >= 1.5) {
         const l = state.appearLine;
 
         const dx = l.tx - l.cx;
@@ -304,6 +308,7 @@ export function setup(host, casualMode, hardMode) {
         state.appearLine = null;
         state.attackData = null;
         state.disappearData = null;
+        state.laserAudio = false;
       }
     }
   }
@@ -370,11 +375,9 @@ export function setup(host, casualMode, hardMode) {
       ctx.restore();
     }
     for (const lz of state.lasers) {
-      const p = Math.min(1, lz.t / lz.life);
-
       let scale = 1;
-      if (lz.t > 1) {
-        const sp = Math.min(1, (lz.t - 1) / 0.5);
+      if (lz.t > lz.life - 0.5) {
+        const sp = Math.min(1, (lz.t - (lz.life - 0.5)) / 0.5);
         scale = 1 - sp;
       }
 
@@ -383,7 +386,7 @@ export function setup(host, casualMode, hardMode) {
       const perpX = -lz.ny;
       const perpY = lz.nx;
 
-      const thickness = 10 * scale;
+      const thickness = 7 * scale;
 
       const halfLen = 20000;
 
@@ -407,7 +410,7 @@ export function setup(host, casualMode, hardMode) {
 
       ctx.save();
       ctx.globalAlpha = lz.t < 0.25 ? Math.min(1, state.phaseT * 4) : 1;
-      ctx.fillStyle = lz.t > lz.life / 2 ? "orange" : "red";
+      ctx.fillStyle = lz.t > lz.life - 0.5 ? "orange" : "red";
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);

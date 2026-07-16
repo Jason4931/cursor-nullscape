@@ -2658,8 +2658,7 @@ export function setup(
       b.t += dt;
 
       const p = Math.min(b.t / 2, 1);
-      const eased = 1 - (1 - p) * (1 - p);
-      let angle = b.baseAngle + eased * Math.PI * 2 * b.dirAngle;
+      let angle = b.baseAngle;
       angle += (b.t - 2) * Math.PI * b.dirAngle;
       b.angle = angle;
 
@@ -2744,7 +2743,7 @@ export function setup(
       for (let i = 0; i < b.count; i++) {
         ctx.rotate((Math.PI * 2) / b.count);
 
-        const len = 1000;
+        const len = Math.min(1000, b.t * 1000);
         const w = isLethal ? 25 : 50;
 
         if (isLethal) {
@@ -4475,8 +4474,7 @@ export function setup(
       b.t += dt;
 
       const p = Math.min(b.t / 2, 1);
-      const eased = 1 - (1 - p) * (1 - p);
-      let angle = b.baseAngle + eased * Math.PI * 2 * b.dirAngle;
+      let angle = b.baseAngle;
       angle += (b.t - 2) * Math.PI * b.dirAngle;
       b.angle = angle;
 
@@ -4693,7 +4691,7 @@ export function setup(
       for (let i = 0; i < b.count; i++) {
         ctx.rotate((Math.PI * 2) / b.count);
 
-        const len = 1000;
+        const len = Math.min(1000, b.t * 1000);
         const w = isLethal ? 25 : 50;
 
         if (isLethal) {
