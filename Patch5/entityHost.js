@@ -23,6 +23,7 @@ import {
   stopAllEntity,
   spaceHeld,
   shiftlockEase,
+  playSound,
 } from "./main.js";
 export function updateMouseWorld(canvas, camX, camY) {
   if (!spaceHeld) {
@@ -595,6 +596,36 @@ export function death(name = "Unknown", color = "#f70000") {
     }, 200);
     setTimeout(() => {
       stopAllSounds();
+      let deathSound = [
+        "DeathVoicelines/Domasp1",
+        "DeathVoicelines/Domasp2",
+        "DeathVoicelines/Domasp3",
+        "DeathVoicelines/Domasp4",
+        "DeathVoicelines/Domasp5",
+        "DeathVoicelines/Domasp6",
+        "DeathVoicelines/Domasp7",
+        "DeathVoicelines/Domasp8",
+        "DeathVoicelines/Domasp9",
+        "DeathVoicelines/Domasp10",
+        "DeathVoicelines/Domasp11",
+        "DeathVoicelines/Domasp12",
+        "DeathVoicelines/Domasp13",
+        "DeathVoicelines/Domasp14",
+        "CodeAudios/Domasp_YIPPEE",
+        "CodeAudios/DRHouse_Laugh",
+        "CodeAudios/FOOTBALL",
+        "CodeAudios/Garrys_lovely_story",
+        "CodeAudios/KirbyTG_Secret",
+        "CodeAudios/PondererStart",
+        "CodeAudios/Subsical_Whistling",
+        "CodeAudios/Virrevicke_Similarities",
+      ];
+      deathSound.push(
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
+      );
+      playSound(
+        `./ASSET/Sound/Domasp/${deathSound[Math.floor(Math.random() * deathSound.length)]}.ogg`,
+      );
     }, 1000);
     if (localStorage.getItem("boyquiet")) {
       retry.style.opacity = "1";
@@ -607,6 +638,7 @@ export function death(name = "Unknown", color = "#f70000") {
         retry.onclick = () => location.reload();
       }, 5000);
     }
+    playSound("./ASSET/Sound/Domasp/Domasp_Ambiance.ogg");
   }, 200);
   setStars();
 }
