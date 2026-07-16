@@ -51,5 +51,3 @@ v celestial outro
 
 vx catalyst
 vx celestial
-
-death counter -> counter should alternate between entity name

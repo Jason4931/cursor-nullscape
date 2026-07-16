@@ -18,13 +18,14 @@ export function setup(host, casualMode, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    const cam = getCameraPos();
+    const mouseX = cam.x + mouse._clientX;
+    const mouseY = cam.y + mouse._clientY;
 
     state.timer += dt;
 
     if (state.timer >= state.cooldown) {
       state.timer -= state.cooldown;
-
-      const cam = getCameraPos();
 
       const attack = Math.random();
       const attackCount = 5;
@@ -33,8 +34,8 @@ export function setup(host, casualMode, hardMode) {
         const angles = [0, Math.PI / 2, Math.PI / 4, -Math.PI / 4];
         for (let i = 0; i < 3; i++) {
           setTimeout(() => {
-            const screenX = Math.random() * window.innerWidth;
-            const screenY = Math.random() * window.innerHeight;
+            const screenX = (0.1 + Math.random() * 0.8) * window.innerWidth;
+            const screenY = (0.1 + Math.random() * 0.8) * window.innerHeight;
             const angle = angles[(Math.random() * angles.length) | 0];
             state.beams.push({
               t: 0,
@@ -49,8 +50,8 @@ export function setup(host, casualMode, hardMode) {
       } else if (attack < 2 / attackCount) {
         state.cooldown = 2;
         const vertical = Math.random() < 0.5;
-        const screenX = Math.random() * window.innerWidth;
-        const screenY = Math.random() * window.innerHeight;
+        const screenX = (0.1 + Math.random() * 0.8) * window.innerWidth;
+        const screenY = (0.1 + Math.random() * 0.8) * window.innerHeight;
         state.stompers.push({
           t: 0,
           vertical,
@@ -61,8 +62,8 @@ export function setup(host, casualMode, hardMode) {
         });
       } else if (attack < 3 / attackCount) {
         state.cooldown = 2;
-        const screenX = Math.random() * window.innerWidth;
-        const screenY = Math.random() * window.innerHeight;
+        const screenX = (0.1 + Math.random() * 0.8) * window.innerWidth;
+        const screenY = (0.1 + Math.random() * 0.8) * window.innerHeight;
         state.circles.push({
           t: 0,
           screenX,
@@ -265,7 +266,6 @@ export function setup(host, casualMode, hardMode) {
     for (const beam of state.beams) {
       beam.t += dt;
 
-      const cam = getCameraPos();
       beam.x = cam.x + beam.screenX;
       beam.y = cam.y + beam.screenY;
 
@@ -277,7 +277,6 @@ export function setup(host, casualMode, hardMode) {
     for (const beam of state.stompers) {
       beam.t += dt;
 
-      const cam = getCameraPos();
       beam.x = cam.x + beam.screenX;
       beam.y = cam.y + beam.screenY;
 
@@ -289,7 +288,6 @@ export function setup(host, casualMode, hardMode) {
     for (const circle of state.circles) {
       circle.t += dt;
 
-      const cam = getCameraPos();
       circle.x = cam.x + circle.screenX;
       circle.y = cam.y + circle.screenY;
 
@@ -301,7 +299,6 @@ export function setup(host, casualMode, hardMode) {
     for (const bomb of state.bombs) {
       bomb.t += dt;
 
-      const cam = getCameraPos();
       let sx, sy;
       if (bomb.t < 0.5) {
         const e = 1 - Math.pow(1 - bomb.t / 0.5, 3);
@@ -322,8 +319,6 @@ export function setup(host, casualMode, hardMode) {
         for (let i = 0; i < 12; i++) {
           const a = rot + (i * Math.PI) / 6;
           const speed = TILE * 18;
-
-          const cam = getCameraPos();
 
           state.bullets.push({
             x: bomb.x,
@@ -349,8 +344,6 @@ export function setup(host, casualMode, hardMode) {
     for (const bullet of state.bullets) {
       bullet.t += dt;
 
-      const cam = getCameraPos();
-
       const travelX = bullet.vx * bullet.t;
       const travelY = bullet.vy * bullet.t;
       const wobble = Math.sin(bullet.t * 16 + bullet.wobble) * TILE * 0.25;
@@ -367,8 +360,8 @@ export function setup(host, casualMode, hardMode) {
         travelY +
         bullet.py * wobble;
 
-      const dx = mouse._clientX - bullet.x;
-      const dy = mouse._clientY - bullet.y;
+      const dx = mouseX - bullet.x;
+      const dy = mouseY - bullet.y;
 
       if (dx * dx + dy * dy <= bullet.radius * bullet.radius) {
         death("Corrupted");
@@ -381,8 +374,6 @@ export function setup(host, casualMode, hardMode) {
     }
     for (const saw of state.saws) {
       saw.t += dt;
-
-      const cam = getCameraPos();
 
       if (saw.t >= 1 && saw.t < 2) {
         let e;
@@ -411,8 +402,8 @@ export function setup(host, casualMode, hardMode) {
         saw.rotation += dt * saw.rotationSpeed;
       }
 
-      const dx = mouse._clientX - saw.x;
-      const dy = mouse._clientY - saw.y;
+      const dx = mouseX - saw.x;
+      const dy = mouseY - saw.y;
 
       if (dx * dx + dy * dy <= saw.radius * saw.radius) {
         death("Corrupted");
@@ -445,8 +436,8 @@ export function setup(host, casualMode, hardMode) {
       const nx = -Math.sin(beam.angle);
       const ny = Math.cos(beam.angle);
 
-      const dx = mouse._clientX - beam.x;
-      const dy = mouse._clientY - beam.y;
+      const dx = mouseX - beam.x;
+      const dy = mouseY - beam.y;
 
       if (Math.abs(dx * nx + dy * ny) <= width * 0.5) {
         death("Corrupted");
@@ -502,7 +493,7 @@ export function setup(host, casualMode, hardMode) {
           y1 = bottom;
         }
 
-        if (mouse._clientX >= x0 && mouse._clientX <= x1 && mouse._clientY >= y0 && mouse._clientY <= y1) {
+        if (mouseX >= x0 && mouseX <= x1 && mouseY >= y0 && mouseY <= y1) {
           death("Corrupted");
         }
       } else {
@@ -518,7 +509,7 @@ export function setup(host, casualMode, hardMode) {
           x1 = right;
         }
 
-        if (mouse._clientX >= x0 && mouse._clientX <= x1 && mouse._clientY >= y0 && mouse._clientY <= y1) {
+        if (mouseX >= x0 && mouseX <= x1 && mouseY >= y0 && mouseY <= y1) {
           death("Corrupted");
         }
       }
@@ -534,8 +525,8 @@ export function setup(host, casualMode, hardMode) {
         radius = circle.radius * (1 - t * t);
       }
 
-      const dx = mouse._clientX - circle.x;
-      const dy = mouse._clientY - circle.y;
+      const dx = mouseX - circle.x;
+      const dy = mouseY - circle.y;
 
       if (dx * dx + dy * dy <= radius * radius) {
         death("Corrupted");
