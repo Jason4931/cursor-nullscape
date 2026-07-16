@@ -473,6 +473,9 @@ export function activateShield() {
 }
 export function toggleToggleDeath() {
   toggleDeath = !toggleDeath;
+  document.getElementById("death-counter").style.display = !toggleDeath
+    ? "block"
+    : "none";
 }
 export function toggleImmortality(state) {
   immortality = state;
@@ -487,6 +490,9 @@ export function toggleTripmineLeniency(state) {
   if (typeof state === "number") tripmineCustomLeniency = state;
   else if (typeof state === "boolean") tripmineLeniency = state;
 }
+let lastdeathName = null;
+let lastdeathTime = null;
+let deathCounter = 0;
 export function death(name = "Unknown", color = "#f70000") {
   if (dies || immortality || springerImmortality) return;
   if (
@@ -501,6 +507,14 @@ export function death(name = "Unknown", color = "#f70000") {
   }
   if (!toggleDeath) {
     setDeathOpacity(1);
+    const now = performance.now();
+    if (lastdeathTime === null || now - lastdeathTime >= 1000) {
+      deathCounter++;
+      lastdeathName = name;
+      lastdeathTime = now;
+      document.getElementById("death-counter").innerHTML =
+        `Deaths: ${deathCounter} (${name})`;
+    }
     return;
   }
   if (bellLeniency) {

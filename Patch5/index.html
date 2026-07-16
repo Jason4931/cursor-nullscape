@@ -176,6 +176,20 @@
         transition: color 1.5s ease;
       }
 
+      #death-counter {
+        position: absolute;
+        right: 1vw;
+        top: 1vw;
+        margin: 0;
+        color: #fff;
+        font-family: monospace;
+        font-size: 1.5vw;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1000;
+        display: none;
+      }
+
       #lvl {
         position: absolute;
         left: 1vw;
@@ -838,6 +852,7 @@
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
       <canvas id="entities-2" width="1920" height="1200"></canvas>
+      <p id="death-counter">Deaths: 0</p>
       <p id="timer">00:00</p>
       <p id="counter">Gift(s) Collected: 0</p>
       <p id="lvl">Lvl 0</p>
