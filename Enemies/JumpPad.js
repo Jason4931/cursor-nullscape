@@ -4,65 +4,44 @@ import { TILE, moveCamera, jumppadHit } from "../main.js";
 const jumppad = new Image();
 jumppad.src = "./ASSET/Misc/Jumppad.png";
 
-export function setup(host, MAX_CURSOR_DISTANCE) {
+export function setup(host) {
   const state = {
     activated: false,
     pads: [],
   };
 
-  const PAD_COUNT = 15;
   const PAD_SIZE = TILE * 2.5;
   const PAD_DISTANCE = 2000;
-  const PAD_MIN_SEP = PAD_DISTANCE / 2;
 
   function spawnPads(cursorX, cursorY) {
-    state.pads.length = 0;
+    const a = Math.random() * Math.PI * 2;
 
-    let safety = 0;
-    while (state.pads.length < PAD_COUNT && safety < 100) {
-      safety++;
+    const cx = cursorX + Math.cos(a) * PAD_DISTANCE;
+    const cy = cursorY + Math.sin(a) * PAD_DISTANCE;
 
-      const a = Math.random() * Math.PI * 2;
-      const d = PAD_DISTANCE;
-
-      const x = cursorX + Math.cos(a) * d;
-      const y = cursorY + Math.sin(a) * d;
-
-      let ok = true;
-      for (const p of state.pads) {
-        const dx = x - p.x;
-        const dy = y - p.y;
-        if (dx * dx + dy * dy < PAD_MIN_SEP * PAD_MIN_SEP) {
-          ok = false;
-          break;
-        }
-      }
-
-      if (ok) {
-        state.pads.push({
-          x,
-          y,
-          opacity: 0.5,
-        });
-        safety = 0;
-      }
-    }
+    state.pads = [
+      {
+        x: cx - PAD_SIZE / 2,
+        y: cy - PAD_SIZE / 2,
+        opacity: 0.5,
+      },
+    ];
   }
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    let far = true;
-    for (const p of state.pads) {
+    if (state.pads.length === 0) {
+      spawnPads(mouse.x, mouse.y);
+    } else {
+      const p = state.pads[0];
+
       const dx = mouse.x - (p.x + PAD_SIZE / 2);
       const dy = mouse.y - (p.y + PAD_SIZE / 2);
-      if (Math.hypot(dx, dy) <= MAX_CURSOR_DISTANCE) {
-        far = false;
-        break;
+
+      if (Math.hypot(dx, dy) > PAD_DISTANCE) {
+        spawnPads(mouse.x, mouse.y);
       }
-    }
-    if (far) {
-      spawnPads(mouse.x, mouse.y);
     }
 
     for (const p of state.pads) {

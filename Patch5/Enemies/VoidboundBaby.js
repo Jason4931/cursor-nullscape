@@ -202,7 +202,7 @@ export function setup(host, hardMode) {
       const dy = mouse.y - state.y;
 
       if (Math.hypot(dx, dy) <= state.size * 0.4) {
-        death("Baby");
+        death("VoidboundBaby");
         return;
       }
 
@@ -252,7 +252,7 @@ export function setup(host, hardMode) {
       const dy = mouse.y - state.y;
 
       if (Math.hypot(dx, dy) <= state.size * 0.4) {
-        death("Baby");
+        death("VoidboundBaby");
         return;
       }
 

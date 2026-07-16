@@ -362,8 +362,13 @@ function getDeathMessage(name) {
   if (name === "Catalyst") {
     list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
   } else {
+    if (name === "VoidboundBaby") {
+      name = "Baby";
+    } else if (name === "VoidboundGuardian") {
+      name = "Guardian";
+    }
     list =
-      Math.random() < 0.95
+      Math.random() < 0.99
         ? DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown
         : DEATH_MESSAGES.Unknown;
   }

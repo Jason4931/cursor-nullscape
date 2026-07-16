@@ -759,7 +759,9 @@ topLeftInput.addEventListener("keydown", function (event) {
         } else if (input.toLowerCase() === "seamine") {
           spawnSeamine(entityHost, casualMode);
         } else if (input.toLowerCase() === "jumppad") {
-          spawnJumpPad(entityHost, 2000 + Math.random() * 1000);
+          for (let i = 0; i < 10; i++) {
+            spawnJumpPad(entityHost);
+          }
         } else if (entity.name === "Random") {
           const randUnlocked = ENTITY_POOL.filter((e) => {
             if (e.name === "Random") return false;
@@ -1882,8 +1884,9 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
-      spawnJumpPad(entityHost, 2500);
-      spawnJumpPad(entityHost, 3000);
+      for (let i = 0; i < 10; i++) {
+        spawnJumpPad(entityHost);
+      }
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
@@ -2852,7 +2855,9 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid, showFloor);
-          spawnJumpPad(entityHost, 2000);
+          for (let i = 0; i < 10; i++) {
+            spawnJumpPad(entityHost);
+          }
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
             const pool = ENTITY_POOL.filter((e) => e.name !== "Random");
@@ -2963,8 +2968,9 @@ function updateCamera() {
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
-            spawnJumpPad(entityHost, 2500);
-            spawnJumpPad(entityHost, 3000);
+            for (let i = 0; i < 10; i++) {
+              spawnJumpPad(entityHost);
+            }
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);

@@ -161,7 +161,7 @@ export function setup(host, hardMode) {
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
       if (dx * dx + dy * dy < 12 * 12) {
-        death("Guardian");
+        death("VoidboundGuardian");
       }
     }
   }

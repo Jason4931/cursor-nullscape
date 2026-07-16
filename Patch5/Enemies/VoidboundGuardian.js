@@ -273,7 +273,7 @@ export function setup(host, casualMode, hardMode) {
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         if (dx * dx + dy * dy < 40 * 40) {
-          death("Guardian");
+          death("VoidboundGuardian");
         }
 
         if (p.phaseTimer >= 1) {
@@ -317,7 +317,7 @@ export function setup(host, casualMode, hardMode) {
             const ry = dx * s + dy * c;
 
             if (Math.abs(ry) <= beamHalfWidth) {
-              death("Guardian");
+              death("VoidboundGuardian");
               break;
             }
           }
