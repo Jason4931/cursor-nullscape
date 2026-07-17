@@ -51,6 +51,7 @@ x frame
 v hazard
 v seamine
 v jumppad
+v triaorb
 v grindrail
 v pylons
 v reality collapse
@@ -60,8 +61,6 @@ x altars
 
 vx catalyst
 vx celestial
-
-REWORK JUMPPADS to be like seamines
 
 Chaos: Spawn a PERMANENT entity (no restriction spawn & chaos entities) and give +0.5x (spawn 2 on extreme)
 Purgatory: +1x and 5 temporary entities

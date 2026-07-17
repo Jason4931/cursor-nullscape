@@ -759,8 +759,8 @@ topLeftInput.addEventListener("keydown", function (event) {
         } else if (input.toLowerCase() === "seamine") {
           spawnSeamine(entityHost, casualMode);
         } else if (input.toLowerCase() === "jumppad") {
-          for (let i = 0; i < 10; i++) {
-            spawnJumpPad(entityHost);
+          for (let i = 1; i <= 10; i++) {
+            spawnJumpPad(entityHost, i >= 8);
           }
         } else if (entity.name === "Random") {
           const randUnlocked = ENTITY_POOL.filter((e) => {
@@ -1884,8 +1884,8 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
-      for (let i = 0; i < 10; i++) {
-        spawnJumpPad(entityHost);
+      for (let i = 1; i <= 10; i++) {
+        spawnJumpPad(entityHost, i >= 8);
       }
       spawnSeamine(entityHost, casualMode);
       spawnSeamine(entityHost, casualMode);
@@ -2855,8 +2855,8 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid, showFloor);
-          for (let i = 0; i < 10; i++) {
-            spawnJumpPad(entityHost);
+          for (let i = 1; i <= 10; i++) {
+            spawnJumpPad(entityHost, i >= 8);
           }
           if (Math.random() < 0.01) spawnGlitch(entityHost);
           if (Math.random() < 0.01) {
@@ -2968,8 +2968,8 @@ function updateCamera() {
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
-            for (let i = 0; i < 10; i++) {
-              spawnJumpPad(entityHost);
+            for (let i = 1; i <= 10; i++) {
+              spawnJumpPad(entityHost, i >= 8);
             }
             spawnSeamine(entityHost, casualMode);
             spawnSeamine(entityHost, casualMode);
