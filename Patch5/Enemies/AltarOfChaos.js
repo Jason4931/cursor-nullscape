@@ -1,7 +1,7 @@
 import { mouse } from "../entityHost.js";
 import {
   pickRandomPlaced4or5,
-  activatePassage,
+  activateChaos,
   entityCanvas2,
   canvas,
   getCameraPos,
@@ -10,7 +10,7 @@ import {
 } from "../main.js";
 
 const altar = new Image();
-altar.src = "./ASSET/Misc/AltarOfPassage.png";
+altar.src = "./ASSET/Misc/AltarOfChaos.png";
 
 export function setup(host, hardMode) {
   const state = {
@@ -46,7 +46,7 @@ export function setup(host, hardMode) {
     const r = state.size * 0.5;
 
     if (dx * dx + dy * dy <= r * r) {
-      activatePassage();
+      activateChaos();
       state.resultTimer = 4;
       teleport();
     }
@@ -86,9 +86,9 @@ export function setup(host, hardMode) {
     ctx.drawImage(
       altar,
       Math.round(state.x - size * 0.2),
-      Math.round(state.y - size * 0.9),
+      Math.round(state.y - size * 0.85),
       size * 0.4,
-      size,
+      size * 0.9,
     );
 
     if (state.resultTimer > 0) {
@@ -121,14 +121,14 @@ export function setup(host, hardMode) {
       ctx.font = "30px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#ff0";
+      ctx.fillStyle = "#f00";
       ctx.strokeText(
-        "Altar of Passage",
+        "Altar of Chaos",
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 - 15,
       );
       ctx.fillText(
-        "Altar of Passage",
+        "Altar of Chaos",
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 - 15,
       );
@@ -138,12 +138,12 @@ export function setup(host, hardMode) {
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
       ctx.strokeText(
-        `Tiles with Golden Gifts (4x normal Gifts) appear.`,
+        `Good luck.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
-        `Tiles with Golden Gifts (4x normal Gifts) appear.`,
+        `Good luck.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );

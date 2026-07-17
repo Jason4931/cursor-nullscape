@@ -465,8 +465,8 @@ let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
-export let shieldActive = [false, false];
-export let shieldBroken = [false, false];
+export let shieldActive = [false, false, false, false, false];
+export let shieldBroken = [false, false, false, false, false];
 export function activateShield() {
   if (!shieldActive[0]) {
     shieldActive[0] = true;
@@ -474,6 +474,18 @@ export function activateShield() {
   }
   if (!shieldActive[1]) {
     shieldActive[1] = true;
+    return;
+  }
+  if (!shieldActive[2]) {
+    shieldActive[2] = true;
+    return;
+  }
+  if (!shieldActive[3]) {
+    shieldActive[3] = true;
+    return;
+  }
+  if (!shieldActive[4]) {
+    shieldActive[4] = true;
     return;
   }
 }
@@ -532,26 +544,47 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (shieldActive[1] && name != "Void" && name != "VoidImplosions") {
-    shieldBroken[1] = true;
-    setTimeout(() => {
-      shieldBroken[1] = false;
-      shieldActive[1] = false;
-    }, 1000);
-    return;
-  }
-  if (
-    shieldActive[0] &&
-    !shieldActive[1] &&
-    name != "Void" &&
-    name != "VoidImplosions"
-  ) {
-    shieldBroken[0] = true;
-    setTimeout(() => {
-      shieldBroken[0] = false;
-      shieldActive[0] = false;
-    }, 1000);
-    return;
+  if (name != "Void" && name != "VoidImplosions") {
+    if (shieldActive[4]) {
+      shieldBroken[4] = true;
+      setTimeout(() => {
+        shieldBroken[4] = false;
+        shieldActive[4] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[3] && !shieldActive[4]) {
+      shieldBroken[3] = true;
+      setTimeout(() => {
+        shieldBroken[3] = false;
+        shieldActive[3] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[2] && !shieldActive[3]) {
+      shieldBroken[2] = true;
+      setTimeout(() => {
+        shieldBroken[2] = false;
+        shieldActive[2] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[1] && !shieldActive[2]) {
+      shieldBroken[1] = true;
+      setTimeout(() => {
+        shieldBroken[1] = false;
+        shieldActive[1] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[0] && !shieldActive[1]) {
+      shieldBroken[0] = true;
+      setTimeout(() => {
+        shieldBroken[0] = false;
+        shieldActive[0] = false;
+      }, 1000);
+      return;
+    }
   }
   if (
     name != "Catalyst" &&

@@ -93,13 +93,11 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawX = state.x - size * 0.02;
-    const drawY = state.y - size * 0.37;
     ctx.drawImage(
       altar,
-      Math.round(drawX - size * 0.5),
-      Math.round(drawY - size * 0.5),
-      size,
+      Math.round(state.x - size * 0.175),
+      Math.round(state.y - size * 0.975),
+      size * 0.35,
       size,
     );
 

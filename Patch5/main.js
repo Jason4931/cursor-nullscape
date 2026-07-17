@@ -19,6 +19,7 @@ import {
   dies,
 } from "./entityHost.js";
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
+import { setup as spawnAltarChaos } from "./Enemies/AltarOfChaos.js";
 import { setup as spawnAltarChance } from "./Enemies/AltarOfChance.js";
 import { setup as spawnAltarProtection } from "./Enemies/AltarOfProtection.js";
 import { setup as spawnAltarPurification } from "./Enemies/AltarOfPurification.js";
@@ -425,7 +426,7 @@ const ENTITY_POOL = [
     name: "Voidbreaker",
     altName: "VB",
     spawn: () => spawnVoidbreaker(entityHost, casualMode, hardMode),
-    start: 1500,
+    start: 1200,
     src: "./ASSET/Enemies/VoidbreakerIcon.png",
     desc: "Materializes swords around you, firing them shortly after.",
   },
@@ -562,7 +563,7 @@ const ENTITY_POOL = [
     spawn: () => spawnCelestial(entityHost, hardMode),
     start: 1000000000,
     src: "./ASSET/Enemies/Celestial.png",
-    desc: "YOU SHALL WILT IN THIS DANCE WITH ME.",
+    desc: "TO MAKE THINGS EVEN.",
   },
 ];
 const ProgressionEvents = [
@@ -1044,8 +1045,9 @@ export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let collectedCountBeforeCelestial = 0;
 let giftMultiplier = 1;
-export function setGiftMultiplier(v) {
-  giftMultiplier *= v;
+export function setGiftMultiplier(v, set = false) {
+  if (!set) giftMultiplier *= v;
+  else giftMultiplier = v;
 }
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
@@ -1117,12 +1119,29 @@ let firstDisableProgression = false;
 let cheattimer = 0;
 let tipstimer = 0;
 const altars = [
-  { name: "chance", activate: () => activateChance() },
-  { name: "echo", activate: () => activateEcho() },
-  { name: "passage", activate: () => activatePassage() },
-  { name: "protection", activate: () => activateProtection() },
-  { name: "purgatory", activate: () => activatePurgatory() },
-  { name: "purification", activate: () => activatePurification() },
+  { name: "chance", activate: () => activateChance(), spawn: spawnAltarChance },
+  { name: "echo", activate: () => activateEcho(), spawn: spawnAltarEcho },
+  {
+    name: "passage",
+    activate: () => activatePassage(),
+    spawn: spawnAltarPassage,
+  },
+  {
+    name: "protection",
+    activate: () => activateProtection(),
+    spawn: spawnAltarProtection,
+  },
+  {
+    name: "purgatory",
+    activate: () => activatePurgatory(),
+    spawn: spawnAltarPurgatory,
+  },
+  { name: "chaos", activate: () => activateChaos(), spawn: spawnAltarChaos },
+  {
+    name: "purification",
+    activate: () => activatePurification(),
+    spawn: spawnAltarPurification,
+  },
 ];
 export let soundStopped = false;
 const topLeftInput = document.getElementById("spawn-input");
@@ -1147,7 +1166,8 @@ topLeftInput.addEventListener("keydown", function (event) {
       input.toLowerCase() === "seamine" ||
       input.toLowerCase() === "jumppad" ||
       input.toLowerCase() === "realitycollapse" ||
-      input.toLowerCase() === "grindrail";
+      input.toLowerCase() === "grindrail" ||
+      input.toLowerCase().startsWith("altar");
     if (entity) {
       let spawned = 0;
       const interval = setInterval(() => {
@@ -1177,6 +1197,12 @@ topLeftInput.addEventListener("keydown", function (event) {
         } else if (input.toLowerCase() === "realitycollapse") {
           spawnRealityCollapse(entityHost, true);
           spawnRealityCollapse(entityHost);
+        } else if (input.toLowerCase().startsWith("altar")) {
+          const name = input.slice(5).toLowerCase();
+          const altar = altars.find((a) => a.name === name);
+          if (altar) {
+            altar.spawn(entityHost, hardMode);
+          }
         } else if (entity.name === "Random") {
           const randUnlocked = chaosMode
             ? ENTITY_POOL.filter((e) => {
@@ -1417,6 +1443,13 @@ topLeftInput.addEventListener("keydown", function (event) {
         topLeftInput.value = "";
         break;
       }
+    }
+    const setgiftmultiplierMatch = input.match(
+      /^setgiftmultiplier\(([\d.]+)\)$/,
+    );
+    if (setgiftmultiplierMatch) {
+      setGiftMultiplier(parseFloat(setgiftmultiplierMatch[1]), true);
+      topLeftInput.value = "";
     }
     const entityspawndelayMatch = input.match(/^entityspawndelay\((\d+)\)$/);
     if (entityspawndelayMatch) {
@@ -2518,8 +2551,12 @@ export function spawnCelestialIntro() {
   onCelestial = true;
   onCelestialIntro = true;
   disableCollect = true;
-  activateShield();
-  activateShield();
+  if (!shieldActive[1]) {
+    activateShield();
+    if (!shieldActive[0]) {
+      activateShield();
+    }
+  }
   startCelestialIntro(entityHost);
   stopAllEntity = true;
   disablespawn = true;
@@ -2657,21 +2694,26 @@ export function spawnCelestialAfterEnding() {
 }
 /* ===== ALTARS ===== */
 let lastAltar = null;
-function ENTITY_SPAWN(temp = false, exceptEntity = null) {
+function ENTITY_SPAWN(
+  temp = false,
+  exceptEntity = null,
+  chaosIncluded = false,
+) {
   let name = null;
-  const unlocked = chaosMode
-    ? ENTITY_POOL.filter((e) => {
-        if (e.name === "Celestial" || e.name === "Catalyst") return false;
-        if (exceptEntity && e.name === exceptEntity) return false;
-        return true;
-      })
-    : ENTITY_POOL.filter((e) => {
-        if (e.chaosOnly) return false;
-        if (collectedCount < e.start) return false;
-        if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
-        if (exceptEntity && e.name === exceptEntity) return false;
-        return true;
-      });
+  const unlocked =
+    chaosMode || chaosIncluded
+      ? ENTITY_POOL.filter((e) => {
+          if (e.name === "Celestial" || e.name === "Catalyst") return false;
+          if (exceptEntity && e.name === exceptEntity) return false;
+          return true;
+        })
+      : ENTITY_POOL.filter((e) => {
+          if (e.chaosOnly) return false;
+          if (collectedCount < e.start) return false;
+          if (e.unstackable && spawnedUnstackables.has(e.name)) return false;
+          if (exceptEntity && e.name === exceptEntity) return false;
+          return true;
+        });
 
   if (unlocked.length > 0) {
     let pick;
@@ -2722,7 +2764,8 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       if (randUnlocked.length !== 0) {
         let randPick = randUnlocked[(Math.random() * randUnlocked.length) | 0];
         const unregister = randPick.spawn();
-        if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
+        if (!temp && typeof unregister === "function")
+          trackHighestEntity(unregister, pick.start, pick.name);
         if (temp && typeof unregister === "function") {
           setTimeout(() => {
             unregister();
@@ -2760,7 +2803,8 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else if (pick.name === "Catalyst") {
       const unregister = pick.spawn();
-      if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
+      if (!temp && typeof unregister === "function")
+        trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
@@ -2797,7 +2841,8 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
       }
     } else {
       const unregister = pick.spawn();
-      if (!temp) trackHighestEntity(unregister, pick.start, pick.name);
+      if (!temp && typeof unregister === "function")
+        trackHighestEntity(unregister, pick.start, pick.name);
       if (temp && typeof unregister === "function") {
         setTimeout(() => {
           unregister();
@@ -2913,38 +2958,14 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
 }
 export function activatePurgatory() {
   lastAltar = "Purgatory";
-  let beforeCollectedCount = collectedCount;
-  let beforeLastEntitySpawnAt = lastEntitySpawnAt;
-  if (!disableCollect && !stopCollect) actualCollectedCount += 1000;
-  if (actualCollectedCount > 10000) actualCollectedCount = 10000;
-  collectedCount = hardMode
-    ? actualCollectedCount
-    : Math.floor(actualCollectedCount / 2);
-  if (
-    latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-    latestCollectedCount <= (hardMode ? 12500 : 6250)
-  ) {
-    counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
-    lvlEl.textContent = `lvl 100`;
-  } else {
-    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
-    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
-  }
-  lastEntitySpawnAt = collectedCount;
-  const totalSpawns = hardMode ? 10 : 5;
-  let tempCount = 0;
-  for (let i = 0; i < totalSpawns; i++) {
-    if (beforeCollectedCount < beforeLastEntitySpawnAt) {
-      tempCount++;
-      beforeCollectedCount += 100;
-    } else {
-      break;
-    }
-  }
-  for (let i = 0; i < totalSpawns; i++) {
+  giftMultiplier += 2;
+  for (let i = 0; i < 5; i++) {
     ENTITY_SPAWN(true);
-    if (i < tempCount == false) ENTITY_SPAWN();
   }
+}
+export function activateChaos() {
+  giftMultiplier += 1;
+  ENTITY_SPAWN(undefined, undefined, true);
 }
 let alreadyBenefitChanced = [false, false];
 export function activateChance() {
@@ -2982,7 +3003,6 @@ export function activateChance() {
     case 2:
       // + gift multiplier x2
       giftMultiplier *= 2;
-      alreadyBenefitChanced[0] = true;
       break;
     case 3:
       // + no tripmines
@@ -2997,11 +3017,19 @@ export function activateChance() {
   }
   return chance;
 }
-export function activateProtection() {
+export function activateProtection(echo = false) {
+  if (echo) {
+    activateShield();
+    return;
+  }
   lastAltar = "Protection";
   if (
     actualCollectedCount >= 1000 &&
-    (shieldActive[0] === false || shieldActive[1] === false)
+    (shieldActive[0] === false ||
+      shieldActive[1] === false ||
+      shieldActive[2] === false ||
+      shieldActive[3] === false ||
+      shieldActive[4] === false)
   ) {
     actualCollectedCount -= 1000;
     collectedCount = hardMode
@@ -3022,9 +3050,32 @@ export function activateProtection() {
   }
   return false;
 }
-export function activatePassage() {
+export function activatePassage(echo = false) {
+  if (echo) {
+    if (!disableCollect)
+      actualCollectedCount += 100 + Math.floor(Math.random() * 5) * 100;
+    if (actualCollectedCount > 10000) actualCollectedCount = 10000;
+    collectedCount = hardMode
+      ? actualCollectedCount
+      : Math.floor(actualCollectedCount / 2);
+    if (
+      latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+      latestCollectedCount <= (hardMode ? 12500 : 6250)
+    ) {
+      counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
+      lvlEl.textContent = `lvl 100`;
+    } else {
+      counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
+      lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+    }
+    lastEntitySpawnAt = collectedCount;
+    return;
+  }
   lastAltar = "Passage";
   passageGoldPattern += 10;
+  setTimeout(() => {
+    passageGoldPattern += 5;
+  }, 6000);
   changePatterns();
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
@@ -3039,16 +3090,13 @@ export function activateEcho() {
 
   switch (beforeLastAltar) {
     case "Protection":
-      activateProtection();
+      activateProtection(true);
       break;
     case "Chance":
       activateChance();
       break;
-    case "Purification":
-      activatePurification();
-      break;
     case "Passage":
-      activatePassage();
+      activatePassage(true);
       break;
     case "Purgatory":
       activatePurgatory();
@@ -3064,8 +3112,6 @@ export function activateEcho() {
       return "Altar of Protection";
     case "Chance":
       return "Altar of Chance";
-    case "Purification":
-      return "Altar of Purification";
     case "Passage":
       return "Altar of Passage";
     case "Purgatory":
@@ -3077,8 +3123,6 @@ export function activateEcho() {
   }
 }
 export function activatePurification() {
-  lastAltar = "Purification";
-
   if (highestEntitySpawned.length === 0) return false;
   const index = (Math.random() * highestEntitySpawned.length) | 0;
   const chosen = highestEntitySpawned[index];
@@ -3121,6 +3165,20 @@ export function activatePurification() {
 
   renderPanel();
   const newEntity = ENTITY_SPAWN(false, chosen.name);
+  actualCollectedCount -= chosen.start / 2;
+  collectedCount = hardMode
+    ? actualCollectedCount
+    : Math.floor(actualCollectedCount / 2);
+  if (
+    latestCollectedCount >= (hardMode ? 10000 : 5000) &&
+    latestCollectedCount <= (hardMode ? 12500 : 6250)
+  ) {
+    counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
+    lvlEl.textContent = `lvl 100`;
+  } else {
+    counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
+    lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
+  }
   return [replacedEntity, newEntity];
 }
 
@@ -4768,20 +4826,18 @@ function updateCamera() {
         }
         if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
-          spawnAltarProtection(entityHost, hardMode);
           spawnAltarChance(entityHost, hardMode);
+          spawnAltarChaos(entityHost, hardMode);
         }
-        if (collectedCount >= (hardMode ? 1200 : 600) && !spawnedAltar[1]) {
+        if (collectedCount >= (hardMode ? 1600 : 800) && !spawnedAltar[1]) {
           spawnedAltar[1] = true;
-          spawnAltarPurgatory(entityHost, hardMode);
-          spawnAltarPassage(entityHost, hardMode);
-        }
-        if (collectedCount >= (hardMode ? 1600 : 800) && !spawnedAltar[2]) {
-          spawnedAltar[2] = true;
           spawnAltarEcho(entityHost, hardMode);
+          spawnAltarPassage(entityHost, hardMode);
+          spawnAltarProtection(entityHost, hardMode);
+          spawnAltarPurgatory(entityHost, hardMode);
         }
-        if (collectedCount >= (hardMode ? 2000 : 1000) && !spawnedAltar[3]) {
-          spawnedAltar[3] = true;
+        if (collectedCount >= (hardMode ? 2800 : 1400) && !spawnedAltar[2]) {
+          spawnedAltar[2] = true;
           spawnAltarPurification(entityHost, hardMode);
         }
 
@@ -4846,14 +4902,17 @@ function updateCamera() {
               let randPick =
                 randUnlocked[(Math.random() * randUnlocked.length) | 0];
               const unregister = randPick.spawn();
-              trackHighestEntity(unregister, pick.start, pick.name);
+              if (typeof unregister === "function")
+                trackHighestEntity(unregister, pick.start, pick.name);
             }
           } else if (pick.name === "Catalyst") {
             const unregister = pick.spawn();
-            trackHighestEntity(unregister, pick.start, pick.name);
+            if (typeof unregister === "function")
+              trackHighestEntity(unregister, pick.start, pick.name);
           } else {
             const unregister = pick.spawn();
-            trackHighestEntity(unregister, pick.start, pick.name);
+            if (typeof unregister === "function")
+              trackHighestEntity(unregister, pick.start, pick.name);
           }
           if (pick.src) registerEntitySpawn(pick.name, pick.src);
           if (collectedCount >= 1800 && !highriseEnabled) {
@@ -5162,7 +5221,13 @@ function loop(now) {
     ctx.fill();
   }
 
-  if (shieldBroken[0] || shieldBroken[1]) {
+  if (
+    shieldBroken[0] ||
+    shieldBroken[1] ||
+    shieldBroken[2] ||
+    shieldBroken[3] ||
+    shieldBroken[4]
+  ) {
     const size = TILE * (1 + Math.random());
     const shieldg = ctx.createRadialGradient(
       mouse.x,
@@ -5172,16 +5237,22 @@ function loop(now) {
       mouse.y,
       size,
     );
-    shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
+    shieldg.addColorStop(0, "rgba(255, 0, 0, 0)");
     shieldg.addColorStop(
       1,
-      `rgba(${Math.floor(Math.random() * 256)}, 0, 255, ${Math.random() * 0.5})`,
+      `rgba(${128 + Math.floor(Math.random() * 128)}, 0, 0, ${Math.random() * 0.5})`,
     );
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, size - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
     ctx.fill();
-  } else if (shieldActive[0] || shieldActive[1]) {
+  } else if (
+    shieldActive[0] ||
+    shieldActive[1] ||
+    shieldActive[2] ||
+    shieldActive[3] ||
+    shieldActive[4]
+  ) {
     const shieldg = ctx.createRadialGradient(
       mouse.x,
       mouse.y,
@@ -5190,11 +5261,21 @@ function loop(now) {
       mouse.y,
       TILE,
     );
-    shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
-    if (shieldActive[1]) {
-      shieldg.addColorStop(1, `rgba(255, 0, 255, 1)`);
+    if (shieldActive[4]) {
+      shieldg.addColorStop(0, "#ffffff00");
+      shieldg.addColorStop(1, `#ffffff`);
+    } else if (shieldActive[3]) {
+      shieldg.addColorStop(0, "#ffff0000");
+      shieldg.addColorStop(1, `#ffff00`);
+    } else if (shieldActive[2]) {
+      shieldg.addColorStop(0, "#00ff0000");
+      shieldg.addColorStop(1, `#00ff00`);
+    } else if (shieldActive[1]) {
+      shieldg.addColorStop(0, "#a834eb00");
+      shieldg.addColorStop(1, `#a834eb`);
     } else if (shieldActive[0]) {
-      shieldg.addColorStop(1, `rgba(0, 0, 255, 1)`);
+      shieldg.addColorStop(0, "#00ffff00");
+      shieldg.addColorStop(1, `#00ffff`);
     }
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
@@ -5296,7 +5377,7 @@ function loop(now) {
   if (abilityCooldown < 0) abilityCooldown = 0;
   speedBoostScale -= 0.033;
   if (speedBoostScale < 1) speedBoostScale = 1;
-  const change = 1 / (30 * 120);
+  const change = 1 / (30 * 60);
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
   if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;

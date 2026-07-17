@@ -83,12 +83,11 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawY = state.y - size * 0.35;
     ctx.drawImage(
       altar,
-      Math.round(state.x - size * 0.5),
-      Math.round(drawY - size * 0.5),
-      size,
+      Math.round(state.x - size * 0.2),
+      Math.round(state.y - size * 0.95),
+      size * 0.4,
       size,
     );
 
@@ -139,12 +138,12 @@ export function setup(host, hardMode) {
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
       ctx.strokeText(
-        `Gained 1000 gifts. Good luck.`,
+        `+2x Gift Yield, Good luck.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
-        `Gained 1000 gifts. Good luck.`,
+        `+2x Gift Yield, Good luck.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );

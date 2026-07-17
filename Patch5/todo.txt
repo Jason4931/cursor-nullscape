@@ -62,15 +62,7 @@ x altars
 vx catalyst
 vx celestial
 
-Chaos: Spawn a PERMANENT entity (no restriction spawn & chaos entities) and give +0.5x (spawn 2 on extreme)
-Purgatory: +1x and 5 temporary entities
 Chance: Wiki bitch
-Protection: 4 Shield stack
-Purification: Limit except curses type (cannot despawn but can spawn) and cost gift
-Echo: Actual echo (Wiki)
-
-setgiftmultiplier(1)
-
 No tripmines [1 minute] (none on tweak)
 +0.5x Golden Gift Yield Increase (+0.75x if high, +0.25x if tweak)
 +0.75x Golden Gift Yield Increase (+1.25x if high, +0.5x if tweak)

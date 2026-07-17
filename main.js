@@ -650,8 +650,9 @@ export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let giftMultiplier = 1;
-export function setGiftMultiplier(v) {
-  giftMultiplier *= v;
+export function setGiftMultiplier(v, set = false) {
+  if (!set) giftMultiplier *= v;
+  else giftMultiplier = v;
 }
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
@@ -717,12 +718,28 @@ let firstDisableProgression = false;
 let cheattimer = 0;
 let tipstimer = 0;
 const altars = [
-  { name: "chance", activate: () => activateChance() },
-  { name: "echo", activate: () => activateEcho() },
-  { name: "passage", activate: () => activatePassage() },
-  { name: "protection", activate: () => activateProtection() },
-  { name: "purgatory", activate: () => activatePurgatory() },
-  { name: "purification", activate: () => activatePurification() },
+  { name: "chance", activate: () => activateChance(), spawn: spawnAltarChance },
+  { name: "echo", activate: () => activateEcho(), spawn: spawnAltarEcho },
+  {
+    name: "passage",
+    activate: () => activatePassage(),
+    spawn: spawnAltarPassage,
+  },
+  {
+    name: "protection",
+    activate: () => activateProtection(),
+    spawn: spawnAltarProtection,
+  },
+  {
+    name: "purgatory",
+    activate: () => activatePurgatory(),
+    spawn: spawnAltarPurgatory,
+  },
+  {
+    name: "purification",
+    activate: () => activatePurification(),
+    spawn: spawnAltarPurification,
+  },
 ];
 export let soundStopped = false;
 const topLeftInput = document.getElementById("spawn-input");
@@ -743,7 +760,8 @@ topLeftInput.addEventListener("keydown", function (event) {
       ENTITY_POOL.find((e) => e.altName?.toLowerCase() === input) ||
       input.toLowerCase() === "catalyst" ||
       input.toLowerCase() === "seamine" ||
-      input.toLowerCase() === "jumppad";
+      input.toLowerCase() === "jumppad" ||
+      input.toLowerCase().startsWith("altar");
     if (entity) {
       let spawned = 0;
       const interval = setInterval(() => {
@@ -761,6 +779,12 @@ topLeftInput.addEventListener("keydown", function (event) {
         } else if (input.toLowerCase() === "jumppad") {
           for (let i = 1; i <= 10; i++) {
             spawnJumpPad(entityHost, i >= 8);
+          }
+        } else if (input.toLowerCase().startsWith("altar")) {
+          const name = input.slice(5).toLowerCase();
+          const altar = altars.find((a) => a.name === name);
+          if (altar) {
+            altar.spawn(entityHost, hardMode);
           }
         } else if (entity.name === "Random") {
           const randUnlocked = ENTITY_POOL.filter((e) => {
@@ -899,6 +923,13 @@ topLeftInput.addEventListener("keydown", function (event) {
         topLeftInput.value = "";
         break;
       }
+    }
+    const setgiftmultiplierMatch = input.match(
+      /^setgiftmultiplier\(([\d.]+)\)$/,
+    );
+    if (setgiftmultiplierMatch) {
+      setGiftMultiplier(parseFloat(setgiftmultiplierMatch[1]), true);
+      topLeftInput.value = "";
     }
     const entityspawndelayMatch = input.match(/^entityspawndelay\((\d+)\)$/);
     if (entityspawndelayMatch) {
@@ -1968,7 +1999,6 @@ export function activateChance() {
     case 2:
       // + gift multiplier x2
       giftMultiplier *= 2;
-      alreadyBenefitChanced[0] = true;
       break;
     case 3:
       // + no tripmines
@@ -2011,6 +2041,9 @@ export function activateProtection() {
 export function activatePassage() {
   lastAltar = "Passage";
   passageGoldPattern += 10;
+  setTimeout(() => {
+    passageGoldPattern += 5;
+  }, 6000);
 }
 export function activateEcho() {
   const beforeLastAltar = lastAltar;
@@ -3199,10 +3232,10 @@ function loop(now) {
       mouse.y,
       size,
     );
-    shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
+    shieldg.addColorStop(0, "rgba(255, 0, 0, 0)");
     shieldg.addColorStop(
       1,
-      `rgba(${Math.floor(Math.random() * 256)}, 0, 255, ${Math.random() * 0.5})`,
+      `rgba(${128 + Math.floor(Math.random() * 128)}, 0, 0, ${Math.random() * 0.5})`,
     );
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, size - GIFT_SIZE / 2, 0, Math.PI * 2);
@@ -3219,9 +3252,11 @@ function loop(now) {
     );
     shieldg.addColorStop(0, "rgba(0, 0, 255, 0)");
     if (shieldActive[1]) {
-      shieldg.addColorStop(1, `rgba(255, 0, 255, 1)`);
+      shieldg.addColorStop(0, "#a834eb00");
+      shieldg.addColorStop(1, `#a834eb`);
     } else if (shieldActive[0]) {
-      shieldg.addColorStop(1, `rgba(0, 0, 255, 1)`);
+      shieldg.addColorStop(0, "#00ffff00");
+      shieldg.addColorStop(1, `#00ffff`);
     }
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
@@ -3306,7 +3341,7 @@ function loop(now) {
   if (abilityCooldown < 0) abilityCooldown = 0;
   speedBoostScale -= 0.033;
   if (speedBoostScale < 1) speedBoostScale = 1;
-  const change = 1 / (30 * 120);
+  const change = 1 / (30 * 60);
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
   if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
