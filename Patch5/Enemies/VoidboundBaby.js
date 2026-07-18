@@ -26,7 +26,7 @@ for (let i = 1; i <= 6; i++) {
   VBbabyCharging.push(img);
 }
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, rebirth = null) {
   const state = {
     opacity: 1,
     layers: VoidboundBaby_Idle,
@@ -80,7 +80,14 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     if (!state.initialized) {
-      randomSpawn();
+      if (!rebirth) {
+        randomSpawn();
+      } else {
+        state.x = rebirth.x;
+        state.y = rebirth.y;
+        state.size *= rebirth.scale;
+        state.lineLength *= rebirth.scale;
+      }
       state.initialized = true;
     }
 
@@ -281,9 +288,9 @@ export function setup(host, hardMode) {
       const alpha = 0.375 - state.timer;
       ctx.fillStyle = `rgba(255,0,255,${alpha})`;
 
-      const dashLength = 30;
-      const gapLength = 20;
-      const thickness = 4;
+      const dashLength = 30 * (rebirth ? rebirth.scale : 1);
+      const gapLength = 20 * (rebirth ? rebirth.scale : 1);
+      const thickness = 4 * (rebirth ? rebirth.scale : 1);
 
       const angle =
         hardMode && state.state === "charging"
@@ -354,13 +361,16 @@ export function setup(host, hardMode) {
     }
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
-    ctx.drawImage(
-      state.enemy,
-      Math.round((-state.size / 2) * 1.2),
-      Math.round((-state.size / 2) * 1.2),
-      Math.round(state.size * 1.2),
-      Math.round(state.size * 1.2),
-    );
+    if (state.enemy) {
+      const sizescale = state.layers == VBbabyLockOnTarget ? 1.5 : 1.2;
+      ctx.drawImage(
+        state.enemy,
+        Math.round((-state.size / 2) * sizescale),
+        Math.round((-state.size / 2) * sizescale),
+        Math.round(state.size * sizescale),
+        Math.round(state.size * sizescale),
+      );
+    }
 
     ctx.restore();
   }

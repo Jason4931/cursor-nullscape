@@ -28,21 +28,27 @@ import { setup as spawnAltarEcho } from "./Enemies/AltarOfEcho.js";
 import { setup as spawnAltarPassage } from "./Enemies/AltarOfPassage.js";
 import { setup as spawnJumpPad } from "./Enemies/JumpPad.js";
 import { setup as spawnTriaOrb } from "./Enemies/TriaOrb.js";
-import { setup as spawnBell } from "./Enemies/Bell.js";
+import { dontTouchMeActive, setup as spawnBell } from "./Enemies/Bell.js";
 import { setup as spawnMart } from "./Enemies/Mart.js";
-import { setup as spawnBaby } from "./Enemies/Baby.js";
+import { rebirthActive, setup as spawnBaby } from "./Enemies/Baby.js";
 import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
 import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { setup as spawnNIL } from "./Enemies/NIL.js";
-import { setup as spawnGuardian } from "./Enemies/Guardian.js";
+import {
+  shotgunGuardianActive,
+  setup as spawnGuardian,
+} from "./Enemies/Guardian.js";
 import {
   malfunctionActive,
   setup as spawnOperator,
 } from "./Enemies/Operator.js";
-import { setup as spawnTelefragger } from "./Enemies/Telefragger.js";
+import {
+  mutedActive,
+  setup as spawnTelefragger,
+} from "./Enemies/Telefragger.js";
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
@@ -53,11 +59,18 @@ import { setup as spawnRazorbloom } from "./Enemies/Razorbloom.js";
 import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
+import { setup as spawnEvilCadence } from "./Enemies/EvilCadence.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnQuartz } from "./Enemies/Quartz.js";
 import { setup as spawnVisage } from "./Enemies/Visage.js";
-import { setup as spawnVoidboundGuardian } from "./Enemies/VoidboundGuardian.js";
-import { setup as spawnScrapmaw } from "./Enemies/Scrapmaw.js";
+import {
+  shotgunVBGuardianActive,
+  setup as spawnVoidboundGuardian,
+} from "./Enemies/VoidboundGuardian.js";
+import {
+  blueprintCrossBeamsActive,
+  setup as spawnScrapmaw,
+} from "./Enemies/Scrapmaw.js";
 import { setup as spawnCatalyst } from "./Enemies/Catalyst.js";
 import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
@@ -211,6 +224,7 @@ export let onCelestial = false;
 let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
+const spawnedCurses = new Set();
 export let spaceHeld = false;
 export let shiftlockEase = 1;
 export let ability = false;
@@ -336,6 +350,7 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Malfunction.png",
     unstackable: true,
     desc: "Operator have 50% chance to become Voidbound. Stay still 3 times to survive.",
+    curseType: true,
   },
   {
     name: "Telefragger",
@@ -498,6 +513,15 @@ const ENTITY_POOL = [
     chaosOnly: true,
   },
   {
+    name: "EvilCadence",
+    altName: "EvilCad",
+    spawn: () => spawnEvilCadence(entityHost, hardMode),
+    start: 0,
+    src: "./ASSET/Enemies/EvilCadence.png",
+    desc: "Don't collect the instruments, keep it at bay.",
+    chaosOnly: true,
+  },
+  {
     name: "Locust",
     altName: "Belchboy",
     spawn: () => spawnLocust(entityHost),
@@ -514,6 +538,7 @@ const ENTITY_POOL = [
     rare: true,
     desc: "Due to popular demand, the ICBM will now raze the entire map.",
     chaosOnly: true,
+    curseType: true,
   },
   {
     name: "Legion",
@@ -524,6 +549,65 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Legion.png",
     desc: "You and what... army... oh...",
     chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "Don'tTouchMe",
+    altName: "DontTouchMe",
+    spawn: () => {
+      dontTouchMeActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Placeholder.png",
+    desc: "Don't ring Bell..",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "Shotgun",
+    spawn: () => {
+      shotgunGuardianActive[0] = true;
+      shotgunVBGuardianActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Shotgun.png",
+    desc: "Guardian will fire a spread of bullets rather than a volley.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "Blueprint:CrossBeams",
+    altName: "BlueprintCrossBeams",
+    spawn: () => {
+      blueprintCrossBeamsActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Placeholder.png",
+    desc: "Lasers now cross.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "Muted",
+    spawn: () => {
+      mutedActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Muted.png",
+    desc: "Removes Telefragger's indicator.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "Rebirth",
+    spawn: () => {
+      rebirthActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Rebirth.png",
+    desc: "All babies will turn into Voidbound Babies.",
+    chaosOnly: true,
+    curseType: true,
   },
   {
     name: "Cascade",
@@ -1209,6 +1293,7 @@ topLeftInput.addEventListener("keydown", function (event) {
                 if (e.name === "Celestial" || e.name === "Catalyst")
                   return false;
                 if (e.name === "Random") return false;
+                if (e.curseType) return false;
                 return true;
               })
             : ENTITY_POOL.filter((e) => {
@@ -2707,6 +2792,7 @@ function ENTITY_SPAWN(
       ? ENTITY_POOL.filter((e) => {
           if (e.name === "Celestial" || e.name === "Catalyst") return false;
           if (exceptEntity && e.name === exceptEntity) return false;
+          if (e.curseType && spawnedCurses.has(e.name)) return false;
           return true;
         })
       : ENTITY_POOL.filter((e) => {
@@ -2754,6 +2840,7 @@ function ENTITY_SPAWN(
         ? ENTITY_POOL.filter((e) => {
             if (e.name === "Celestial" || e.name === "Catalyst") return false;
             if (e.name === "Random") return false;
+            if (e.curseType) return false;
             return true;
           })
         : ENTITY_POOL.filter((e) => {
@@ -2772,6 +2859,7 @@ function ENTITY_SPAWN(
           setTimeout(() => {
             unregister();
             spawnedUnstackables.delete(pick.name);
+            spawnedCurses.delete(pick.name);
 
             const data = tempEntityCounts.get(pick.name);
             if (data) {
@@ -2811,6 +2899,7 @@ function ENTITY_SPAWN(
         setTimeout(() => {
           unregister();
           spawnedUnstackables.delete(pick.name);
+          spawnedCurses.delete(pick.name);
 
           const data = tempEntityCounts.get(pick.name);
           if (data) {
@@ -2849,6 +2938,7 @@ function ENTITY_SPAWN(
         setTimeout(() => {
           unregister();
           spawnedUnstackables.delete(pick.name);
+          spawnedCurses.delete(pick.name);
 
           const data = tempEntityCounts.get(pick.name);
           if (data) {
@@ -2954,6 +3044,9 @@ function ENTITY_SPAWN(
     }
     if (pick.unstackable) {
       spawnedUnstackables.add(pick.name);
+    }
+    if (pick.curseType) {
+      spawnedCurses.add(pick.name);
     }
   }
   return name;
@@ -3132,6 +3225,7 @@ export function activatePurification() {
 
   chosen.unregister();
   spawnedUnstackables.delete(chosen.name);
+  spawnedCurses.delete(pick.name);
 
   highestEntitySpawned.splice(index, 1);
 
@@ -4785,6 +4879,7 @@ function updateCamera() {
         const unlocked = chaosMode
           ? ENTITY_POOL.filter((e) => {
               if (e.name === "Celestial" || e.name === "Catalyst") return false;
+              if (e.curseType && spawnedCurses.has(e.name)) return false;
               return true;
             })
           : ENTITY_POOL.filter((e) => {
@@ -4891,6 +4986,7 @@ function updateCamera() {
                   if (e.name === "Celestial" || e.name === "Catalyst")
                     return false;
                   if (e.name === "Random") return false;
+                  if (e.curseType) return false;
                   return true;
                 })
               : ENTITY_POOL.filter((e) => {
@@ -4983,6 +5079,9 @@ function updateCamera() {
           }
           if (pick.unstackable) {
             spawnedUnstackables.add(pick.name);
+          }
+          if (pick.curseType) {
+            spawnedCurses.add(pick.name);
           }
         }
       }

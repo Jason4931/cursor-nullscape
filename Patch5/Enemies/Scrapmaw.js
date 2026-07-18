@@ -4,12 +4,12 @@ import { playSound } from "../main.js";
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Scrapmaw.png";
 
+export let blueprintCrossBeamsActive = [false];
 export function setup(host, casualMode, hardMode) {
   const state = {
     opacity: 1,
     phase: "idle",
     phaseT: 0,
-    // idleDuration: (casualMode ? 30 : 20) + Math.random(),
     idleDuration: 0,
 
     appearLine: null,
@@ -131,6 +131,24 @@ export function setup(host, casualMode, hardMode) {
             t: 0,
             life: 2,
           });
+        }
+        if (blueprintCrossBeamsActive[0]) {
+          const nx2 = Math.cos(ang + Math.PI / 2);
+          const ny2 = Math.sin(ang + Math.PI / 2);
+          const px2 = -ny2;
+          const py2 = nx2;
+          for (let i = 0; i < laserCount; i++) {
+            const offset = (i - (laserCount - 1) / 2) * spacing;
+            lasers.push({
+              x: midX + px2 * offset,
+              y: midY + py2 * offset,
+              ang: ang + Math.PI / 2,
+              nx: nx2,
+              ny: ny2,
+              t: 0,
+              life: 2,
+            });
+          }
         }
         state.lasers = lasers;
 

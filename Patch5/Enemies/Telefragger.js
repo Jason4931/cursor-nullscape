@@ -8,6 +8,7 @@ for (let i = 1; i <= 2; i++) {
   Telefragger.push(img);
 }
 
+export let mutedActive = [false];
 export function setup(host, casualMode, hardMode, deafMode) {
   const state = {
     opacity: 1,
@@ -193,7 +194,8 @@ export function setup(host, casualMode, hardMode, deafMode) {
     if (
       state.teleportTimer >= 0.9 &&
       state.teleportTimer <= 1 &&
-      !state.teleportSound
+      !state.teleportSound &&
+      !mutedActive[0]
     ) {
       playSound(
         "./ASSET/Sound/Enemies/Telefragger/Teleport.mp3",
@@ -254,7 +256,12 @@ export function setup(host, casualMode, hardMode, deafMode) {
       }
     }
 
-    if (state.teleportTimer > 0 && state.teleportTimer <= 1 && deafMode) {
+    if (
+      state.teleportTimer > 0 &&
+      state.teleportTimer <= 1 &&
+      deafMode &&
+      !mutedActive[0]
+    ) {
       const t = 1 - state.teleportTimer;
 
       const cx = Math.round(mouse.x);

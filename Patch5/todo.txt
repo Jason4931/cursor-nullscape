@@ -30,18 +30,20 @@ vx locust/belchboy
 vx big baby
 vx the eye
 vx realmweaver
-x evilcadence
+vx evilcadence
 curses
-vx legion
-vx nuclearbomb
-x Don't touch me
+v legion
+v nuclearbomb
+v Don't touch me
 x Mart slide
-x Shotgun
-x Blueprint cross beams
+v Shotgun
+v Blueprint cross beams
 x Ballet
 x Bombard
 x Lost embers
 x Redacted
+v Muted
+v Rebirth
 
 v cascade
 v corrupted

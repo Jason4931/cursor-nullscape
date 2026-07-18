@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
+import { setup as spawnVoidboundBaby } from "./VoidboundBaby.js";
 
 const Babyidle = [];
 for (let i = 1; i <= 8; i++) {
@@ -26,6 +27,7 @@ for (let i = 1; i <= 13; i++) {
   Babycharge.push(img);
 }
 
+export let rebirthActive = [false];
 export function setup(host, hardMode, scale = 1) {
   const state = {
     opacity: 1,
@@ -57,9 +59,9 @@ export function setup(host, hardMode, scale = 1) {
     chargeDuration2: 0,
     startX2: 0,
     startY2: 0,
-    speed: 1 * scale,
 
     initialized: false,
+    rebirth: false,
   };
 
   function randomSpawn() {
@@ -76,6 +78,16 @@ export function setup(host, hardMode, scale = 1) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (state.rebirth) return;
+
+    if (!state.rebirth && rebirthActive[0]) {
+      state.rebirth = true;
+      spawnVoidboundBaby(host, hardMode, {
+        x: state.x,
+        y: state.y,
+        scale: scale,
+      });
+    }
 
     if (!state.initialized) {
       randomSpawn();
@@ -242,6 +254,7 @@ export function setup(host, hardMode, scale = 1) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (state.rebirth) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;

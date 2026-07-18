@@ -32,6 +32,7 @@ for (let i = 1; i <= 75; i++) {
   GuardianEnraging.push(img);
 }
 
+export let shotgunVBGuardianActive = [false];
 export function setup(host, casualMode, hardMode) {
   const state = {
     x: 0,
@@ -109,7 +110,7 @@ export function setup(host, casualMode, hardMode) {
     return 1 - Math.pow(1 - t, 3);
   }
 
-  function firePellet(rand = false) {
+  function firePellet(rand = false, offsetAngle = null) {
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y - 40;
     const angle =
@@ -117,12 +118,19 @@ export function setup(host, casualMode, hardMode) {
       (rand ? (Math.random() < 0.5 ? 30 : -30) * (Math.PI / 180) : 0);
 
     const speed = hardMode ? 1418 : casualMode ? 630 : 945;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
+
+    if (offsetAngle !== null) {
+      vx += Math.cos(offsetAngle) * 300;
+      vy += Math.sin(offsetAngle) * 300;
+    }
 
     state.pellets.push({
       x: state.x,
       y: state.y + 40,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
+      vx,
+      vy,
       born: performance.now(),
       trail: [],
 
@@ -204,12 +212,22 @@ export function setup(host, casualMode, hardMode) {
       }
     } else if (state.mode === "shoot") {
       /* ===== SHOOT ===== */
-      const interval = state.shootDuration / 2;
+      const interval =
+        state.shootDuration / (shotgunVBGuardianActive[0] ? 1 : 2);
 
-      if (state.shotsFired < 2 && state.timer >= interval * state.shotsFired) {
+      if (
+        state.shotsFired < (shotgunVBGuardianActive[0] ? 1 : 2) &&
+        state.timer >= interval * state.shotsFired
+      ) {
         state.opacity = 1;
-        firePellet();
-        firePellet(true);
+        if (shotgunVBGuardianActive[0]) {
+          for (let i = 0; i < 8; i++) {
+            firePellet(false, (i * Math.PI * 2) / 8);
+          }
+        } else {
+          firePellet();
+          firePellet(true);
+        }
         state.shootCirc = 0;
         if (!state.layerChange[0]) {
           state.layers = state.enrage ? GuardianEnragedSHOOT : GuardianSHOOT;
@@ -217,7 +235,7 @@ export function setup(host, casualMode, hardMode) {
           if (state.shotsFired == 2) state.layerChange[0] = true;
         }
         playSound(
-          `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Firing${state.shotsFired + 1}.ogg`,
+          `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Firing${state.shotsFired + (shotgunVBGuardianActive[0] ? 2 : 1)}.ogg`,
         );
         state.shotsFired++;
       }

@@ -20,6 +20,7 @@ for (let i = 1; i <= 16; i++) {
   GuardianEnragedIdle.push(img);
 }
 
+export let shotgunGuardianActive = [false];
 export function setup(host, hardMode) {
   const state = {
     x: 0,
@@ -94,21 +95,30 @@ export function setup(host, hardMode) {
     return 1 - Math.pow(1 - t, 3);
   }
 
-  function firePellet() {
+  function firePellet(offsetAngle = null) {
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y - 20;
     const len = Math.hypot(dx, dy) || 1;
 
     const speed = hardMode ? 945 : 630;
 
-    state.pellets.push({
+    const pellet = {
       x: state.x,
       y: state.y + 20,
       vx: (dx / len) * speed,
       vy: (dy / len) * speed,
       born: performance.now(),
       trail: [],
-    });
+    };
+
+    if (offsetAngle === null) {
+      state.centerPellet = pellet;
+    } else {
+      pellet.center = state.centerPellet;
+      pellet.offsetAngle = offsetAngle;
+    }
+
+    state.pellets.push(pellet);
   }
 
   function update(dt) {
@@ -153,14 +163,22 @@ export function setup(host, hardMode) {
       }
     } else if (state.mode === "shoot") {
       /* ===== SHOOT ===== */
-      const interval = state.shootDuration / (hardMode ? 4 : 3);
+      const interval =
+        state.shootDuration /
+        ((hardMode ? 4 : 3) - (shotgunGuardianActive[0] ? 1 : 0));
 
       if (
-        state.shotsFired < (hardMode ? 4 : 3) &&
+        state.shotsFired <
+          (hardMode ? 4 : 3) - (shotgunGuardianActive[0] ? 1 : 0) &&
         state.timer >= interval * state.shotsFired
       ) {
         state.opacity = 1;
         firePellet();
+        if (shotgunGuardianActive[0]) {
+          for (let i = 0; i < 7; i++) {
+            firePellet((i * Math.PI * 2) / 7);
+          }
+        }
         state.shootCirc = 0;
         if (!state.layerChange[0]) {
           state.layers = GuardianSHOOT;
@@ -211,8 +229,16 @@ export function setup(host, hardMode) {
         }
       }
 
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
+      if (p.center) {
+        const t = (performance.now() - p.born) / 1000;
+        const r = 100 * t;
+
+        p.x = p.center.x + Math.cos(p.offsetAngle) * r;
+        p.y = p.center.y + Math.sin(p.offsetAngle) * r;
+      } else {
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+      }
 
       if (now - p.born > 10500) {
         state.pellets.splice(i, 1);

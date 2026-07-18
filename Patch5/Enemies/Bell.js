@@ -22,6 +22,7 @@ for (let i = 1; i <= 24; i++) {
   Bell_Ring_Anim.push(img);
 }
 
+export let dontTouchMeActive = [false];
 export function setup(host, hardMode, immunebell) {
   const state = {
     opacity: 1,
@@ -84,25 +85,34 @@ export function setup(host, hardMode, immunebell) {
       moveCamera(0, 50);
       toggleBellLeniency(true);
       state.hitTimer = 0;
-      bellHit.count += 1;
-      if (bellHit.count == 1) {
-        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
-      } else if (bellHit.count == 2) {
-        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_2.ogg");
-      } else if (bellHit.count == 3) {
-        playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_3.ogg");
-        playSound("./ASSET/Sound/Enemies/Bell/Overtuned.ogg");
-        setTimeout(() => {
-          playSound("./ASSET/Sound/Enemies/Bell/Overtuned_Clear.ogg");
-          bellHit.count = 2;
-        }, 27000);
-      } else if (bellHit.count >= 4) {
+      if (dontTouchMeActive[0]) {
         playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
         playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
         setTimeout(() => {
           toggleBellLeniency(false);
           death("Bell");
         }, 1000);
+      } else {
+        bellHit.count += 1;
+        if (bellHit.count == 1) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
+        } else if (bellHit.count == 2) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_2.ogg");
+        } else if (bellHit.count == 3) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_3.ogg");
+          playSound("./ASSET/Sound/Enemies/Bell/Overtuned.ogg");
+          setTimeout(() => {
+            playSound("./ASSET/Sound/Enemies/Bell/Overtuned_Clear.ogg");
+            bellHit.count = 2;
+          }, 27000);
+        } else if (bellHit.count >= 4) {
+          playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
+          playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
+          setTimeout(() => {
+            toggleBellLeniency(false);
+            death("Bell");
+          }, 1000);
+        }
       }
       cleanseZones.push({
         x: state.x,
