@@ -449,26 +449,36 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (shieldActive[1] && name != "Void" && name != "VoidImplosions") {
-    shieldBroken[1] = true;
-    setTimeout(() => {
-      shieldBroken[1] = false;
-      shieldActive[1] = false;
-    }, 1000);
-    return;
-  }
-  if (
-    shieldActive[0] &&
-    !shieldActive[1] &&
-    name != "Void" &&
-    name != "VoidImplosions"
-  ) {
-    shieldBroken[0] = true;
-    setTimeout(() => {
-      shieldBroken[0] = false;
-      shieldActive[0] = false;
-    }, 1000);
-    return;
+  if (name == "Void" || name == "VoidImplosions") {
+    if (shieldActive[0]) {
+      for (let i = 0; i < shieldActive.length; i++) {
+        shieldBroken[i] = shieldActive[i];
+      }
+      setTimeout(() => {
+        for (let i = 0; i < shieldActive.length; i++) {
+          shieldBroken[i] = false;
+          shieldActive[i] = false;
+        }
+      }, 1000);
+      return;
+    }
+  } else {
+    if (shieldActive[1]) {
+      shieldBroken[1] = true;
+      setTimeout(() => {
+        shieldBroken[1] = false;
+        shieldActive[1] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[0] && !shieldActive[1]) {
+      shieldBroken[0] = true;
+      setTimeout(() => {
+        shieldBroken[0] = false;
+        shieldActive[0] = false;
+      }, 1000);
+      return;
+    }
   }
   if (
     name != "Catalyst" &&

@@ -313,7 +313,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
-    desc: "Creates several implosions around the map that explode after a short duration.",
+    desc: "Void Implosions will start spawning. Destroy all shield.",
   },
   {
     name: "Sorrow",

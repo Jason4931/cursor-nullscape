@@ -379,7 +379,7 @@ const ENTITY_POOL = [
     start: 1000,
     src: "./ASSET/Curses/VoidImplosions.png",
     unstackable: true,
-    desc: "Void Implosions will start spawning. Bypasses shield.",
+    desc: "Void Implosions will start spawning. Destroy all shield.",
   },
   {
     name: "Oblivion",

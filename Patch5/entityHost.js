@@ -545,7 +545,21 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (name != "Void" && name != "VoidImplosions") {
+  if (name == "Void" || name == "VoidImplosions") {
+    if (shieldActive[0]) {
+      shieldLostMsg = [name, 180];
+      for (let i = 0; i < shieldActive.length; i++) {
+        shieldBroken[i] = shieldActive[i];
+      }
+      setTimeout(() => {
+        for (let i = 0; i < shieldActive.length; i++) {
+          shieldBroken[i] = false;
+          shieldActive[i] = false;
+        }
+      }, 1000);
+      return;
+    }
+  } else {
     if (shieldActive[4]) {
       shieldLostMsg = [name, 180];
       shieldBroken[4] = true;
