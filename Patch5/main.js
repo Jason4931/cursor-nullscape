@@ -17,6 +17,7 @@ import {
   shieldBroken,
   revive,
   dies,
+  shieldLostMsg,
 } from "./entityHost.js";
 import { setup as spawnAltarPurgatory } from "./Enemies/AltarOfPurgatory.js";
 import { setup as spawnAltarChaos } from "./Enemies/AltarOfChaos.js";
@@ -2551,11 +2552,11 @@ export function spawnCelestialIntro() {
   onCelestial = true;
   onCelestialIntro = true;
   disableCollect = true;
+  if (!shieldActive[0]) {
+    activateShield();
+  }
   if (!shieldActive[1]) {
     activateShield();
-    if (!shieldActive[0]) {
-      activateShield();
-    }
   }
   startCelestialIntro(entityHost);
   stopAllEntity = true;
@@ -5116,6 +5117,19 @@ function loop(now) {
     debtAltar = null;
   }
 
+  const cam = getCameraPos();
+  const screenX = cam.x;
+  const screenY = cam.y;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  const displayMultiplier =
+    giftMultiplier >= 1
+      ? Math.ceil(giftMultiplier * 2) / 2
+      : Math.floor(giftMultiplier * 2) / 2;
+  document.getElementById("entity-panel-multiplier").innerHTML =
+    `${displayMultiplier}x`;
+
   // music
   if (!lobbyMusic) {
     let rand = Math.random();
@@ -5221,6 +5235,7 @@ function loop(now) {
     ctx.fill();
   }
 
+  // shield
   if (
     shieldBroken[0] ||
     shieldBroken[1] ||
@@ -5277,10 +5292,58 @@ function loop(now) {
       shieldg.addColorStop(0, "#00ffff00");
       shieldg.addColorStop(1, `#00ffff`);
     }
-    ctx.beginPath();
-    ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
+    ctx.beginPath();
+    ctx.arc(
+      mouse.x,
+      mouse.y,
+      (TILE - GIFT_SIZE / 2) * (1 - (now % 1000) / 1000),
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
+    ctx.beginPath();
+    ctx.arc(
+      mouse.x,
+      mouse.y,
+      (TILE - GIFT_SIZE / 2) * (1 - ((now + 500) % 1000) / 1000),
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+  }
+  if (shieldLostMsg[1] > 0) {
+    shieldLostMsg[1]--;
+    ctx.save();
+    const boxHeight = 100;
+    const boxX = cam.x + w * 0.25;
+    const boxY = cam.y + h - boxHeight * 1.5;
+    const shieldCount = shieldActive.filter(
+      (_, i) => shieldActive[i] && !shieldBroken[i],
+    ).length;
+    let text = `Shield lost to ${shieldLostMsg[0]}`;
+    let text2 =
+      shieldCount > 0
+        ? `${shieldCount} Shield remaining.`
+        : `No shields remaining.`;
+
+    ctx.globalAlpha = Math.min(1, shieldLostMsg[1] / 30);
+    ctx.fillStyle = `#0a3cff80`;
+    ctx.fillRect(boxX, boxY, w * 0.5, boxHeight);
+    ctx.strokeStyle = `#0a3cff`;
+    ctx.strokeRect(boxX, boxY, w * 0.5, boxHeight);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.lineWidth = 2;
+    ctx.font = "30px sans-serif";
+    ctx.fillStyle = "#f00";
+    ctx.strokeText(text, boxX + w * 0.25, boxY + boxHeight / 2 - 15);
+    ctx.fillText(text, boxX + w * 0.25, boxY + boxHeight / 2 - 15);
+    ctx.font = "20px sans-serif";
+    ctx.fillStyle = "#0ff";
+    ctx.strokeText(text2, boxX + w * 0.25, boxY + boxHeight / 2 + 20);
+    ctx.fillText(text2, boxX + w * 0.25, boxY + boxHeight / 2 + 20);
+    ctx.restore();
   }
 
   // scorched
@@ -5388,12 +5451,6 @@ function loop(now) {
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
-
-  const cam = getCameraPos();
-  const screenX = cam.x;
-  const screenY = cam.y;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
 
   function drawCooldownBar(x, y, width, height, cooldown) {
     ctx.save();

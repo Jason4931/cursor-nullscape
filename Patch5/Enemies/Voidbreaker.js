@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
+import { operatorActive } from "./Operator.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Voidbreaker.png";
@@ -113,7 +114,7 @@ export function setup(host, casualMode, hardMode) {
     state.timer += dt;
 
     if (state.phase === "idle") {
-      if (state.timer >= state.delay) {
+      if (state.timer >= state.delay && !operatorActive) {
         state.phase = "warning";
         playSound(
           "./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Spawn.ogg",

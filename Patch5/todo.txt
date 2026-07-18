@@ -30,12 +30,12 @@ vx locust/belchboy
 vx big baby
 vx the eye
 vx realmweaver
+x evilcadence
 curses
 vx legion
 vx nuclearbomb
 x Don't touch me
 x Mart slide
-x Woops all flesh
 x Shotgun
 x Blueprint cross beams
 x Ballet
@@ -62,7 +62,6 @@ x altars
 vx catalyst
 vx celestial
 
-Chance: Wiki bitch
 No tripmines [1 minute] (none on tweak)
 +0.5x Golden Gift Yield Increase (+0.75x if high, +0.25x if tweak)
 +0.75x Golden Gift Yield Increase (+1.25x if high, +0.5x if tweak)
@@ -73,6 +72,8 @@ Martpocalypse [spawn 6 temp mart] (double size if high)
 2 Random Enemies [temp] (spawn 4 if high)
 Mart and Springer [faster springer & mart, stackable]
 It's Here [spawn big springer temp] (spawn 3 if high)
-Less Jump Pads [kill 1 jumppad, spawn back after 1 minute] (kill & spawn 2 if high)
-More Seamines [spawn 2 temp seamine] (spawn 4 if high)
+40% Less Jump Pads [kill 2 jumppad, spawn back after 1 minute] (kill & spawn 5 if high)
+60% Less Jump Pads [kill 3 jumppad, spawn back after 1 minute] (kill & spawn 5 if high)
+40% More Seamines [spawn 1 temp seamine] (spawn 3 if high)
+60% More Seamines [spawn 2 temp seamine] (spawn 4 if high)
 Oops, all Flesh! [infect all & spawn 1 temp flesh] (spawn 3 if high)

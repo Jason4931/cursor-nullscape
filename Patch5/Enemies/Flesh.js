@@ -2,9 +2,9 @@ import { death, mouse } from "../entityHost.js";
 import { fleshPositions, playSound, isCursorOnFloor } from "../main.js";
 
 const Flesh = [];
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 5 * 3; i++) {
   const img = new Image();
-  img.src = `./ASSET/Enemies/Flesh/Layer ${i}.png`;
+  img.src = `./ASSET/Enemies/Flesh/Layer ${Math.ceil(i / 3)}.png`;
   Flesh.push(img);
 }
 

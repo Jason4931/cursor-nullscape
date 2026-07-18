@@ -707,6 +707,29 @@
         opacity: 0.5;
       }
 
+      #entity-panel-multiplier-container {
+        position: absolute;
+        top: 5.25vw;
+        left: 49.5vw;
+        transform: translate(-100%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 0.25vw;
+      }
+
+      #entity-panel-gift-multiplier {
+        width: 1vw;
+        height: 1vw;
+        flex-shrink: 0;
+      }
+
+      #entity-panel-multiplier {
+        margin: 0;
+        font-size: 1vw;
+        font-family: monospace;
+        white-space: nowrap;
+      }
+
       .diff-arrow {
         padding: 0.45vw 0.75vw;
         background: #111;
@@ -849,6 +872,10 @@
         <div id="entity-panel-content"></div>
         <p id="entity-panel-count">EntityCount: 0</p>
         <p id="entity-panel-diff">Standard</p>
+        <div id="entity-panel-multiplier-container">
+          <img src="./ASSET/Misc/Gifts.png" id="entity-panel-gift-multiplier" />
+          <p id="entity-panel-multiplier">1x</p>
+        </div>
       </div>
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>

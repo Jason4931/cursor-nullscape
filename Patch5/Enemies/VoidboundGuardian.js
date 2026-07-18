@@ -138,10 +138,6 @@ export function setup(host, casualMode, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
-    if (hardMode) {
-      state.opacity -= dt;
-      if (state.opacity < 0) state.opacity = 0;
-    }
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
     state.enemy = state.layers[state.layer - 1];
@@ -522,7 +518,7 @@ export function setup(host, casualMode, hardMode) {
         ctx.arc(
           Math.round(t.x),
           Math.round(t.y),
-          (0.5 + t.life / 2) * 40,
+          (1.25 - t.life / 2) * 40,
           0,
           Math.PI * 2,
         );

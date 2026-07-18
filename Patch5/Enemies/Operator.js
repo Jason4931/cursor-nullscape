@@ -11,6 +11,7 @@ OperatorDanger.src = "./ASSET/Enemies/Operator/Operator_Danger.png";
 const OperatorKilling = new Image();
 OperatorKilling.src = "./ASSET/Enemies/Operator/Operator_Killing.png";
 
+export let operatorActive = false;
 export let malfunctionActive = [false];
 export function setup(host, hardMode) {
   const state = {
@@ -49,6 +50,12 @@ export function setup(host, hardMode) {
     state.timer = 0;
     state.idleDuration = (mal ? 12.5 : 0) + 14 + Math.random();
     state.death = false;
+    setTimeout(
+      () => {
+        operatorActive = false;
+      },
+      mal ? 12500 : 0,
+    );
   }
   function easeOut(t) {
     return 1 - Math.pow(1 - t, 3);
@@ -71,6 +78,7 @@ export function setup(host, hardMode) {
 
     if (state.phase === "idle") {
       if (state.timer >= state.idleDuration) {
+        operatorActive = true;
         if (malfunctionActive[0] && Math.random() < 0.5) {
           spawnMalfunction(host);
           enterIdle(true);

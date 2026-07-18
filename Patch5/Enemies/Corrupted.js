@@ -468,7 +468,7 @@ export function setup(host, casualMode, hardMode) {
       const right = left + window.innerWidth;
       const bottom = top + window.innerHeight;
 
-      const width = TILE * 5;
+      const width = TILE * 6;
 
       let length;
       if (beam.t < 2.5) {
@@ -565,21 +565,16 @@ export function setup(host, casualMode, hardMode) {
       ctx.restore();
     }
     for (const beam of state.stompers) {
-      let width;
+      let width = TILE * 6;
       let alpha;
-
       if (beam.t < 1) {
         const e = 1 - Math.pow(1 - beam.t / 1, 3);
-        width = TILE * 5;
         alpha = 0.5 * e;
       } else if (beam.t < 2) {
-        width = TILE * 5;
         alpha = 0.5;
       } else if (beam.t < 2.5) {
-        width = TILE * 5;
         alpha = 1;
       } else {
-        width = TILE * 5;
         alpha = 0;
       }
 

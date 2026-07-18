@@ -3132,6 +3132,13 @@ function loop(now) {
     debtAltar = null;
   }
 
+  const displayMultiplier =
+    giftMultiplier >= 1
+      ? Math.ceil(giftMultiplier * 2) / 2
+      : Math.floor(giftMultiplier * 2) / 2;
+  document.getElementById("entity-panel-multiplier").innerHTML =
+    `${displayMultiplier}x`;
+
   // music
   if (!lobbyMusic) {
     lobbyMusic = playSound(
@@ -3222,6 +3229,7 @@ function loop(now) {
     ctx.fill();
   }
 
+  // shield
   if (shieldBroken[0] || shieldBroken[1]) {
     const size = TILE * (1 + Math.random());
     const shieldg = ctx.createRadialGradient(
@@ -3258,9 +3266,24 @@ function loop(now) {
       shieldg.addColorStop(0, "#00ffff00");
       shieldg.addColorStop(1, `#00ffff`);
     }
-    ctx.beginPath();
-    ctx.arc(mouse.x, mouse.y, TILE - GIFT_SIZE / 2, 0, Math.PI * 2);
     ctx.fillStyle = shieldg;
+    ctx.beginPath();
+    ctx.arc(
+      mouse.x,
+      mouse.y,
+      (TILE - GIFT_SIZE / 2) * (1 - (now % 1000) / 1000),
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(
+      mouse.x,
+      mouse.y,
+      (TILE - GIFT_SIZE / 2) * (1 - ((now + 500) % 1000) / 1000),
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
   }
 
