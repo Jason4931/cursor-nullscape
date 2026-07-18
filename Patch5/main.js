@@ -1046,9 +1046,8 @@ export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let collectedCountBeforeCelestial = 0;
 let giftMultiplier = 1;
-export function setGiftMultiplier(v, set = false) {
-  if (!set) giftMultiplier *= v;
-  else giftMultiplier = v;
+export function setGiftMultiplier(v) {
+  giftMultiplier = v;
 }
 let MAX_SPEED = 25;
 const GRID_DIVS = 10;
@@ -1449,7 +1448,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       /^setgiftmultiplier\(([\d.]+)\)$/,
     );
     if (setgiftmultiplierMatch) {
-      setGiftMultiplier(parseFloat(setgiftmultiplierMatch[1]), true);
+      setGiftMultiplier(parseFloat(setgiftmultiplierMatch[1]));
       topLeftInput.value = "";
     }
     const entityspawndelayMatch = input.match(/^entityspawndelay\((\d+)\)$/);
@@ -2493,6 +2492,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
   return variants[bestList[(Math.random() * bestList.length) | 0]];
 }
 function spawnCatalystIntro() {
+  setGiftMultiplier(1);
   SHAKE = true;
   changePatterns("final");
   ROTATED_PATTERNS = PATTERNS.map((base) => {
@@ -2549,6 +2549,7 @@ function spawnCatalystIntro() {
   }, 15000);
 }
 export function spawnCelestialIntro() {
+  setGiftMultiplier(1);
   onCelestial = true;
   onCelestialIntro = true;
   disableCollect = true;

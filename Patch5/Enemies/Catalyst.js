@@ -226,7 +226,7 @@ export function setup(host) {
 
     if (state.phase === "waitSpawn") {
       if (state.timer >= 7) {
-        setGiftMultiplier(2);
+        setGiftMultiplier(1);
         const p = randNearCursor();
         state.x = p.x;
         state.y = p.y;

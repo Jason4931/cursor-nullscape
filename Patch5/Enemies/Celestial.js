@@ -3387,7 +3387,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        setGiftMultiplier(2);
+        setGiftMultiplier(1);
         s.active = false;
       }
     }
@@ -5075,7 +5075,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        setGiftMultiplier(2);
+        setGiftMultiplier(1);
         s.active = false;
       }
     }
@@ -7063,7 +7063,7 @@ export function setup(
       s.w -= dt * 1000;
       if (s.w <= 0 && s.active) {
         s.w = 0;
-        setGiftMultiplier(2);
+        setGiftMultiplier(1);
         s.active = false;
       }
     }
