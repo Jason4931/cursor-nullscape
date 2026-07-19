@@ -151,9 +151,9 @@ export function setup(host) {
         Math.round(c.y),
         r,
       );
-      grad.addColorStop(0, "rgba(128, 0, 128, 0.25)");
-      grad.addColorStop(0.95, "rgba(128, 0, 128, 0.5)");
-      grad.addColorStop(1, "rgba(128, 0, 128, 1)");
+      grad.addColorStop(0, "rgba(64, 0, 128, 0)");
+      grad.addColorStop(0.95, "rgba(64, 0, 128, 0.25)");
+      grad.addColorStop(1, "rgba(64, 0, 128, 1)");
       ctx.save();
       ctx.globalAlpha = Math.min(1, ctx.globalAlpha * 2);
       ctx.fillStyle = grad;
@@ -173,8 +173,8 @@ export function setup(host) {
         Math.round(c.y),
         circle2r,
       );
-      circle2grad.addColorStop(0, "rgba(128, 0, 128, 0.5)");
-      circle2grad.addColorStop(1, "rgba(128, 0, 128, 1)");
+      circle2grad.addColorStop(0, "rgba(64, 0, 128, 0.5)");
+      circle2grad.addColorStop(1, "rgba(64, 0, 128, 1)");
       ctx.fillStyle = circle2grad;
       ctx.beginPath();
       ctx.arc(Math.round(c.x), Math.round(c.y), circle2r, 0, Math.PI * 2);
@@ -216,7 +216,7 @@ export function setup(host) {
       ctx.save();
       ctx.translate(Math.round(c.x), Math.round(c.y));
       ctx.rotate(Math.random() * Math.PI * 2);
-      ctx.fillStyle = "rgba(128, 0, 128, 0.5)";
+      ctx.fillStyle = "rgba(64, 0, 128, 0.5)";
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 
