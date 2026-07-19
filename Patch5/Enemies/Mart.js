@@ -1,22 +1,36 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound, soundStopped, MartStack } from "../main.js";
 
-const Mart = [];
+const Probably_Improper_Speeded_Mart = [];
 for (let i = 1; i <= 24; i++) {
   const img = new Image();
-  img.src = `./ASSET/Enemies/Mart/Layer ${i}.png`;
-  Mart.push(img);
+  img.src = `./ASSET/Enemies/Mart/Probably_Improper_Speeded_Mart/Layer ${i}.png`;
+  Probably_Improper_Speeded_Mart.push(img);
+}
+const MartSlideAnimation = [];
+for (let i = 1; i <= 24; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Mart/MartSlideAnimation/Layer ${i}.png`;
+  MartSlideAnimation.push(img);
 }
 
+export let martSlideActive = [false];
 export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
     opacity: 1,
-    layers: Mart,
+    layers: Probably_Improper_Speeded_Mart,
     enemy: null,
     layer: 0,
 
     x: 0,
     y: 0,
+    vx: 0,
+    vy: 0,
+    accel: 1000,
+    friction: 1,
+    overshootBrake: 0.99,
+    maxSpeed: Infinity,
+    martSlided: false,
 
     size: (0.6 + stack * 0.4) * 75,
     speed: (0.6 + stack * 0.4) * (hardMode ? 80 : 40),
@@ -58,6 +72,15 @@ export function setup(host, hardMode, stack = 1, position = null) {
       }
       state.initialized = true;
     }
+    if (!state.martSlided && martSlideActive[0]) {
+      state.martSlided = true;
+      state.layers = MartSlideAnimation;
+      state.layer = state.layers.length;
+      if (state.sound) {
+        state.sound();
+        state.sound = null;
+      }
+    }
 
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
@@ -72,7 +95,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
     if (state.mode === "target" && state.modeTimer >= state._targetDuration) {
       state.modeTimer = 0;
 
-      if (Math.random() < 0.333) {
+      if (Math.random() < 0.333 && !martSlideActive[0]) {
         state.mode = "random";
 
         const a = Math.random() * Math.PI * 2;
@@ -95,7 +118,10 @@ export function setup(host, hardMode, stack = 1, position = null) {
 
     const dist = Math.hypot(dx, dy);
 
-    if (dist <= state.size * 0.5) {
+    if (
+      dist <= state.size * 0.5 &&
+      (martSlideActive[0] ? Math.random() < 0.5 : true)
+    ) {
       death("Mart", "#43aeff");
       if (!state.deathSound) {
         playSound(`./ASSET/Sound/Enemies/Mart/MartKill.mp3`);
@@ -122,14 +148,51 @@ export function setup(host, hardMode, stack = 1, position = null) {
     const wx = -dy * wobble;
     const wy = dx * wobble;
 
-    state.x += (dx + wx) * state.speed * dt;
-    state.y += (dy + wy) * state.speed * dt;
+    if (martSlideActive[0]) {
+      const mx = dx + wx;
+      const my = dy + wy;
+
+      const len = Math.hypot(mx, my) || 1;
+      const ax = mx / len;
+      const ay = my / len;
+
+      state.vx += ax * state.accel * dt;
+      state.vy += ay * state.accel * dt;
+
+      const dot = state.vx * ax + state.vy * ay;
+
+      state.vx *= state.friction;
+      state.vy *= state.friction;
+
+      if (dot < 0) {
+        state.vx *= state.overshootBrake;
+        state.vy *= state.overshootBrake;
+      }
+
+      const speed = Math.hypot(state.vx, state.vy);
+      if (speed > state.maxSpeed) {
+        const s = state.maxSpeed / speed;
+        state.vx *= s;
+        state.vy *= s;
+      }
+
+      state.x += state.vx * dt;
+      state.y += state.vy * dt;
+    } else {
+      state.vx = 0;
+      state.vy = 0;
+
+      state.x += (dx + wx) * state.speed * dt;
+      state.y += (dy + wy) * state.speed * dt;
+    }
 
     if (!soundStopped) {
       if (dist <= 500 * (0.6 + stack * 0.4)) {
         if (!state.sound)
           state.sound = playSound(
-            `./ASSET/Sound/Enemies/Mart/MartLoop.mp3`,
+            state.martSlided
+              ? `./ASSET/Sound/Enemies/Mart/Mart_-_Slide_(loop).ogg`
+              : `./ASSET/Sound/Enemies/Mart/MartLoop.mp3`,
             undefined,
             undefined,
             undefined,

@@ -29,14 +29,14 @@ import { setup as spawnAltarPassage } from "./Enemies/AltarOfPassage.js";
 import { setup as spawnJumpPad } from "./Enemies/JumpPad.js";
 import { setup as spawnTriaOrb } from "./Enemies/TriaOrb.js";
 import { dontTouchMeActive, setup as spawnBell } from "./Enemies/Bell.js";
-import { setup as spawnMart } from "./Enemies/Mart.js";
+import { martSlideActive, setup as spawnMart } from "./Enemies/Mart.js";
 import { rebirthActive, setup as spawnBaby } from "./Enemies/Baby.js";
 import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
 import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
 import { setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
-import { setup as spawnNIL } from "./Enemies/NIL.js";
+import { redactedActive, setup as spawnNIL } from "./Enemies/NIL.js";
 import {
   shotgunGuardianActive,
   setup as spawnGuardian,
@@ -564,6 +564,17 @@ const ENTITY_POOL = [
     curseType: true,
   },
   {
+    name: "MartSlide",
+    spawn: () => {
+      martSlideActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/MartSlide.png",
+    desc: "He's building up momentum!",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
     name: "Shotgun",
     spawn: () => {
       shotgunGuardianActive[0] = true;
@@ -584,6 +595,18 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Placeholder.png",
     desc: "Lasers now cross.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "[REDACTED]",
+    altName: "REDACTED",
+    spawn: () => {
+      redactedActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/REDACTED.png",
+    desc: "<0> --> ... <0> --> ... <0> !!!",
     chaosOnly: true,
     curseType: true,
   },

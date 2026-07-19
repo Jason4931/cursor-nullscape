@@ -8,6 +8,7 @@ for (let i = 1; i <= 4; i++) {
   NIL.push(img);
 }
 
+export let redactedActive = [false];
 export function setup(host, deafMode) {
   const state = {
     opacity: 0.1,
@@ -36,6 +37,14 @@ export function setup(host, deafMode) {
     dashStartX: 0,
     dashStartY: 0,
     dashDistance: 600,
+    vx: 0,
+    vy: 0,
+    dashSlideTimer: 0,
+    dashSlideDuration: 27,
+    accel: 2500,
+    friction: 1,
+    overshootBrake: 0.75,
+    maxSpeed: Infinity,
 
     _targetDuration: 9 + Math.random(),
 
@@ -85,15 +94,51 @@ export function setup(host, deafMode) {
         return;
       }
 
-      if (state.attackTimer < 1.5) {
+      if (
+        state.attackTimer < (redactedActive[0] ? state.dashSlideDuration : 1.5)
+      ) {
         const t = (state.attackTimer - 0.5) / 1.0;
         const easedT = easeOut(t);
 
         state.opacity = 0.9;
-        state.x =
-          state.dashStartX + state.dashDirX * state.dashDistance * easedT;
-        state.y =
-          state.dashStartY + state.dashDirY * state.dashDistance * easedT;
+        if (redactedActive[0] && state.dashSlideDuration > 0) {
+          state.dashSlideTimer -= dt;
+
+          const dx = mouse.x - state.x;
+          const dy = mouse.y - state.y;
+          const len = Math.hypot(dx, dy) || 1;
+
+          const ax = dx / len;
+          const ay = dy / len;
+
+          state.vx += ax * state.accel * dt;
+          state.vy += ay * state.accel * dt;
+
+          const dot = state.vx * ax + state.vy * ay;
+
+          state.vx *= state.friction;
+          state.vy *= state.friction;
+
+          if (dot < 0) {
+            state.vx *= state.overshootBrake;
+            state.vy *= state.overshootBrake;
+          }
+
+          const speed = Math.hypot(state.vx, state.vy);
+          if (speed > state.maxSpeed) {
+            const s = state.maxSpeed / speed;
+            state.vx *= s;
+            state.vy *= s;
+          }
+
+          state.x += state.vx * dt;
+          state.y += state.vy * dt;
+        } else {
+          state.x =
+            state.dashStartX + state.dashDirX * state.dashDistance * easedT;
+          state.y =
+            state.dashStartY + state.dashDirY * state.dashDistance * easedT;
+        }
 
         const dx0 = mouse.x - state.x;
         const dy0 = mouse.y - state.y;
@@ -107,8 +152,14 @@ export function setup(host, deafMode) {
         return;
       }
 
-      if (state.attackTimer < 2.0) {
-        const t = (state.attackTimer - 1.5) / 0.5;
+      if (
+        state.attackTimer <
+        (redactedActive[0] ? state.dashSlideDuration : 1.5) + 0.5
+      ) {
+        const t =
+          (state.attackTimer -
+            (redactedActive[0] ? state.dashSlideDuration : 1.5)) /
+          0.5;
         state.opacity = 0.9 * (1 - easeIn(t));
         return;
       }
@@ -213,11 +264,20 @@ export function setup(host, deafMode) {
 
     if (dist <= 220) {
       state.attacking = true;
-      if (!soundStopped)
+      if (!soundStopped) {
         playSound(
-          `./ASSET/Sound/Enemies/NIL/Nil_-_dash.mp3?t=${Math.floor(Date.now() / 60000)}`,
+          `./ASSET/Sound/Enemies/NIL/${redactedActive[0] ? "Nil-Dash-Enrage.ogg" : "Nil_-_dash.mp3"}?t=${Math.floor(Date.now() / 60000)}`,
         );
+        if (redactedActive[0]) {
+          playSound(`./ASSET/Sound/Enemies/NIL/Nil-Loop-Enrage.ogg`);
+        }
+      }
       state.attackTimer = 0;
+      if (redactedActive[0]) {
+        state.dashSlideTimer = state.dashSlideDuration;
+        state.vx = 0;
+        state.vy = 0;
+      }
 
       const adx = mouse.x - state.x;
       const ady = mouse.y - state.y;

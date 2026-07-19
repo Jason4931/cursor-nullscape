@@ -35,13 +35,13 @@ curses
 v legion
 v nuclearbomb
 v Don't touch me
-x Mart slide
+v Mart slide
 v Shotgun
 v Blueprint cross beams
 x Ballet
 x Bombard
 x Lost embers
-x Redacted
+v Redacted
 v Muted
 v Rebirth
 
