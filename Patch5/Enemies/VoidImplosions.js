@@ -152,7 +152,7 @@ export function setup(host) {
         r,
       );
       grad.addColorStop(0, "rgba(64, 0, 128, 0)");
-      grad.addColorStop(0.95, "rgba(64, 0, 128, 0.25)");
+      grad.addColorStop(0.9, "rgba(64, 0, 128, 0.25)");
       grad.addColorStop(1, "rgba(128, 0, 255, 1)");
       ctx.save();
       ctx.globalAlpha = Math.min(1, ctx.globalAlpha * 2);
@@ -216,7 +216,7 @@ export function setup(host) {
       ctx.save();
       ctx.translate(Math.round(c.x), Math.round(c.y));
       ctx.rotate(Math.random() * Math.PI * 2);
-      ctx.fillStyle = "rgba(64, 0, 128, 0.5)";
+      ctx.fillStyle = "rgba(64, 0, 128, 0.75)";
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 

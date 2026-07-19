@@ -2178,7 +2178,7 @@ export function setup(
     for (const p of s.trail) {
       const dx = p.x - mx;
       const dy = p.y - my;
-      if (dx * dx + dy * dy < p.r * p.r) {
+      if (dx * dx + dy * dy < p.r * p.r && p.r > 100) {
         checkDeath("Celestial");
       }
       p.r -=
@@ -7283,7 +7283,7 @@ export function setup(
     for (const p of s.trail) {
       const dx = p.x - mx;
       const dy = p.y - my;
-      if (dx * dx + dy * dy < p.r * p.r) {
+      if (dx * dx + dy * dy < p.r * p.r && p.r > 100) {
         checkDeath("Celestial");
       }
       p.r -=
