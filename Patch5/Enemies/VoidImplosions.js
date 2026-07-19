@@ -153,7 +153,7 @@ export function setup(host) {
       );
       grad.addColorStop(0, "rgba(64, 0, 128, 0)");
       grad.addColorStop(0.95, "rgba(64, 0, 128, 0.25)");
-      grad.addColorStop(1, "rgba(64, 0, 128, 1)");
+      grad.addColorStop(1, "rgba(128, 0, 255, 1)");
       ctx.save();
       ctx.globalAlpha = Math.min(1, ctx.globalAlpha * 2);
       ctx.fillStyle = grad;
@@ -231,8 +231,8 @@ export function setup(host) {
           outlineR,
         );
         g.addColorStop(0.94, "rgba(255,255,255,0)");
-        g.addColorStop(0.95, "rgba(255,255,255,0.5)");
-        g.addColorStop(1, "rgba(255,255,255,0.5)");
+        g.addColorStop(0.95, "rgba(255,255,255,1)");
+        g.addColorStop(1, "rgba(255,255,255,1)");
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(Math.round(c.x), Math.round(c.y), outlineR, 0, Math.PI * 2);
