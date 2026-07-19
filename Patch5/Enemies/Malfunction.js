@@ -173,7 +173,7 @@ export function setup(host) {
         playSound(
           "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Fail.ogg",
         );
-        death("Operator");
+        death("VoidboundOperator");
         setTimeout(() => {
           state.phase = "disable";
           state.timer = 0;
@@ -248,7 +248,7 @@ export function setup(host) {
         playSound(
           "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Fail.ogg",
         );
-        death("Operator");
+        death("VoidboundOperator");
         setTimeout(() => {
           state.phase = "disable";
           state.timer = 0;
@@ -320,7 +320,7 @@ export function setup(host) {
         playSound(
           "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Fail.ogg",
         );
-        death("Operator");
+        death("VoidboundOperator");
         setTimeout(() => {
           state.phase = "disable";
           state.timer = 0;

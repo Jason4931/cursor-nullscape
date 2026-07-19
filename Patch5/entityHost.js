@@ -449,6 +449,8 @@ function getDeathMessage(name) {
       name = "Baby";
     } else if (name === "VoidboundGuardian") {
       name = "Guardian";
+    } else if (name === "VoidboundOperator") {
+      name = "Operator";
     }
     list =
       Math.random() < 0.99
