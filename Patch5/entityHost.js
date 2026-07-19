@@ -547,7 +547,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (name == "Void" || name == "VoidImplosions") {
+  if (name == "Void" || name == "VoidImplosions" || name == "Visage") {
     if (shieldActive[0]) {
       shieldLostMsg = [name, 180];
       for (let i = 0; i < shieldActive.length; i++) {
