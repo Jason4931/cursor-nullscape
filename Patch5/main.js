@@ -4950,19 +4950,19 @@ function updateCamera() {
             }, 200);
           }
         }
-        if (collectedCount >= (hardMode ? 600 : 300) && !spawnedAltar[0]) {
+        if (actualCollectedCount >= 300 && !spawnedAltar[0]) {
           spawnedAltar[0] = true;
           spawnAltarChance(entityHost, hardMode);
           spawnAltarChaos(entityHost, hardMode);
         }
-        if (collectedCount >= (hardMode ? 1600 : 800) && !spawnedAltar[1]) {
+        if (actualCollectedCount >= 800 && !spawnedAltar[1]) {
           spawnedAltar[1] = true;
           spawnAltarEcho(entityHost, hardMode);
           spawnAltarPassage(entityHost, hardMode);
           spawnAltarProtection(entityHost, hardMode);
           spawnAltarPurgatory(entityHost, hardMode);
         }
-        if (collectedCount >= (hardMode ? 2800 : 1400) && !spawnedAltar[2]) {
+        if (actualCollectedCount >= 1400 && !spawnedAltar[2]) {
           spawnedAltar[2] = true;
           spawnAltarPurification(entityHost, hardMode);
         }
