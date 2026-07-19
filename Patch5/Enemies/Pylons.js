@@ -158,7 +158,7 @@ export function setup(host) {
       const margin = 1000;
       const minDist = 3000;
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         while (true) {
           const x = Math.random() * (canvas.width - margin * 2) + margin;
           const y = Math.random() * (canvas.height - margin * 2) + margin;
@@ -283,11 +283,11 @@ export function setup(host) {
           p.charged = true;
           p.shake = 2;
           pylonDone++;
-          RealityCollapseCount.count = 2.5 * pylonDone;
+          RealityCollapseCount.count = 3.333 * pylonDone;
           if (pylonDone == 1) {
             state.realityCollapse[0] = spawnRealityCollapse(host, true);
             state.realityCollapse[1] = spawnRealityCollapse(host);
-          } else if (pylonDone == 5) {
+          } else if (pylonDone == 4) {
             if (typeof state.realityCollapse[0] === "function") {
               state.realityCollapse[0]();
               state.realityCollapse[1]();
@@ -348,7 +348,7 @@ export function setup(host) {
       }
       const cx = p.x;
       const cy = p.y;
-      if (pylonDone != 5) {
+      if (pylonDone != 4) {
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotate);
@@ -675,7 +675,7 @@ export function setup(host) {
       ctx.font = "48px Times New Roman";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      const text = `${pylonDone}/5`;
+      const text = `${pylonDone}/4`;
       const x = cam.x + window.innerWidth / 2;
       const y = cam.y + window.innerHeight * 0.9;
       ctx.lineJoin = "round";

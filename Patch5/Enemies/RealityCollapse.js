@@ -3,7 +3,7 @@ import { actualCollectedCount } from "../main.js";
 
 let mainReality = false;
 let fastReality = false;
-export let RealityCollapseCount = { count: 2.5 }; //max 10 -> 4/5
+export let RealityCollapseCount = { count: 3.333 }; //max 10 -> 3/4
 export function setup(host, fast = false) {
   const state = {
     opacity: 1,
