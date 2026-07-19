@@ -3254,7 +3254,7 @@ export function activatePurification() {
 
   chosen.unregister();
   spawnedUnstackables.delete(chosen.name);
-  spawnedCurses.delete(pick.name);
+  spawnedCurses.delete(chosen.name);
 
   highestEntitySpawned.splice(index, 1);
 
