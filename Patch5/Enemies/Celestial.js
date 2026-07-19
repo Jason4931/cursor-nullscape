@@ -3097,7 +3097,7 @@ export function setup(
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
-      } else {
+      } else if (Number.isFinite(c.r)) {
         const glow = 100;
 
         const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
