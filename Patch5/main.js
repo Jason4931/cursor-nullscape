@@ -4928,6 +4928,13 @@ function updateCamera() {
         if (collectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid, showFloor);
+          if (chaosMode) {
+            activateShield();
+            activateShield();
+            activateShield();
+            activateShield();
+            activateShield();
+          }
           for (let i = 1; i <= 10; i++) {
             if (i <= 8) {
               spawnJumpPad(entityHost, i >= 6);
