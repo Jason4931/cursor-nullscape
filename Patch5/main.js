@@ -1399,7 +1399,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     if (input === "icetile") {
       isIceTileEnabled = true;
-      if (!disableIceTile) {
+      if (!disableIceTile && passageGoldPattern == 0) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -1420,7 +1420,7 @@ topLeftInput.addEventListener("keydown", function (event) {
         }, 6000);
       }
       setInterval(() => {
-        if (!disableIceTile) {
+        if (!disableIceTile && passageGoldPattern == 0) {
           changePatterns("ice");
           ROTATED_PATTERNS = PATTERNS.map((base) => {
             const r0 = base;
@@ -3002,7 +3002,7 @@ function ENTITY_SPAWN(
     }
     if (collectedCount >= 800 && !isIceTileEnabled) {
       isIceTileEnabled = true;
-      if (!disableIceTile) {
+      if (!disableIceTile && passageGoldPattern == 0) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -3023,7 +3023,7 @@ function ENTITY_SPAWN(
         }, 6000);
       }
       setInterval(() => {
-        if (!disableIceTile) {
+        if (!disableIceTile && passageGoldPattern == 0) {
           changePatterns("ice");
           ROTATED_PATTERNS = PATTERNS.map((base) => {
             const r0 = base;
@@ -5041,7 +5041,7 @@ function updateCamera() {
           }
           if (collectedCount >= 800 && !isIceTileEnabled) {
             isIceTileEnabled = true;
-            if (!disableIceTile) {
+            if (!disableIceTile && passageGoldPattern == 0) {
               changePatterns("ice");
               ROTATED_PATTERNS = PATTERNS.map((base) => {
                 const r0 = base;
@@ -5062,7 +5062,7 @@ function updateCamera() {
               }, 6000);
             }
             setInterval(() => {
-              if (!disableIceTile) {
+              if (!disableIceTile && passageGoldPattern == 0) {
                 changePatterns("ice");
                 ROTATED_PATTERNS = PATTERNS.map((base) => {
                   const r0 = base;
