@@ -3569,64 +3569,70 @@ setTimeout(() => {
 let headingX = 1; // default direction (right)
 let headingY = 0;
 
+let lastPicked4or5 = { x: 0, y: 0 };
 export function pickRandomPlaced4or5(minRadius = 0) {
-  // --- Update heading ---
-  const dxMove = mouse.x - lastMouseX;
-  const dyMove = mouse.y - lastMouseY;
-  const moveLen = Math.hypot(dxMove, dyMove);
+  while (true) {
+    // --- Update heading ---
+    const dxMove = mouse.x - lastMouseX;
+    const dyMove = mouse.y - lastMouseY;
+    const moveLen = Math.hypot(dxMove, dyMove);
 
-  if (moveLen > 0.001) {
-    headingX = dxMove / moveLen;
-    headingY = dyMove / moveLen;
-  }
+    if (moveLen > 0.001) {
+      headingX = dxMove / moveLen;
+      headingY = dyMove / moveLen;
+    }
 
-  lastMouseX = mouse.x;
-  lastMouseY = mouse.y;
+    lastMouseX = mouse.x;
+    lastMouseY = mouse.y;
 
-  // --- Build candidate list ---
-  const candidates = [];
-  const maxRadius = minRadius + 1000;
+    // --- Build candidate list ---
+    const candidates = [];
+    const maxRadius = minRadius + 1000;
 
-  for (const p of patternsState.values()) {
-    if (!p.pattern || !p.has4or5) continue;
-
-    const center = patternCenter(p.sx, p.sy);
-    const dx = center.x - mouse.x;
-    const dy = center.y - mouse.y;
-    const d2 = dx * dx + dy * dy;
-
-    if (d2 < minRadius * minRadius || d2 > maxRadius * maxRadius) continue;
-
-    // 180° forward check
-    const dot = dx * headingX + dy * headingY;
-    if (dot <= 0) continue;
-
-    candidates.push(p);
-  }
-
-  let pool = candidates;
-
-  // --- Fallback ---
-  if (pool.length === 0) {
     for (const p of patternsState.values()) {
       if (!p.pattern || !p.has4or5) continue;
-      pool.push(p);
+
+      const center = patternCenter(p.sx, p.sy);
+      const dx = center.x - mouse.x;
+      const dy = center.y - mouse.y;
+      const d2 = dx * dx + dy * dy;
+
+      if (d2 < minRadius * minRadius || d2 > maxRadius * maxRadius) continue;
+
+      // 180° forward check
+      const dot = dx * headingX + dy * headingY;
+      if (dot <= 0) continue;
+
+      candidates.push(p);
     }
 
+    let pool = candidates;
+
+    // --- Fallback ---
     if (pool.length === 0) {
-      return { x: mouse.x, y: mouse.y };
+      for (const p of patternsState.values()) {
+        if (!p.pattern || !p.has4or5) continue;
+        pool.push(p);
+      }
+
+      if (pool.length === 0) {
+        return { x: mouse.x, y: mouse.y };
+      }
+    }
+
+    // --- Random pick ---
+    const pickedPattern = pool[(Math.random() * pool.length) | 0];
+    const coords = pickedPattern.coords4or5;
+    const c = coords[(Math.random() * coords.length) | 0];
+
+    const worldX = (pickedPattern.sx * SUPER_TILE + c.x) * TILE + TILE / 2;
+    const worldY = (pickedPattern.sy * SUPER_TILE + c.y) * TILE + TILE / 2;
+
+    if (lastPicked4or5.x != worldX || lastPicked4or5.y != worldY) {
+      lastPicked4or5 = { x: worldX, y: worldY };
+      return { x: worldX, y: worldY };
     }
   }
-
-  // --- Random pick ---
-  const pickedPattern = pool[(Math.random() * pool.length) | 0];
-  const coords = pickedPattern.coords4or5;
-  const c = coords[(Math.random() * coords.length) | 0];
-
-  const worldX = (pickedPattern.sx * SUPER_TILE + c.x) * TILE + TILE / 2;
-  const worldY = (pickedPattern.sy * SUPER_TILE + c.y) * TILE + TILE / 2;
-
-  return { x: worldX, y: worldY };
 }
 
 /* ===== DRAW ===== */
