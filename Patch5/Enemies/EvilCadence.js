@@ -335,6 +335,16 @@ export function setup(host, hardMode) {
     ctx.filter = "sepia(100%) saturate(5000%) hue-rotate(-5deg)";
     ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
     ctx.restore();
+    // const exportCanvas = document.createElement("canvas");
+    // exportCanvas.width = size;
+    // exportCanvas.height = size;
+    // const exportCtx = exportCanvas.getContext("2d");
+    // exportCtx.filter = "sepia(100%) saturate(2500%) hue-rotate(-5deg)";
+    // exportCtx.drawImage(state.enemy, 0, 0, size, size);
+    // const a = document.createElement("a");
+    // a.download = "cadence.png";
+    // a.href = exportCanvas.toDataURL("image/png");
+    // a.click();
 
     for (const it of state.instruments) {
       const ix = Math.round(it.x);
