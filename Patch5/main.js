@@ -2688,6 +2688,10 @@ export function spawnCelestialIntro() {
 export function spawnCelestialAfterIntro() {
   celestialBG = true;
   startCelestialMusic = true;
+  for (const [key, p] of patternsState) {
+    destroyPattern(p);
+    patternsState.delete(key);
+  }
   setTimeout(() => {
     onCelestialIntro = false;
     disableCollect = false;
