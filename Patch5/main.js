@@ -90,6 +90,8 @@ import { setup as spawnRealmweaver } from "./Enemies/Realmweaver.js";
 import { setup as spawnLocust } from "./Enemies/Locust.js";
 import { setup as multiplayerMessage } from "./Enemies/MultiplayerMessage.js";
 
+document.getElementById("intro-start").innerHTML = "Click anywhere to begin";
+
 export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
 export const entityCanvas2 = document.getElementById("entities-2");

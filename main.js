@@ -48,6 +48,8 @@ import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
 import { setup as spawnBeacon } from "./Enemies/Beacon.js";
 
+document.getElementById("intro-start").innerHTML = "Click anywhere to begin";
+
 export const canvas = document.getElementById("screen");
 const entityCanvas = document.getElementById("entities");
 export const entityCanvas2 = document.getElementById("entities-2");
