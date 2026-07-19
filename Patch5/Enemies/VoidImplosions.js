@@ -139,6 +139,10 @@ export function setup(host) {
 
     for (const c of state.circles) {
       const r = Math.round(BASE_RADIUS * state.scale);
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.beginPath();
+      ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
+      ctx.fill();
       const grad = ctx.createRadialGradient(
         Math.round(c.x),
         Math.round(c.y),
@@ -147,7 +151,7 @@ export function setup(host) {
         Math.round(c.y),
         r,
       );
-      grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
+      grad.addColorStop(0, "rgba(128, 0, 128, 0.5)");
       grad.addColorStop(1, "rgba(128, 0, 128, 1)");
 
       ctx.fillStyle = grad;
@@ -166,7 +170,7 @@ export function setup(host) {
         Math.round(c.y),
         circle2r,
       );
-      circle2grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
+      circle2grad.addColorStop(0, "rgba(128, 0, 128, 0.5)");
       circle2grad.addColorStop(1, "rgba(128, 0, 128, 1)");
       ctx.fillStyle = circle2grad;
       ctx.beginPath();
@@ -209,7 +213,7 @@ export function setup(host) {
       ctx.save();
       ctx.translate(Math.round(c.x), Math.round(c.y));
       ctx.rotate(Math.random() * Math.PI * 2);
-      ctx.fillStyle = "rgba(128, 0, 128, 1)";
+      ctx.fillStyle = "rgba(128, 0, 128, 0.5)";
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 
