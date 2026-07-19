@@ -117,7 +117,7 @@ export function setup(host, casualMode, hardMode) {
       Math.atan2(dy, dx) +
       (rand ? (Math.random() < 0.5 ? 30 : -30) * (Math.PI / 180) : 0);
 
-    const speed = hardMode ? 1418 : casualMode ? 630 : 945;
+    const speed = hardMode ? 1120 : casualMode ? 630 : 840;
     let vx = Math.cos(angle) * speed;
     let vy = Math.sin(angle) * speed;
 

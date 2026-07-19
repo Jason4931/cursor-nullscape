@@ -5938,6 +5938,7 @@ const unlock = () => {
   if (windowClicked) return;
   windowClicked = true;
   tipstimer = 900;
+  panel.classList.toggle("init");
   setInterval(() => {
     const basicEnemies = ENTITY_POOL.filter((e) => {
       if (e.chaosOnly) return false;

@@ -8,7 +8,7 @@ agro.src = "./ASSET/Enemies/Locust/Locust2.png";
 
 export function setup(host) {
   const SPEED = 3000;
-  const TRIGGER_TIME = 0.5;
+  const TRIGGER_TIME = 0.4;
   const BLACK_TIME = 0.5;
   const SIZE = 200;
 
@@ -26,8 +26,16 @@ export function setup(host) {
   };
 
   function randomize() {
-    state.x = Math.random() * canvas.width;
-    state.y = Math.random() * canvas.height;
+    const cam = getCameraPos();
+    do {
+      state.x = Math.random() * canvas.width;
+      state.y = Math.random() * canvas.height;
+    } while (
+      state.x >= cam.x &&
+      state.x <= cam.x + window.innerWidth &&
+      state.y >= cam.y &&
+      state.y <= cam.y + window.innerHeight
+    );
 
     state.enemy = idle;
     state.agro = false;

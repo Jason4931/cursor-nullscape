@@ -647,6 +647,9 @@
         cursor: default;
       }
 
+      #entity-panel.init {
+        transform: translateY(-130%);
+      }
       #entity-panel.open {
         transform: translateY(0);
       }
@@ -868,7 +871,7 @@
         globalspawn<span style="color: #f88">{entityname}</span><br />
         <span style="opacity: 1%">youwillnotsurvivethis</span>
       </p>
-      <div id="entity-panel">
+      <div id="entity-panel" class="init">
         <div id="entity-panel-content"></div>
         <p id="entity-panel-count">EntityCount: 0</p>
         <p id="entity-panel-diff">Standard</p>
