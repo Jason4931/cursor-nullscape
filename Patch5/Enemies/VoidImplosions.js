@@ -151,13 +151,16 @@ export function setup(host) {
         Math.round(c.y),
         r,
       );
-      grad.addColorStop(0, "rgba(128, 0, 128, 0.5)");
+      grad.addColorStop(0, "rgba(128, 0, 128, 0.25)");
+      grad.addColorStop(0.95, "rgba(128, 0, 128, 0.5)");
       grad.addColorStop(1, "rgba(128, 0, 128, 1)");
-
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, ctx.globalAlpha * 2);
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
       ctx.save();
       const circle2r = Math.round(BASE_RADIUS * state.circle2scale);
