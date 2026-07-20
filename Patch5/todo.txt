@@ -32,18 +32,18 @@ vx the eye
 vx realmweaver
 vx evilcadence
 curses
-v legion
-v nuclearbomb
-v Don't touch me
-v Mart slide
-v Shotgun
-v Blueprint cross beams
-x Ballet
-x Bombard
+vx legion
+vx nuclearbomb
+vx Don't touch me
+vx Mart slide
+vx Shotgun
+vx Blueprint cross beams
+vx Ballet
+vx Bombard
 x Lost embers
-v Redacted
-v Muted
-v Rebirth
+vx Redacted
+vx Muted
+vx Rebirth
 
 v cascade
 v corrupted

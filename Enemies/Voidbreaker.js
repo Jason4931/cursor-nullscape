@@ -166,10 +166,14 @@ export function setup(host, stack, hardMode) {
           const vy = mouse.y - state.sword.lockY;
 
           const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
-
-          const dist = perp;
-
-          if (t > 0.25 && t <= 0.5 && dist <= KILL_RADIUS) {
+          const along = -(vx * state.sword.dx + vy * state.sword.dy);
+          if (
+            t > 0.25 &&
+            t <= 0.5 &&
+            perp <= KILL_RADIUS &&
+            along >= -Infinity &&
+            along <= 200
+          ) {
             death("Voidbreaker");
           }
         }
@@ -203,11 +207,15 @@ export function setup(host, stack, hardMode) {
 
             const vx = mouse.x - state.sword2.lockX;
             const vy = mouse.y - state.sword2.lockY;
+
+            const perp = Math.abs(vx * state.sword2.dy - vy * state.sword2.dx);
+            const along = -(vx * state.sword2.dx + vy * state.sword2.dy);
             if (
               t > 0.25 &&
               t <= 0.5 &&
-              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-                KILL_RADIUS
+              perp <= KILL_RADIUS &&
+              along >= -Infinity &&
+              along <= 200
             ) {
               death("Voidbreaker");
             }
@@ -472,9 +480,16 @@ export function setup(host, stack, hardMode) {
 
           const vx = mouse.x - state.sword.lockX;
           const vy = mouse.y - state.sword.lockY;
-          const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
 
-          if (t > 0.25 && t <= 0.5 && perp <= KILL_RADIUS) {
+          const perp = Math.abs(vx * state.sword.dy - vy * state.sword.dx);
+          const along = -(vx * state.sword.dx + vy * state.sword.dy);
+          if (
+            t > 0.25 &&
+            t <= 0.5 &&
+            perp <= KILL_RADIUS &&
+            along >= -Infinity &&
+            along <= 200
+          ) {
             death("Voidbreaker");
           }
         }
@@ -508,11 +523,15 @@ export function setup(host, stack, hardMode) {
 
             const vx = mouse.x - state.sword2.lockX;
             const vy = mouse.y - state.sword2.lockY;
+
+            const perp = Math.abs(vx * state.sword2.dy - vy * state.sword2.dx);
+            const along = -(vx * state.sword2.dx + vy * state.sword2.dy);
             if (
               t > 0.25 &&
               t <= 0.5 &&
-              Math.abs(vx * state.sword2.dy - vy * state.sword2.dx) <=
-                KILL_RADIUS
+              perp <= KILL_RADIUS &&
+              along >= -Infinity &&
+              along <= 200
             ) {
               death("Voidbreaker");
             }

@@ -57,7 +57,11 @@ import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnOblivion } from "./Enemies/Oblivion.js";
 import { setup as spawnRazorbloom } from "./Enemies/Razorbloom.js";
 import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
-import { setup as spawnVoidbreaker } from "./Enemies/Voidbreaker.js";
+import {
+  balletOfBladesActive,
+  bladeBombardmentActive,
+  setup as spawnVoidbreaker,
+} from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnEvilCadence } from "./Enemies/EvilCadence.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
@@ -597,6 +601,30 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Placeholder.png",
     desc: "Lasers now cross.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "BalletOfBlades",
+    altName: "Ballet",
+    spawn: () => {
+      balletOfBladesActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/BalletofBlades.png",
+    desc: "Voidbreaker summons more swords around you before striking, be mindful of the order as the swords launch at an extreme rate.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "BladeBombardment",
+    altName: "Bombard",
+    spawn: () => {
+      bladeBombardmentActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/BladeBombardment.png",
+    desc: "Voidbreaker fires more swords at once, the swords themselves are faster, but the summoning is much slower and increases the cooldown.",
     chaosOnly: true,
     curseType: true,
   },
@@ -5724,7 +5752,7 @@ function loop(now) {
   }
 
   //deathglow
-  if (deathOpacity > 0) {
+  if (deathOpacity > 0 && Number.isFinite(screenY)) {
     const border = 150;
     ctx.save();
     deathOpacity -= 0.033;
