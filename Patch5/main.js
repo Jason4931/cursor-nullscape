@@ -1333,6 +1333,8 @@ topLeftInput.addEventListener("keydown", function (event) {
           spawnTruePylons(entityHost);
         } else if (input.toLowerCase() === "seamine") {
           spawnSeamine(entityHost, casualMode, hardMode);
+        } else if (input.toLowerCase() === "grindrail") {
+          spawnGrindrail(entityHost);
         } else if (input.toLowerCase() === "jumppad") {
           for (let i = 1; i <= 10; i++) {
             if (i <= 8) {

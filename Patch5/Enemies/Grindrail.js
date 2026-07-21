@@ -3,9 +3,9 @@ import { setGrindrailScale } from "../main.js";
 
 function generatePath(canvas) {
   const points = [];
-  const MIN_DIST = 1000;
+  const MIN_DIST = 2000;
 
-  while (points.length < 5) {
+  while (points.length < 10) {
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height;
 
