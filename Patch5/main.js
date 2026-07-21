@@ -3852,25 +3852,33 @@ function drawGrid() {
         const h = TILE / 2;
 
         // top-left
-        ctx.fillStyle = "#77f";
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#77f";
         ctx.fillRect(t.x + h, t.y - h, h, h);
         ctx.fillRect(t.x - h, t.y + h, h, h);
         ctx.fillRect(t.x + h, t.y + h, h, h);
 
         // top-right
-        ctx.fillStyle = "#88f";
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#88f";
         ctx.fillRect(t.x, t.y - h, h, h);
         ctx.fillRect(t.x, t.y + h, h, h);
         ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
 
         // bottom-left
-        ctx.fillStyle = "#87f";
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#87f";
         ctx.fillRect(t.x - h, t.y, h, h);
         ctx.fillRect(t.x + h, t.y, h, h);
         ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
 
         // bottom-right
-        ctx.fillStyle = "#98f";
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#98f";
         ctx.fillRect(t.x, t.y, h, h);
         ctx.fillRect(t.x + 2 * h, t.y, h, h);
         ctx.fillRect(t.x, t.y + 2 * h, h, h);
