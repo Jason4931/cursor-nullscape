@@ -1,5 +1,6 @@
 import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, ability } from "../main.js";
+import { kolonaActive } from "./Kolona.js";
 import { setup as spawnMalfunction } from "./Malfunction.js";
 
 const OperatorIdle = new Image();
@@ -77,7 +78,7 @@ export function setup(host, hardMode) {
     }
 
     if (state.phase === "idle") {
-      if (state.timer >= state.idleDuration) {
+      if (state.timer >= state.idleDuration && !kolonaActive) {
         operatorActive = true;
         if (malfunctionActive[0] && Math.random() < 0.5) {
           spawnMalfunction(host);

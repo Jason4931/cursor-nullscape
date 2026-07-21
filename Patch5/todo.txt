@@ -8,7 +8,7 @@ vx flesh
 vx operator
 vx guardian
 vx telefragger
-x kolona
+vx kolona
 vx voidbound baby
 vx cadence
 vx sigil
@@ -40,7 +40,7 @@ vx Shotgun
 vx Blueprint cross beams
 vx Ballet
 vx Bombard
-x Lost embers
+vx Lost embers
 vx Redacted
 vx Muted
 vx Rebirth

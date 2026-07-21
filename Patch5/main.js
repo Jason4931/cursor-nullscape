@@ -52,7 +52,7 @@ import {
 import { setup as spawnSeamine } from "./Enemies/Seamine.js";
 import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
-import { setup as spawnKookoo } from "./Enemies/Kookoo.js";
+import { lostEmbersActive, setup as spawnKolona } from "./Enemies/Kolona.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
 import { setup as spawnOblivion } from "./Enemies/Oblivion.js";
 import { setup as spawnRazorbloom } from "./Enemies/Razorbloom.js";
@@ -386,11 +386,10 @@ const ENTITY_POOL = [
     desc: "Takes on the temporary form of a random enemy.",
   },
   {
-    name: "Kookoo",
-    spawn: () => spawnKookoo(entityHost),
+    name: "Kolona",
+    spawn: () => spawnKolona(entityHost, casualMode),
     start: 800,
-    src: "./ASSET/Enemies/Kookoo.png",
-    unstackable: true,
+    src: "./ASSET/Enemies/Kolona.png",
     desc: "Use your ability right after it hits the number that was shown at the start.",
   },
   {
@@ -625,6 +624,17 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/BladeBombardment.png",
     desc: "Voidbreaker fires more swords at once, the swords themselves are faster, but the summoning is much slower and increases the cooldown.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "LostEmbers",
+    spawn: () => {
+      lostEmbersActive[0] = true;
+    },
+    start: 0,
+    src: "./ASSET/Enemies/LostEmbers.png",
+    desc: "Kolóna will no longer show a number while counting. Pay attention.",
     chaosOnly: true,
     curseType: true,
   },
@@ -1507,7 +1517,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       spawnOperator(entityHost, hardMode);
       malfunctionActive[0] = true;
       spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
-      spawnKookoo(entityHost);
+      spawnKolona(entityHost, casualMode);
       spawnVoidImplosions(entityHost);
       spawnOblivion(entityHost, showFloor);
       spawnRazorbloom(entityHost, hardMode);
@@ -1533,7 +1543,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       registerEntitySpawn("Operator", "./ASSET/Enemies/Operator.png");
       registerEntitySpawn("Malfunction", "./ASSET/Enemies/Malfunction.png");
       registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
-      registerEntitySpawn("Kookoo", "./ASSET/Enemies/Kookoo.png");
+      registerEntitySpawn("Kolona", "./ASSET/Enemies/Kolona.png");
       registerEntitySpawn(
         "VoidImplosions",
         "./ASSET/Curses/VoidImplosions.png",

@@ -297,17 +297,12 @@ const DEATH_MESSAGES = {
     "Was that a firework?",
     "Happy 4th of July to you!",
   ],
-  Kookoo: [
-    "You bluescreened.",
-    "You got sent to adspace.",
-    "Kookoo's clock strikes again, featuring your demise! Available in DVD and BlueRay.",
-    "!!! VIRUS DETECTED !!! Deleting you... Success!",
-    "You forgot how to use your ability.",
-    "You forgot what time it was.",
-    "You clicked on a random popup.",
-    "Really? Thats the number one rule of the internet!",
-    "Forgetting something?",
-    "Someone else can count better than you.",
+  Kolona: [
+    "You attempted to use Kolona as a Christmas decoration.",
+    "You found your flame.",
+    "You were immolated.",
+    "You were burnt to a crisp.",
+    "Someone PLEASE teach you how to count.",
   ],
   VoidImplosions: [
     "You fizzled out of existence.",

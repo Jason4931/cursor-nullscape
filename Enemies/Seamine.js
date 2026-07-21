@@ -1,5 +1,5 @@
 import { death, mouse, toggleTripmineLeniency } from "../entityHost.js";
-import { moveCamera, playSound, setSeamineScale } from "../main.js";
+import { ability, moveCamera, playSound, setSeamineScale } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Curses/Seamine.png";
@@ -72,7 +72,10 @@ export function setup(host, casualMode, hardMode) {
       state.flashTimer -= dt;
       state.opacity = 1;
 
-      if (state.flashTimer <= 0) {
+      if (
+        state.flashTimer <= 0 ||
+        (ability && state.flashTimer >= FLASH_TIME - 0.1)
+      ) {
         state.exploded = true;
         state.respawnTimer = RESPAWN_DELAY;
 
@@ -82,15 +85,14 @@ export function setup(host, casualMode, hardMode) {
         playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Explode_1.ogg");
         if (dist < EXPLODE_RADIUS) {
           death("Seamine", "#FF6A00");
-        } else {
-          const nx = dx / dist;
-          const ny = dy / dist;
-          moveCamera(-nx * 400, -ny * 400);
-          toggleTripmineLeniency(true);
-          setTimeout(() => {
-            toggleTripmineLeniency(false);
-          }, 1000);
         }
+        const nx = dx / dist;
+        const ny = dy / dist;
+        moveCamera(-nx * 400, -ny * 400);
+        toggleTripmineLeniency(true);
+        setTimeout(() => {
+          toggleTripmineLeniency(false);
+        }, 1000);
       }
     }
   }
