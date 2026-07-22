@@ -271,13 +271,15 @@ export function setup(host, overshootBrake) {
       }
     }
 
-    ctx.drawImage(
-      state.enemy,
-      Math.round(state.x - 50),
-      Math.round(state.y - 50),
-      Math.round(100),
-      Math.round(100),
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - 50),
+        Math.round(state.y - 50),
+        Math.round(100),
+        Math.round(100),
+      );
+    }
 
     ctx.restore();
   }
