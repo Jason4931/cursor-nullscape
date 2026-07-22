@@ -18,27 +18,27 @@ Springerrightglow.src = "./ASSET/Enemies/Springer/Springer-right-glow.png";
 const Springerleftglow = new Image();
 Springerleftglow.src = "./ASSET/Enemies/Springer/Springer-left-glow.png";
 
-export function setup(host, hardMode) {
+export let fasterSpringer = [0];
+export function setup(host, hardMode, scale = 1) {
   const state = {
     opacity: 1,
     enemy: Springerleft,
     enemyGlow: Springerleftglow,
 
-    size: 100,
+    size: 100 * scale,
 
     phase: "landing",
     timer: 0,
     leniencyTimer: null,
 
-    landingDuration: 2.3,
+    landingDuration: 2.3 / (1 + fasterSpringer[0]),
 
-    idleDuration: 5,
-    idleGrowTime: 3,
+    idleDuration: 5 / (1 + fasterSpringer[0]),
     ringMaxRadius: hardMode ? 1500 : 1000,
     innerRingDist: 100,
     flashAlpha: 0,
 
-    exitDuration: 2.4,
+    exitDuration: 2.4 / (1 + fasterSpringer[0]),
 
     ringCenterX: 0,
     ringCenterY: 0,
@@ -46,7 +46,8 @@ export function setup(host, hardMode) {
     spriteScale: 1,
     spriteAlpha: 0,
 
-    wasInsideRing: false,
+    knockbacks: [],
+    knockbackGrowTime: 3 / scale,
 
     flashSound: false,
     deathSound: false,
@@ -55,7 +56,7 @@ export function setup(host, hardMode) {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function pickIdleDuration() {
-    state.idleDuration = 4.5 + Math.random();
+    state.idleDuration = (4.5 + Math.random()) / (1 + fasterSpringer[0]);
   }
 
   function applyTripmineLeniency(strength01) {
@@ -73,6 +74,15 @@ export function setup(host, hardMode) {
     }, duration * 1000);
   }
 
+  function spawnKnockback() {
+    state.knockbacks.push({
+      timer: 0,
+      centerX: state.ringCenterX,
+      centerY: state.ringCenterY,
+      wasInsideRing: false,
+    });
+  }
+
   function enterLanding() {
     const p = pickRandomPlaced4or5();
     if (p.x && p.y) {
@@ -84,7 +94,6 @@ export function setup(host, hardMode) {
     state.spriteScale = 1.6;
     state.spriteAlpha = 0;
     state.phase = "landing";
-    state.wasInsideRing = false;
     const randDir = Math.random();
     if (randDir < 0.2) {
       state.enemy = Springerback;
@@ -109,6 +118,61 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
+    for (let i = state.knockbacks.length - 1; i >= 0; i--) {
+      const kb = state.knockbacks[i];
+
+      kb.timer += dt;
+
+      const growT = clamp(kb.timer / state.knockbackGrowTime, 0, 1);
+      const ringRadius = state.ringMaxRadius * growT;
+
+      const cx = mouse.x - kb.centerX;
+      const cy = mouse.y - kb.centerY;
+      const dist = Math.hypot(cx, cy);
+
+      const thickness = 30;
+      let insideRing = false;
+
+      if (kb.timer < state.knockbackGrowTime) {
+        const inner = ringRadius - thickness;
+        const outer = ringRadius;
+
+        insideRing = dist >= inner && dist <= outer;
+
+        if (hardMode) {
+          const innerRingRadius = ringRadius - state.innerRingDist;
+          const innerInner = innerRingRadius - thickness * 8;
+          const innerOuter = innerRingRadius;
+
+          if (dist >= innerInner && dist <= innerOuter) {
+            death("Springer");
+          }
+        }
+      } else {
+        state.knockbacks.splice(i, 1);
+        continue;
+      }
+
+      if (insideRing && !kb.wasInsideRing) {
+        const power01 = clamp(1 - growT, 0, 1);
+
+        const strength =
+          Math.min(host.canvas.width, host.canvas.height) *
+          0.03 *
+          power01 *
+          (hardMode ? 2 : 1);
+
+        const nx = dist ? cx / dist : 0;
+        const ny = dist ? cy / dist : 0;
+
+        if (kb.timer > 0.1) {
+          moveCamera(-nx * strength, -ny * strength);
+          applyTripmineLeniency(power01);
+        }
+      }
+
+      kb.wasInsideRing = insideRing;
+    }
 
     if (state.phase === "landing") {
       const fadeStart = state.landingDuration - 1;
@@ -138,58 +202,13 @@ export function setup(host, hardMode) {
         }
 
         pickIdleDuration();
+        spawnKnockback();
         state.timer = 0;
         state.phase = "idle";
         playSound("./ASSET/Sound/Enemies/Springer/Springer_-_JumpLand1.ogg");
         state.wasInsideRing = false;
       }
     } else if (state.phase === "idle") {
-      const growT = clamp(state.timer / state.idleGrowTime, 0, 1);
-      const ringRadius = state.ringMaxRadius * growT;
-
-      const cx = mouse.x - state.ringCenterX;
-      const cy = mouse.y - state.ringCenterY;
-      const dist = Math.hypot(cx, cy);
-
-      const thickness = 30;
-      let insideRing = false;
-
-      if (state.timer < state.idleGrowTime) {
-        const inner = ringRadius - thickness;
-        const outer = ringRadius;
-
-        insideRing = dist >= inner && dist <= outer;
-
-        if (hardMode) {
-          const innerRingRadius = ringRadius - state.innerRingDist;
-          const innerInner = innerRingRadius - thickness * 8;
-          const innerOuter = innerRingRadius;
-          const insideInnerRing = dist >= innerInner && dist <= innerOuter;
-          if (insideInnerRing) {
-            death("Springer");
-          }
-        }
-      }
-
-      if (insideRing && !state.wasInsideRing) {
-        const power01 = clamp(1 - growT, 0, 1);
-        const strength =
-          Math.min(host.canvas.width, host.canvas.height) *
-          0.03 *
-          power01 *
-          (hardMode ? 2 : 1);
-
-        const nx = dist ? cx / dist : 0;
-        const ny = dist ? cy / dist : 0;
-
-        if (state.timer > 0.1) {
-          moveCamera(-nx * strength, -ny * strength);
-          applyTripmineLeniency(power01);
-        }
-      }
-
-      state.wasInsideRing = insideRing;
-
       if (
         state.idleDuration - state.timer >= 0.9 &&
         state.idleDuration - state.timer <= 1 &&
@@ -230,8 +249,8 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity;
 
     if (state.phase === "landing") {
-      const outerR = 28;
-      const innerR = 18;
+      const outerR = 28 * scale;
+      const innerR = 18 * scale;
 
       ctx.fillStyle = "rgba(255,40,40,0.9)";
       ctx.beginPath();
@@ -252,8 +271,8 @@ export function setup(host, hardMode) {
       );
       ctx.fill("evenodd");
 
-      const markW = 14;
-      const markH = 40;
+      const markW = 14 * scale;
+      const markH = 40 * scale;
       const rot = state.timer * 1.5;
 
       ctx.save();
@@ -280,20 +299,17 @@ export function setup(host, hardMode) {
       ctx.restore();
     }
 
-    if (state.phase === "idle" && state.timer < state.idleGrowTime) {
-      const growT = clamp(state.timer / state.idleGrowTime, 0, 1);
+    for (const kb of state.knockbacks) {
+      const growT = clamp(kb.timer / state.knockbackGrowTime, 0, 1);
       const radius = state.ringMaxRadius * growT;
       const thickness = 200;
       const alpha = (1 - growT) * 0.6;
 
       ctx.save();
-      ctx.translate(
-        Math.round(state.ringCenterX),
-        Math.round(state.ringCenterY),
-      );
+      ctx.translate(Math.round(kb.centerX), Math.round(kb.centerY));
 
       const layers = 5;
-      const baseAlpha = (1 - growT) * 0.3; // ~10% like you wanted
+      const baseAlpha = (1 - growT) * 0.3;
 
       for (let l = 0; l < layers; l++) {
         const offset = l * 6;
@@ -305,7 +321,7 @@ export function setup(host, hardMode) {
         ctx.beginPath();
 
         for (let a = 0; a <= Math.PI * 2 + 0.1; a += 0.1) {
-          const wave = Math.sin(a * waveFreq + state.timer * 4 + l) * waveAmp;
+          const wave = Math.sin(a * waveFreq + kb.timer * 4 + l) * waveAmp;
 
           const rr = r + wave;
 
@@ -373,7 +389,8 @@ export function setup(host, hardMode) {
             : state.phase === "exit"
               ? Math.round(state.timer * 10)
               : 0) -
-          20;
+          20 -
+          (scale - 1) * 10;
 
         ctx.drawImage(
           state.enemyGlow,
@@ -397,7 +414,8 @@ export function setup(host, hardMode) {
           : state.phase === "exit"
             ? Math.round(state.timer * 10)
             : 0) -
-        20;
+        20 -
+        (scale - 1) * 10;
 
       ctx.drawImage(
         state.enemy,

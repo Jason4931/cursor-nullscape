@@ -14,6 +14,7 @@ for (let i = 1; i <= 24; i++) {
   MartSlideAnimation.push(img);
 }
 
+export let fasterMart = [0];
 export let martSlideActive = [false];
 export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
@@ -33,7 +34,8 @@ export function setup(host, hardMode, stack = 1, position = null) {
     martSlided: false,
 
     size: (0.6 + stack * 0.4) * 75,
-    speed: (0.6 + stack * 0.4) * (hardMode ? 80 : 40),
+    speed:
+      (0.6 + stack * 0.4) * (hardMode ? 80 : 40) * (1 + fasterMart[0] * 0.5),
     _stack: stack,
 
     initialized: false,

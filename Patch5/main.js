@@ -29,11 +29,15 @@ import { setup as spawnAltarPassage } from "./Enemies/AltarOfPassage.js";
 import { setup as spawnJumpPad } from "./Enemies/JumpPad.js";
 import { setup as spawnTriaOrb } from "./Enemies/TriaOrb.js";
 import { dontTouchMeActive, setup as spawnBell } from "./Enemies/Bell.js";
-import { martSlideActive, setup as spawnMart } from "./Enemies/Mart.js";
+import {
+  fasterMart,
+  martSlideActive,
+  setup as spawnMart,
+} from "./Enemies/Mart.js";
 import { rebirthActive, setup as spawnBaby } from "./Enemies/Baby.js";
 import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
 import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
-import { setup as spawnSpringer } from "./Enemies/Springer.js";
+import { fasterSpringer, setup as spawnSpringer } from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { redactedActive, setup as spawnNIL } from "./Enemies/NIL.js";
@@ -231,6 +235,8 @@ let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 const spawnedCurses = new Set();
+let jumppadSpawns = [];
+let fleshSpawns = [];
 export let spaceHeld = false;
 export let shiftlockEase = 1;
 export let ability = false;
@@ -318,7 +324,11 @@ const ENTITY_POOL = [
   },
   {
     name: "Flesh",
-    spawn: () => spawnFlesh(entityHost, hardMode),
+    spawn: () => {
+      const unregister = spawnFlesh(entityHost, hardMode);
+      fleshSpawns.push(unregister);
+      return unregister;
+    },
     start: 500,
     src: "./ASSET/Enemies/FleshIcon.png",
     desc: "Infects nearby tiles, hinders ability usage for a short duration.",
@@ -1337,8 +1347,10 @@ topLeftInput.addEventListener("keydown", function (event) {
           spawnGrindrail(entityHost);
         } else if (input.toLowerCase() === "jumppad") {
           for (let i = 1; i <= 10; i++) {
-            if (i <= 8) {
-              spawnJumpPad(entityHost, i >= 6);
+            if (i <= 5) {
+              jumppadSpawns.push(spawnJumpPad(entityHost));
+            } else if (i <= 8) {
+              spawnJumpPad(entityHost, true);
             } else {
               spawnTriaOrb(entityHost);
             }
@@ -3094,8 +3106,10 @@ function ENTITY_SPAWN(
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
       for (let i = 1; i <= 10; i++) {
-        if (i <= 8) {
-          spawnJumpPad(entityHost, i >= 6);
+        if (i <= 5) {
+          jumppadSpawns.push(spawnJumpPad(entityHost));
+        } else if (i <= 8) {
+          spawnJumpPad(entityHost, true);
         } else {
           spawnTriaOrb(entityHost);
         }
@@ -3131,21 +3145,73 @@ export function activateChaos() {
   giftMultiplier += 1;
   ENTITY_SPAWN(undefined, undefined, true);
 }
-let alreadyBenefitChanced = [false, false];
-export function activateChance() {
+export function activateChance(mode = "normal", outcome = null) {
   lastAltar = "Chance";
   let chance;
-  while (true) {
-    chance = Math.floor(Math.random() * 4);
-    if (chance === 0 || chance === 1) break;
-    if (chance === 2 && !alreadyBenefitChanced[0]) break;
-    if (chance === 3 && !alreadyBenefitChanced[1] && !casualMode) break;
+  if (outcome) {
+    if (outcome == "positive") {
+      chance = 1 + Math.floor(Math.random() * 4);
+    } else if (outcome == "negative") {
+      chance = 5 + Math.floor(Math.random() * 10);
+    }
+  } else {
+    chance = Math.floor(Math.random() * 15);
   }
   switch (chance) {
     case 0:
-      // - payment 1000
-      actualCollectedCount -= 1000;
-      // if (actualCollectedCount < 0) actualCollectedCount = 0;
+      // No Tripmines For 1 Minute
+      disableTripmine = true;
+      giftPositions.forEach((gift) => {
+        if (gift.type === "tripmine") {
+          gift.type = "gift";
+        }
+      });
+      setTimeout(() => {
+        disableTripmine = false;
+      }, 60000);
+      break;
+    case 1:
+      // +0.5x Gift Multiplier Increase
+      giftMultiplier += mode == "high" ? 0.75 : mode == "tweak" ? 0.25 : 0.5;
+      break;
+    case 2:
+      // +0.75x Gift Multiplier Increase
+      giftMultiplier += mode == "high" ? 1.25 : mode == "tweak" ? 0.5 : 0.75;
+      break;
+    case 3:
+      // Flesh BEGONE
+      fleshPositions.clear();
+      slowness = false;
+      if (fleshSpawns.length != 0) {
+        const removeCount = mode == "high" ? 2 : 1;
+        const indices = [...Array(fleshSpawns.length).keys()];
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        const removed = [];
+        indices
+          .slice(0, removeCount)
+          .sort((a, b) => b - a)
+          .forEach((index) => {
+            fleshSpawns[index]();
+            fleshSpawns.splice(index, 1);
+            removed.push(index);
+          });
+        setTimeout(() => {
+          for (const index of removed) {
+            fleshSpawns.push(spawnFlesh(entityHost, hardMode));
+          }
+        }, 60000);
+      }
+      break;
+    case 4:
+      // Extra Shield
+      activateShield();
+      break;
+    case 5:
+      // Payment 1000 Gift
+      actualCollectedCount -= mode == "high" ? 2000 : 1000;
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
@@ -3160,23 +3226,125 @@ export function activateChance() {
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
       break;
-    case 1:
-      // - random enemy 4
-      for (let i = 0; i < 4; i++) ENTITY_SPAWN(true);
+    case 6:
+      // Martpocalypse
+      for (let i = 0; i < 6; i++) {
+        const unregister = spawnMart(
+          entityHost,
+          hardMode,
+          mode == "high" ? 2 : 1,
+        );
+        setTimeout(() => {
+          unregister();
+        }, 60000);
+      }
       break;
-    case 2:
-      // + gift multiplier x2
-      giftMultiplier *= 2;
+    case 7:
+      // 2 Random Enemies
+      for (let i = 0; i < (mode == "high" ? 4 : 2); i++) ENTITY_SPAWN(true);
       break;
-    case 3:
-      // + no tripmines
-      disableTripmine = true;
-      giftPositions.forEach((gift) => {
-        if (gift.type === "tripmine") {
-          gift.type = "gift";
+    case 8:
+      // Mart and Springer
+      fasterMart[0]++;
+      fasterSpringer[0]++;
+      break;
+    case 9:
+      // It's Here
+      for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
+        const unregister = spawnSpringer(entityHost, hardMode, 3);
+        setTimeout(() => {
+          unregister();
+        }, 60000);
+      }
+      break;
+    case 10:
+      // 40% Less Jump Pads
+      if (jumppadSpawns.length != 0) {
+        const removeCount = Math.max(
+          1,
+          Math.floor(jumppadSpawns.length * (mode == "high" ? 1 : 0.4)),
+        );
+        const indices = [...Array(jumppadSpawns.length).keys()];
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
         }
+        const removed = [];
+        indices
+          .slice(0, removeCount)
+          .sort((a, b) => b - a)
+          .forEach((index) => {
+            jumppadSpawns[index]();
+            jumppadSpawns.splice(index, 1);
+            removed.push(index);
+          });
+        setTimeout(() => {
+          for (const index of removed) {
+            jumppadSpawns.push(spawnJumpPad(entityHost));
+          }
+        }, 60000);
+      }
+      break;
+    case 11:
+      // 60% Less Jump Pads
+      if (jumppadSpawns.length != 0) {
+        const removeCount = Math.max(
+          1,
+          Math.floor(jumppadSpawns.length * (mode == "high" ? 1 : 0.6)),
+        );
+        const indices = [...Array(jumppadSpawns.length).keys()];
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        const removed = [];
+        indices
+          .slice(0, removeCount)
+          .sort((a, b) => b - a)
+          .forEach((index) => {
+            jumppadSpawns[index]();
+            jumppadSpawns.splice(index, 1);
+            removed.push(index);
+          });
+        setTimeout(() => {
+          for (const index of removed) {
+            jumppadSpawns.push(spawnJumpPad(entityHost));
+          }
+        }, 60000);
+      }
+      break;
+    case 12:
+      // 40% More Seamines
+      for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
+        const unregister = spawnSeamine(entityHost, casualMode, hardMode);
+        setTimeout(() => {
+          unregister();
+        }, 60000);
+      }
+      break;
+    case 13:
+      // 60% More Seamines
+      for (let i = 0; i < (mode == "high" ? 4 : 2); i++) {
+        const unregister = spawnSeamine(entityHost, casualMode, hardMode);
+        setTimeout(() => {
+          unregister();
+        }, 60000);
+      }
+      break;
+    case 14:
+      // Oops, all Flesh!
+      fleshPositions.add({
+        x: 0,
+        y: 0,
+        until: performance.now() + 25000,
+        oopsAllFlesh: true,
       });
-      alreadyBenefitChanced[1] = true;
+      for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
+        const unregister = spawnFlesh(entityHost, hardMode);
+        setTimeout(() => {
+          unregister();
+        }, 60000);
+      }
       break;
   }
   return chance;
@@ -3824,7 +3992,10 @@ function drawGrid() {
         for (const f of fleshPositions) {
           const ddx = cx - f.x;
           const ddy = cy - f.y;
-          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          if (
+            ddx * ddx + ddy * ddy <
+            (f.oopsAllFlesh ? Infinity : (TILE * 3) ** 2)
+          ) {
             corrupted = true;
             break;
           }
@@ -3918,7 +4089,10 @@ function drawGrid() {
         for (const f of fleshPositions) {
           const ddx = cx - f.x;
           const ddy = cy - f.y;
-          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          if (
+            ddx * ddx + ddy * ddy <
+            (f.oopsAllFlesh ? Infinity : (TILE * 3) ** 2)
+          ) {
             corrupted = true;
             break;
           }
@@ -4062,7 +4236,10 @@ function drawGrid() {
           const ddx = cx - fx;
           const ddy = cy - fy;
 
-          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          if (
+            ddx * ddx + ddy * ddy <
+            (f.oopsAllFlesh ? Infinity : (TILE * 3) ** 2)
+          ) {
             corrupted = true;
             break;
           }
@@ -4362,7 +4539,10 @@ function drawGrid() {
         for (const f of fleshPositions) {
           const ddx = cx - f.x;
           const ddy = cy - f.y;
-          if (ddx * ddx + ddy * ddy < (TILE * 3) ** 2) {
+          if (
+            ddx * ddx + ddy * ddy <
+            (f.oopsAllFlesh ? Infinity : (TILE * 3) ** 2)
+          ) {
             corrupted = true;
             break;
           }
@@ -4622,6 +4802,111 @@ function drawGrid() {
         ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
         ctx.closePath();
         ctx.fill();
+        function roundRect(cx, cy, w, h, r, rot) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rot);
+          ctx.beginPath();
+          ctx.moveTo(-w / 2 + r, -h / 2);
+          ctx.lineTo(w / 2 - r, -h / 2);
+          ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+          ctx.lineTo(w / 2, h / 2 - r);
+          ctx.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+          ctx.lineTo(-w / 2 + r, h / 2);
+          ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+          ctx.lineTo(-w / 2, -h / 2 + r);
+          ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+          ctx.closePath();
+          ctx.fill();
+          const grad = ctx.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            Math.max(w, h) * 0.5,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0)");
+          grad.addColorStop(0.65, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,0.25)");
+          ctx.fillStyle = grad;
+          ctx.fill();
+          ctx.restore();
+        }
+        function rect(cx, cy, w, h, rot) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rot);
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          const grad = ctx.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            Math.max(w, h) * 0.5,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0)");
+          grad.addColorStop(0.65, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,0.25)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          ctx.restore();
+        }
+        // function rect(cx, cy, w, h, rot) {
+        //   ctx.save();
+        //   ctx.translate(cx, cy);
+        //   ctx.rotate(rot);
+        //   ctx.fillRect(-w / 2, -h / 2, w, h);
+        //   ctx.restore();
+        // }
+        // right leg
+        ctx.fillStyle = "#555";
+        rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
+        // left arm
+        ctx.fillStyle = "#555";
+        rect(t.x - TILE * 0.1, t.y - TILE * 2.2, TILE * 0.5, TILE * 1.25, -0.2);
+        // body
+        ctx.fillStyle = "#666";
+        rect(t.x + TILE * 0.5, t.y - TILE * 1.2, TILE * 1, TILE * 1.25, 0.1);
+        // left leg
+        ctx.fillStyle = "#777";
+        rect(t.x + TILE * 0, t.y - TILE * 0.3, TILE * 0.5, TILE * 1.25, 0.05);
+        // right arm
+        ctx.fillStyle = "#777";
+        rect(t.x + TILE * 1.3, t.y - TILE * 1, TILE * 0.5, TILE * 1.25, -0.1);
+        // head
+        ctx.fillStyle = "#777";
+        roundRect(
+          t.x + TILE * 0.7,
+          t.y - TILE * 2.05,
+          TILE * 0.5,
+          TILE * 0.5,
+          TILE * 0.1,
+          0.5,
+        );
+        // gift
+        ctx.fillStyle = "#505";
+        rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
+        ctx.fillStyle = "#606";
+        rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
+        // left leaf
+        ctx.fillStyle = "#707";
+        ctx.save();
+        ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
+        ctx.rotate(0.8);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        // right leaf
+        ctx.save();
+        ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
+        ctx.rotate(-0.3);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
       }
     }
   }
@@ -4986,8 +5271,10 @@ function updateCamera() {
             activateShield();
           }
           for (let i = 1; i <= 10; i++) {
-            if (i <= 8) {
-              spawnJumpPad(entityHost, i >= 6);
+            if (i <= 5) {
+              jumppadSpawns.push(spawnJumpPad(entityHost));
+            } else if (i <= 8) {
+              spawnJumpPad(entityHost, true);
             } else {
               spawnTriaOrb(entityHost);
             }
@@ -5156,8 +5443,10 @@ function updateCamera() {
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
             for (let i = 1; i <= 10; i++) {
-              if (i <= 8) {
-                spawnJumpPad(entityHost, i >= 6);
+              if (i <= 5) {
+                jumppadSpawns.push(spawnJumpPad(entityHost));
+              } else if (i <= 8) {
+                spawnJumpPad(entityHost, true);
               } else {
                 spawnTriaOrb(entityHost);
               }
