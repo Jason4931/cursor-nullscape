@@ -251,7 +251,7 @@ export function setup(host) {
 
       const r = c.radius * scale;
 
-      if (Math.isFinite(c.x) && Math.isFinite(c.y) && Math.isFinite(r)) {
+      if (Number.isFinite(c.x) && Number.isFinite(c.y) && Number.isFinite(r)) {
         const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r);
 
         grad.addColorStop(0.0, `rgba(0,0,0,${alpha})`);
