@@ -28,6 +28,7 @@ vx quartz
 vx fear/visage
 vx locust/belchboy
 vx big baby
+vx big springer
 vx the eye
 vx realmweaver
 vx evilcadence

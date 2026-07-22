@@ -512,6 +512,14 @@ const ENTITY_POOL = [
     chaosOnly: true,
   },
   {
+    name: "BigSpringer",
+    spawn: () => spawnSpringer(entityHost, hardMode, 3 + Math.random()),
+    start: 0,
+    src: "./ASSET/Enemies/Springer.png",
+    desc: "Big springer. Jumps around the map, creating shockwaves that fling you.",
+    chaosOnly: true,
+  },
+  {
     name: "TheEye",
     spawn: () => spawnTheEye(entityHost),
     start: 0,
@@ -1923,6 +1931,8 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath !=
+      "./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg" &&
     soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg" &&
     !soundPath.startsWith("./ASSET/Sound/Domasp/")
   )
@@ -1930,7 +1940,18 @@ export function playSound(
   const audio = new Audio(soundPath);
   audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {
-    audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
+    if (
+      soundPath ==
+        "./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg" &&
+      originalVolume[1]
+    ) {
+      audio.volume = Math.max(
+        0,
+        Math.min(1, originalVolume[1] / Number(important)),
+      );
+    } else {
+      audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));
+    }
   } else {
     audio.volume = Math.max(
       0,
@@ -1978,6 +1999,8 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath !=
+      "./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg" &&
     soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg" &&
     !soundPath.startsWith("./ASSET/Sound/Domasp/")
   )

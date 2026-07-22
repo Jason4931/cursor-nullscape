@@ -31,14 +31,14 @@ export function setup(host, hardMode, scale = 1) {
     timer: 0,
     leniencyTimer: null,
 
-    landingDuration: 2.3 / (1 + fasterSpringer[0]),
+    landingDuration: 2.3 / (1 + fasterSpringer[0] * 0.5),
 
-    idleDuration: 5 / (1 + fasterSpringer[0]),
-    ringMaxRadius: hardMode ? 1500 : 1000,
+    idleDuration: 5 / (1 + fasterSpringer[0] * 0.5),
+    ringMaxRadius: (hardMode ? 1500 : 1000) * (0.5 + scale * 0.5),
     innerRingDist: 100,
     flashAlpha: 0,
 
-    exitDuration: 2.4 / (1 + fasterSpringer[0]),
+    exitDuration: 2.4 / (1 + fasterSpringer[0] * 0.5),
 
     ringCenterX: 0,
     ringCenterY: 0,
@@ -47,7 +47,7 @@ export function setup(host, hardMode, scale = 1) {
     spriteAlpha: 0,
 
     knockbacks: [],
-    knockbackGrowTime: 3 / scale,
+    knockbackGrowTime: 3 * (0.5 + scale * 0.5),
 
     flashSound: false,
     deathSound: false,
@@ -56,7 +56,7 @@ export function setup(host, hardMode, scale = 1) {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function pickIdleDuration() {
-    state.idleDuration = (4.5 + Math.random()) / (1 + fasterSpringer[0]);
+    state.idleDuration = (4.5 + Math.random()) / (1 + fasterSpringer[0] * 0.5);
   }
 
   function applyTripmineLeniency(strength01) {
@@ -109,7 +109,10 @@ export function setup(host, hardMode, scale = 1) {
       state.enemyGlow = Springerleftglow;
     }
 
-    playSound("./ASSET/Sound/Enemies/Springer/Springer_-_LockOn.ogg");
+    playSound(
+      "./ASSET/Sound/Enemies/Springer/Springer_-_LockOn.ogg",
+      1 + fasterSpringer[0] * 0.5,
+    );
   }
 
   enterLanding();
@@ -194,6 +197,7 @@ export function setup(host, hardMode, scale = 1) {
           if (!state.deathSound) {
             playSound(
               "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
+              1 + fasterSpringer[0] * 0.5,
             );
             state.deathSound = true;
           }
@@ -205,7 +209,10 @@ export function setup(host, hardMode, scale = 1) {
         spawnKnockback();
         state.timer = 0;
         state.phase = "idle";
-        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_JumpLand1.ogg");
+        playSound(
+          "./ASSET/Sound/Enemies/Springer/Springer_-_JumpLand1.ogg",
+          1 + fasterSpringer[0] * 0.5,
+        );
         state.wasInsideRing = false;
       }
     } else if (state.phase === "idle") {
@@ -214,7 +221,10 @@ export function setup(host, hardMode, scale = 1) {
         state.idleDuration - state.timer <= 1 &&
         !state.flashSound
       ) {
-        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_Flash.ogg");
+        playSound(
+          "./ASSET/Sound/Enemies/Springer/Springer_-_Flash.ogg",
+          1 + fasterSpringer[0] * 0.5,
+        );
         state.flashSound = true;
       }
       if (state.idleDuration - state.timer <= 1) {
@@ -227,7 +237,10 @@ export function setup(host, hardMode, scale = 1) {
       if (state.timer >= state.idleDuration) {
         state.timer = 0;
         state.phase = "exit";
-        playSound("./ASSET/Sound/Enemies/Springer/Springer_-_Move.ogg");
+        playSound(
+          "./ASSET/Sound/Enemies/Springer/Springer_-_Move.ogg",
+          1 + fasterSpringer[0] * 0.5,
+        );
         state.flashSound = false;
       }
     } else if (state.phase === "exit") {

@@ -41,9 +41,14 @@ export function setup(host) {
       floatingText.t = 0;
       floatingText.duration = duration;
       floatingText.active = true;
-      // playSound(
-      //   `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 8)}.ogg`,
-      // );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
     }
     if (floatingText.active) {
       floatingText.t += dt;
