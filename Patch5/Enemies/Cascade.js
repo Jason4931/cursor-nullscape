@@ -71,7 +71,7 @@ export function setup(host, casualMode, hardMode) {
       if (b.trail.length > 12) b.trail.shift();
 
       if (dist(b, mouse) < b.radius) {
-        death();
+        death("Cascade");
       }
     }
 
@@ -162,7 +162,7 @@ export function setup(host, casualMode, hardMode) {
       while (b.trail.length > 12) b.trail.shift();
 
       if (dist(b, mouse) < b.radius) {
-        death();
+        death("Cascade");
       }
     }
 

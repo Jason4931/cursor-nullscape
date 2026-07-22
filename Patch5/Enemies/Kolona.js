@@ -267,7 +267,6 @@ export function setup(host, casualMode) {
     }
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
-    console.log(state.phase);
     ctx.rotate(
       -arrowAngle * 2 -
         (!(state.phase === "intro") ? (state.target - state.timer) * 0.1 : 0),
