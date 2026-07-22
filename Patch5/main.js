@@ -544,6 +544,12 @@ const ENTITY_POOL = [
     chaosOnly: true,
   },
   {
+    name: "RealityBreak",
+    spawn: () => spawnRealityCollapse(entityHost, true),
+    start: 0,
+    chaosOnly: true,
+  },
+  {
     name: "NuclearBomb",
     spawn: () => {
       nuclearBombActive[0] = true;
@@ -4794,7 +4800,7 @@ function drawGrid() {
         }
       }
       if (t.wall[0] && t.wall[1] == 66) {
-        ctx.fillStyle = "#aaa";
+        ctx.fillStyle = "#333";
         ctx.beginPath();
         ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
         ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
@@ -4853,13 +4859,6 @@ function drawGrid() {
           ctx.fillRect(-w / 2, -h / 2, w, h);
           ctx.restore();
         }
-        // function rect(cx, cy, w, h, rot) {
-        //   ctx.save();
-        //   ctx.translate(cx, cy);
-        //   ctx.rotate(rot);
-        //   ctx.fillRect(-w / 2, -h / 2, w, h);
-        //   ctx.restore();
-        // }
         // right leg
         ctx.fillStyle = "#555";
         rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
@@ -4880,9 +4879,9 @@ function drawGrid() {
         roundRect(
           t.x + TILE * 0.7,
           t.y - TILE * 2.05,
-          TILE * 0.5,
-          TILE * 0.5,
-          TILE * 0.1,
+          TILE * 0.6,
+          TILE * 0.6,
+          TILE * 0.2,
           0.5,
         );
         // gift
@@ -4890,22 +4889,23 @@ function drawGrid() {
         rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
         ctx.fillStyle = "#606";
         rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
-        // left leaf
-        ctx.fillStyle = "#707";
+        // left bow loop
+        ctx.strokeStyle = "#707";
+        ctx.lineWidth = TILE * 0.05;
         ctx.save();
         ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
         ctx.rotate(0.8);
         ctx.beginPath();
         ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.stroke();
         ctx.restore();
-        // right leaf
+        // right bow loop
         ctx.save();
         ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
         ctx.rotate(-0.3);
         ctx.beginPath();
         ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.stroke();
         ctx.restore();
       }
     }
