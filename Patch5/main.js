@@ -3761,28 +3761,30 @@ function drawGrid() {
     const lookStrength = -0.05;
     const cx = centerX + (mouse.x - centerX) * lookStrength;
     const cy = centerY + (mouse.y - centerY) * lookStrength;
-    const grad = ctx.createRadialGradient(
-      cx,
-      cy,
-      0,
-      cx,
-      cy,
-      Math.min(window.innerWidth, window.innerHeight) * 0.5,
-    );
-    grad.addColorStop(0, "rgba(0, 0, 0, 1)");
-    grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
-    grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
-    grad.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(
-      cx,
-      cy,
-      Math.min(window.innerWidth, window.innerHeight) * 0.5,
-      0,
-      Math.PI * 2,
-    );
-    ctx.fill();
+    if (Number.isFinite(cx) && Number.isFinite(cy)) {
+      const grad = ctx.createRadialGradient(
+        cx,
+        cy,
+        0,
+        cx,
+        cy,
+        Math.min(window.innerWidth, window.innerHeight) * 0.5,
+      );
+      grad.addColorStop(0, "rgba(0, 0, 0, 1)");
+      grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
+      grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(
+        cx,
+        cy,
+        Math.min(window.innerWidth, window.innerHeight) * 0.5,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+    }
     ctx.restore();
   }
 
