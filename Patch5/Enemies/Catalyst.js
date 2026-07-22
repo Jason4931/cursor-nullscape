@@ -26,8 +26,8 @@ export function setup(host) {
   const state = {
     phase: "initDarken",
 
-    x: 0,
-    y: 0,
+    x: -1000,
+    y: -1000,
 
     layers: CatalystOptim,
     enemy: null,

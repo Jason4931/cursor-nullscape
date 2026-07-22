@@ -5772,7 +5772,11 @@ function loop(now) {
   }
 
   //deathglow
-  if (deathOpacity > 0 && Number.isFinite(screenY)) {
+  if (
+    deathOpacity > 0 &&
+    Number.isFinite(screenX) &&
+    Number.isFinite(screenY)
+  ) {
     const border = 150;
     ctx.save();
     deathOpacity -= 0.033;
