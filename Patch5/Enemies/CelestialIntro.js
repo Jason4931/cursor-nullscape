@@ -251,17 +251,19 @@ export function setup(host) {
 
       const r = c.radius * scale;
 
-      const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r);
+      if (Math.isFinite(c.x) && Math.isFinite(c.y) && Math.isFinite(r)) {
+        const grad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, r);
 
-      grad.addColorStop(0.0, `rgba(0,0,0,${alpha})`);
-      grad.addColorStop(0.75, `rgba(0,0,0,${alpha})`);
-      grad.addColorStop(0.76, `rgba(${c.color},${alpha})`);
-      grad.addColorStop(1.0, `rgba(${c.color},0)`);
+        grad.addColorStop(0.0, `rgba(0,0,0,${alpha})`);
+        grad.addColorStop(0.75, `rgba(0,0,0,${alpha})`);
+        grad.addColorStop(0.76, `rgba(${c.color},${alpha})`);
+        grad.addColorStop(1.0, `rgba(${c.color},0)`);
 
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     if (state.timer >= 2 && state.timer <= 28.5) {
       const x = cam.x + window.innerWidth / 2;
