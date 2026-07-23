@@ -22,7 +22,7 @@ export let fasterSpringer = [0];
 export let fastSpringerActive = [false];
 export function setup(host, hardMode, scale = 1) {
   const state = {
-    _speedMultiplier: 1 + fasterSpringer[0] * 0.5,
+    _speedMultiplier: 1 + fasterSpringer[0],
     opacity: 1,
     enemy: Springerleft,
     enemyGlow: Springerleftglow,
@@ -33,14 +33,14 @@ export function setup(host, hardMode, scale = 1) {
     timer: 0,
     leniencyTimer: null,
 
-    landingDuration: 2.3 / (1 + fasterSpringer[0] * 0.5),
+    landingDuration: 2.3 / (1 + fasterSpringer[0]),
 
-    idleDuration: 5 / (1 + fasterSpringer[0] * 0.5),
+    idleDuration: 5 / (1 + fasterSpringer[0]),
     ringMaxRadius: (hardMode ? 1500 : 1000) * (0.5 + scale * 0.5),
     innerRingDist: 100,
     flashAlpha: 0,
 
-    exitDuration: 2.4 / (1 + fasterSpringer[0] * 0.5),
+    exitDuration: 2.4 / (1 + fasterSpringer[0]),
 
     ringCenterX: 0,
     ringCenterY: 0,
@@ -58,7 +58,7 @@ export function setup(host, hardMode, scale = 1) {
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function pickIdleDuration() {
-    state.idleDuration = (4.5 + Math.random()) / (1 + fasterSpringer[0] * 0.5);
+    state.idleDuration = (4.5 + Math.random()) / (1 + fasterSpringer[0]);
   }
 
   function applyTripmineLeniency(strength01) {
@@ -113,7 +113,7 @@ export function setup(host, hardMode, scale = 1) {
 
     playSound(
       "./ASSET/Sound/Enemies/Springer/Springer_-_LockOn.ogg",
-      1 + fasterSpringer[0] * 0.5,
+      1 + fasterSpringer[0],
     );
   }
 
@@ -122,7 +122,7 @@ export function setup(host, hardMode, scale = 1) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    const newMultiplier = 1 + fasterSpringer[0] * 0.5;
+    const newMultiplier = 1 + fasterSpringer[0];
     if (newMultiplier !== state._speedMultiplier) {
       const ratio = state._speedMultiplier / newMultiplier;
       state.landingDuration *= ratio;
@@ -208,7 +208,7 @@ export function setup(host, hardMode, scale = 1) {
           if (!state.deathSound) {
             playSound(
               "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
-              1 + fasterSpringer[0] * 0.5,
+              1 + fasterSpringer[0],
             );
             state.deathSound = true;
           }
@@ -222,7 +222,7 @@ export function setup(host, hardMode, scale = 1) {
         state.phase = "idle";
         playSound(
           "./ASSET/Sound/Enemies/Springer/Springer_-_JumpLand1.ogg",
-          1 + fasterSpringer[0] * 0.5,
+          1 + fasterSpringer[0],
         );
         state.wasInsideRing = false;
       }
@@ -234,7 +234,7 @@ export function setup(host, hardMode, scale = 1) {
       ) {
         playSound(
           "./ASSET/Sound/Enemies/Springer/Springer_-_Flash.ogg",
-          1 + fasterSpringer[0] * 0.5,
+          1 + fasterSpringer[0],
         );
         state.flashSound = true;
       }
@@ -250,7 +250,7 @@ export function setup(host, hardMode, scale = 1) {
         state.phase = "exit";
         playSound(
           "./ASSET/Sound/Enemies/Springer/Springer_-_Move.ogg",
-          1 + fasterSpringer[0] * 0.5,
+          1 + fasterSpringer[0],
         );
         state.flashSound = false;
       }
