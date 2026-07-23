@@ -5,6 +5,7 @@ import {
   actualCollectedCount,
   getCameraPos,
   spawnCelestialIntro,
+  playSound,
 } from "../main.js";
 import {
   RealityCollapseCount,
@@ -134,6 +135,39 @@ const pattern = rawpattern.map((row, y) =>
     return neighbors.includes(0) ? (Math.random() < 0.1 ? 4 : 1) : 1;
   }),
 );
+const text = [
+  [
+    "...",
+    "... YOU.",
+    "WERE YOU THE ONES TO\nWAKE ME?",
+    "HOW...",
+    "ARROGANT.",
+    "WHAT IS IT THAT YOU\nSEEK?",
+    "I HOLD NO ANSWERS FOR\nYOU, I DO NOT POSSESS\nAN ESCAPE.",
+    "IF YOU CAME LOOKING FOR\nA SAVIOR...",
+    "HEED MY WORDS.",
+    "DO NOT PERSIST.",
+  ],
+  [
+    "HAVE YOU NOT GOTTEN\nYOUR ANSWERS?",
+    "YOUR KINDS CURIOSITY\nDISGUSTS ME.",
+    "YOU ARE... VERMIN PESTS\nTO BE CLEANSED.",
+    "WHAT MAKES YOU THINK\nYOU ARE EVEN WORTHY OF\nMY TIME?",
+    "DO YOU THINK YOU BEAR\nEVEN AN OUNCE OF\nIMPORTANCE?",
+    "YOUR WELCOME HAS LONG\nWORN THIN.",
+    "LEAVE ME TO SLUMBER, DO\nNOT TEST MY PATIENCE.",
+  ],
+  [
+    "NOTHING BUT\nINCESSANT NOISE.",
+    "SPEAKING YOUR TONGUE\nTAINTS THE DIVINE.",
+    "YOU ARENT ANYTHING\nBUT LOUD, BUZZING\nINSECTS.",
+    "WHAT MEANING DO YOUR\nMERE, PITIFUL\nEXISTENCE FIND,",
+    "IN THIS ENDLESS\nHORIZON OF THE VOID?",
+    "YOU WANT AN ANSWER?",
+    "YOU WILL DISCOVER\nSALVATION.",
+    "BY JOINING THE ABYSS\nTHAT ENSHROUDS US.",
+  ],
+];
 let pylonDone = 0;
 export let pylonLocations = [];
 export function setup(host) {
@@ -145,10 +179,46 @@ export function setup(host) {
     realityCollapse: [null, null],
     circleRadius: 0,
   };
+  const floatingText = {
+    text: "",
+    t: 0,
+    duration: 1,
+    active: false,
+  };
+  const textIndex = [0, 0, 0];
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (actualCollectedCount >= 5000) return;
+
+    function showText(group, index = 0) {
+      if (group < 0 || group >= text.length) return;
+      if (index >= text[group].length) return;
+      floatingText.text = text[group][index];
+      floatingText.t = 0;
+      floatingText.duration = 1 + floatingText.text.split("\n").length * 0.5;
+      floatingText.active = true;
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 3)}.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      setTimeout(() => {
+        if (pylonDone == group + 1) {
+          showText(group, index + 1);
+        }
+      }, floatingText.duration * 1000);
+    }
+    if (floatingText.active) {
+      floatingText.t += dt;
+      if (floatingText.t >= floatingText.duration) {
+        floatingText.active = false;
+      }
+    }
+
     const s = state;
 
     if (!s.generated) {
@@ -284,6 +354,13 @@ export function setup(host) {
           p.shake = 2;
           pylonDone++;
           RealityCollapseCount.count = 3.333 * pylonDone;
+          if (pylonDone == 1) {
+            showText(0);
+          } else if (pylonDone == 2) {
+            showText(1);
+          } else if (pylonDone == 3) {
+            showText(2);
+          }
           if (pylonDone == 1) {
             state.realityCollapse[0] = spawnRealityCollapse(host, true);
             state.realityCollapse[1] = spawnRealityCollapse(host);
@@ -693,6 +770,103 @@ export function setup(host) {
       ctx.fillStyle = "magenta";
       ctx.fillText(text, x, y);
       ctx.restore();
+    }
+
+    if (floatingText.active) {
+      const p = floatingText.t / floatingText.duration;
+      const cam = getCameraPos();
+
+      ctx.save();
+
+      const textWeight = 100;
+      ctx.font = `${textWeight}px CelestialFont`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const baseX = cam.x + window.innerWidth / 2;
+      const baseY = cam.y + window.innerHeight * 0.667;
+
+      const lines = floatingText.text.split("\n");
+      const lineHeight = textWeight;
+      const totalHeight = (lines.length - 1) * lineHeight;
+
+      const stretchPhase = Math.min(floatingText.t / 0.1, 1);
+      const stretch = stretchPhase < 1 ? 1 + (1 - stretchPhase) * 12 : 1;
+
+      const flickerStart = floatingText.duration - 0.25;
+      if (floatingText.t >= flickerStart) {
+        ctx.fillStyle = Math.random() > 0.5 ? "white" : "black";
+      } else {
+        ctx.fillStyle = "#ff0088";
+      }
+
+      let globalIndex = 0;
+      for (let line = 0; line < lines.length; line++) {
+        const text = lines[line];
+
+        const totalWidth = ctx.measureText(text).width;
+        let offsetX = -totalWidth / 2;
+
+        const lineY = baseY + line * lineHeight - totalHeight / 2;
+
+        for (let i = 0; i < 3; i++) {
+          const w = 50 + Math.random() * (totalWidth * 0.5);
+          const h = 20 + Math.random() * textWeight;
+
+          const offsetX = (Math.random() - 0.5) * totalWidth * 0.5 - 10;
+          const offsetY = (Math.random() - 0.5) * textWeight * 0.5;
+
+          ctx.save();
+
+          ctx.globalAlpha = 0.25 + Math.random() * 0.75;
+          ctx.fillStyle =
+            floatingText.t >= flickerStart
+              ? Math.random() < 0.5
+                ? "white"
+                : "black"
+              : "black";
+
+          ctx.fillRect(baseX + offsetX - w / 2, lineY + offsetY - h / 2, w, h);
+
+          ctx.restore();
+        }
+      }
+      globalIndex = 0;
+      for (let line = 0; line < lines.length; line++) {
+        const text = lines[line];
+
+        const totalWidth = ctx.measureText(text).width;
+        let offsetX = -totalWidth / 2;
+
+        const lineY = baseY + line * lineHeight - totalHeight / 2;
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const charWidth = ctx.measureText(char).width;
+
+          const t = floatingText.t * 2;
+          const seed = globalIndex * 123.456;
+
+          const wobbleX = Math.sin(t + seed) * 1;
+          const wobbleY = Math.cos(t * 1.3 + seed) * 2;
+
+          const rot = Math.sin(t + seed) * ((15 * Math.PI) / 180);
+          const scale = 0.9 + (Math.sin(seed) * 0.5 + 0.5) * 0.1;
+
+          ctx.save();
+
+          ctx.translate(baseX + offsetX + wobbleX, lineY + wobbleY);
+          ctx.rotate(rot);
+          ctx.scale(scale * stretch, scale);
+
+          ctx.fillText(char, charWidth / 2, 0);
+
+          ctx.restore();
+
+          offsetX += charWidth;
+          globalIndex++;
+        }
+      }
     }
 
     ctx.restore();

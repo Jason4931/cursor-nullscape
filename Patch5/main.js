@@ -2824,6 +2824,7 @@ export function spawnCelestialEnding() {
   musicVolume = 0;
   sfxVolume = 0;
   localStorage.setItem("GameBeaten", `${new Date()}`);
+  localStorage.setItem("Blossom", "true");
   setStars();
   if (casualMode) {
     localStorage.setItem("win-casual", `${new Date()}`);
