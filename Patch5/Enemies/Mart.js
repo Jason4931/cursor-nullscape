@@ -18,6 +18,7 @@ export let fasterMart = [0];
 export let martSlideActive = [false];
 export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
+    _speedMultiplier: 1 + fasterMart[0] * 0.5,
     opacity: 1,
     layers: Probably_Improper_Speeded_Mart,
     enemy: null,
@@ -57,6 +58,13 @@ export function setup(host, hardMode, stack = 1, position = null) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    const newMultiplier = 1 + fasterMart[0] * 0.5;
+    if (newMultiplier !== state._speedMultiplier) {
+      const ratio = newMultiplier / state._speedMultiplier;
+      state.speed *= ratio;
+      state._speedMultiplier = newMultiplier;
+    }
 
     if (!state.initialized) {
       if (position) {

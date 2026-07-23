@@ -1110,6 +1110,7 @@ export function playSound(
     !soundPath.startsWith("./ASSET/Sound/Domasp/")
   )
     return;
+  rate = Math.min(16, rate);
   const audio = new Audio(soundPath);
   audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {

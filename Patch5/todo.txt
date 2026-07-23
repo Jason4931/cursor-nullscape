@@ -45,6 +45,7 @@ vx Lost embers
 vx Redacted
 vx Muted
 vx Rebirth
+v Fast springer
 
 v cascade
 v corrupted

@@ -19,8 +19,10 @@ const Springerleftglow = new Image();
 Springerleftglow.src = "./ASSET/Enemies/Springer/Springer-left-glow.png";
 
 export let fasterSpringer = [0];
+export let fastSpringerActive = [false];
 export function setup(host, hardMode, scale = 1) {
   const state = {
+    _speedMultiplier: 1 + fasterSpringer[0] * 0.5,
     opacity: 1,
     enemy: Springerleft,
     enemyGlow: Springerleftglow,
@@ -119,6 +121,15 @@ export function setup(host, hardMode, scale = 1) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    const newMultiplier = 1 + fasterSpringer[0] * 0.5;
+    if (newMultiplier !== state._speedMultiplier) {
+      const ratio = state._speedMultiplier / newMultiplier;
+      state.landingDuration *= ratio;
+      state.idleDuration *= ratio;
+      state.exitDuration *= ratio;
+      state._speedMultiplier = newMultiplier;
+    }
 
     state.timer += dt;
     for (let i = state.knockbacks.length - 1; i >= 0; i--) {

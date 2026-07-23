@@ -37,7 +37,11 @@ import {
 import { rebirthActive, setup as spawnBaby } from "./Enemies/Baby.js";
 import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
 import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
-import { fasterSpringer, setup as spawnSpringer } from "./Enemies/Springer.js";
+import {
+  fasterSpringer,
+  fastSpringerActive,
+  setup as spawnSpringer,
+} from "./Enemies/Springer.js";
 import { setup as spawnVoidboundBaby } from "./Enemies/VoidboundBaby.js";
 import { setup as spawnFlesh } from "./Enemies/Flesh.js";
 import { redactedActive, setup as spawnNIL } from "./Enemies/NIL.js";
@@ -693,6 +697,20 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Rebirth.png",
     desc: "All babies will turn into Voidbound Babies.",
+    chaosOnly: true,
+    curseType: true,
+  },
+  {
+    name: "FastSpringer",
+    spawn: () => {
+      if (!fastSpringerActive[0]) {
+        fastSpringerActive[0] = true;
+        fasterSpringer[0] += 10;
+      }
+    },
+    start: 0,
+    src: "./ASSET/Enemies/Placeholder.png",
+    desc: "All Springers now move significantly faster when jumping, and jump cooldown is reduced.",
     chaosOnly: true,
     curseType: true,
   },
@@ -1937,6 +1955,7 @@ export function playSound(
     !soundPath.startsWith("./ASSET/Sound/Domasp/")
   )
     return;
+  rate = Math.min(16, rate);
   const audio = new Audio(soundPath);
   audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {
