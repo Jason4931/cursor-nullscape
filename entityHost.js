@@ -462,7 +462,7 @@ let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
-export let shieldLostMsg = [null, 0];
+export let shieldLostMsg = [null, 0, false];
 export let shieldActive = [false, false, false, false, false];
 export let shieldBroken = [false, false, false, false, false];
 export function activateShield() {
@@ -544,7 +544,7 @@ export function death(name = "Unknown", color = "#f70000") {
   }
   if (name == "Void" || name == "VoidImplosions" || name == "Visage") {
     if (shieldActive[0]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       for (let i = 0; i < shieldActive.length; i++) {
         shieldBroken[i] = shieldActive[i];
       }
@@ -558,7 +558,7 @@ export function death(name = "Unknown", color = "#f70000") {
     }
   } else {
     if (shieldActive[4]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       shieldBroken[4] = true;
       setTimeout(() => {
         shieldBroken[4] = false;
@@ -567,7 +567,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
     if (shieldActive[3] && !shieldActive[4]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       shieldBroken[3] = true;
       setTimeout(() => {
         shieldBroken[3] = false;
@@ -576,7 +576,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
     if (shieldActive[2] && !shieldActive[3]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       shieldBroken[2] = true;
       setTimeout(() => {
         shieldBroken[2] = false;
@@ -585,7 +585,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
     if (shieldActive[1] && !shieldActive[2]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       shieldBroken[1] = true;
       setTimeout(() => {
         shieldBroken[1] = false;
@@ -594,7 +594,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
     if (shieldActive[0] && !shieldActive[1]) {
-      shieldLostMsg = [name, 180];
+      shieldLostMsg = [name, 180, Math.random() < 0.01];
       shieldBroken[0] = true;
       setTimeout(() => {
         shieldBroken[0] = false;

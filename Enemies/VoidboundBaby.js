@@ -286,7 +286,7 @@ export function setup(host, hardMode, rebirth = null) {
       (hardMode && state.state === "charging")
     ) {
       const alpha = 0.375 - state.timer;
-      ctx.fillStyle = `rgba(255,0,255,${alpha})`;
+      ctx.fillStyle = `rgba(255,0,255,${Math.min(1, alpha * 4)})`;
 
       const dashLength = 30 * (rebirth ? rebirth.scale : 1);
       const gapLength = 20 * (rebirth ? rebirth.scale : 1);

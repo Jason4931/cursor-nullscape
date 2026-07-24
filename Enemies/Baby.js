@@ -264,7 +264,7 @@ export function setup(host, hardMode, scale = 1) {
       (hardMode && state.state === "charging")
     ) {
       const alpha = 0.75 - state.timer;
-      ctx.fillStyle = `rgba(255,0,0,${alpha})`;
+      ctx.fillStyle = `rgba(255,0,0,${Math.min(1, alpha * 4)})`;
 
       const dashLength = 30 * scale;
       const gapLength = 20 * scale;

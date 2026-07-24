@@ -829,6 +829,8 @@ const ProgressionEvents = [
   },
 ];
 
+const jesus = new Image();
+jesus.src = "./ASSET/Misc/Jesus.png";
 const oblivionBGimg = new Image();
 oblivionBGimg.src = "./ASSET/Misc/OblivionBG.png";
 const celestialBGimg = new Image();
@@ -5841,6 +5843,13 @@ function loop(now) {
   }
   if (shieldLostMsg[1] > 0) {
     shieldLostMsg[1]--;
+    // rare jesus
+    if (shieldLostMsg[2]) {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, (shieldLostMsg[1] - 150) / 30);
+      ctx.drawImage(jesus, -camX, -camY, window.innerWidth, window.innerHeight);
+      ctx.restore();
+    }
     ctx.save();
     const boxHeight = 100;
     const boxX = cam.x + w * 0.25;
