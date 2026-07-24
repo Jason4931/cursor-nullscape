@@ -25,6 +25,48 @@ const CelestialDeathFont = new FontFace(
 await CelestialDeathFont.load();
 document.fonts.add(CelestialDeathFont);
 
+const bladeCanvas = document.createElement("canvas");
+bladeCanvas.width = 2200;
+bladeCanvas.height = 2200;
+const bctx = bladeCanvas.getContext("2d");
+bctx.translate(bladeCanvas.width / 2, bladeCanvas.height / 2);
+bctx.beginPath();
+bctx.moveTo(-500, 0);
+bctx.lineTo(-280, -40);
+bctx.lineTo(-240, -240);
+bctx.lineTo(-200, -40);
+bctx.lineTo(-160, -30);
+bctx.lineTo(-80, -40);
+bctx.lineTo(30, -100);
+bctx.lineTo(15, -65);
+bctx.lineTo(80, -40);
+bctx.lineTo(1000, 0);
+bctx.lineTo(80, 40);
+bctx.lineTo(15, 65);
+bctx.lineTo(30, 100);
+bctx.lineTo(-80, 40);
+bctx.lineTo(-160, 30);
+bctx.lineTo(-200, 40);
+bctx.lineTo(-240, 240);
+bctx.lineTo(-280, 40);
+bctx.closePath();
+bctx.fillStyle = "black";
+bctx.fill();
+const bladeGlowCanvas = document.createElement("canvas");
+bladeGlowCanvas.width = bladeCanvas.width;
+bladeGlowCanvas.height = bladeCanvas.height;
+const gctx = bladeGlowCanvas.getContext("2d");
+for (let i = 40; i >= 4; i -= 4) {
+  gctx.filter = `blur(${i}px)`;
+  gctx.globalAlpha = 1;
+  gctx.drawImage(bladeCanvas, 0, 0);
+}
+gctx.filter = "none";
+gctx.globalCompositeOperation = "source-in";
+gctx.fillStyle = "#ff00cc";
+gctx.fillRect(0, 0, bladeGlowCanvas.width, bladeGlowCanvas.height);
+gctx.globalCompositeOperation = "source-over";
+
 const Celestial_Idle = [];
 for (let i = 1; i <= 25; i++) {
   const img = new Image();
@@ -4029,55 +4071,8 @@ export function setup(
       ctx.rotate(b.angle);
       ctx.scale(b.scale, b.scale);
 
-      const glowLen = 1000;
-      const glowWidth = 200;
-      ctx.save();
-      ctx.scale(1, glowWidth / glowLen);
-
-      ctx.translate(b.x * 0.05, 0);
-
-      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,1)");
-      glow.addColorStop(1, "rgba(255,0,192,0)");
-
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
 
       ctx.restore();
     }
@@ -4271,36 +4266,8 @@ export function setup(
       ctx.rotate(b.angle);
       ctx.scale(b.scale, b.scale);
 
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeCanvas, -1100, -1100);
 
       ctx.restore();
     }
@@ -5726,55 +5693,8 @@ export function setup(
         }
       }
       ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-
-      const glowLen = 100;
-      const glowWidth = 20;
-      ctx.save();
-      ctx.scale(1, glowWidth / glowLen);
-      ctx.translate(tipOffset * 0.25, 0);
-
-      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,1)");
-      glow.addColorStop(1, "rgba(255,0,192,0)");
-
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
       ctx.scale(0.1, 0.1);
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
 
       ctx.restore();
     }
@@ -5888,37 +5808,7 @@ export function setup(
       }
 
       ctx.scale(0.1, 0.1);
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
-
+      ctx.drawImage(bladeCanvas, -1100, -1100);
       ctx.restore();
     }
   }
@@ -6491,55 +6381,8 @@ export function setup(
         }
       }
       ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-
-      const glowLen = 100;
-      const glowWidth = 20;
-      ctx.save();
-      ctx.scale(1, glowWidth / glowLen);
-      ctx.translate(tipOffset * 0.25, 0);
-
-      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
-      glow.addColorStop(0, "rgba(255,0,192,1)");
-      glow.addColorStop(1, "rgba(255,0,192,0)");
-
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
       ctx.scale(0.1, 0.1);
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
 
       ctx.restore();
     }
@@ -6757,37 +6600,7 @@ export function setup(
       }
 
       ctx.scale(0.1, 0.1);
-      ctx.beginPath();
-
-      ctx.moveTo(-500, 0);
-
-      ctx.lineTo(-280, -40);
-      ctx.lineTo(-240, -240);
-      ctx.lineTo(-200, -40);
-      ctx.lineTo(-160, -30);
-
-      ctx.lineTo(-80, -40);
-      ctx.lineTo(30, -100);
-      ctx.lineTo(15, -65);
-      ctx.lineTo(80, -40);
-
-      ctx.lineTo(1000, 0);
-
-      ctx.lineTo(80, 40);
-      ctx.lineTo(15, 65);
-      ctx.lineTo(30, 100);
-      ctx.lineTo(-80, 40);
-
-      ctx.lineTo(-160, 30);
-      ctx.lineTo(-200, 40);
-      ctx.lineTo(-240, 240);
-      ctx.lineTo(-280, 40);
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
-
+      ctx.drawImage(bladeCanvas, -1100, -1100);
       ctx.restore();
     }
   }
