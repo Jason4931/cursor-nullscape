@@ -26,7 +26,7 @@ export function setup(host, hardMode) {
 
     wobbleTime: 0,
     wasNear: true,
-    moveSound: null,
+    sound: null,
     deathSound: false,
   };
 

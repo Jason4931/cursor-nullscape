@@ -5,7 +5,8 @@ import {
   entityCanvas2,
   canvas,
   getCameraPos,
-  collectedCount,
+  actualCollectedCount,
+  onCelestial,
 } from "../main.js";
 
 const altar = new Image();
@@ -35,7 +36,7 @@ export function setup(host, hardMode) {
   }
 
   function onClick(e) {
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -55,7 +56,7 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
 
     state.timer += dt;
     state.resultTimer -= dt;
@@ -76,19 +77,17 @@ export function setup(host, hardMode) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawX = state.x + size * 0.05;
-    const drawY = state.y - size * 0.3;
     ctx.drawImage(
       altar,
-      Math.round(drawX - size * 0.4),
-      Math.round(drawY - size * 0.5),
-      size * 0.8,
+      Math.round(state.x - size * 0.2),
+      Math.round(state.y - size * 0.9),
+      size * 0.4,
       size,
     );
 

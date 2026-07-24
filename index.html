@@ -420,7 +420,7 @@
         background: #440;
       }
 
-      #patch5 {
+      #patch {
         background: #111;
         color: #fff;
         border: 0.1vw solid #444;
@@ -436,12 +436,12 @@
           border-color 0.2s;
       }
 
-      #patch5:hover {
+      #patch:hover {
         background: #202;
         border-color: #808;
       }
 
-      #patch5:active {
+      #patch:active {
         transform: scale(0.97);
         background: #404;
       }
@@ -603,6 +603,11 @@
         animation: spin 4s linear infinite;
       }
 
+      body.full-bnw {
+        filter: grayscale(1) contrast(10) brightness(1.2);
+        transition: filter 0.05s linear;
+      }
+
       body.player-dead {
         filter: grayscale(1) brightness(0.6);
         transition: filter 0.2s ease;
@@ -756,6 +761,7 @@
         text-align: center;
         font-weight: bold;
         white-space: nowrap;
+        font-size: 1vw;
         transition:
           transform 0.25s ease,
           opacity 0.2s ease,
@@ -848,13 +854,27 @@
         setgiftmultiplier(<span style="color: #f88">{num}</span>)<br />
         patternspawn(<span style="color: #f88">{num}</span>)<br />
         <span style="color: #f88">{altarname}</span><br />
+        highrise<br />
+        icetile<br />
         oneofeach<br />
+        msg(<span style="color: #f88">{text}</span>)<br />
+        msg([<span style="color: #f88">{#ffffff}</span>]<span
+          style="color: #f88"
+          >{text}</span
+        >)<br />
+        msg([rgb(<span style="color: #f88">{255}</span>,<span
+          style="color: #f88"
+          >{255}</span
+        >,<span style="color: #f88">{255}</span>)]<span style="color: #f88"
+          >{text}</span
+        >)<br />
+        globalspawn<span style="color: #f88">{entityname}</span><br />
         <span style="opacity: 1%">youwillnotsurvivethis</span>
       </p>
       <div id="entity-panel" class="init">
         <div id="entity-panel-content"></div>
         <p id="entity-panel-count">EntityCount: 0</p>
-        <p id="entity-panel-diff">Normal</p>
+        <p id="entity-panel-diff">Standard</p>
         <div id="entity-panel-multiplier-container">
           <img src="./ASSET/Misc/Gifts.png" id="entity-panel-gift-multiplier" />
           <p id="entity-panel-multiplier">1x</p>
@@ -863,7 +883,7 @@
       <canvas id="screen" width="1920" height="1200"></canvas>
       <canvas id="entities" width="1920" height="1200"></canvas>
       <canvas id="entities-2" width="1920" height="1200"></canvas>
-      <p id="death-counter">Death Counter: 0</p>
+      <p id="death-counter">Deaths: 0</p>
       <p id="timer">00:00</p>
       <p id="counter">Gift(s) Collected: 0</p>
       <p id="lvl">Lvl 0</p>
@@ -884,7 +904,7 @@
             <div id="diff-left" class="diff-arrow">&lt;</div>
 
             <div class="diff-mask">
-              <div id="diff-label" class="diff-label">Normal</div>
+              <div id="diff-label" class="diff-label">Standard</div>
             </div>
 
             <div id="diff-right" class="diff-arrow">&gt;</div>
@@ -986,14 +1006,14 @@
             <span class="slider-toggle"></span>
           </label>
         </div>
-        <hr />
         <div class="setting-row">
-          <span style="color: #888888">An old friend?</span>
+          <span>Show players</span>
           <label class="toggle">
-            <input type="checkbox" id="toggle-enable-ponderer" />
+            <input type="checkbox" id="toggle-players" />
             <span class="slider-toggle"></span>
           </label>
         </div>
+        <hr />
         <div class="setting-row">
           <span style="color: #8800ff">Enable void</span>
           <label class="toggle">
@@ -1047,12 +1067,12 @@
         </div>
         <div class="setting-row">
           <a
-            href="./Patch5/"
-            id="patch5"
+            href="./Patch4/"
+            id="patch"
             style="width: 100%; font-family: monospace"
           >
-            Patch 5<br />
-            <span style="font-size: 0.75vw">(In Development)</span>
+            Patch 4<br />
+            <span style="font-size: 0.75vw">(Old Patch)</span>
           </a>
         </div>
         <div class="setting-row" style="margin: 0">
@@ -1084,7 +1104,7 @@
         </div>
       </div>
       <div id="mobile-screen" style="display: none">
-        <div id="intro-card" style="scale: 2">
+        <div id="intro-card">
           <h1>PC Required</h1>
 
           <p>This game is designed for desktop use only.</p>

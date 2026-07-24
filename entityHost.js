@@ -20,6 +20,7 @@ import {
   ultrafastmode,
   stopTimer,
   usedAbility,
+  stopAllEntity,
   spaceHeld,
   shiftlockEase,
   playSound,
@@ -64,28 +65,77 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 
   function update(dt) {
     for (const e of [...entities]) {
-      e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
+      if (
+        stopAllEntity
+          ? e.name === "Celestial" ||
+            e.name === "Catalyst" ||
+            e.name === "CelestialCutscene" ||
+            e.name === "Pylons" ||
+            e.name === "TruePylons" ||
+            e.name === "Void" ||
+            e.name === "Seamine" ||
+            e.name === "Jumppad" ||
+            e.name === "Grindrail"
+          : true
+      ) {
+        e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
+      }
     }
   }
 
   function draw() {
+    let celestial = [];
     let catalyst = [];
+    let celestialcutscene = [];
     let beacon;
     for (const e of entities) {
-      if (e.name === "Beacon") {
-        beacon = e;
-        continue;
-      } else if (e.name === "Catalyst") {
-        catalyst.push(e);
-        continue;
-      }
-      if (e.name === "Bell") {
+      if (e.name === "Pylons" || e.name === "TruePylons") {
         e.draw?.(backctx);
-      } else {
-        Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
       }
     }
+    for (const e of entities) {
+      if (
+        stopAllEntity
+          ? e.name === "Celestial" ||
+            e.name === "Catalyst" ||
+            e.name === "CelestialCutscene" ||
+            e.name === "Pylons" ||
+            e.name === "TruePylons" ||
+            e.name === "Void" ||
+            e.name === "Seamine" ||
+            e.name === "Jumppad" ||
+            e.name === "Grindrail"
+          : true
+      ) {
+        if (e.name === "Beacon") {
+          beacon = e;
+          continue;
+        } else if (e.name === "Pylons" || e.name === "TruePylons") {
+          continue;
+        } else if (e.name === "Celestial") {
+          celestial.push(e);
+          continue;
+        } else if (e.name === "Catalyst") {
+          catalyst.push(e);
+          continue;
+        } else if (e.name === "CelestialCutscene") {
+          celestialcutscene.push(e);
+          continue;
+        }
+        if (e.name === "Bell") {
+          e.draw?.(backctx);
+        } else {
+          Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
+        }
+      }
+    }
+    for (const e of celestial) {
+      e?.draw?.(ctx2);
+    }
     for (const e of catalyst) {
+      e?.draw?.(ctx2);
+    }
+    for (const e of celestialcutscene) {
       e?.draw?.(ctx2);
     }
     beacon?.draw?.(ctx2);
@@ -101,6 +151,13 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
 }
 
 const DEATH_MESSAGES = {
+  Bell: [
+    "You couldn't handle the power... of MUSIC!",
+    "You reverberated.",
+    "You hear the bells.",
+    "You... Please... leave the bell alone...",
+    "You rang the bell too much.",
+  ],
   Mart: [
     "You something Mart something dead.",
     "You are Dead (probably.)",
@@ -137,17 +194,17 @@ const DEATH_MESSAGES = {
     "You are out of this world!",
     "You ended being nothing more then ICBM target practice.",
   ],
-  Skinwalker: [
-    "You were AFK and got promptly punished by Skinwalker.",
-    "You forgot Skinwalker was active.",
-    "You ran into Skinwalker while trying to survive.",
-    "Skinwalker killed you just by copying your moves.",
+  Husk: [
+    "You were AFK and got promptly punished by Husk.",
+    "You forgot Husk was active.",
+    "You ran into Husk while trying to survive.",
+    "Husk killed you just by copying your moves.",
     "You died. Consider not dying next time.",
-    "You couldn't dodge Skinwalker.",
-    "Skinwalker killed you without doing anything.",
-    "You died at the hands of Skinwalker.",
-    "You ran into Skinwalker.",
-    "Avoiding the Skinwalker proved beyond your abilities.",
+    "You couldn't dodge Husk.",
+    "Husk killed you without doing anything.",
+    "You died at the hands of Husk.",
+    "You ran into Husk.",
+    "Avoiding the Husk proved beyond your abilities.",
   ],
   Springer: [
     "You? Checkmate.",
@@ -208,17 +265,15 @@ const DEATH_MESSAGES = {
     "You are horrible at dodging, said Guardian. Not me though, I think you're fine.",
     "You are scared of Guardian.",
   ],
-  Dozer: [
-    "You held your head too high.",
-    "You forgot to bow.",
-    "Will you wake up tomorrow?",
-    "Wakey wakey!",
-    "Don't bother, you are having a good rest.",
-    "You aren't waking up.",
-    "You dozed off.",
-    "You somehow can't see the big yellow dude in the middle of your screen.",
-    "You were put to sleep for good.",
-    "It's past your bed time.",
+  Operator: [
+    "Life comes at you fast... just ask yourself.",
+    "Red Light! Oh... you did not stop.",
+    "You crossed the road with a red light.",
+    "You failed your drivers test.",
+    "You forgot to check both ways before crossing.",
+    "Caution: you ahead.",
+    "Why did the chicken cross the road? To get to the other side!",
+    "You went over the speed limit.",
   ],
   Telefragger: [
     "You got completely telefragged.",
@@ -242,17 +297,12 @@ const DEATH_MESSAGES = {
     "Was that a firework?",
     "Happy 4th of July to you!",
   ],
-  Kookoo: [
-    "You bluescreened.",
-    "You got sent to adspace.",
-    "Kookoo's clock strikes again, featuring your demise! Available in DVD and BlueRay.",
-    "!!! VIRUS DETECTED !!! Deleting you... Success!",
-    "You forgot how to use your ability.",
-    "You forgot what time it was.",
-    "You clicked on a random popup.",
-    "Really? Thats the number one rule of the internet!",
-    "Forgetting something?",
-    "Someone else can count better than you.",
+  Kolona: [
+    "You attempted to use Kolona as a Christmas decoration.",
+    "You found your flame.",
+    "You were immolated.",
+    "You were burnt to a crisp.",
+    "Someone PLEASE teach you how to count.",
   ],
   VoidImplosions: [
     "You fizzled out of existence.",
@@ -260,28 +310,20 @@ const DEATH_MESSAGES = {
     "You imploded.",
     "You have become... null. cue title card.",
   ],
-  Sorrow: [
-    "You were withered away.",
-    "You were consumed by your own lament.",
-    "You were drowned in sorrow.",
-    "You forgot to bring an umbrella.",
-    "You were caught in the rain.",
-    "You didn't hear there was a risk of rain.",
-    "You didn't hear there was a risk of rain, someone else didn't too.",
-    "You forgot to check the weather today.",
-    "You couldn't find a shelter for this cycle.",
+  Oblivion: [
+    "The void reached out to you, and you reached back.",
+    "You got obliterated.",
+    "You were too busy stargazing.",
+    "You thought the weather forecast said 'light' rain.",
+    "You disintegrated into oblivion.",
+    "Rocks were thrown at you.",
+    "YOU HAVE BEEN DESTROYED.",
+    "You suffered from a memory leak.",
   ],
-  Doombringer: [
-    "Cheesed to meet you!",
-    "Hey you, you know there was a jumppad right next to you, right?",
-    "You are perfectly safe and made Doombringer stop screaming.",
-    "Doombringer caused you to go deaf",
-    "You were found dead after a standoff with Doombringer.",
-    "You have exploded into about 6.7 pi-- wait... didn't we already do this one?",
-    "Your ears were ruptured from Doombringer's scream.",
-    "You can't take care of any pets for the life of them, literally..",
-    "They're gonna have to glue you back together... IN HELL!",
-    "You brought the doom to yourself.",
+  Razorbloom: [
+    "Hey, you know there was a Jump Pad right next to you, right?",
+    "Watch out for your head!",
+    "Is it a bird? A plane? No it's your head!",
   ],
   Ponderer: [
     "You stopped paying attention.",
@@ -319,6 +361,35 @@ const DEATH_MESSAGES = {
     "Your soul now screams with the rest.",
     "You were imprisoned.",
   ],
+  Sigil: [
+    "You were vaporized.",
+    "You returned to the stars.",
+    "You gazed at the wrong star.",
+    "Twinkle twinkle, little star!",
+  ],
+  Scrapmaw: [
+    "NULLKIND IS DEAD. YOU ARE FUEL. NULLSCAPE IS FULL.",
+    "Yoy failed the laser QTE.",
+    "You didn't realize Scrapmaw was the light at the end of the tunnel.",
+    "You got speedblitzed.",
+    "You became fuel.",
+    "Train time.",
+    "You are no scrap... but I shall feast upon your essence regardless!",
+    ":disintegrate you",
+    "GET OUT OF MY WAY!!!!.",
+    "DID YOU SEE THAT?!",
+  ],
+  Visage: ["YOU WERE CAUGHT"],
+  Hazards: [
+    "You can't parkour.",
+    "You didn't watch out for stage hazards.",
+    "You are questioning your platforming skills.",
+  ],
+  RealityCollapse: [
+    "You couldn't handle the collapse.",
+    "You were obliterated.",
+    "You got destroyed.",
+  ],
   Catalyst: [
     "YOU ENTERED PARADISE.",
     "YOU HAVE ASCENDED.",
@@ -330,6 +401,13 @@ const DEATH_MESSAGES = {
     "YOU WERE RAPTURED.",
     "YOU WERE SAVED.",
     "YOU WERE VISITED BY A HOLY SPIRIT.",
+  ],
+  Celestial: [
+    "YOU FOUGHT IN VAIN.",
+    "FAREWELL.",
+    "FELLED.",
+    "MERELY MORTAL.",
+    "FRAGILE.",
   ],
   Void: [
     "You are null.",
@@ -359,13 +437,15 @@ const DEATH_MESSAGES = {
 };
 function getDeathMessage(name) {
   let list;
-  if (name === "Catalyst") {
+  if (name === "Catalyst" || name === "Celestial") {
     list = DEATH_MESSAGES[name] || DEATH_MESSAGES.Unknown;
   } else {
     if (name === "VoidboundBaby") {
       name = "Baby";
     } else if (name === "VoidboundGuardian") {
       name = "Guardian";
+    } else if (name === "VoidboundOperator") {
+      name = "Operator";
     }
     list =
       Math.random() < 0.99
@@ -382,8 +462,9 @@ let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
 let tripmineCustomLeniency = 0;
-export let shieldActive = [false, false];
-export let shieldBroken = [false, false];
+export let shieldLostMsg = [null, 0];
+export let shieldActive = [false, false, false, false, false];
+export let shieldBroken = [false, false, false, false, false];
 export function activateShield() {
   if (!shieldActive[0]) {
     shieldActive[0] = true;
@@ -391,6 +472,18 @@ export function activateShield() {
   }
   if (!shieldActive[1]) {
     shieldActive[1] = true;
+    return;
+  }
+  if (!shieldActive[2]) {
+    shieldActive[2] = true;
+    return;
+  }
+  if (!shieldActive[3]) {
+    shieldActive[3] = true;
+    return;
+  }
+  if (!shieldActive[4]) {
+    shieldActive[4] = true;
     return;
   }
 }
@@ -421,7 +514,7 @@ export function death(name = "Unknown", color = "#f70000") {
   if (
     ability &&
     usedAbility == "r" &&
-    name != "Dozer" &&
+    name != "Operator" &&
     name != "Suicide" &&
     name != "Void"
   ) {
@@ -449,8 +542,9 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     if (Math.random() < 0.1) return;
   }
-  if (name == "Void" || name == "VoidImplosions") {
+  if (name == "Void" || name == "VoidImplosions" || name == "Visage") {
     if (shieldActive[0]) {
+      shieldLostMsg = [name, 180];
       for (let i = 0; i < shieldActive.length; i++) {
         shieldBroken[i] = shieldActive[i];
       }
@@ -463,7 +557,35 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
   } else {
-    if (shieldActive[1]) {
+    if (shieldActive[4]) {
+      shieldLostMsg = [name, 180];
+      shieldBroken[4] = true;
+      setTimeout(() => {
+        shieldBroken[4] = false;
+        shieldActive[4] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[3] && !shieldActive[4]) {
+      shieldLostMsg = [name, 180];
+      shieldBroken[3] = true;
+      setTimeout(() => {
+        shieldBroken[3] = false;
+        shieldActive[3] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[2] && !shieldActive[3]) {
+      shieldLostMsg = [name, 180];
+      shieldBroken[2] = true;
+      setTimeout(() => {
+        shieldBroken[2] = false;
+        shieldActive[2] = false;
+      }, 1000);
+      return;
+    }
+    if (shieldActive[1] && !shieldActive[2]) {
+      shieldLostMsg = [name, 180];
       shieldBroken[1] = true;
       setTimeout(() => {
         shieldBroken[1] = false;
@@ -472,6 +594,7 @@ export function death(name = "Unknown", color = "#f70000") {
       return;
     }
     if (shieldActive[0] && !shieldActive[1]) {
+      shieldLostMsg = [name, 180];
       shieldBroken[0] = true;
       setTimeout(() => {
         shieldBroken[0] = false;
@@ -482,6 +605,7 @@ export function death(name = "Unknown", color = "#f70000") {
   }
   if (
     name != "Catalyst" &&
+    name != "Celestial" &&
     name != "Suicide" &&
     Math.random() < Math.min(0.333, collectedCount / 15000)
   )
@@ -507,6 +631,18 @@ export function death(name = "Unknown", color = "#f70000") {
     entityCanvas.style.display = "none";
     text.textContent = getDeathMessage(name);
     text.style.color = color;
+    if (name === "Celestial") {
+      text.style.color = "#d05e8b";
+      text.style.fontSize = "4vw";
+      text.style.top = "2vw";
+      text.style.left = "0.25vw";
+      text.style.fontFamily = "CelestialDeathFont";
+    }
+    if (name === "Visage") {
+      text.style.color = "#ff0000";
+      text.style.fontSize = "1.25vw";
+      text.style.fontFamily = "VisageFont";
+    }
     screen.style.display = "block";
     input.focus();
     input.select();
@@ -530,16 +666,33 @@ export function death(name = "Unknown", color = "#f70000") {
         "DeathVoicelines/Domasp12",
         "DeathVoicelines/Domasp13",
         "DeathVoicelines/Domasp14",
+        "CodeAudios/Domasp_YIPPEE",
+        "CodeAudios/DRHouse_Laugh",
+        "CodeAudios/FOOTBALL",
+        "CodeAudios/Garrys_lovely_story",
+        "CodeAudios/KirbyTG_Secret",
+        "CodeAudios/PondererStart",
+        "CodeAudios/Subsical_Whistling",
+        "CodeAudios/Virrevicke_Similarities",
       ];
+      deathSound.push(
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
+      );
       playSound(
         `./ASSET/Sound/Domasp/${deathSound[Math.floor(Math.random() * deathSound.length)]}.ogg`,
       );
     }, 1000);
-    setTimeout(() => {
+    if (localStorage.getItem("boyquiet")) {
       retry.style.opacity = "1";
       retry.style.pointerEvents = "auto";
       retry.onclick = () => location.reload();
-    }, 5000);
+    } else {
+      setTimeout(() => {
+        retry.style.opacity = "1";
+        retry.style.pointerEvents = "auto";
+        retry.onclick = () => location.reload();
+      }, 5000);
+    }
     playSound("./ASSET/Sound/Domasp/Domasp_Ambiance.ogg");
   }, 200);
   setStars();

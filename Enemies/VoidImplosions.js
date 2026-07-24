@@ -7,12 +7,15 @@ export function setup(host) {
     phase: 0,
     waitTime: 0,
     opacity: 0.25,
+    spikeOpacity: 0,
+    circle2opacity: 0,
+    circle2scale: 0,
     scale: 0,
     circles: [],
     minRadius: 480,
     maxRadius: 1000,
     outlineTime: 0.5,
-    outlineScale: 1,
+    outlineScale: 0,
     flashTime: 0,
   };
 
@@ -54,9 +57,13 @@ export function setup(host) {
     state.time += dt;
 
     state.outlineTime += dt;
-    state.outlineScale -= state.outlineTime * 5;
-    if (state.outlineScale <= 0) {
-      state.outlineScale = BASE_RADIUS * state.scale;
+    state.outlineScale += state.outlineTime * 5;
+    if (
+      state.outlineScale >=
+        Math.max(BASE_RADIUS / 2, BASE_RADIUS * state.scale) ||
+      state.phase == 1
+    ) {
+      state.outlineScale = 0;
     }
 
     if (state.flashTime >= 0) {
@@ -67,21 +74,34 @@ export function setup(host) {
     }
 
     if (state.phase === 0) {
-      const t = Math.min(state.time / 2.75, 1);
+      let t;
+      if (state.time < 1) {
+        t = 0;
+      } else {
+        t = Math.min((state.time - 1) / 1, 1);
+      }
       const ease = 1 - Math.pow(1 - t, 3);
       state.scale = ease;
 
       if (state.time < 1.75) {
-        state.opacity = 0.25;
+        state.opacity += dt;
+        if (state.opacity > 0.25) state.opacity = 0.25;
+        state.spikeOpacity += dt * 4;
+        if (state.spikeOpacity > 1) state.spikeOpacity = 1;
       } else {
         const ot = Math.min((state.time - 1.75) / 1, 1);
         state.opacity = 0.25 + 0.25 * ot;
+        const ease = ot * ot;
+        state.circle2opacity = ot;
+        state.circle2scale = 1 - ease;
       }
 
-      if (t === 1) {
+      if (state.time >= 2.75) {
         state.phase = 1;
         state.time = 0;
         state.flashTime = 0;
+        state.circle2scale = 0;
+        state.circle2opacity = 0;
         checkDeathAtStrike();
         playSound(
           "./ASSET/Sound/Enemies/VoidImplosions/VoidImplosion_Explode.ogg",
@@ -91,6 +111,7 @@ export function setup(host) {
       const t = Math.min(state.time / 1, 1);
       state.scale = 1;
       state.opacity = 1 - t;
+      state.spikeOpacity = 1 - t;
       if (t === 1) {
         state.phase = 2;
         state.time = 0;
@@ -98,6 +119,7 @@ export function setup(host) {
       }
     } else if (state.phase === 2) {
       state.opacity = 0;
+      state.spikeOpacity = 0;
       if (state.time >= state.waitTime) {
         state.phase = 0;
         state.time = 0;
@@ -117,7 +139,10 @@ export function setup(host) {
 
     for (const c of state.circles) {
       const r = Math.round(BASE_RADIUS * state.scale);
-
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.beginPath();
+      ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
+      ctx.fill();
       const grad = ctx.createRadialGradient(
         Math.round(c.x),
         Math.round(c.y),
@@ -126,23 +151,77 @@ export function setup(host) {
         Math.round(c.y),
         r,
       );
-      grad.addColorStop(0, "rgba(128, 80, 128, 0.5)");
-      grad.addColorStop(1, "rgba(128, 0, 128, 1)");
-
+      grad.addColorStop(0, "rgba(64, 0, 128, 0)");
+      grad.addColorStop(0.9, "rgba(64, 0, 128, 0.25)");
+      grad.addColorStop(1, "rgba(128, 0, 255, 1)");
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, ctx.globalAlpha * 2);
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      const circle2r = Math.round(BASE_RADIUS * state.circle2scale);
+      ctx.globalAlpha = state.circle2opacity;
+      const circle2grad = ctx.createRadialGradient(
+        Math.round(c.x),
+        Math.round(c.y),
+        Math.round(circle2r * 0.1),
+        Math.round(c.x),
+        Math.round(c.y),
+        circle2r,
+      );
+      circle2grad.addColorStop(0, "rgba(64, 0, 128, 0.5)");
+      circle2grad.addColorStop(1, "rgba(64, 0, 128, 1)");
+      ctx.fillStyle = circle2grad;
+      ctx.beginPath();
+      ctx.arc(Math.round(c.x), Math.round(c.y), circle2r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(Math.round(c.x), Math.round(c.y));
+      const spikes = state.phase == 1 ? 10 : 4 + ((Math.random() * 4) | 0);
+      const innerR =
+        state.phase == 1
+          ? BASE_RADIUS * 0.05 * Math.max(0, 1 - state.time * 2)
+          : BASE_RADIUS * 0.05;
+      const outerR =
+        state.phase == 1
+          ? BASE_RADIUS * 0.05 * Math.max(0, 1 - state.time * 2)
+          : BASE_RADIUS * (0.15 + Math.random() * 0.1);
+      const rot = Math.random() * Math.PI * 2;
+      ctx.globalAlpha = state.spikeOpacity;
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes * 2; i++) {
+        const t = i / (spikes * 2);
+        const ang = t * Math.PI * 2 + rot;
+
+        const isOuter = i % 2 === 0;
+        const rad = isOuter ? outerR : innerR;
+
+        const x = Math.cos(ang) * rad;
+        const y = Math.sin(ang) * rad;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
 
       ctx.save();
       ctx.translate(Math.round(c.x), Math.round(c.y));
       ctx.rotate(Math.random() * Math.PI * 2);
-      ctx.fillStyle = "rgba(128, 0, 128, 1)";
+      ctx.fillStyle = "rgba(64, 0, 128, 0.75)";
       ctx.fillRect(-r, -2, r * 2, 1);
       ctx.restore();
 
       if (state.outlineScale > 0) {
-        const outlineR = Math.round(Math.min(state.outlineScale, r));
+        const outlineR = Math.round(state.outlineScale);
         const g = ctx.createRadialGradient(
           Math.round(c.x),
           Math.round(c.y),
@@ -152,8 +231,8 @@ export function setup(host) {
           outlineR,
         );
         g.addColorStop(0.94, "rgba(255,255,255,0)");
-        g.addColorStop(0.95, "rgba(255,255,255,0.5)");
-        g.addColorStop(1, "rgba(255,255,255,0.5)");
+        g.addColorStop(0.95, "rgba(255,255,255,1)");
+        g.addColorStop(1, "rgba(255,255,255,1)");
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(Math.round(c.x), Math.round(c.y), outlineR, 0, Math.PI * 2);

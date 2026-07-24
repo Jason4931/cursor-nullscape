@@ -1,4 +1,4 @@
-import { mouse, toggleImmortality } from "../entityHost.js";
+import { mouse } from "../entityHost.js";
 import { onFinalContact, TILE, getCameraPos } from "../main.js";
 
 export function setup(host, deafMode) {

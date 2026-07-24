@@ -1,16 +1,52 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, passageGoldPattern } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
-const enemy2 = new Image();
-enemy2.src = "./ASSET/Enemies/Skull.png";
+const Guardian_Idle_Animation = [];
+for (let i = 1; i <= 40; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Idle/Layer ${i}.png`;
+  Guardian_Idle_Animation.push(img);
+}
+const GuardianSHOOT = [];
+for (let i = 1; i <= 30; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Shoot/Layer ${i}.png`;
+  GuardianSHOOT.push(img);
+}
+const GuardianEnragedIdle = [];
+for (let i = 1; i <= 40; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedIdle/Layer ${i}.png`;
+  GuardianEnragedIdle.push(img);
+}
+const GuardianEnragedSHOOT = [];
+for (let i = 1; i <= 25; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedShoot/Layer ${i}.png`;
+  GuardianEnragedSHOOT.push(img);
+}
+const GuardianEnraging = [];
+for (let i = 1; i <= 75; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Enraging/Layer ${i}.png`;
+  GuardianEnraging.push(img);
+}
 
-export function setup(host, hardMode) {
+export let shotgunVBGuardianActive = [false];
+export function setup(host, casualMode, hardMode) {
   const state = {
     x: 0,
     y: 0,
     opacity: 1,
+    layers: Guardian_Idle_Animation,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false],
+    enrage: false,
+
+    DASH_TIME: 1.5,
+    IDLE_SHOOT_TIME: 0.5,
+    IDLE_TIME: 0.5,
 
     mode: "move",
     timer: 0,
@@ -20,17 +56,16 @@ export function setup(host, hardMode) {
     dashTargetX: 0,
     dashTargetY: 0,
 
+    shootCirc: 60,
     pellets: [],
     shotsFired: 0,
     shootDuration: 0,
+
+    trails: [],
+    blackAsh: [],
   };
 
-  const Enemy = Math.random() < 0.9 ? enemy : enemy2;
-  const DASH_RADIUS = hardMode ? 320 : 640;
-  const DASH_TIME = 1.5;
-  const IDLE_SHOOT_TIME = 0.5;
-  const IDLE_TIME = 0.5;
-  const HOMING_STRENGTH = 1;
+  const DASH_RADIUS = 640;
 
   function startMove() {
     state.mode = "move";
@@ -45,9 +80,9 @@ export function setup(host, hardMode) {
     state.dashTargetX = mouse.x + Math.cos(a) * r;
     state.dashTargetY = mouse.y + Math.sin(a) * r;
     let moveSound = [
-      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove1.ogg",
-      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove2.ogg",
-      "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianMove3.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardianMove1.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardianMove2.ogg",
+      "./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardianMove3.ogg",
     ];
     playSound(moveSound[Math.floor(Math.random() * 3)]);
   }
@@ -61,7 +96,9 @@ export function setup(host, hardMode) {
     state.mode = "shoot";
     state.timer = 0;
     state.shotsFired = 0;
-    state.shootDuration = 0.5 + Math.random();
+    state.shootDuration = state.enrage
+      ? 0.25 + Math.random()
+      : 0.5 + Math.random();
   }
 
   function startIdle() {
@@ -73,19 +110,35 @@ export function setup(host, hardMode) {
     return 1 - Math.pow(1 - t, 3);
   }
 
-  function firePellet() {
+  function firePellet(rand = false, offsetAngle = null) {
     const dx = mouse.x - state.x;
-    const dy = mouse.y - state.y - 20;
-    const len = Math.hypot(dx, dy) || 1;
+    const dy = mouse.y - state.y - 40;
+    const angle =
+      Math.atan2(dy, dx) +
+      (rand ? (Math.random() < 0.5 ? 30 : -30) * (Math.PI / 180) : 0);
 
-    const speed = hardMode ? 1418 : 945;
+    const speed = hardMode ? 1120 : casualMode ? 630 : 840;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
+
+    if (offsetAngle !== null) {
+      vx += Math.cos(offsetAngle) * 300;
+      vy += Math.sin(offsetAngle) * 300;
+    }
 
     state.pellets.push({
       x: state.x,
-      y: state.y + 20,
-      vx: (dx / len) * speed,
-      vy: (dy / len) * speed,
+      y: state.y + 40,
+      vx,
+      vy,
       born: performance.now(),
+      trail: [],
+
+      phase: "fly",
+      phaseTimer: 0,
+      beamAngle: Math.random() * Math.PI * 2,
+      beamScale: 0,
+      bulletScale: 1,
     });
   }
 
@@ -93,9 +146,54 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     state.timer += dt;
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
+    if (state.shootCirc < 60) state.shootCirc += 8;
 
+    if (state.enrage) {
+      for (let i = 0; i < 10; i++) {
+        state.blackAsh.push({
+          x: state.x + Math.random() * 100 - 50,
+          y: state.y + Math.random() * 150 - 75,
+          age: 0,
+        });
+      }
+    }
     if (state.mode === "move") {
-      const t = Math.min(state.timer / DASH_TIME, 1);
+      state.trails.push({
+        x: state.x + Math.random() * 50 - 25,
+        y: state.y + Math.random() * 50 - 25,
+        age: 0,
+        image: state.enemy,
+      });
+    }
+    for (const trail of state.trails) {
+      trail.age += dt;
+    }
+    for (const trail of state.blackAsh) {
+      trail.age += dt;
+    }
+    state.trails = state.trails.filter((t) => t.age < 0.5);
+    state.blackAsh = state.blackAsh.filter((t) => t.age < 0.5);
+
+    if (passageGoldPattern > 0 && !state.enrage) {
+      state.enrage = true;
+      state.DASH_TIME = 1.5;
+      state.IDLE_SHOOT_TIME = 0.5;
+      state.IDLE_TIME = 0.5;
+      state.layers = GuardianEnraging;
+      state.layer = state.layers.length;
+      playSound(
+        `./ASSET/Sound/Enemies/VoidboundGuardian/VBG_Enrage_Cry_${Math.floor(1 + Math.random() * 2)}.ogg`,
+      );
+    }
+
+    /* ===== MOVE ===== */
+    if (state.mode === "move") {
+      state.opacity += dt * 4;
+      if (state.opacity > 1) state.opacity = 1;
+      const t = Math.min(state.timer / state.DASH_TIME, 1);
       const e = easeOut(t);
 
       state.x = state.dashStartX + (state.dashTargetX - state.dashStartX) * e;
@@ -103,65 +201,150 @@ export function setup(host, hardMode) {
 
       if (t >= 1) {
         startIdleShoot();
+        playSound(
+          "./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Warning.ogg",
+        );
       }
     } else if (state.mode === "idleShoot") {
-      if (state.timer >= IDLE_SHOOT_TIME) {
+      /* ===== IDLE SHOOT (SPARK) ===== */
+      if (state.timer >= state.IDLE_SHOOT_TIME) {
         startShoot();
       }
     } else if (state.mode === "shoot") {
-      const interval = state.shootDuration / (hardMode ? 4 : 3);
+      /* ===== SHOOT ===== */
+      const interval =
+        state.shootDuration / (shotgunVBGuardianActive[0] ? 1 : 2);
 
       if (
-        state.shotsFired < (hardMode ? 4 : 3) &&
+        state.shotsFired < (shotgunVBGuardianActive[0] ? 1 : 2) &&
         state.timer >= interval * state.shotsFired
       ) {
-        firePellet();
+        state.opacity = 1;
+        if (shotgunVBGuardianActive[0]) {
+          for (let i = 0; i < 8; i++) {
+            firePellet(false, (i * Math.PI * 2) / 8);
+          }
+        } else {
+          firePellet();
+          firePellet(true);
+        }
+        state.shootCirc = 0;
+        if (!state.layerChange[0]) {
+          state.layers = state.enrage ? GuardianEnragedSHOOT : GuardianSHOOT;
+          state.layer = state.layers.length;
+          if (state.shotsFired == 2) state.layerChange[0] = true;
+        }
         playSound(
-          "./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianShoot.ogg",
+          `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Firing${state.shotsFired + (shotgunVBGuardianActive[0] ? 2 : 1)}.ogg`,
         );
         state.shotsFired++;
       }
 
       if (state.timer >= state.shootDuration) {
         startIdle();
+        if (!state.layerChange[1]) {
+          state.layers = state.enrage
+            ? GuardianEnragedIdle
+            : Guardian_Idle_Animation;
+          state.layer = state.layers.length;
+          state.layerChange[1] = true;
+        }
       }
     } else if (state.mode === "idle") {
-      if (state.timer >= IDLE_TIME) {
+      /* ===== IDLE ===== */
+      if (state.timer >= state.IDLE_TIME) {
+        state.layerChange[0] = false;
+        state.layerChange[1] = false;
         startMove();
       }
     }
 
+    /* ===== PELLETS ===== */
     const now = performance.now();
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
 
-      const ddx = mouse.x - p.x;
-      const ddy = mouse.y - p.y;
-      const vLen = Math.hypot(p.vx, p.vy) || 1;
-      const vx = p.vx / vLen;
-      const vy = p.vy / vLen;
-      const px = -vy;
-      const py = vx;
-      const side = ddx * px + ddy * py;
-      p.vx += px * side * HOMING_STRENGTH * dt;
-      p.vy += py * side * HOMING_STRENGTH * dt;
-      const newLen = Math.hypot(p.vx, p.vy) || 1;
-      const speed = 630;
-      p.vx = (p.vx / newLen) * speed;
-      p.vy = (p.vy / newLen) * speed;
+      for (let i = p.trail.length - 1; i >= 0; i--) {
+        const t = p.trail[i];
+        t.life -= dt * 2;
 
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-
-      if (now - p.born > 4500) {
-        state.pellets.splice(i, 1);
-        continue;
+        if (t.life <= 0) {
+          p.trail.splice(i, 1);
+        }
       }
 
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      if (dx * dx + dy * dy < 12 * 12) {
-        death("VoidboundGuardian");
+      p.phaseTimer += dt;
+      if (p.phase === "fly") {
+        p.trail.push({
+          x: p.x,
+          y: p.y,
+          life: 1,
+        });
+
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        if (dx * dx + dy * dy < 40 * 40) {
+          death("VoidboundGuardian");
+        }
+
+        if (p.phaseTimer >= 1) {
+          p.phase = "charge";
+          p.phaseTimer = 0;
+          playSound(
+            `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Projectile_Impact.ogg`,
+          );
+
+          p.vx = 0;
+          p.vy = 0;
+        }
+      } else if (p.phase === "charge") {
+        const t = Math.min(p.phaseTimer / 0.5, 1);
+
+        p.bulletScale = 1 - t * t;
+        p.beamScale = 1 - Math.pow(1 - t, 3);
+
+        if (p.phaseTimer >= 1) {
+          p.phase = "disappear";
+          p.phaseTimer = 0;
+          playSound(
+            `./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardian_Beam${Math.floor(
+              1 + Math.random() * 3,
+            )}.ogg`,
+          );
+
+          const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+          const beamHalfWidth = 45;
+
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+
+          for (let b = 0; b < beamCount; b++) {
+            const angle = p.beamAngle + (Math.PI * b) / beamCount;
+
+            const c = Math.cos(-angle);
+            const s = Math.sin(-angle);
+
+            const rx = dx * c - dy * s;
+            const ry = dx * s + dy * c;
+
+            if (Math.abs(ry) <= beamHalfWidth) {
+              death("VoidboundGuardian");
+              break;
+            }
+          }
+        }
+      } else if (p.phase === "disappear") {
+        const t = Math.min(p.phaseTimer / 0.5, 1);
+
+        p.beamScale = 1 - t;
+
+        if (t >= 1) {
+          state.pellets.splice(i, 1);
+          continue;
+        }
       }
     }
   }
@@ -172,51 +355,252 @@ export function setup(host, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    ctx.drawImage(
-      Enemy,
-      Math.round(state.x - 50),
-      Math.round(state.y - 50),
-      100,
-      100,
-    );
-
-    if (state.mode === "idleShoot") {
-      const t = Math.min(state.timer / IDLE_SHOOT_TIME, 1);
-      const alpha = (1 - t) * 0.5;
-
-      const rOuter = 36;
-      const rInner = 10;
-
-      ctx.translate(Math.round(state.x + 12), Math.round(state.y - 5));
-
+    for (const trail of state.blackAsh) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+      ctx.fillStyle = "black";
       ctx.beginPath();
-      ctx.moveTo(0, -rOuter);
-      ctx.lineTo(rInner, -rInner);
-      ctx.lineTo(rOuter, 0);
-      ctx.lineTo(rInner, rInner);
-      ctx.lineTo(0, rOuter);
-      ctx.lineTo(-rInner, rInner);
-      ctx.lineTo(-rOuter, 0);
-      ctx.lineTo(-rInner, -rInner);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(255,130,220,${alpha})`;
+      ctx.arc(
+        Math.round(trail.x),
+        Math.round(trail.y),
+        Math.round(50 * (0.5 * (1 - trail.age / 0.5))),
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(0, -rInner);
-      ctx.lineTo(rInner, 0);
-      ctx.lineTo(0, rInner);
-      ctx.lineTo(-rInner, 0);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(210,140,255,${alpha})`;
-      ctx.fill();
+      ctx.restore();
     }
 
-    ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}f`;
-    for (const p of state.pellets) {
+    if (state.mode === "idleShoot") {
+      ctx.save();
+      const t = Math.min(state.timer / state.IDLE_SHOOT_TIME, 1);
+      const alpha = Math.max(0, Math.min(1, 4 - t * 4));
+
+      const rOuter = 200 * (1 - state.timer * 2);
+      const rInner = 20;
+
+      ctx.translate(Math.round(state.x), Math.round(state.y));
+      ctx.scale(1 - state.timer, 1 - state.timer);
+      ctx.rotate(Math.PI / 2);
+
+      const glow = 25;
+      const grad = ctx.createRadialGradient(0, 0, 100, 0, 0, 100 + glow);
+      grad.addColorStop(0, `rgba(255,0,192,${alpha})`);
+      grad.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
+      ctx.arc(0, 0, 100 + glow, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -rOuter * 2);
+      ctx.lineTo(rInner, 0);
+      ctx.lineTo(0, rOuter * 2);
+      ctx.lineTo(-rInner, 0);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255,128,240,${alpha})`;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 100, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,128,240,${alpha})`;
+      ctx.lineWidth = 8;
+      ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    for (const trail of state.trails) {
+      ctx.save();
+      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+      ctx.translate(Math.round(trail.x), Math.round(trail.y));
+      ctx.drawImage(
+        trail.image,
+        Math.round(-100 * 0.9),
+        Math.round(-100 * 0.9),
+        Math.round(200 * 0.9),
+        Math.round(200 * 0.9),
+      );
+      ctx.restore();
+    }
+    ctx.drawImage(
+      state.enemy,
+      Math.round(state.x - 100),
+      Math.round(state.y - 100),
+      200,
+      200,
+    );
+
+    if (state.shootCirc < 60) {
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(state.x - 5),
+        Math.round(state.y + 40),
+        state.shootCirc,
+        0,
+        Math.PI * 2,
+      );
+      ctx.strokeStyle = `rgba(255,255,255,${(60 - state.shootCirc) / 60})`;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = `#000`;
+    for (const p of state.pellets) {
+      ctx.globalAlpha = 1;
+      if (p.phase !== "fly" && p.phase != "charge") {
+        const beamLength = 10000;
+        const beamWidth = 90 * p.beamScale;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+
+        if (!p.beamAngle) p.beamAngle = Math.random() * Math.PI * 2;
+
+        ctx.rotate(p.beamAngle);
+
+        const glow = 25;
+        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+        for (let b = 0; b < beamCount; b++) {
+          ctx.save();
+          ctx.rotate((Math.PI * b) / beamCount);
+
+          ctx.fillRect(-beamLength / 2, -beamWidth / 2, beamLength, beamWidth);
+          let grad = ctx.createLinearGradient(
+            0,
+            -beamWidth / 2 - glow,
+            0,
+            -beamWidth / 2,
+          );
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(1, "rgba(255,0,192,1)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(
+            -beamLength / 2,
+            -beamWidth / 2 - glow,
+            beamLength,
+            glow,
+          );
+          grad = ctx.createLinearGradient(
+            0,
+            beamWidth / 2,
+            0,
+            beamWidth / 2 + glow,
+          );
+          grad.addColorStop(0, "rgba(255,0,192,1)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(-beamLength / 2, beamWidth / 2, beamLength, glow);
+
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+    }
+    for (const p of state.pellets) {
+      ctx.globalAlpha = 1;
+      if (p.phase !== "fly" && p.phase != "charge") {
+        const beamLength = 10000;
+        const beamWidth = 90 * p.beamScale;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+
+        if (!p.beamAngle) p.beamAngle = Math.random() * Math.PI * 2;
+
+        ctx.rotate(p.beamAngle);
+
+        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+        for (let b = 0; b < beamCount; b++) {
+          ctx.save();
+          ctx.rotate((Math.PI * b) / beamCount);
+          ctx.beginPath();
+          ctx.rect(-beamLength / 2, -beamWidth / 2, beamLength, beamWidth);
+          ctx.strokeStyle = `#f8e`;
+          ctx.lineWidth = 12;
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+    }
+    for (const p of state.pellets) {
+      ctx.globalAlpha = 1;
+      for (const t of p.trail) {
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(t.x),
+          Math.round(t.y),
+          (1.25 - t.life / 2) * 40,
+          0,
+          Math.PI * 2,
+        );
+        ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      if (p.phase !== "disappear") {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(p.bulletScale, p.bulletScale);
+
+        const glow = 25;
+        const grad = ctx.createRadialGradient(0, 0, 40, 0, 0, 40 + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, 40 + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#000";
+        ctx.strokeStyle = "#f8e";
+        ctx.lineWidth = 6;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 40, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+      }
+      if (p.phase !== "fly") {
+        const beamLength = 10000;
+        const beamWidth = 90 * p.beamScale;
+
+        ctx.save();
+
+        if (p.phase === "charge") {
+          ctx.globalAlpha = 0.5;
+          ctx.fillStyle = "#f0c";
+        } else {
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = "black";
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+
+        if (!p.beamAngle) p.beamAngle = Math.random() * Math.PI * 2;
+
+        ctx.rotate(p.beamAngle);
+
+        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+        for (let b = 0; b < beamCount; b++) {
+          ctx.save();
+          ctx.rotate((Math.PI * b) / beamCount);
+          ctx.fillRect(-beamLength / 2, -beamWidth / 2, beamLength, beamWidth);
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
     }
 
     ctx.restore();

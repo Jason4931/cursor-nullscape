@@ -219,6 +219,18 @@
         color: #ffcc00 !important;
       }
 
+      #blossomed {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        height: 100vh;
+        font-family: monospace;
+        opacity: 0.1;
+        display: none;
+        z-index: -2000;
+      }
+
       #highest-level-display {
         position: fixed;
         left: 1.5vw;
@@ -288,8 +300,9 @@
   </head>
 
   <div id="highest-level-display">
-    Highest level reached: 0<br />(Normal & Hard only)
+    Highest level reached: 0<br />(Standard & Extreme only)
   </div>
+  <img src="./ASSET/Misc/Blossom.png" id="blossomed" />
   <div id="secret-command">Ctrl+Shift+/ to open commands</div>
   <a
     href="https://discordapp.com/users/786483198368022578"
@@ -425,6 +438,9 @@
       (function renderHighestLevel() {
         const el = document.getElementById("highest-level-display");
         const raw = localStorage.getItem("highest-level-reached");
+        if (localStorage.getItem("Blossom") != null) {
+          document.getElementById("blossomed").style.display = "block";
+        }
         if (localStorage.getItem("GameBeaten") != null) {
           document.getElementById("secret-command").style.display = "block";
           document.getElementById("secret-gallery").style.display = "flex";
@@ -436,7 +452,8 @@
         }
 
         if (!raw) {
-          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+          el.innerHTML =
+            "Highest level reached: 0<br>(Standard & Extreme only)";
           return;
         }
 
@@ -445,9 +462,10 @@
         const level = parseInt(parts[1], 10);
 
         if (!isNaN(level)) {
-          el.innerHTML = `Highest level reached: ${level} (${collected} gifts collected)<br>(Normal & Hard only)`;
+          el.innerHTML = `Highest level reached: ${level} (${collected} gifts collected)<br>(Standard & Extreme only)`;
         } else {
-          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+          el.innerHTML =
+            "Highest level reached: 0<br>(Standard & Extreme only)";
         }
       })();
       (function renderStars() {

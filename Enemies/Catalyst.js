@@ -8,11 +8,17 @@ import {
   setGiftMultiplier,
 } from "../main.js";
 
-const layers = [];
+const CatalystOptim = [];
 for (let i = 1; i <= 8; i++) {
   const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
-  layers.push(img);
+  img.src = `./ASSET/Enemies/Catalyst/CatalystOptim/Layer ${i}.png`;
+  CatalystOptim.push(img);
+}
+const Catalyst_Shock = [];
+for (let i = 1; i <= 4; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Catalyst/Catalyst_Shock/Layer ${i}.png`;
+  Catalyst_Shock.push(img);
 }
 
 export let catalystPos = { x: 0, y: 0 };
@@ -20,11 +26,13 @@ export function setup(host) {
   const state = {
     phase: "initDarken",
 
-    x: 0,
-    y: 0,
+    x: -1000,
+    y: -1000,
 
+    layers: CatalystOptim,
+    enemy: null,
     layer: 0,
-    enemy: layers[0],
+    layerChange: false,
     timer: 0,
     totalTimer: 0,
     nextScream: 14 + Math.random(),
@@ -50,11 +58,32 @@ export function setup(host) {
     beaconWaveOpacity: 1,
     beaconTime: 0,
 
+    squares: [
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+      {
+        w: 50 + Math.random() * 200,
+        h: 50 + Math.random() * 200,
+        offsetX: (Math.random() - 0.5) * 200,
+        offsetY: (Math.random() - 0.5) * 200,
+      },
+    ],
     pellets: [],
+    extraTrail: [],
   };
 
   const BODY_RADIUS = 80;
-  const PELLET_RADIUS = 8;
+  const PELLET_RADIUS = 12;
 
   function randNearCursor(r = 600) {
     const a = Math.random() * Math.PI * 2;
@@ -116,10 +145,38 @@ export function setup(host) {
       }
     }
 
+    for (let i = state.extraTrail.length - 1; i >= 0; i--) {
+      const p = state.extraTrail[i];
+      p.t += dt;
+
+      if (p.t < 0.75) {
+        const k = p.t / 0.75;
+        const eased = 1 - (1 - k) * (1 - k);
+
+        p.x = p.sx + (p.tx - p.sx) * eased;
+        p.y = p.sy + (p.ty - p.sy) * eased;
+      }
+
+      if (p.t >= 1) {
+        state.extraTrail.splice(i, 1);
+      }
+    }
+    if (state.screaming) {
+      state.extraTrail.push({
+        x: state.x,
+        y: state.y,
+        sx: state.x,
+        sy: state.y,
+        tx: state.x + (Math.random() - 0.5) * 500,
+        ty: state.y + (Math.random() - 0.5) * 500,
+        t: 0,
+      });
+    }
+
     catalystPos = { x: state.x, y: state.y };
     state.layer++;
-    if (state.layer > 8) state.layer = 1;
-    state.enemy = layers[state.layer - 1];
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
@@ -262,7 +319,18 @@ export function setup(host) {
         let dx = p.x - state.dashFromX;
         let dy = p.y - state.dashFromY;
 
-        if (actualCollectedCount >= 12500) state.MAX_DASH_DIST = 10000;
+        if (actualCollectedCount >= 12500) {
+          state.MAX_DASH_DIST = 10000;
+          if (!state.layerChange) {
+            state.layers = Catalyst_Shock;
+            state.layer = state.layers.length;
+            state.layerChange = true;
+            setTimeout(() => {
+              state.layers = CatalystOptim;
+              state.layer = state.layers.length;
+            }, 3000);
+          }
+        }
         const d = Math.hypot(dx, dy) || 1;
 
         if (d > state.MAX_DASH_DIST) {
@@ -282,6 +350,26 @@ export function setup(host) {
           undefined,
           "50",
         );
+        state.squares = [
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+          {
+            w: 50 + Math.random() * 200,
+            h: 50 + Math.random() * 200,
+            offsetX: (Math.random() - 0.5) * 200,
+            offsetY: (Math.random() - 0.5) * 200,
+          },
+        ];
       }
 
       const k = state.cycleTime / t0;
@@ -393,6 +481,43 @@ export function setup(host) {
       }
     }
 
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
+        r = 25;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 25 * (1 - eased);
+      }
+
+      const glow = 25;
+      const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
+      grad.addColorStop(0, "rgba(255,0,192,1)");
+      grad.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
+        r = 25;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 25 * (1 - eased);
+      }
+
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     if (state.screaming) {
       const sx = Math.round(state.x);
       const sy = Math.round(state.y);
@@ -441,6 +566,22 @@ export function setup(host) {
       ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
+    if (!beaconed && state.layers != Catalyst_Shock) {
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+
+        ctx.globalAlpha = Math.random() < 0.1 ? 0 : 1;
+        ctx.fillStyle = "black";
+        ctx.fillRect(
+          state.x - state.squares[i].w / 2 + state.squares[i].offsetX,
+          state.y - state.squares[i].h / 2 + state.squares[i].offsetY,
+          state.squares[i].w,
+          state.squares[i].h,
+        );
+
+        ctx.restore();
+      }
+    }
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - 100),
@@ -457,9 +598,15 @@ export function setup(host) {
       );
       ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
       ctx.beginPath();
-      ctx.arc(0, 0, 8, 0, Math.PI * 2);
+      ctx.arc(0, 0, PELLET_RADIUS, 0, Math.PI * 2);
       ctx.fill();
-      ctx.drawImage(state.enemy, -4, -4, 8, 8);
+      ctx.drawImage(
+        state.enemy,
+        -PELLET_RADIUS / 2,
+        -PELLET_RADIUS / 2,
+        PELLET_RADIUS,
+        PELLET_RADIUS,
+      );
       ctx.restore();
     }
 

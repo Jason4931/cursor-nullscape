@@ -1,12 +1,19 @@
 import { death, mouse } from "../entityHost.js";
 import { fleshPositions, playSound, isCursorOnFloor } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Flesh.png";
+const Flesh = [];
+for (let i = 1; i <= 5 * 3; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Flesh/Layer ${Math.ceil(i / 3)}.png`;
+  Flesh.push(img);
+}
 
 export function setup(host, hardMode) {
   const state = {
     opacity: 1,
+    layers: Flesh,
+    enemy: null,
+    layer: 0,
 
     x: 0,
     y: 0,
@@ -64,6 +71,10 @@ export function setup(host, hardMode) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     const now = performance.now();
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     if (!state.initialized) {
       const cx = host.canvas.width / 2;
@@ -201,7 +212,7 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity;
 
     ctx.drawImage(
-      enemy,
+      state.enemy,
       Math.round(state.x - state.size / 2),
       Math.round(state.y - state.size / 2),
       Math.round(state.size),

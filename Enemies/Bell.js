@@ -1,18 +1,35 @@
-import { mouse, toggleBellLeniency } from "../entityHost.js";
+import { death, mouse, toggleBellLeniency } from "../entityHost.js";
 import {
   playSound,
   cleanseZones,
   setSlowness,
   TILE,
+  bellHit,
   moveCamera,
+  getCameraPos,
 } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Bell.png";
+const Bell_New_Idle_Animated = [];
+for (let i = 1; i <= 35; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Bell/Bell_New_Idle_Animated/Layer ${i}.png`;
+  Bell_New_Idle_Animated.push(img);
+}
+const Bell_Ring_Anim = [];
+for (let i = 1; i <= 24; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Bell/Bell_Ring_Anim/Layer ${i}.png`;
+  Bell_Ring_Anim.push(img);
+}
 
+export let dontTouchMeActive = [false];
 export function setup(host, hardMode, immunebell) {
   const state = {
     opacity: 1,
+    layers: Bell_New_Idle_Animated,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false],
 
     x: 0,
     y: 0,
@@ -23,8 +40,6 @@ export function setup(host, hardMode, immunebell) {
     size: 100,
     bellScale: 0,
     circleScale: 0,
-    rotation: 0,
-    rotationTime: 0,
 
     phase: "appear",
     timer: 0,
@@ -36,6 +51,7 @@ export function setup(host, hardMode, immunebell) {
     hitActive: false,
     wasHovering: false,
 
+    bellidleSound: false,
     bellteleportstartsoundSound: false,
     bellteleportendsoundSound: false,
   };
@@ -55,9 +71,9 @@ export function setup(host, hardMode, immunebell) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    state.rotationTime += dt;
-
-    state.rotation = Math.sin(state.rotationTime * 1.2) * 0.15;
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     const half = (state.size * state.bellScale) / 2;
     const dx = mouse.x - state.x;
@@ -66,10 +82,38 @@ export function setup(host, hardMode, immunebell) {
 
     if (hovering && !state.wasHovering && !state.hitActive) {
       state.hitActive = true;
-      playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
       moveCamera(0, 50);
       toggleBellLeniency(true);
       state.hitTimer = 0;
+      if (dontTouchMeActive[0]) {
+        playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
+        playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
+        setTimeout(() => {
+          toggleBellLeniency(false);
+          death("Bell");
+        }, 1000);
+      } else {
+        bellHit.count += 1;
+        if (bellHit.count == 1) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_Sound.wav");
+        } else if (bellHit.count == 2) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_2.ogg");
+        } else if (bellHit.count == 3) {
+          playSound("./ASSET/Sound/Enemies/Bell/Bell_Player_Contact_3.ogg");
+          playSound("./ASSET/Sound/Enemies/Bell/Overtuned.ogg");
+          setTimeout(() => {
+            playSound("./ASSET/Sound/Enemies/Bell/Overtuned_Clear.ogg");
+            bellHit.count = 2;
+          }, 27000);
+        } else if (bellHit.count >= 4) {
+          playSound("./ASSET/Sound/Enemies/Bell/OldBellRing.ogg");
+          playSound("./ASSET/Sound/Enemies/Bell/Player_Bell_Death.ogg");
+          setTimeout(() => {
+            toggleBellLeniency(false);
+            death("Bell");
+          }, 1000);
+        }
+      }
       cleanseZones.push({
         x: state.x,
         y: state.y,
@@ -83,10 +127,22 @@ export function setup(host, hardMode, immunebell) {
 
     if (state.hitActive) {
       state.hitTimer += dt;
+      if (!state.layerChange[0]) {
+        state.layers = Bell_Ring_Anim;
+        state.layer = state.layers.length;
+        state.layerChange[0] = true;
+      }
+      if (state.hitTimer >= 1.2 && !state.layerChange[1]) {
+        state.layers = Bell_New_Idle_Animated;
+        state.layer = state.layers.length;
+        state.layerChange[1] = true;
+      }
       if (state.hitTimer >= state.hitCooldown) {
         state.hitActive = false;
         setTimeout(() => {
           toggleBellLeniency(false);
+          state.layerChange[0] = false;
+          state.layerChange[1] = false;
         }, 1000);
       }
     }
@@ -98,7 +154,17 @@ export function setup(host, hardMode, immunebell) {
       state.initialized = true;
       playSound("./ASSET/Sound/Enemies/Bell/Bell_Teleport_Start_Sound.wav");
     }
-
+    if (!state.bellidleSound) {
+      state.bellidleSound = playSound(
+        `./ASSET/Sound/Enemies/Bell/Bell_Idle.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        () => {
+          state.bellidleSound = null;
+        },
+      );
+    }
     state.timer += dt;
 
     if (state.phase === "appear") {
@@ -202,12 +268,12 @@ export function setup(host, hardMode, immunebell) {
       const s = Math.round(state.size * state.bellScale);
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.rotate(state.rotation);
-      ctx.drawImage(enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
+      ctx.drawImage(state.enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
       ctx.restore();
     }
 
     if (state.hitActive && !immunebell) {
+      const cam = getCameraPos();
       const fade = 1 - state.hitTimer / state.hitCooldown;
 
       const strength = 120 * fade;
@@ -229,6 +295,16 @@ export function setup(host, hardMode, immunebell) {
 
       for (const [ox, oy] of offsets) {
         ctx.drawImage(ctx.canvas, ox, oy);
+      }
+
+      if (hardMode) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(
+          cam.x,
+          cam.y,
+          Math.round(window.innerWidth),
+          Math.round(window.innerHeight),
+        );
       }
 
       ctx.restore();

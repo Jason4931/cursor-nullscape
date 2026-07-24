@@ -5,11 +5,16 @@ import {
   entityCanvas2,
   canvas,
   getCameraPos,
-  collectedCount,
+  actualCollectedCount,
+  onCelestial,
 } from "../main.js";
 
 const altar = new Image();
 altar.src = "./ASSET/Misc/AltarOfChance.png";
+const altarHigh = new Image();
+altarHigh.src = "./ASSET/Misc/AltarOfChanceHigh.png";
+const altarTweak = new Image();
+altarTweak.src = "./ASSET/Misc/AltarOfChanceTweak.png";
 
 export function setup(host, hardMode) {
   const state = {
@@ -20,14 +25,62 @@ export function setup(host, hardMode) {
     timer: 0,
     nextDelay: 19 + Math.random(),
     result: null,
+    resultTweak: null,
     resultTimer: 0,
+    resultMode: "normal",
+    mode: "normal",
   };
 
   const RESULT_TEXT = {
-    0: "Payment 1000.",
-    1: "Random enemy 4.",
-    2: "Gift multiplier x2.",
-    3: "No tripmines.",
+    0: "No Tripmines For 1 Minute",
+    1: "+0.5x Gift Multiplier Increase",
+    2: "+0.75x Gift Multiplier Increase",
+    3: "Flesh BEGONE",
+    4: "Extra Shield",
+    5: "Payment 1000 Gift",
+    6: "Martpocalypse",
+    7: "2 Random Enemies",
+    8: "Mart and Springer",
+    9: "It's Here",
+    10: "40% Less Jump Pads",
+    11: "60% Less Jump Pads",
+    12: "40% More Seamines",
+    13: "60% More Seamines",
+    14: "Oops, all Flesh!",
+  };
+  const RESULT_TEXT_HIGH = {
+    0: "No Tripmines For 1 Minute",
+    1: "+0.75x Gift Multiplier Increase",
+    2: "+1.25x Gift Multiplier Increase",
+    3: "Flesh BEGONE",
+    4: "Extra Shield",
+    5: "Payment 2000 Gift",
+    6: "Martpocalypse",
+    7: "4 Random Enemies",
+    8: "Mart and Springer",
+    9: "It's Here",
+    10: "100% Less Jump Pads",
+    11: "100% Less Jump Pads",
+    12: "100% More Seamines",
+    13: "120% More Seamines",
+    14: "Oops, all Flesh!",
+  };
+  const RESULT_TEXT_TWEAK = {
+    0: null,
+    1: "+0.25x Gift Multiplier Increase",
+    2: "+0.5x Gift Multiplier Increase",
+    3: "Flesh BEGONE",
+    4: "Extra Shield",
+    5: "Payment 1000 Gift",
+    6: "Martpocalypse",
+    7: "2 Random Enemies",
+    8: "Mart and Springer",
+    9: "It's Here",
+    10: "40% Less Jump Pads",
+    11: "60% Less Jump Pads",
+    12: "40% More Seamines",
+    13: "60% More Seamines",
+    14: "Oops, all Flesh!",
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -39,11 +92,13 @@ export function setup(host, hardMode) {
     state.x = p.x;
     state.y = p.y;
     state.timer = 0;
+    const randMode = Math.random();
+    state.mode = randMode < 0.2 ? "high" : randMode < 0.4 ? "tweak" : "normal";
     state.nextDelay = 19 + Math.random();
   }
 
   function onClick(e) {
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -53,7 +108,13 @@ export function setup(host, hardMode) {
     const r = state.size * 0.5;
 
     if (dx * dx + dy * dy <= r * r) {
-      state.result = activateChance();
+      if (state.mode == "tweak") {
+        state.result = activateChance(state.mode, "positive");
+        state.resultTweak = activateChance(state.mode, "negative");
+      } else {
+        state.result = activateChance(state.mode);
+      }
+      state.resultMode = state.mode;
       state.resultTimer = 0;
       teleport();
     }
@@ -63,13 +124,14 @@ export function setup(host, hardMode) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
 
     state.timer += dt;
     if (state.result !== null) {
       state.resultTimer += dt;
       if (state.resultTimer >= 4) {
         state.result = null;
+        state.resultTweak = null;
         state.resultTimer = 0;
       }
     }
@@ -89,19 +151,22 @@ export function setup(host, hardMode) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
-    if (collectedCount >= (hardMode ? 10000 : 5000)) return;
+    if (actualCollectedCount >= 10000 || onCelestial) return;
 
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
     const size = Math.round(state.size);
-    const drawY = state.y - size * 0.3;
     ctx.drawImage(
-      altar,
-      Math.round(state.x - size * 0.5),
-      Math.round(drawY - size * 0.6),
+      state.mode == "high"
+        ? altarHigh
+        : state.mode == "tweak"
+          ? altarTweak
+          : altar,
+      Math.round(state.x - size * 0.15),
+      Math.round(state.y - size),
+      size * 0.3,
       size,
-      size * 1.2,
     );
 
     if (state.result !== null && state.resultTimer > 0) {
@@ -150,16 +215,33 @@ export function setup(host, hardMode) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
-      ctx.strokeText(
-        RESULT_TEXT[state.result],
-        boxX + screenW * 0.25,
-        boxY + boxHeight / 2 + 20,
-      );
-      ctx.fillText(
-        RESULT_TEXT[state.result],
-        boxX + screenW * 0.25,
-        boxY + boxHeight / 2 + 20,
-      );
+      if (state.resultTweak == null) {
+        ctx.strokeText(
+          state.resultMode == "high"
+            ? RESULT_TEXT_HIGH[state.result]
+            : RESULT_TEXT[state.result],
+          boxX + screenW * 0.25,
+          boxY + boxHeight / 2 + 20,
+        );
+        ctx.fillText(
+          state.resultMode == "high"
+            ? RESULT_TEXT_HIGH[state.result]
+            : RESULT_TEXT[state.result],
+          boxX + screenW * 0.25,
+          boxY + boxHeight / 2 + 20,
+        );
+      } else {
+        ctx.strokeText(
+          `${RESULT_TEXT_TWEAK[state.result]} and ${RESULT_TEXT_TWEAK[state.resultTweak]}`,
+          boxX + screenW * 0.25,
+          boxY + boxHeight / 2 + 20,
+        );
+        ctx.fillText(
+          `${RESULT_TEXT_TWEAK[state.result]} and ${RESULT_TEXT_TWEAK[state.resultTweak]}`,
+          boxX + screenW * 0.25,
+          boxY + boxHeight / 2 + 20,
+        );
+      }
     }
 
     ctx.restore();

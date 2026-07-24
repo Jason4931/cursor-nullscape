@@ -2,8 +2,12 @@ import { death, mouse } from "../entityHost.js";
 import { despawnCatalyst, moveCamera, playSound } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/CatalystMinion.png";
+const Catalysthungerpatch5 = [];
+for (let i = 1; i <= 16; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/Catalyst/Catalysthungerpatch5/Layer ${i}.png`;
+  Catalysthungerpatch5.push(img);
+}
 
 export function setup(host, overshootBrake) {
   const canvas = host.ctx.canvas;
@@ -11,6 +15,10 @@ export function setup(host, overshootBrake) {
   const state = {
     x: catalystPos.x,
     y: catalystPos.y,
+
+    layers: Catalysthungerpatch5,
+    enemy: null,
+    layer: 0,
 
     vx: 0,
     vy: 0,
@@ -31,6 +39,7 @@ export function setup(host, overshootBrake) {
 
     trail: [],
     trailLife: 1,
+    extraTrail: [],
   };
 
   const BODY_RADIUS = 50;
@@ -38,6 +47,10 @@ export function setup(host, overshootBrake) {
   function update(dt) {
     if (despawnCatalyst) return;
     if (!Number.isFinite(mouse.x)) return;
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     state.screamTimer += dt;
 
@@ -112,11 +125,38 @@ export function setup(host, overshootBrake) {
       y: state.y,
       life: state.trailLife,
     });
+    if (Math.random() < 0.5) {
+      state.extraTrail.push({
+        x: state.x,
+        y: state.y,
+        sx: state.x,
+        sy: state.y,
+        tx: state.x + (Math.random() - 0.5) * 200,
+        ty: state.y + (Math.random() - 0.5) * 200,
+        t: 0,
+      });
+    }
 
     for (let i = state.trail.length - 1; i >= 0; i--) {
       state.trail[i].life -= dt;
       if (state.trail[i].life <= 0) {
         state.trail.splice(i, 1);
+      }
+    }
+    for (let i = state.extraTrail.length - 1; i >= 0; i--) {
+      const p = state.extraTrail[i];
+      p.t += dt;
+
+      if (p.t < 0.75) {
+        const k = p.t / 0.75;
+        const eased = 1 - (1 - k) * (1 - k);
+
+        p.x = p.sx + (p.tx - p.sx) * eased;
+        p.y = p.sy + (p.ty - p.sy) * eased;
+      }
+
+      if (p.t >= 1) {
+        state.extraTrail.splice(i, 1);
       }
     }
 
@@ -128,17 +168,60 @@ export function setup(host, overshootBrake) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
+        r = 25;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 25 * (1 - eased);
+      }
+
+      const glow = 25;
+      const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
+      grad.addColorStop(0, "rgba(255,0,192,1)");
+      grad.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const p of state.extraTrail) {
+      let r;
+
+      if (p.t < 0.75) {
+        r = 15;
+      } else {
+        const k = (p.t - 0.75) / 0.25;
+        const eased = k * k;
+        r = 15 * (1 - eased);
+      }
+
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
+      ctx.fill();
+    }
     for (const t of state.trail) {
       const a = t.life / state.trailLife;
-      ctx.fillStyle = `rgba(0,0,0,${a * 2})`;
+      const r = (40 + Math.random() * 10) * a;
+      const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, r);
+      grad.addColorStop(0, "rgba(0,0,255,1)");
+      grad.addColorStop(0.5, "rgba(0,0,255,0.75)");
+      grad.addColorStop(1, "rgba(255,0,255,0.5)");
+      ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(
-        Math.round(t.x),
-        Math.round(t.y),
-        Math.round((40 + Math.random() * 10) * a),
-        0,
-        Math.PI * 2,
-      );
+      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const t of state.trail) {
+      const a = t.life / state.trailLife;
+      const r = (40 + Math.random() * 10) * a * a * a;
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -188,13 +271,15 @@ export function setup(host, overshootBrake) {
       }
     }
 
-    ctx.drawImage(
-      enemy,
-      Math.round(state.x - 50),
-      Math.round(state.y - 50),
-      Math.round(100),
-      Math.round(100),
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - 50),
+        Math.round(state.y - 50),
+        Math.round(100),
+        Math.round(100),
+      );
+    }
 
     ctx.restore();
   }

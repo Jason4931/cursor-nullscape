@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursor Nullscape — Credits</title>
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        color: #ccc;
+        filter: brightness(1.1);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at 20% 30%, #0a0a0a 0%, transparent 40%),
+          radial-gradient(circle at 80% 70%, #050505 0%, transparent 45%);
+        animation: drift 18s linear infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes drift {
+        from {
+          transform: translateY(0);
+        }
+
+        to {
+          transform: translateY(-3.125vw);
+        }
+      }
+
+      #credit {
+        max-width: 70.3125vw;
+        padding: 4vw;
+        text-align: center;
+        animation: fadeIn 2s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(3.125vw);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #credit p {
+        margin: 0.6em 0;
+        font-size: 1vw;
+        line-height: 1.6;
+        opacity: 0.85;
+      }
+
+      .gold {
+        color: #aa8800;
+        text-decoration: none;
+      }
+
+      .red {
+        color: #aa3333;
+        text-decoration: none;
+      }
+
+      .purple {
+        color: #aa55aa;
+        text-decoration: none;
+      }
+
+      .divider {
+        width: 60%;
+        height: 0.078125vw;
+        margin: 2vw auto;
+        background: linear-gradient(to right, transparent, #333, transparent);
+      }
+
+      #return-btn {
+        position: fixed;
+        right: 1.25vw;
+        bottom: 1.5vw;
+
+        width: 3.2vw;
+        height: 3.2vw;
+        min-width: 3.28125vw;
+        min-height: 3.28125vw;
+
+        padding-bottom: 0.15625vw;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #0a0a0a;
+        border: 0.078125vw solid #333;
+        border-radius: 50%;
+
+        color: #888;
+        font-size: 1.75vw;
+        text-decoration: none;
+
+        opacity: 0.75;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+
+        z-index: 2000;
+      }
+
+      #return-btn:hover,
+      #secret-gallery:hover {
+        opacity: 1;
+        transform: scale(1.1);
+        box-shadow: 0 0 1.25vw rgba(100, 100, 255, 0.25);
+        color: #bbb;
+      }
+
+      #return-btn:active,
+      #secret-gallery:active {
+        transform: scale(0.95);
+      }
+
+      #stars {
+        position: fixed;
+        left: 1.5vw;
+        bottom: 1.5vw;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0vw;
+
+        font-size: 1.8vw;
+        z-index: 2000;
+      }
+
+      .star-row {
+        display: flex;
+        gap: 0.6vw;
+      }
+
+      .star {
+        position: relative;
+        opacity: 0.15;
+        transition:
+          opacity 0.3s ease,
+          transform 0.2s ease;
+      }
+
+      .star.active {
+        opacity: 1;
+      }
+
+      .casual .star.active {
+        color: #22aa22;
+      }
+
+      .normal .star.active {
+        color: #ffffff;
+      }
+
+      .hard .star.active {
+        color: #cc2222;
+      }
+
+      .star::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+
+        background: #111;
+        color: #ccc;
+        padding: 0.3vw 0.6vw;
+        font-size: 1vw;
+        white-space: nowrap;
+        border: 0.1vw solid #333;
+        border-radius: 0.2vw;
+
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .star:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .star.yellow {
+        color: #ffcc00 !important;
+      }
+
+      #highest-level-display {
+        position: fixed;
+        left: 1.5vw;
+        bottom: 9vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #aaa;
+        opacity: 0.85;
+        z-index: 2000;
+      }
+
+      #discord {
+        position: fixed;
+        left: 1vw;
+        top: 1vw;
+        font-size: 1vw;
+        font-weight: bold;
+        letter-spacing: 0.2vw;
+        font-family: monospace;
+        z-index: 2000;
+      }
+      #secret-command {
+        position: fixed;
+        left: 1vw;
+        top: 2.5vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #aaa;
+        opacity: 0.25;
+        z-index: 2000;
+        display: none;
+      }
+
+      #secret-gallery {
+        position: fixed;
+        right: 1.25vw;
+        top: 1.5vw;
+
+        width: 3.2vw;
+        height: 3.2vw;
+        min-width: 3.28125vw;
+        min-height: 3.28125vw;
+
+        padding-bottom: 0.15625vw;
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        background: #0a0a0a;
+        border: 0.078125vw solid #333;
+        border-radius: 50%;
+
+        color: #888;
+        font-size: 1.75vw;
+        text-decoration: none;
+
+        opacity: 0.75;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+
+        z-index: 2000;
+      }
+    </style>
+  </head>
+
+  <div id="highest-level-display">
+    Highest level reached: 0<br />(Normal & Hard only)
+  </div>
+  <div id="secret-command">Ctrl+Shift+/ to open commands</div>
+  <a
+    href="https://discordapp.com/users/786483198368022578"
+    target="_blank"
+    style="color: #7289da; text-decoration: none"
+    id="discord"
+    >Discord</a
+  >
+
+  <div id="stars">
+    <div class="star-row casual"></div>
+    <div class="star-row normal"></div>
+    <div class="star-row hard"></div>
+  </div>
+
+  <body>
+    <div id="credit">
+      <p class="section" style="font-size: 1.6vw; opacity: 1">
+        <b>Cursor Nullscape release V1.4.12</b>
+      </p>
+
+      <div class="divider"></div>
+
+      <p>
+        A fan-made project from the original game called
+        <a
+          href="https://www.roblox.com/games/129279692364812/Nullscape"
+          target="_blank"
+          style="color: #8800ff; text-decoration: none"
+          >Nullscape</a
+        >
+        from Roblox
+      </p>
+
+      <div class="divider"></div>
+
+      <p>
+        <b>Coding & balancing:</b>
+        <a
+          href="https://www.roblox.com/users/7304443698/profile"
+          target="_blank"
+          style="color: #ffaa33; text-decoration: none"
+          >Jason4931</a
+        >
+      </p>
+
+      <p>
+        <b>Playtester & design:</b>
+        <a
+          href="https://www.roblox.com/users/8036958756/profile"
+          target="_blank"
+          style="color: #ff5577; text-decoration: none"
+          >Astronull3542</a
+        >
+      </p>
+
+      <div class="divider"></div>
+
+      <p class="section" style="opacity: 1"><b>Original game credits</b></p>
+
+      <p>
+        <b>Scripters:</b>
+        <span style="color: #55ffcc">@Hame</span>,
+        <span style="color: #ff66ff">@GhostyPep</span>,
+        <span style="color: #66ccff">@KirbyTG</span>
+      </p>
+
+      <p>
+        <b>Modellers / Artists:</b>
+        <span style="color: #ff9966">@marcie_wav</span>,
+        <span style="color: #99ff66">@basicallynotreally</span>,
+        <span style="color: #66ccff">@KirbyTG</span>
+      </p>
+
+      <p>
+        <b>Music / SFX:</b>
+        <a
+          href="https://www.youtube.com/channel/UCPa78LlIvBiDozF6iAuNPqg"
+          target="_blank"
+          style="color: #ffcc00; text-decoration: none"
+          >@digital_dsc</a
+        >,
+        <a
+          href="https://www.youtube.com/channel/UCOo5Zb7pfUKnvlaIsJqHlsw"
+          target="_blank"
+          style="color: #aa88ff; text-decoration: none"
+          >@AgelessMuse</a
+        >,
+        <a
+          href="https://www.youtube.com/channel/UC_cEwgidcmqOBxzw-nc16Eg"
+          target="_blank"
+          style="color: #ff4444; text-decoration: none"
+          >@MetaHumanBoi</a
+        >
+      </p>
+
+      <p>
+        <b>Animators:</b>
+        <span style="color: #66ff99">@ShortWeekDays</span>,
+        <span style="color: #66ccff">@KirbyTG</span>
+      </p>
+
+      <div class="divider"></div>
+
+      <p>
+        All sprites and SFX taken from
+        <a
+          href="https://nullscape.wiki/wiki/Main_Page"
+          target="_blank"
+          style="color: #bb77ff; text-decoration: none"
+          >Nullscape Wiki</a
+        >
+      </p>
+
+      <div class="divider"></div>
+
+      <p>Thank you Nullscape devs for the awesome game</p>
+
+      <p>
+        …and all the
+        <a
+          href="https://www.youtube.com/playlist?list=PL7fquGI5OlN4pa-TPO_ieoulirJipPYyH"
+          target="_blank"
+          style="color: #ffd700; text-decoration: none"
+          >OST bangers</a
+        >.
+      </p>
+    </div>
+
+    <a href="./gallery.html" id="secret-gallery">▣</a>
+    <a href="./" id="return-btn">⮌</a>
+    <script>
+      (function renderHighestLevel() {
+        const el = document.getElementById("highest-level-display");
+        const raw = localStorage.getItem("highest-level-reached");
+        if (localStorage.getItem("GameBeaten") != null) {
+          document.getElementById("secret-command").style.display = "block";
+          document.getElementById("secret-gallery").style.display = "flex";
+          setInterval(() => {
+            const arrsymbol = ["▣", "▤", "▥", "▦", "▧", "▨"];
+            document.getElementById("secret-gallery").innerHTML =
+              arrsymbol[Math.floor(Math.random() * arrsymbol.length)];
+          }, 100);
+        }
+
+        if (!raw) {
+          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+          return;
+        }
+
+        const parts = raw.split(" ");
+        const collected = parseInt(parts[0], 10);
+        const level = parseInt(parts[1], 10);
+
+        if (!isNaN(level)) {
+          el.innerHTML = `Highest level reached: ${level} (${collected} gifts collected)<br>(Normal & Hard only)`;
+        } else {
+          el.innerHTML = "Highest level reached: 0<br>(Normal & Hard only)";
+        }
+      })();
+      (function renderStars() {
+        const oneYear = 365 * 24 * 60 * 60 * 1000;
+        const now = new Date();
+
+        const milestones = [
+          { key: "lv5", label: "LVL 5" },
+          { key: "lv12", label: "LVL 12" },
+          { key: "lv25", label: "LVL 25" },
+          { key: "lv50", label: "LVL 50" },
+          { key: "win", label: "Win" },
+        ];
+
+        function valid(key) {
+          const raw = localStorage.getItem(key);
+          if (!raw) return false;
+
+          const date = new Date(raw);
+          if (now - date > oneYear) {
+            localStorage.removeItem(key);
+            return false;
+          }
+          return true;
+        }
+
+        function highestTier(difficulty) {
+          for (let i = milestones.length - 1; i >= 0; i--) {
+            if (valid(`${milestones[i].key}-${difficulty}`)) {
+              return i;
+            }
+          }
+          return -1;
+        }
+
+        const casualMax = highestTier("casual");
+        const normalMax = highestTier("normal");
+        const hardMax = highestTier("hard");
+
+        function buildRow(maxTier) {
+          const arr = new Array(milestones.length).fill(false);
+          for (let i = 0; i <= maxTier; i++) {
+            arr[i] = true;
+          }
+          return arr;
+        }
+
+        let casualRow = buildRow(casualMax);
+        let normalRow = buildRow(normalMax);
+        let hardRow = buildRow(hardMax);
+
+        for (let i = 0; i < milestones.length; i++) {
+          if (hardRow[i]) {
+            normalRow[i] = true;
+            casualRow[i] = true;
+          }
+
+          if (normalRow[i]) {
+            casualRow[i] = true;
+          }
+        }
+
+        function fillRow(rowClass, achievedArray) {
+          const row = document.querySelector(`.${rowClass}`);
+          row.innerHTML = "";
+
+          for (let i = 0; i < milestones.length; i++) {
+            const star = document.createElement("span");
+            star.className = "star";
+            star.textContent = "★";
+            const diffName =
+              rowClass.charAt(0).toUpperCase() + rowClass.slice(1);
+            let label;
+            if (milestones[i].key === "win") {
+              label = `${diffName} Win`;
+            } else {
+              const lvl = milestones[i].key.replace("lv", "");
+              label = `${diffName} Lvl ${lvl}`;
+            }
+            star.setAttribute("data-label", label);
+
+            if (achievedArray[i]) {
+              star.classList.add("active");
+
+              if (i === milestones.length - 1) {
+                star.classList.add("yellow");
+              }
+            }
+
+            row.appendChild(star);
+          }
+        }
+
+        fillRow("casual", casualRow);
+        fillRow("normal", normalRow);
+        fillRow("hard", hardRow);
+      })();
+    </script>
+  </body>
+</html>

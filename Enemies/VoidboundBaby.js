@@ -1,12 +1,38 @@
 import { death, mouse } from "../entityHost.js";
 import { playSound } from "../main.js";
 
-const enemy = new Image();
-enemy.src = "./ASSET/Enemies/VoidboundBaby.png";
+const VoidboundBaby_Idle = [];
+for (let i = 1; i <= 18; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundBaby/VoidboundBaby_Idle/Layer ${i}.png`;
+  VoidboundBaby_Idle.push(img);
+}
+const VBbabyLockOnTarget = [];
+for (let i = 1; i <= 7; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyLockOnTarget/Layer ${i}.png`;
+  VBbabyLockOnTarget.push(img);
+}
+const Vbabytrans = [];
+for (let i = 1; i <= 4; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundBaby/Vbabytrans/Layer ${i}.png`;
+  Vbabytrans.push(img);
+}
+const VBbabyCharging = [];
+for (let i = 1; i <= 6; i++) {
+  const img = new Image();
+  img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyCharging/Layer ${i}.png`;
+  VBbabyCharging.push(img);
+}
 
-export function setup(host, hardMode) {
+export function setup(host, hardMode, rebirth = null) {
   const state = {
     opacity: 1,
+    layers: VoidboundBaby_Idle,
+    enemy: null,
+    layer: 0,
+    layerChange: [false, false, false, false, false],
 
     x: 0,
     y: 0,
@@ -33,6 +59,7 @@ export function setup(host, hardMode) {
     startY2: 0,
 
     trails: [],
+    ballTrails: [],
 
     initialized: false,
   };
@@ -53,25 +80,51 @@ export function setup(host, hardMode) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
     if (!state.initialized) {
-      randomSpawn();
+      if (!rebirth) {
+        randomSpawn();
+      } else {
+        state.x = rebirth.x;
+        state.y = rebirth.y;
+        state.size *= rebirth.scale;
+        state.lineLength *= rebirth.scale;
+      }
       state.initialized = true;
     }
+
+    state.layer++;
+    if (state.layer > state.layers.length) state.layer = 1;
+    state.enemy = state.layers[state.layer - 1];
 
     if (state.state === "charging" || state.state === "charging2") {
       state.trails.push({
         x: state.x + Math.random() * 50 - 25,
         y: state.y + Math.random() * 50 - 25,
         age: 0,
+        image: state.enemy,
+      });
+      state.ballTrails.push({
+        x: state.x + Math.random() * 100 - 50,
+        y: state.y + Math.random() * 100 - 50,
+        age: 0,
       });
     }
     for (const trail of state.trails) {
       trail.age += dt;
     }
+    for (const trail of state.ballTrails) {
+      trail.age += dt;
+    }
     state.trails = state.trails.filter((t) => t.age < 0.5);
+    state.ballTrails = state.ballTrails.filter((t) => t.age < 0.5);
 
     state.timer += dt;
 
     if (state.state === "idle") {
+      if (!state.layerChange[0]) {
+        state.layers = VoidboundBaby_Idle;
+        state.layer = state.layers.length;
+        state.layerChange[0] = true;
+      }
       if (state.timer >= 0.375) {
         state.timer = 0;
         state.state = "indicator";
@@ -85,6 +138,11 @@ export function setup(host, hardMode) {
         state.dirY = dy / d;
       }
     } else if (state.state === "indicator") {
+      if (!state.layerChange[1]) {
+        state.layers = VBbabyLockOnTarget;
+        state.layer = state.layers.length;
+        state.layerChange[1] = true;
+      }
       if (state.timer >= 0.375) {
         state.timer = 0;
         state.state = "charging";
@@ -117,7 +175,26 @@ export function setup(host, hardMode) {
         }
       }
     } else if (state.state === "charging") {
+      if (!state.layerChange[2]) {
+        state.layers = Vbabytrans;
+        state.layer = state.layers.length;
+        state.layerChange[2] = true;
+      }
       state.chargeTime += dt;
+      if (state.chargeTime >= 0.1 && !state.layerChange[3]) {
+        state.layers = VBbabyCharging;
+        state.layer = state.layers.length;
+        state.layerChange[3] = true;
+      }
+      if (
+        !hardMode &&
+        state.chargeTime >= state.chargeDuration - 0.1 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Vbabytrans;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime / state.chargeDuration;
       if (t > 1) t = 1;
@@ -150,10 +227,24 @@ export function setup(host, hardMode) {
 
           state.chargeTime2 = 0;
           state.chargeDuration2 = 0.125 + Math.random() * 0.5;
+        } else {
+          state.layerChange[0] = false;
+          state.layerChange[1] = false;
+          state.layerChange[2] = false;
+          state.layerChange[3] = false;
+          state.layerChange[4] = false;
         }
       }
     } else if (state.state === "charging2") {
       state.chargeTime2 += dt;
+      if (
+        state.chargeTime2 >= state.chargeDuration2 - 0.1 &&
+        !state.layerChange[4]
+      ) {
+        state.layers = Vbabytrans;
+        state.layer = state.layers.length;
+        state.layerChange[4] = true;
+      }
 
       let t = state.chargeTime2 / state.chargeDuration2;
       if (t > 1) t = 1;
@@ -175,6 +266,11 @@ export function setup(host, hardMode) {
       if (t >= 1) {
         state.state = "idle";
         state.timer = 0;
+        state.layerChange[0] = false;
+        state.layerChange[1] = false;
+        state.layerChange[2] = false;
+        state.layerChange[3] = false;
+        state.layerChange[4] = false;
       }
     }
   }
@@ -192,9 +288,9 @@ export function setup(host, hardMode) {
       const alpha = 0.375 - state.timer;
       ctx.fillStyle = `rgba(255,0,255,${alpha})`;
 
-      const dashLength = 30;
-      const gapLength = 20;
-      const thickness = 4;
+      const dashLength = 30 * (rebirth ? rebirth.scale : 1);
+      const gapLength = 20 * (rebirth ? rebirth.scale : 1);
+      const thickness = 4 * (rebirth ? rebirth.scale : 1);
 
       const angle =
         hardMode && state.state === "charging"
@@ -233,47 +329,48 @@ export function setup(host, hardMode) {
       }
     }
 
-    const jitter =
-      state.state === "charging" || state.state === "charging2"
-        ? 4
-        : state.state === "indicator"
-          ? 2
-          : 1;
-    const rotJitter =
-      state.state === "charging" || state.state === "charging2"
-        ? 0.32
-        : state.state === "indicator"
-          ? 0.16
-          : 0.08;
-
-    const drawX = Math.round(state.x + (Math.random() - 0.5) * jitter * 2);
-    const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
-    const rot = (Math.random() - 0.5) * rotJitter * 2;
-
+    for (const trail of state.ballTrails) {
+      ctx.save();
+      ctx.fillStyle = "black";
+      ctx.strokeStyle = "rgb(255,0,192)";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(trail.x),
+        Math.round(trail.y),
+        Math.round((state.size / 2) * (0.5 * (1 - trail.age / 0.5))),
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
     for (const trail of state.trails) {
       ctx.save();
       ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
       ctx.translate(Math.round(trail.x), Math.round(trail.y));
       ctx.drawImage(
-        enemy,
-        Math.round((-state.size / 2) * 0.75),
-        Math.round((-state.size / 2) * 0.75),
-        Math.round(state.size * 0.75),
-        Math.round(state.size * 0.75),
+        trail.image,
+        Math.round((-state.size / 2) * 0.9),
+        Math.round((-state.size / 2) * 0.9),
+        Math.round(state.size * 0.9),
+        Math.round(state.size * 0.9),
       );
       ctx.restore();
     }
     ctx.save();
-    ctx.translate(drawX, drawY);
-    ctx.rotate(rot);
-    const size = Math.round(state.size);
-    ctx.drawImage(
-      enemy,
-      Math.round(-size / 2),
-      Math.round(-size / 2),
-      size,
-      size,
-    );
+    ctx.translate(Math.round(state.x), Math.round(state.y));
+    if (state.enemy) {
+      const sizescale = state.layers == VBbabyLockOnTarget ? 1.5 : 1.2;
+      ctx.drawImage(
+        state.enemy,
+        Math.round((-state.size / 2) * sizescale),
+        Math.round((-state.size / 2) * sizescale),
+        Math.round(state.size * sizescale),
+        Math.round(state.size * sizescale),
+      );
+    }
 
     ctx.restore();
   }
