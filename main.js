@@ -5309,7 +5309,7 @@ function updateCamera() {
               return true;
             });
 
-        if (collectedCount >= 100 && !spawnedVoid) {
+        if (actualCollectedCount >= 100 && !spawnedVoid) {
           spawnedVoid = true;
           spawnVoid(entityHost, enableVoid, showFloor);
           if (chaosMode) {
