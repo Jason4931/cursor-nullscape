@@ -5540,10 +5540,7 @@ function updateCamera() {
     forceSpawn3x3(mouse);
   }
   if (highriseEnabled) {
-    const current5x5 = countPatterns(5);
-    if (current5x5 < 5) {
-      forceSpawn5x5(mouse);
-    }
+    forceSpawn5x5(mouse);
   } else {
     for (const p of [...patternsState.values()]) {
       if (p.pattern[0].length == 45 && p.pattern.length == 45) {
