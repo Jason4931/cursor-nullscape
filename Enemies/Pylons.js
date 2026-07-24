@@ -196,7 +196,7 @@ export function setup(host) {
       if (index >= text[group].length) return;
       floatingText.text = text[group][index];
       floatingText.t = 0;
-      floatingText.duration = 1 + floatingText.text.split("\n").length * 0.5;
+      floatingText.duration = 2.5 + floatingText.text.split("\n").length * 0.5;
       floatingText.active = true;
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 3)}.ogg`,
