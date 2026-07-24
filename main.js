@@ -829,6 +829,7 @@ const ProgressionEvents = [
   },
 ];
 
+let jesusAppear = false;
 const jesus = new Image();
 jesus.src = "./ASSET/Misc/Jesus.png";
 const oblivionBGimg = new Image();
@@ -5844,7 +5845,9 @@ function loop(now) {
   if (shieldLostMsg[1] > 0) {
     shieldLostMsg[1]--;
     // rare jesus
-    if (shieldLostMsg[2]) {
+    if (shieldLostMsg[2] || jesusAppear) {
+      jesusAppear = true;
+      if (shieldLostMsg[1] - 150 <= 0) jesusAppear = false;
       ctx.save();
       ctx.globalAlpha = Math.max(0, (shieldLostMsg[1] - 150) / 30);
       ctx.drawImage(jesus, -camX, -camY, window.innerWidth, window.innerHeight);
