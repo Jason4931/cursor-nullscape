@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const VoidboundBaby_Idle = [];
 for (let i = 1; i <= 18; i++) {
@@ -329,35 +329,37 @@ export function setup(host, hardMode, rebirth = null) {
       }
     }
 
-    for (const trail of state.ballTrails) {
-      ctx.save();
-      ctx.fillStyle = "black";
-      ctx.strokeStyle = "rgb(255,0,192)";
-      ctx.lineWidth = 6;
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(trail.x),
-        Math.round(trail.y),
-        Math.round((state.size / 2) * (0.5 * (1 - trail.age / 0.5))),
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
-    for (const trail of state.trails) {
-      ctx.save();
-      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
-      ctx.translate(Math.round(trail.x), Math.round(trail.y));
-      ctx.drawImage(
-        trail.image,
-        Math.round((-state.size / 2) * 0.9),
-        Math.round((-state.size / 2) * 0.9),
-        Math.round(state.size * 0.9),
-        Math.round(state.size * 0.9),
-      );
-      ctx.restore();
+    if (!uldm) {
+      for (const trail of state.ballTrails) {
+        ctx.save();
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "rgb(255,0,192)";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(trail.x),
+          Math.round(trail.y),
+          Math.round((state.size / 2) * (0.5 * (1 - trail.age / 0.5))),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+      for (const trail of state.trails) {
+        ctx.save();
+        ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+        ctx.translate(Math.round(trail.x), Math.round(trail.y));
+        ctx.drawImage(
+          trail.image,
+          Math.round((-state.size / 2) * 0.9),
+          Math.round((-state.size / 2) * 0.9),
+          Math.round(state.size * 0.9),
+          Math.round(state.size * 0.9),
+        );
+        ctx.restore();
+      }
     }
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));

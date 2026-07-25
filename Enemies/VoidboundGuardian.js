@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, passageGoldPattern } from "../main.js";
+import { playSound, passageGoldPattern, uldm } from "../main.js";
 
 const Guardian_Idle_Animation = [];
 for (let i = 1; i <= 40; i++) {
@@ -355,20 +355,22 @@ export function setup(host, casualMode, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    for (const trail of state.blackAsh) {
-      ctx.save();
-      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(trail.x),
-        Math.round(trail.y),
-        Math.round(50 * (0.5 * (1 - trail.age / 0.5))),
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-      ctx.restore();
+    if (!uldm) {
+      for (const trail of state.blackAsh) {
+        ctx.save();
+        ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(trail.x),
+          Math.round(trail.y),
+          Math.round(50 * (0.5 * (1 - trail.age / 0.5))),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+        ctx.restore();
+      }
     }
 
     if (state.mode === "idleShoot") {
@@ -383,23 +385,25 @@ export function setup(host, casualMode, hardMode) {
       ctx.scale(1 - state.timer, 1 - state.timer);
       ctx.rotate(Math.PI / 2);
 
-      const glow = 25;
-      const grad = ctx.createRadialGradient(0, 0, 100, 0, 0, 100 + glow);
-      grad.addColorStop(0, `rgba(255,0,192,${alpha})`);
-      grad.addColorStop(1, "rgba(255,0,192,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(0, 0, 100 + glow, 0, Math.PI * 2);
-      ctx.fill();
+      if (!uldm) {
+        const glow = 25;
+        const grad = ctx.createRadialGradient(0, 0, 100, 0, 0, 100 + glow);
+        grad.addColorStop(0, `rgba(255,0,192,${alpha})`);
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, 100 + glow, 0, Math.PI * 2);
+        ctx.fill();
 
-      ctx.beginPath();
-      ctx.moveTo(0, -rOuter * 2);
-      ctx.lineTo(rInner, 0);
-      ctx.lineTo(0, rOuter * 2);
-      ctx.lineTo(-rInner, 0);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(255,128,240,${alpha})`;
-      ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(0, -rOuter * 2);
+        ctx.lineTo(rInner, 0);
+        ctx.lineTo(0, rOuter * 2);
+        ctx.lineTo(-rInner, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(255,128,240,${alpha})`;
+        ctx.fill();
+      }
 
       ctx.beginPath();
       ctx.arc(0, 0, 100, 0, Math.PI * 2);
@@ -412,18 +416,20 @@ export function setup(host, casualMode, hardMode) {
       ctx.restore();
     }
 
-    for (const trail of state.trails) {
-      ctx.save();
-      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
-      ctx.translate(Math.round(trail.x), Math.round(trail.y));
-      ctx.drawImage(
-        trail.image,
-        Math.round(-100 * 0.9),
-        Math.round(-100 * 0.9),
-        Math.round(200 * 0.9),
-        Math.round(200 * 0.9),
-      );
-      ctx.restore();
+    if (!uldm) {
+      for (const trail of state.trails) {
+        ctx.save();
+        ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+        ctx.translate(Math.round(trail.x), Math.round(trail.y));
+        ctx.drawImage(
+          trail.image,
+          Math.round(-100 * 0.9),
+          Math.round(-100 * 0.9),
+          Math.round(200 * 0.9),
+          Math.round(200 * 0.9),
+        );
+        ctx.restore();
+      }
     }
     ctx.drawImage(
       state.enemy,
@@ -433,7 +439,7 @@ export function setup(host, casualMode, hardMode) {
       200,
     );
 
-    if (state.shootCirc < 60) {
+    if (state.shootCirc < 60 && !uldm) {
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x - 5),
@@ -448,62 +454,69 @@ export function setup(host, casualMode, hardMode) {
     }
 
     ctx.fillStyle = `#000`;
-    for (const p of state.pellets) {
-      ctx.globalAlpha = 1;
-      if (p.phase !== "fly" && p.phase != "charge") {
-        const beamLength = 10000;
-        const beamWidth = 90 * p.beamScale;
+    if (!uldm) {
+      for (const p of state.pellets) {
+        ctx.globalAlpha = 1;
+        if (p.phase !== "fly" && p.phase != "charge") {
+          const beamLength = 20000;
+          const beamWidth = 90 * p.beamScale;
 
-        ctx.save();
-        ctx.translate(p.x, p.y);
-
-        if (!p.beamAngle) p.beamAngle = Math.random() * Math.PI * 2;
-
-        ctx.rotate(p.beamAngle);
-
-        const glow = 25;
-        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
-        for (let b = 0; b < beamCount; b++) {
           ctx.save();
-          ctx.rotate((Math.PI * b) / beamCount);
+          ctx.translate(p.x, p.y);
 
-          ctx.fillRect(-beamLength / 2, -beamWidth / 2, beamLength, beamWidth);
-          let grad = ctx.createLinearGradient(
-            0,
-            -beamWidth / 2 - glow,
-            0,
-            -beamWidth / 2,
-          );
-          grad.addColorStop(0, "rgba(255,0,192,0)");
-          grad.addColorStop(1, "rgba(255,0,192,1)");
-          ctx.fillStyle = grad;
-          ctx.fillRect(
-            -beamLength / 2,
-            -beamWidth / 2 - glow,
-            beamLength,
-            glow,
-          );
-          grad = ctx.createLinearGradient(
-            0,
-            beamWidth / 2,
-            0,
-            beamWidth / 2 + glow,
-          );
-          grad.addColorStop(0, "rgba(255,0,192,1)");
-          grad.addColorStop(1, "rgba(255,0,192,0)");
-          ctx.fillStyle = grad;
-          ctx.fillRect(-beamLength / 2, beamWidth / 2, beamLength, glow);
+          if (!p.beamAngle) p.beamAngle = Math.random() * Math.PI * 2;
+
+          ctx.rotate(p.beamAngle);
+
+          const glow = 25;
+          const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+          for (let b = 0; b < beamCount; b++) {
+            ctx.save();
+            ctx.rotate((Math.PI * b) / beamCount);
+
+            ctx.fillRect(
+              -beamLength / 2,
+              -beamWidth / 2,
+              beamLength,
+              beamWidth,
+            );
+            let grad = ctx.createLinearGradient(
+              0,
+              -beamWidth / 2 - glow,
+              0,
+              -beamWidth / 2,
+            );
+            grad.addColorStop(0, "rgba(255,0,192,0)");
+            grad.addColorStop(1, "rgba(255,0,192,1)");
+            ctx.fillStyle = grad;
+            ctx.fillRect(
+              -beamLength / 2,
+              -beamWidth / 2 - glow,
+              beamLength,
+              glow,
+            );
+            grad = ctx.createLinearGradient(
+              0,
+              beamWidth / 2,
+              0,
+              beamWidth / 2 + glow,
+            );
+            grad.addColorStop(0, "rgba(255,0,192,1)");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+            ctx.fillStyle = grad;
+            ctx.fillRect(-beamLength / 2, beamWidth / 2, beamLength, glow);
+
+            ctx.restore();
+          }
 
           ctx.restore();
         }
-
-        ctx.restore();
       }
     }
     for (const p of state.pellets) {
       ctx.globalAlpha = 1;
       if (p.phase !== "fly" && p.phase != "charge") {
-        const beamLength = 10000;
+        const beamLength = 20000;
         const beamWidth = 90 * p.beamScale;
 
         ctx.save();
@@ -531,18 +544,20 @@ export function setup(host, casualMode, hardMode) {
     }
     for (const p of state.pellets) {
       ctx.globalAlpha = 1;
-      for (const t of p.trail) {
-        ctx.beginPath();
-        ctx.arc(
-          Math.round(t.x),
-          Math.round(t.y),
-          (1.25 - t.life / 2) * 40,
-          0,
-          Math.PI * 2,
-        );
-        ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
+      if (!uldm) {
+        for (const t of p.trail) {
+          ctx.beginPath();
+          ctx.arc(
+            Math.round(t.x),
+            Math.round(t.y),
+            (1.25 - t.life / 2) * 40,
+            0,
+            Math.PI * 2,
+          );
+          ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
       }
 
       if (p.phase !== "disappear") {
@@ -550,14 +565,16 @@ export function setup(host, casualMode, hardMode) {
         ctx.translate(p.x, p.y);
         ctx.scale(p.bulletScale, p.bulletScale);
 
-        const glow = 25;
-        const grad = ctx.createRadialGradient(0, 0, 40, 0, 0, 40 + glow);
-        grad.addColorStop(0, "rgba(255,0,192,1)");
-        grad.addColorStop(1, "rgba(255,0,192,0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, 40 + glow, 0, Math.PI * 2);
-        ctx.fill();
+        if (!uldm) {
+          const glow = 25;
+          const grad = ctx.createRadialGradient(0, 0, 40, 0, 0, 40 + glow);
+          grad.addColorStop(0, "rgba(255,0,192,1)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, 40 + glow, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.fillStyle = "#000";
         ctx.strokeStyle = "#f8e";
@@ -571,7 +588,7 @@ export function setup(host, casualMode, hardMode) {
         ctx.restore();
       }
       if (p.phase !== "fly") {
-        const beamLength = 10000;
+        const beamLength = 20000;
         const beamWidth = 90 * p.beamScale;
 
         ctx.save();

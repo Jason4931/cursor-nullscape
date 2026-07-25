@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { moveCamera } from "../main.js";
+import { moveCamera, uldm } from "../main.js";
 
 const TheEyeclosed = new Image();
 TheEyeclosed.src = "./ASSET/Enemies/TheEye/TheEye-closed.png";
@@ -147,7 +147,7 @@ export function setup(host) {
       const dy = mouse.y - s.y;
       const dist = Math.hypot(dx, dy);
 
-      if (dist > 0.001 && !s.destroyed) {
+      if (dist > 0.001 && !s.destroyed && !uldm) {
         const angle = Math.atan2(dy, dx);
 
         const t = Math.min(s.stareTime / s.stareLimit, 1);

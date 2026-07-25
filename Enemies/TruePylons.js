@@ -5,6 +5,7 @@ import {
   despawnCelestial,
   getCameraPos,
   spawnCelestialEnding,
+  uldm,
 } from "../main.js";
 import { pylonLocations } from "./Pylons.js";
 const rawpattern = [
@@ -349,15 +350,17 @@ export function setup(host) {
       const cols = pattern[0].length;
       const width = cols * TILE;
       const height = rows * TILE;
-      const radius = Math.hypot(width, height) * 0.5;
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-      grad.addColorStop(0, "rgba(0,0,0,1)");
-      grad.addColorStop(0.75, "rgba(0,0,0,0.5)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fill();
+      if (!uldm) {
+        const radius = Math.hypot(width, height) * 0.5;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        grad.addColorStop(0, "rgba(0,0,0,1)");
+        grad.addColorStop(0.75, "rgba(0,0,0,0.5)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       const startX = p.x - (cols * TILE) / 2;
       const startY = p.y - (rows * TILE) / 2;
@@ -375,90 +378,92 @@ export function setup(host) {
           );
         }
       }
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const v = pattern[y][x];
-          if (v == 0 || v == 1 || v == 2 || v == 3) continue;
-          ctx.save();
-          ctx.translate(
-            startX + x * TILE + TILE / 2,
-            startY + y * TILE + TILE / 2,
-          );
-          ctx.scale(0.5, 0.5);
-
-          const half = TILE * 1.75;
-          const step = TILE * 0.8;
-
-          const placements = [];
-
-          for (let i = -1; i <= 1; i++) {
-            placements.push([
-              i * step,
-              -half + 10 * Math.abs(i),
-              -Math.PI / 2 + (i * Math.PI) / 6,
-            ]);
-          }
-
-          for (let i = -1; i <= 1; i++) {
-            placements.push([
-              i * step,
-              half - 10 * Math.abs(i),
-              Math.PI / 2 - (i * Math.PI) / 6,
-            ]);
-          }
-
-          for (let i = -1; i <= 1; i++) {
-            placements.push([
-              -half + 10 * Math.abs(i),
-              i * step,
-              Math.PI - (i * Math.PI) / 6,
-            ]);
-          }
-
-          for (let i = -1; i <= 1; i++) {
-            placements.push([
-              half - 10 * Math.abs(i),
-              i * step,
-              0 + (i * Math.PI) / 6,
-            ]);
-          }
-
-          for (const [ox, oy, rot] of placements) {
+      if (!uldm) {
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const v = pattern[y][x];
+            if (v == 0 || v == 1 || v == 2 || v == 3) continue;
             ctx.save();
-            ctx.translate(ox, oy);
-            ctx.rotate(rot + Math.PI / 2);
+            ctx.translate(
+              startX + x * TILE + TILE / 2,
+              startY + y * TILE + TILE / 2,
+            );
+            ctx.scale(0.5, 0.5);
 
-            ctx.beginPath();
-            ctx.moveTo(0, -20);
-            ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
-            ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
-            ctx.closePath();
+            const half = TILE * 1.75;
+            const step = TILE * 0.8;
 
-            ctx.fillStyle = "#900";
-            ctx.fill();
+            const placements = [];
 
-            ctx.strokeStyle = "#700";
-            ctx.lineWidth = 4;
-            ctx.stroke();
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                i * step,
+                -half + 10 * Math.abs(i),
+                -Math.PI / 2 + (i * Math.PI) / 6,
+              ]);
+            }
 
-            ctx.beginPath();
-            ctx.moveTo(0, -20);
-            ctx.lineTo(0, 25);
-            ctx.stroke();
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                i * step,
+                half - 10 * Math.abs(i),
+                Math.PI / 2 - (i * Math.PI) / 6,
+              ]);
+            }
 
-            ctx.beginPath();
-            ctx.moveTo(0, 3);
-            ctx.lineTo(10, -5);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(0, 10);
-            ctx.lineTo(-12, 2);
-            ctx.stroke();
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                -half + 10 * Math.abs(i),
+                i * step,
+                Math.PI - (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (let i = -1; i <= 1; i++) {
+              placements.push([
+                half - 10 * Math.abs(i),
+                i * step,
+                0 + (i * Math.PI) / 6,
+              ]);
+            }
+
+            for (const [ox, oy, rot] of placements) {
+              ctx.save();
+              ctx.translate(ox, oy);
+              ctx.rotate(rot + Math.PI / 2);
+
+              ctx.beginPath();
+              ctx.moveTo(0, -20);
+              ctx.bezierCurveTo(15, -10, 20, 10, 0, 25);
+              ctx.bezierCurveTo(-20, 10, -15, -10, 0, -20);
+              ctx.closePath();
+
+              ctx.fillStyle = "#900";
+              ctx.fill();
+
+              ctx.strokeStyle = "#700";
+              ctx.lineWidth = 4;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.moveTo(0, -20);
+              ctx.lineTo(0, 25);
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.moveTo(0, 3);
+              ctx.lineTo(10, -5);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.moveTo(0, 10);
+              ctx.lineTo(-12, 2);
+              ctx.stroke();
+
+              ctx.restore();
+            }
 
             ctx.restore();
           }
-
-          ctx.restore();
         }
       }
       for (let y = 0; y < rows; y++) {
@@ -512,35 +517,44 @@ export function setup(host) {
         }
       }
 
-      for (const pt of p.particles) {
-        const t = pt.t / pt.life;
-        ctx.save();
-        ctx.globalAlpha = 1 - t;
-        ctx.strokeStyle = pt.out ? "white" : "magenta";
-        ctx.lineWidth = 8;
-        const len = 40;
-        const nx = pt.vx;
-        const ny = pt.vy;
-        const l = Math.hypot(nx, ny) || 1;
-        const dx = (nx / l) * len;
-        const dy = (ny / l) * len;
-        ctx.beginPath();
-        ctx.moveTo(pt.x, pt.y);
-        ctx.lineTo(pt.x - dx, pt.y - dy);
-        ctx.stroke();
-        ctx.restore();
-      }
+      if (!uldm) {
+        for (const pt of p.particles) {
+          const t = pt.t / pt.life;
+          ctx.save();
+          ctx.globalAlpha = 1 - t;
+          ctx.strokeStyle = pt.out ? "white" : "magenta";
+          ctx.lineWidth = 8;
+          const len = 40;
+          const nx = pt.vx;
+          const ny = pt.vy;
+          const l = Math.hypot(nx, ny) || 1;
+          const dx = (nx / l) * len;
+          const dy = (ny / l) * len;
+          ctx.beginPath();
+          ctx.moveTo(pt.x, pt.y);
+          ctx.lineTo(pt.x - dx, pt.y - dy);
+          ctx.stroke();
+          ctx.restore();
+        }
 
-      const t = p.charging || p.charged ? p.charge / 10 : p.charge / 11;
-      const glowradius = Math.hypot(width, height) * 0.25 * t;
-      const glowgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowradius);
-      glowgrad.addColorStop(0, "rgba(255,0,255,0.5)");
-      glowgrad.addColorStop(0.75, "rgba(255,0,255,0.25)");
-      glowgrad.addColorStop(1, "rgba(255,0,255,0)");
-      ctx.fillStyle = glowgrad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, glowradius, 0, Math.PI * 2);
-      ctx.fill();
+        const t = p.charging || p.charged ? p.charge / 10 : p.charge / 11;
+        const glowradius = Math.hypot(width, height) * 0.25 * t;
+        const glowgrad = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          cx,
+          cy,
+          glowradius,
+        );
+        glowgrad.addColorStop(0, "rgba(255,0,255,0.5)");
+        glowgrad.addColorStop(0.75, "rgba(255,0,255,0.25)");
+        glowgrad.addColorStop(1, "rgba(255,0,255,0)");
+        ctx.fillStyle = glowgrad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, glowradius, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       const time = performance.now() / 1000;
       const rot = time * 0.5;

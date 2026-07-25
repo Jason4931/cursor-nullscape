@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, moveCamera, playSound } from "../main.js";
+import { pickRandomPlaced4or5, moveCamera, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Cadence.png";
@@ -222,23 +222,25 @@ export function setup(host, hardMode, deafMode) {
       const cx = Math.round(x1 + ux * d);
       const cy = Math.round(y1 + uy * d);
 
-      const grad = ctx.createRadialGradient(
-        cx - Math.round(LINK_R * 0.4),
-        cy - Math.round(LINK_R * 0.4),
-        1,
-        cx,
-        cy,
-        LINK_R,
-      );
-      grad.addColorStop(0, "#fff0");
-      grad.addColorStop(0.6, "#fff0");
-      grad.addColorStop(0.61, "#8a8a8a");
-      grad.addColorStop(1, "#8a8a8a");
+      if (!uldm) {
+        const grad = ctx.createRadialGradient(
+          cx - Math.round(LINK_R * 0.4),
+          cy - Math.round(LINK_R * 0.4),
+          1,
+          cx,
+          cy,
+          LINK_R,
+        );
+        grad.addColorStop(0, "#fff0");
+        grad.addColorStop(0.6, "#fff0");
+        grad.addColorStop(0.61, "#8a8a8a");
+        grad.addColorStop(1, "#8a8a8a");
 
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, LINK_R, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, LINK_R, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       const dx2 = Math.round(cx + ux * (LINK_R + DASH_W / 2));
       const dy2 = Math.round(cy + uy * (LINK_R + DASH_W / 2));
@@ -287,14 +289,16 @@ export function setup(host, hardMode, deafMode) {
       drawChain(ctx, sx, sy, it.x, it.y);
     }
 
-    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 150);
-    grad.addColorStop(0, "rgba(0,0,0,1)");
-    grad.addColorStop(0.6, "rgba(0,0,0,1)");
-    grad.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 150, 0, Math.PI * 2);
-    ctx.fill();
+    if (!uldm) {
+      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 150);
+      grad.addColorStop(0, "rgba(0,0,0,1)");
+      grad.addColorStop(0.6, "rgba(0,0,0,1)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 150, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.drawImage(enemy, sx - 100, sy - 100, 200, 200);
 
@@ -310,42 +314,48 @@ export function setup(host, hardMode, deafMode) {
 
         ctx.save();
         ctx.globalAlpha = alpha;
-        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
-        g.addColorStop(0, "rgba(0,0,0,1)");
-        g.addColorStop(0.4, "rgba(0,0,0,1)");
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
-        ctx.fill();
+        if (!uldm) {
+          const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+          g.addColorStop(0, "rgba(0,0,0,1)");
+          g.addColorStop(0.4, "rgba(0,0,0,1)");
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(ix, iy, 50, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
         ctx.restore();
 
-        ctx.save();
-        ctx.globalAlpha = alpha * 0.5;
-        ctx.translate(ix, iy);
-        ctx.beginPath();
-        ctx.moveTo(0, -rOuter);
-        ctx.lineTo(rInner, -rInner);
-        ctx.lineTo(rOuter, 0);
-        ctx.lineTo(rInner, rInner);
-        ctx.lineTo(0, rOuter);
-        ctx.lineTo(-rInner, rInner);
-        ctx.lineTo(-rOuter, 0);
-        ctx.lineTo(-rInner, -rInner);
-        ctx.closePath();
-        ctx.fillStyle = "white";
-        ctx.fill();
-        ctx.restore();
+        if (!uldm) {
+          ctx.save();
+          ctx.globalAlpha = alpha * 0.5;
+          ctx.translate(ix, iy);
+          ctx.beginPath();
+          ctx.moveTo(0, -rOuter);
+          ctx.lineTo(rInner, -rInner);
+          ctx.lineTo(rOuter, 0);
+          ctx.lineTo(rInner, rInner);
+          ctx.lineTo(0, rOuter);
+          ctx.lineTo(-rInner, rInner);
+          ctx.lineTo(-rOuter, 0);
+          ctx.lineTo(-rInner, -rInner);
+          ctx.closePath();
+          ctx.fillStyle = "white";
+          ctx.fill();
+          ctx.restore();
+        }
       } else {
-        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
-        g.addColorStop(0, "rgba(0,0,0,1)");
-        g.addColorStop(0.4, "rgba(0,0,0,1)");
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
-        ctx.fill();
+        if (!uldm) {
+          const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+          g.addColorStop(0, "rgba(0,0,0,1)");
+          g.addColorStop(0.4, "rgba(0,0,0,1)");
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(ix, iy, 50, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
       }
     }

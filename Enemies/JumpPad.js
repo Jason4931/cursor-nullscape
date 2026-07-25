@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, moveCamera, jumppadHit } from "../main.js";
+import { TILE, moveCamera, jumppadHit, uldm } from "../main.js";
 
 const jumppad = new Image();
 jumppad.src = "./ASSET/Misc/Jumppad.png";
@@ -97,18 +97,20 @@ export function setup(host, red = false) {
           jpSize,
         );
 
-        ctx.save();
-        ctx.globalAlpha = p.opacity * 0.5;
-        const angle = (Math.random() - 0.5) * 0.2;
-        ctx.translate(
-          Math.round(p.x + PAD_SIZE / 2),
-          Math.round(p.y + PAD_SIZE / 2),
-        );
-        ctx.rotate(angle);
-        ctx.translate(-Math.round(PAD_SIZE / 2), -Math.round(PAD_SIZE / 2));
-        ctx.fillStyle = Math.random() > 0.5 ? "#00f" : "#3aa9ff";
-        ctx.fillRect(0, 0, PAD_SIZE, PAD_SIZE);
-        ctx.restore();
+        if (!uldm) {
+          ctx.save();
+          ctx.globalAlpha = p.opacity * 0.5;
+          const angle = (Math.random() - 0.5) * 0.2;
+          ctx.translate(
+            Math.round(p.x + PAD_SIZE / 2),
+            Math.round(p.y + PAD_SIZE / 2),
+          );
+          ctx.rotate(angle);
+          ctx.translate(-Math.round(PAD_SIZE / 2), -Math.round(PAD_SIZE / 2));
+          ctx.fillStyle = Math.random() > 0.5 ? "#00f" : "#3aa9ff";
+          ctx.fillRect(0, 0, PAD_SIZE, PAD_SIZE);
+          ctx.restore();
+        }
       } else {
         const grad = ctx.createRadialGradient(
           p.x + PAD_SIZE / 2,
@@ -131,25 +133,27 @@ export function setup(host, red = false) {
         );
         ctx.fill();
 
-        ctx.translate(p.x + PAD_SIZE / 2, p.y + PAD_SIZE / 2);
-        const r = PAD_SIZE / 4;
-        const pts = [];
-        for (let i = 0; i < 6; i++) {
-          const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
-          pts.push([Math.cos(a) * r, Math.sin(a) * r]);
-        }
-        const cx0 = 0;
-        const cy0 = 0;
-        for (let i = 0; i < 6; i++) {
-          const p1 = pts[i];
-          const p2 = pts[(i + 1) % 6];
-          ctx.beginPath();
-          ctx.moveTo(cx0, cy0);
-          ctx.lineTo(p1[0], p1[1]);
-          ctx.lineTo(p2[0], p2[1]);
-          ctx.closePath();
-          ctx.fillStyle = "#f44";
-          ctx.fill();
+        if (!uldm) {
+          ctx.translate(p.x + PAD_SIZE / 2, p.y + PAD_SIZE / 2);
+          const r = PAD_SIZE / 4;
+          const pts = [];
+          for (let i = 0; i < 6; i++) {
+            const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+            pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+          }
+          const cx0 = 0;
+          const cy0 = 0;
+          for (let i = 0; i < 6; i++) {
+            const p1 = pts[i];
+            const p2 = pts[(i + 1) % 6];
+            ctx.beginPath();
+            ctx.moveTo(cx0, cy0);
+            ctx.lineTo(p1[0], p1[1]);
+            ctx.lineTo(p2[0], p2[1]);
+            ctx.closePath();
+            ctx.fillStyle = "#f44";
+            ctx.fill();
+          }
         }
       }
     }

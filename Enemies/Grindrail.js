@@ -1,5 +1,5 @@
 import { mouse } from "../entityHost.js";
-import { setGrindrailScale } from "../main.js";
+import { setGrindrailScale, uldm } from "../main.js";
 
 function generatePath(canvas) {
   const points = [];
@@ -119,59 +119,61 @@ export function setup(host) {
 
     ctx.stroke();
 
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 4;
+    if (!uldm) {
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 4;
 
-    const STEPS = 16;
+      const STEPS = 16;
 
-    let startX = path[0].x;
-    let startY = path[0].y;
+      let startX = path[0].x;
+      let startY = path[0].y;
 
-    for (let i = 0; i < path.length - 1; i++) {
-      const p0 = path[i];
-      const p1 = path[i + 1];
+      for (let i = 0; i < path.length - 1; i++) {
+        const p0 = path[i];
+        const p1 = path[i + 1];
 
-      const endX = (p0.x + p1.x) / 2;
-      const endY = (p0.y + p1.y) / 2;
+        const endX = (p0.x + p1.x) / 2;
+        const endY = (p0.y + p1.y) / 2;
 
-      const controlX = p0.x;
-      const controlY = p0.y;
+        const controlX = p0.x;
+        const controlY = p0.y;
 
-      for (let j = 0; j <= STEPS; j++) {
-        if (j % 2 !== 0) continue;
+        for (let j = 0; j <= STEPS; j++) {
+          if (j % 2 !== 0) continue;
 
-        const t = j / STEPS;
+          const t = j / STEPS;
 
-        const x =
-          (1 - t) * (1 - t) * startX +
-          2 * (1 - t) * t * controlX +
-          t * t * endX;
+          const x =
+            (1 - t) * (1 - t) * startX +
+            2 * (1 - t) * t * controlX +
+            t * t * endX;
 
-        const y =
-          (1 - t) * (1 - t) * startY +
-          2 * (1 - t) * t * controlY +
-          t * t * endY;
+          const y =
+            (1 - t) * (1 - t) * startY +
+            2 * (1 - t) * t * controlY +
+            t * t * endY;
 
-        const dx =
-          2 * (1 - t) * (controlX - startX) + 2 * t * (endX - controlX);
+          const dx =
+            2 * (1 - t) * (controlX - startX) + 2 * t * (endX - controlX);
 
-        const dy =
-          2 * (1 - t) * (controlY - startY) + 2 * t * (endY - controlY);
+          const dy =
+            2 * (1 - t) * (controlY - startY) + 2 * t * (endY - controlY);
 
-        const len = Math.hypot(dx, dy);
-        if (!len) continue;
+          const len = Math.hypot(dx, dy);
+          if (!len) continue;
 
-        const px = -dy / len;
-        const py = dx / len;
+          const px = -dy / len;
+          const py = dx / len;
 
-        ctx.beginPath();
-        ctx.moveTo(x - px * 6, y - py * 6);
-        ctx.lineTo(x + px * 6, y + py * 6);
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x - px * 6, y - py * 6);
+          ctx.lineTo(x + px * 6, y + py * 6);
+          ctx.stroke();
+        }
+
+        startX = endX;
+        startY = endY;
       }
-
-      startX = endX;
-      startY = endY;
     }
 
     ctx.restore();

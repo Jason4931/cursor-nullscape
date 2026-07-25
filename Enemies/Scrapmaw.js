@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Scrapmaw.png";
@@ -440,7 +440,7 @@ export function setup(host, casualMode, hardMode) {
 
       ctx.restore();
     }
-    if (state.ellipseFX.length && state.ellipseBase) {
+    if (state.ellipseFX.length && state.ellipseBase && !uldm) {
       const { cx, cy, nx, ny } = state.ellipseBase;
 
       const perpX = -ny;

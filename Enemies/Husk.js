@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, soundStopped } from "../main.js";
+import { playSound, soundStopped, uldm } from "../main.js";
 
 const Huskback = [new Image()];
 Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
@@ -276,22 +276,24 @@ export function setup(host, stack, hardMode) {
     }
     for (const p of positions) {
       if (!state.whiteInit) {
-        const grad = ctx.createRadialGradient(
-          Math.round(p.x),
-          Math.round(p.y),
-          0,
-          Math.round(p.x),
-          Math.round(p.y),
-          state.size,
-        );
+        if (!uldm) {
+          const grad = ctx.createRadialGradient(
+            Math.round(p.x),
+            Math.round(p.y),
+            0,
+            Math.round(p.x),
+            Math.round(p.y),
+            state.size,
+          );
 
-        grad.addColorStop(0, "rgba(255,255,255,0.75)");
-        grad.addColorStop(1, "rgba(255,255,255,0)");
+          grad.addColorStop(0, "rgba(255,255,255,0.75)");
+          grad.addColorStop(1, "rgba(255,255,255,0)");
 
-        ctx.beginPath();
-        ctx.arc(Math.round(p.x), Math.round(p.y), state.size, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
+          ctx.beginPath();
+          ctx.arc(Math.round(p.x), Math.round(p.y), state.size, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
 
         const height = state.size;
         const width = state.size;
@@ -303,28 +305,30 @@ export function setup(host, stack, hardMode) {
           height,
         );
       } else {
-        const grad = ctx.createRadialGradient(
-          Math.round(p.x),
-          Math.round(p.y),
-          0,
-          Math.round(p.x),
-          Math.round(p.y),
-          state.size * 0.75,
-        );
+        if (!uldm) {
+          const grad = ctx.createRadialGradient(
+            Math.round(p.x),
+            Math.round(p.y),
+            0,
+            Math.round(p.x),
+            Math.round(p.y),
+            state.size * 0.75,
+          );
 
-        grad.addColorStop(0, "rgba(255,255,255,0.1)");
-        grad.addColorStop(1, "rgba(255,255,255,0)");
+          grad.addColorStop(0, "rgba(255,255,255,0.1)");
+          grad.addColorStop(1, "rgba(255,255,255,0)");
 
-        ctx.beginPath();
-        ctx.arc(
-          Math.round(p.x),
-          Math.round(p.y),
-          state.size * 0.75,
-          0,
-          Math.PI * 2,
-        );
-        ctx.fillStyle = grad;
-        ctx.fill();
+          ctx.beginPath();
+          ctx.arc(
+            Math.round(p.x),
+            Math.round(p.y),
+            state.size * 0.75,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
 
         const height = state.size * 1.25;
         const width = state.size * (2 / 3) * 1.25;

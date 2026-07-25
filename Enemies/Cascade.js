@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -79,7 +80,7 @@ export function setup(host, casualMode, hardMode) {
   }
   function drawPattern1(ctx) {
     for (let b of p1.bullets) {
-      if (b.trail) {
+      if (b.trail && !uldm) {
         for (let i = 0; i < b.trail.length; i++) {
           const t = b.trail[i];
           const alpha = i / b.trail.length;
@@ -170,7 +171,7 @@ export function setup(host, casualMode, hardMode) {
   }
   function drawPattern2(ctx) {
     for (let b of p2.bullets) {
-      if (b.trail) {
+      if (b.trail && !uldm) {
         for (let i = 0; i < b.trail.length; i++) {
           const t = b.trail[i];
           const alpha = i / b.trail.length;
@@ -343,12 +344,14 @@ export function setup(host, casualMode, hardMode) {
     );
     ctx.fillStyle = "white";
     ctx.fill();
-    for (const p of burst.particles) {
-      ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
-      ctx.beginPath();
-      ctx.arc(p.x - burst.x, p.y - burst.y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.fill();
+    if (!uldm) {
+      for (const p of burst.particles) {
+        ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+        ctx.beginPath();
+        ctx.arc(p.x - burst.x, p.y - burst.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
     }
     ctx.globalAlpha = 1;
     ctx.restore();

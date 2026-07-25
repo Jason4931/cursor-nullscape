@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { ability, getCameraPos, playSound, slowness } from "../main.js";
+import { ability, getCameraPos, playSound, slowness, uldm } from "../main.js";
 import { operatorActive } from "./Operator.js";
 
 const Kolona_Eyes = [];
@@ -253,7 +253,7 @@ export function setup(host, casualMode) {
       }
     }
 
-    if (slowness) {
+    if (slowness && !uldm) {
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.drawImage(
@@ -328,7 +328,8 @@ export function setup(host, casualMode) {
     if (
       state.phase === "intro" &&
       state.timer >= 0.25 &&
-      state.timer <= INTRO_TIME - 0.25
+      state.timer <= INTRO_TIME - 0.25 &&
+      !uldm
     ) {
       ctx.save();
       ctx.translate(

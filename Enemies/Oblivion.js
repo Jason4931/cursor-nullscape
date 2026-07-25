@@ -6,6 +6,7 @@ import {
   getCameraPos,
   TILE,
   playSound,
+  uldm,
 } from "../main.js";
 const Oblivion_Convergence_Particles = new Image();
 Oblivion_Convergence_Particles.src =
@@ -137,7 +138,7 @@ export function setup(host, showFloor) {
     if (state.phase == 2) return;
     ctx.save();
     const cam = getCameraPos();
-    if (state.phase === 0) {
+    if (state.phase === 0 && !uldm) {
       const t = Math.min(state.offFloorTime / 0.5, 1);
       const alpha = t;
 

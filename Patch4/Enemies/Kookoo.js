@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { ability, getCameraPos, playSound, slowness } from "../main.js";
+import { ability, getCameraPos, playSound, slowness, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Kookoo.png";
@@ -268,7 +268,7 @@ export function setup(host) {
 
     ctx.restore();
 
-    if (state.phase === "intro") {
+    if (state.phase === "intro" && !uldm) {
       const blinkOn = Math.floor(state.timer / 0.25) % 2 === 0;
 
       if (blinkOn) {

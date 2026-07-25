@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, getCameraPos, soundStopped } from "../main.js";
+import { playSound, getCameraPos, soundStopped, uldm } from "../main.js";
 
 const NIL = [];
 for (let i = 1; i <= 4; i++) {
@@ -320,7 +320,7 @@ export function setup(host, deafMode) {
 
     const maxRadius = 500;
 
-    if (dist <= maxRadius && deafMode) {
+    if (dist <= maxRadius && deafMode && !uldm) {
       const t = 1 - dist / maxRadius; // 0 → 1 as closer
       const opacity = t * 0.6; // max intensity (adjust if too strong)
 

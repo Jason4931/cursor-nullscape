@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 import { operatorActive } from "./Operator.js";
 
 const enemy = new Image();
@@ -398,7 +398,7 @@ export function setup(host, casualMode, hardMode) {
   function drawSword(ctx, sword) {
     ctx.globalAlpha = sword.opacity;
 
-    if (sword.flash > 0) {
+    if (sword.flash > 0 && !uldm) {
       ctx.save();
       ctx.translate(Math.round(sword.flashX), Math.round(sword.flashY));
       ctx.rotate(sword.angle + Math.PI);
@@ -439,7 +439,7 @@ export function setup(host, casualMode, hardMode) {
     ctx.translate(Math.round(sword.x), Math.round(sword.y));
     ctx.rotate(sword.angle + Math.PI);
 
-    if (sword.phase === "spawn" && sword.timer <= 0.25) {
+    if (sword.phase === "spawn" && sword.timer <= 0.25 && !uldm) {
       ctx.save();
       ctx.globalAlpha = 1;
       ctx.fillStyle = "black";
@@ -481,41 +481,43 @@ export function setup(host, casualMode, hardMode) {
 
       const t = performance.now() * 0.001;
 
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.globalAlpha *= 0.25;
-      ctx.strokeStyle = "#b300ff";
-      ctx.lineWidth = 3;
+      if (!uldm) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.globalAlpha *= 0.25;
+        ctx.strokeStyle = "#b300ff";
+        ctx.lineWidth = 3;
 
-      ctx.beginPath();
-      ctx.arc(0, 0, 55, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(0, 0, 60, 0, Math.PI * 2);
-      ctx.stroke();
-
-      function drawHex(radius) {
         ctx.beginPath();
-        for (let i = 0; i < 4; i++) {
-          const ang = (i / 4) * Math.PI * 2;
-          const x = Math.cos(ang) * radius;
-          const y = Math.sin(ang) * radius;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
+        ctx.arc(0, 0, 55, 0, Math.PI * 2);
         ctx.stroke();
-      }
-      ctx.save();
-      ctx.rotate(t);
-      drawHex(50);
-      ctx.restore();
-      ctx.save();
-      ctx.rotate(t + Math.PI / 4);
-      drawHex(50);
-      ctx.restore();
+        ctx.beginPath();
+        ctx.arc(0, 0, 60, 0, Math.PI * 2);
+        ctx.stroke();
 
-      ctx.restore();
+        function drawHex(radius) {
+          ctx.beginPath();
+          for (let i = 0; i < 4; i++) {
+            const ang = (i / 4) * Math.PI * 2;
+            const x = Math.cos(ang) * radius;
+            const y = Math.sin(ang) * radius;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+        ctx.save();
+        ctx.rotate(t);
+        drawHex(50);
+        ctx.restore();
+        ctx.save();
+        ctx.rotate(t + Math.PI / 4);
+        drawHex(50);
+        ctx.restore();
+
+        ctx.restore();
+      }
 
       ctx.drawImage(
         enemy,

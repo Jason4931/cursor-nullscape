@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound } from "../main.js";
+import { getCameraPos, playSound, uldm } from "../main.js";
 
 const ICBM = [];
 for (let i = 1; i <= 7; i++) {
@@ -224,24 +224,27 @@ export function setup(host, hardMode) {
       ctx.drawImage(state.enemy, -Math.round(s / 2), -Math.round(s / 2), s, s);
       ctx.restore();
 
-      ctx.save();
-      ctx.globalAlpha = state.explodeOpacity;
-      ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.scale(1 - state.timer, 1 - state.timer);
-      ctx.drawImage(
-        explode,
-        -Math.round(s * 1.5),
-        -Math.round(s * 1.5),
-        s * 3,
-        s * 3,
-      );
-      ctx.restore();
+      if (!uldm) {
+        ctx.save();
+        ctx.globalAlpha = state.explodeOpacity;
+        ctx.translate(Math.round(state.x), Math.round(state.y));
+        ctx.scale(1 - state.timer, 1 - state.timer);
+        ctx.drawImage(
+          explode,
+          -Math.round(s * 1.5),
+          -Math.round(s * 1.5),
+          s * 3,
+          s * 3,
+        );
+        ctx.restore();
+      }
     }
 
     if (
       nuclearBombActive[0] &&
       state.phase === "idle" &&
-      state.idleDuration > 10
+      state.idleDuration > 10 &&
+      !uldm
     ) {
       ctx.save();
       ctx.globalAlpha = 0.5 * Math.max(0, Math.min(1, 8 - state.timer * 2));

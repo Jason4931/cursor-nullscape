@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, moveCamera } from "../main.js";
+import { TILE, moveCamera, uldm } from "../main.js";
 
 export function setup(host) {
   const state = {
@@ -130,7 +130,7 @@ export function setup(host) {
           ctx.restore();
         }
 
-        if (p.active) {
+        if (p.active && !uldm) {
           const dx = mouse.x - cx;
           const dy = mouse.y - cy;
 

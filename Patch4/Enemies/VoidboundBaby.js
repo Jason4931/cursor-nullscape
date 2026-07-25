@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundBaby.png";
@@ -250,18 +250,20 @@ export function setup(host, hardMode) {
     const drawY = Math.round(state.y + (Math.random() - 0.5) * jitter * 2);
     const rot = (Math.random() - 0.5) * rotJitter * 2;
 
-    for (const trail of state.trails) {
-      ctx.save();
-      ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
-      ctx.translate(Math.round(trail.x), Math.round(trail.y));
-      ctx.drawImage(
-        enemy,
-        Math.round((-state.size / 2) * 0.75),
-        Math.round((-state.size / 2) * 0.75),
-        Math.round(state.size * 0.75),
-        Math.round(state.size * 0.75),
-      );
-      ctx.restore();
+    if (!uldm) {
+      for (const trail of state.trails) {
+        ctx.save();
+        ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
+        ctx.translate(Math.round(trail.x), Math.round(trail.y));
+        ctx.drawImage(
+          enemy,
+          Math.round((-state.size / 2) * 0.75),
+          Math.round((-state.size / 2) * 0.75),
+          Math.round(state.size * 0.75),
+          Math.round(state.size * 0.75),
+        );
+        ctx.restore();
+      }
     }
     ctx.save();
     ctx.translate(drawX, drawY);

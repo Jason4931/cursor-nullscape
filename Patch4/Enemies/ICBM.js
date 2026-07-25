@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
@@ -193,18 +193,20 @@ export function setup(host, hardMode) {
       ctx.drawImage(missile, -Math.round(s / 2), -Math.round(s / 2), s, s);
       ctx.restore();
 
-      ctx.save();
-      ctx.globalAlpha = state.explodeOpacity;
-      ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.scale(1 - state.timer, 1 - state.timer);
-      ctx.drawImage(
-        explode,
-        -Math.round(s * 1.5),
-        -Math.round(s * 1.5),
-        s * 3,
-        s * 3,
-      );
-      ctx.restore();
+      if (!uldm) {
+        ctx.save();
+        ctx.globalAlpha = state.explodeOpacity;
+        ctx.translate(Math.round(state.x), Math.round(state.y));
+        ctx.scale(1 - state.timer, 1 - state.timer);
+        ctx.drawImage(
+          explode,
+          -Math.round(s * 1.5),
+          -Math.round(s * 1.5),
+          s * 3,
+          s * 3,
+        );
+        ctx.restore();
+      }
     }
 
     ctx.restore();

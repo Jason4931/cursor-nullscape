@@ -4,6 +4,7 @@ import {
   setVoidbreakerActive,
   voidbreakerCount,
   playSound,
+  uldm,
 } from "../main.js";
 
 const enemy = new Image();
@@ -273,7 +274,7 @@ export function setup(host, stack, hardMode) {
         );
         ctx.restore();
 
-        if (state.sword.flash > 0) {
+        if (state.sword.flash > 0 && !uldm) {
           ctx.save();
           ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
           ctx.rotate(state.sword.angle + 0.25 * Math.PI);
@@ -314,7 +315,7 @@ export function setup(host, stack, hardMode) {
         );
         ctx.restore();
 
-        if (state.sword2.flash > 0) {
+        if (state.sword2.flash > 0 && !uldm) {
           ctx.save();
           ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
           ctx.rotate(state.sword2.angle + 0.25 * Math.PI);
@@ -564,7 +565,7 @@ export function setup(host, stack, hardMode) {
       );
       ctx.restore();
 
-      if (state.flash > 0) {
+      if (state.flash > 0 && !uldm) {
         ctx.save();
         ctx.translate(Math.round(state.flashX), Math.round(state.flashY));
         ctx.rotate(state.sword.angle + 0.25 * Math.PI);
@@ -605,7 +606,7 @@ export function setup(host, stack, hardMode) {
         );
         ctx.restore();
 
-        if (state.flash2 > 0) {
+        if (state.flash2 > 0 && !uldm) {
           ctx.save();
           ctx.translate(Math.round(state.flashX2), Math.round(state.flashY2));
           ctx.rotate(state.sword2.angle + 0.25 * Math.PI);

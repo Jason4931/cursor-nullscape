@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 export function setup(host) {
   const state = {
@@ -134,42 +134,44 @@ export function setup(host) {
       ctx.arc(Math.round(c.x), Math.round(c.y), r, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.save();
-      ctx.translate(Math.round(c.x), Math.round(c.y));
-      ctx.rotate(Math.random() * Math.PI * 2);
-      ctx.fillStyle = "rgba(128, 0, 128, 1)";
-      ctx.fillRect(-r, -2, r * 2, 1);
-      ctx.restore();
-
-      if (state.outlineScale > 0) {
-        const outlineR = Math.round(Math.min(state.outlineScale, r));
-        const g = ctx.createRadialGradient(
-          Math.round(c.x),
-          Math.round(c.y),
-          Math.round(outlineR * 0.1),
-          Math.round(c.x),
-          Math.round(c.y),
-          outlineR,
-        );
-        g.addColorStop(0.94, "rgba(255,255,255,0)");
-        g.addColorStop(0.95, "rgba(255,255,255,0.5)");
-        g.addColorStop(1, "rgba(255,255,255,0.5)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(Math.round(c.x), Math.round(c.y), outlineR, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      if (state.flashTime >= 0) {
+      if (!uldm) {
         ctx.save();
-        const t = state.flashTime / 0.5;
-        const flashR = Math.round(r * (1 + 0.16 * (1 - Math.pow(1 - t, 2))));
-        ctx.globalAlpha = (1 - t) * 0.25 * state.opacity;
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.arc(Math.round(c.x), Math.round(c.y), flashR, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.translate(Math.round(c.x), Math.round(c.y));
+        ctx.rotate(Math.random() * Math.PI * 2);
+        ctx.fillStyle = "rgba(128, 0, 128, 1)";
+        ctx.fillRect(-r, -2, r * 2, 1);
         ctx.restore();
+
+        if (state.outlineScale > 0) {
+          const outlineR = Math.round(Math.min(state.outlineScale, r));
+          const g = ctx.createRadialGradient(
+            Math.round(c.x),
+            Math.round(c.y),
+            Math.round(outlineR * 0.1),
+            Math.round(c.x),
+            Math.round(c.y),
+            outlineR,
+          );
+          g.addColorStop(0.94, "rgba(255,255,255,0)");
+          g.addColorStop(0.95, "rgba(255,255,255,0.5)");
+          g.addColorStop(1, "rgba(255,255,255,0.5)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(Math.round(c.x), Math.round(c.y), outlineR, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        if (state.flashTime >= 0) {
+          ctx.save();
+          const t = state.flashTime / 0.5;
+          const flashR = Math.round(r * (1 + 0.16 * (1 - Math.pow(1 - t, 2))));
+          ctx.globalAlpha = (1 - t) * 0.25 * state.opacity;
+          ctx.fillStyle = "white";
+          ctx.beginPath();
+          ctx.arc(Math.round(c.x), Math.round(c.y), flashR, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
       }
     }
 

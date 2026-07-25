@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Guardian.png";
@@ -186,14 +186,16 @@ export function setup(host, hardMode) {
       ctx.fillStyle = `rgba(255,130,220,${alpha})`;
       ctx.fill();
 
-      ctx.beginPath();
-      ctx.moveTo(0, -rInner);
-      ctx.lineTo(rInner, 0);
-      ctx.lineTo(0, rInner);
-      ctx.lineTo(-rInner, 0);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(210,140,255,${alpha})`;
-      ctx.fill();
+      if (!uldm) {
+        ctx.beginPath();
+        ctx.moveTo(0, -rInner);
+        ctx.lineTo(rInner, 0);
+        ctx.lineTo(0, rInner);
+        ctx.lineTo(-rInner, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(210,140,255,${alpha})`;
+        ctx.fill();
+      }
     }
 
     ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;

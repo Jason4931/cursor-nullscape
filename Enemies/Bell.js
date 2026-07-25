@@ -7,6 +7,7 @@ import {
   bellHit,
   moveCamera,
   getCameraPos,
+  uldm,
 } from "../main.js";
 
 const Bell_New_Idle_Animated = [];
@@ -251,7 +252,7 @@ export function setup(host, hardMode, immunebell) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    if (state.circleScale > 0) {
+    if (state.circleScale > 0 && !uldm) {
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x),
@@ -293,11 +294,16 @@ export function setup(host, hardMode, immunebell) {
       ctx.save();
       ctx.globalAlpha = alpha;
 
-      for (const [ox, oy] of offsets) {
-        ctx.drawImage(ctx.canvas, ox, oy);
+      if (!uldm) {
+        for (const [ox, oy] of offsets) {
+          ctx.drawImage(ctx.canvas, ox, oy);
+        }
       }
 
-      if (hardMode) {
+      if (hardMode || uldm) {
+        if (uldm) {
+          ctx.globalAlpha *= 2;
+        }
         ctx.fillStyle = "black";
         ctx.fillRect(
           cam.x,

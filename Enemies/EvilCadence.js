@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, moveCamera, playSound } from "../main.js";
+import { pickRandomPlaced4or5, moveCamera, playSound, uldm } from "../main.js";
 
 const Cadence_idle_patch_5 = [];
 for (let i = 1; i <= 12; i++) {
@@ -278,26 +278,28 @@ export function setup(host, hardMode) {
     ctx.fillStyle = grad;
     ctx.fillRect(0, -ropeWidth / 2, dist, ropeWidth);
 
-    const twistSpacing = 6;
-    const twistWidth = ropeWidth * 0.15;
+    if (!uldm) {
+      const twistSpacing = 6;
+      const twistWidth = ropeWidth * 0.15;
 
-    for (let d = 0; d < dist; d += twistSpacing) {
-      const t = d / dist;
+      for (let d = 0; d < dist; d += twistSpacing) {
+        const t = d / dist;
 
-      const offset = Math.sin(d * 0.2) * (ropeWidth * 0.25);
+        const offset = Math.sin(d * 0.2) * (ropeWidth * 0.25);
 
-      const twistGrad = ctx.createLinearGradient(
-        d,
-        offset - twistWidth,
-        d,
-        offset + twistWidth,
-      );
-      twistGrad.addColorStop(0, "rgba(255,0,0,0)");
-      twistGrad.addColorStop(0.5, "rgba(255,0,0,0.25)");
-      twistGrad.addColorStop(1, "rgba(255,0,0,0)");
+        const twistGrad = ctx.createLinearGradient(
+          d,
+          offset - twistWidth,
+          d,
+          offset + twistWidth,
+        );
+        twistGrad.addColorStop(0, "rgba(255,0,0,0)");
+        twistGrad.addColorStop(0.5, "rgba(255,0,0,0.25)");
+        twistGrad.addColorStop(1, "rgba(255,0,0,0)");
 
-      ctx.fillStyle = twistGrad;
-      ctx.fillRect(d, offset - twistWidth, twistSpacing, twistWidth * 2);
+        ctx.fillStyle = twistGrad;
+        ctx.fillRect(d, offset - twistWidth, twistSpacing, twistWidth * 2);
+      }
     }
 
     ctx.restore();
@@ -321,14 +323,16 @@ export function setup(host, hardMode) {
       drawChain(ctx, sx, sy, it.x, it.y);
     }
 
-    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 150);
-    grad.addColorStop(0, "rgba(128,0,0,1)");
-    grad.addColorStop(0.6, "rgba(128,0,0,1)");
-    grad.addColorStop(1, "rgba(128,0,0,0)");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 150, 0, Math.PI * 2);
-    ctx.fill();
+    if (!uldm) {
+      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 150);
+      grad.addColorStop(0, "rgba(128,0,0,1)");
+      grad.addColorStop(0.6, "rgba(128,0,0,1)");
+      grad.addColorStop(1, "rgba(128,0,0,0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 150, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     const size = state.layers == CadenceEnragedPatch5 ? 400 : 200;
     ctx.save();
@@ -358,43 +362,49 @@ export function setup(host, hardMode) {
 
         ctx.save();
         ctx.globalAlpha = alpha;
-        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
-        g.addColorStop(0, "rgba(128,0,0,1)");
-        g.addColorStop(0.4, "rgba(128,0,0,1)");
-        g.addColorStop(1, "rgba(128,0,0,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
-        ctx.fill();
+        if (!uldm) {
+          const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+          g.addColorStop(0, "rgba(128,0,0,1)");
+          g.addColorStop(0.4, "rgba(128,0,0,1)");
+          g.addColorStop(1, "rgba(128,0,0,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(ix, iy, 50, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.filter = "sepia(100%) saturate(3000%) hue-rotate(-5deg)";
         ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
         ctx.restore();
 
-        ctx.save();
-        ctx.globalAlpha = alpha * 0.5;
-        ctx.translate(ix, iy);
-        ctx.beginPath();
-        ctx.moveTo(0, -rOuter);
-        ctx.lineTo(rInner, -rInner);
-        ctx.lineTo(rOuter, 0);
-        ctx.lineTo(rInner, rInner);
-        ctx.lineTo(0, rOuter);
-        ctx.lineTo(-rInner, rInner);
-        ctx.lineTo(-rOuter, 0);
-        ctx.lineTo(-rInner, -rInner);
-        ctx.closePath();
-        ctx.fillStyle = "red";
-        ctx.fill();
-        ctx.restore();
+        if (!uldm) {
+          ctx.save();
+          ctx.globalAlpha = alpha * 0.5;
+          ctx.translate(ix, iy);
+          ctx.beginPath();
+          ctx.moveTo(0, -rOuter);
+          ctx.lineTo(rInner, -rInner);
+          ctx.lineTo(rOuter, 0);
+          ctx.lineTo(rInner, rInner);
+          ctx.lineTo(0, rOuter);
+          ctx.lineTo(-rInner, rInner);
+          ctx.lineTo(-rOuter, 0);
+          ctx.lineTo(-rInner, -rInner);
+          ctx.closePath();
+          ctx.fillStyle = "red";
+          ctx.fill();
+          ctx.restore();
+        }
       } else {
-        const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
-        g.addColorStop(0, "rgba(128,0,0,1)");
-        g.addColorStop(0.4, "rgba(128,0,0,1)");
-        g.addColorStop(1, "rgba(128,0,0,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(ix, iy, 50, 0, Math.PI * 2);
-        ctx.fill();
+        if (!uldm) {
+          const g = ctx.createRadialGradient(ix, iy, 0, ix, iy, 50);
+          g.addColorStop(0, "rgba(128,0,0,1)");
+          g.addColorStop(0.4, "rgba(128,0,0,1)");
+          g.addColorStop(1, "rgba(128,0,0,0)");
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(ix, iy, 50, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.filter = "sepia(100%) saturate(3000%) hue-rotate(-5deg)";
         ctx.drawImage(it.img, ix - 50, iy - 65, 100, 100);
       }

@@ -854,6 +854,7 @@ let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
 let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
 let showSkybox = JSON.parse(localStorage.getItem("skybox")) ?? true;
 let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
+export let uldm = JSON.parse(localStorage.getItem("uldm")) ?? false;
 let showPlayers = JSON.parse(localStorage.getItem("players")) ?? false;
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
@@ -875,6 +876,7 @@ graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 document.getElementById("toggle-grids").checked = showGrids;
 document.getElementById("toggle-skybox").checked = showSkybox;
 document.getElementById("toggle-timer").checked = showTimer;
+document.getElementById("toggle-uldm").checked = uldm;
 document.getElementById("toggle-players").checked = showPlayers;
 document.getElementById("toggle-floor").checked = showFloor;
 document.getElementById("toggle-border").checked = showBorder;
@@ -927,6 +929,9 @@ toggle("toggle-skybox", (v) => {
 toggle("toggle-timer", (v) => {
   showTimer = v;
   document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
+});
+toggle("toggle-uldm", (v) => {
+  uldm = v;
 });
 toggle("toggle-players", (v) => {
   showPlayers = v;
@@ -1030,6 +1035,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("grids");
   localStorage.removeItem("skybox");
   localStorage.removeItem("timer");
+  localStorage.removeItem("uldm");
   localStorage.removeItem("players");
   localStorage.removeItem("reduced-motion");
   localStorage.removeItem("deaf-mode");
@@ -1048,6 +1054,7 @@ document.getElementById("reset-settings").onclick = () => {
   showGrids = false;
   showSkybox = true;
   showTimer = false;
+  uldm = false;
   showPlayers = false;
   reducedMotion = false;
   deafMode = true;
@@ -1065,6 +1072,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-grids").checked = false;
   document.getElementById("toggle-skybox").checked = true;
   document.getElementById("toggle-timer").checked = false;
+  document.getElementById("toggle-uldm").checked = false;
   document.getElementById("toggle-players").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
   document.getElementById("toggle-deaf-mode").checked = true;

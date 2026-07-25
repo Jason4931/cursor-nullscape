@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, passageGoldPattern } from "../main.js";
+import { playSound, passageGoldPattern, uldm } from "../main.js";
 
 const Guardian_Idle_Animation = [];
 for (let i = 1; i <= 16; i++) {
@@ -282,20 +282,22 @@ export function setup(host, hardMode) {
       ctx.fillStyle = `rgba(255,130,220,${alpha})`;
       ctx.fill();
 
-      ctx.beginPath();
-      ctx.moveTo(0, -rInner);
-      ctx.lineTo(rInner, 0);
-      ctx.lineTo(0, rInner);
-      ctx.lineTo(-rInner, 0);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(210,140,255,${alpha})`;
-      ctx.fill();
+      if (!uldm) {
+        ctx.beginPath();
+        ctx.moveTo(0, -rInner);
+        ctx.lineTo(rInner, 0);
+        ctx.lineTo(0, rInner);
+        ctx.lineTo(-rInner, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(210,140,255,${alpha})`;
+        ctx.fill();
 
-      ctx.beginPath();
-      ctx.arc(0, 0, 44, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,130,220,${alpha})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, 44, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,130,220,${alpha})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
 
       ctx.restore();
     }
@@ -308,7 +310,7 @@ export function setup(host, hardMode) {
       100,
     );
 
-    if (state.shootCirc < 30) {
+    if (state.shootCirc < 30 && !uldm) {
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x - 5),
@@ -325,12 +327,14 @@ export function setup(host, hardMode) {
     ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
     for (const p of state.pellets) {
       ctx.globalAlpha = 1;
-      for (const t of p.trail) {
-        ctx.beginPath();
-        ctx.arc(Math.round(t.x), Math.round(t.y), 8, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
+      if (!uldm) {
+        for (const t of p.trail) {
+          ctx.beginPath();
+          ctx.arc(Math.round(t.x), Math.round(t.y), 8, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
       }
 
       ctx.beginPath();

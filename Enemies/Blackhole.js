@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { moveCamera } from "../main.js";
+import { moveCamera, uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -116,20 +116,22 @@ export function setup(host, casualMode, hardMode) {
     ctx.stroke();
     ctx.restore();
 
-    const glow = ctx.createRadialGradient(
-      0,
-      0,
-      state.radius,
-      0,
-      0,
-      state.radius * 1.5,
-    );
-    glow.addColorStop(0, "rgba(255,255,255,0.5)");
-    glow.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.beginPath();
-    ctx.arc(0, 0, state.radius * 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = glow;
-    ctx.fill();
+    if (!uldm) {
+      const glow = ctx.createRadialGradient(
+        0,
+        0,
+        state.radius,
+        0,
+        0,
+        state.radius * 1.5,
+      );
+      glow.addColorStop(0, "rgba(255,255,255,0.5)");
+      glow.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.arc(0, 0, state.radius * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+    }
     ctx.beginPath();
     ctx.arc(0, 0, state.radius, 0, Math.PI * 2);
     ctx.fillStyle = "#000";

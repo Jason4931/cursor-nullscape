@@ -5,6 +5,8 @@ import {
   setSlowness,
   TILE,
   moveCamera,
+  uldm,
+  getCameraPos,
 } from "../main.js";
 
 const enemy = new Image();
@@ -185,7 +187,7 @@ export function setup(host, hardMode, immunebell) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    if (state.circleScale > 0) {
+    if (state.circleScale > 0 && !uldm) {
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x),
@@ -208,6 +210,7 @@ export function setup(host, hardMode, immunebell) {
     }
 
     if (state.hitActive && !immunebell) {
+      const cam = getCameraPos();
       const fade = 1 - state.hitTimer / state.hitCooldown;
 
       const strength = 120 * fade;
@@ -227,8 +230,19 @@ export function setup(host, hardMode, immunebell) {
       ctx.save();
       ctx.globalAlpha = alpha;
 
-      for (const [ox, oy] of offsets) {
-        ctx.drawImage(ctx.canvas, ox, oy);
+      if (!uldm) {
+        for (const [ox, oy] of offsets) {
+          ctx.drawImage(ctx.canvas, ox, oy);
+        }
+      } else {
+        ctx.globalAlpha *= 2;
+        ctx.fillStyle = "black";
+        ctx.fillRect(
+          cam.x,
+          cam.y,
+          Math.round(window.innerWidth),
+          Math.round(window.innerHeight),
+        );
       }
 
       ctx.restore();

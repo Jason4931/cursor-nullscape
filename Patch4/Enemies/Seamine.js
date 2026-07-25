@@ -1,5 +1,11 @@
 import { death, mouse, toggleTripmineLeniency } from "../entityHost.js";
-import { ability, moveCamera, playSound, setSeamineScale } from "../main.js";
+import {
+  ability,
+  moveCamera,
+  playSound,
+  setSeamineScale,
+  uldm,
+} from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Curses/Seamine.png";
@@ -100,7 +106,7 @@ export function setup(host, casualMode, hardMode) {
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    if (state.exploded) {
+    if (state.exploded && !uldm) {
       if (state.blastAlpha > 0) {
         ctx.save();
         ctx.globalAlpha = Math.max(0, state.blastAlpha);
@@ -122,32 +128,34 @@ export function setup(host, casualMode, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    ctx.save();
-    ctx.translate(Math.round(state.x), Math.round(state.y));
-    ctx.rotate(state.rotation);
-    ctx.drawImage(
-      enemy,
-      Math.round(-state.size / 2),
-      Math.round(-state.size / 2),
-      Math.round(state.size),
-      Math.round(state.size),
-    );
-    ctx.restore();
-
-    if (state.flashing) {
-      const pulse = ((FLASH_TIME - state.flashTimer) * 4) % 1;
-
-      ctx.globalAlpha = 0.25;
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(state.x - 3),
-        Math.round(state.y - 3),
-        Math.round(state.size * pulse),
-        0,
-        Math.PI * 2,
+    if (state.respawnTimer <= 0) {
+      ctx.save();
+      ctx.translate(Math.round(state.x), Math.round(state.y));
+      ctx.rotate(state.rotation);
+      ctx.drawImage(
+        enemy,
+        Math.round(-state.size / 2),
+        Math.round(-state.size / 2),
+        Math.round(state.size),
+        Math.round(state.size),
       );
-      ctx.fillStyle = "red";
-      ctx.fill();
+      ctx.restore();
+
+      if (state.flashing) {
+        const pulse = ((FLASH_TIME - state.flashTimer) * 4) % 1;
+
+        ctx.globalAlpha = 0.25;
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(state.x - 3),
+          Math.round(state.y - 3),
+          Math.round(state.size * pulse),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fillStyle = "red";
+        ctx.fill();
+      }
     }
 
     ctx.restore();

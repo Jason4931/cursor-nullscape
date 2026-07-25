@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, playSound, soundStopped } from "../main.js";
+import { canvas, playSound, soundStopped, uldm } from "../main.js";
 
 const Quartz = [];
 for (let i = 1; i <= 75; i++) {
@@ -329,83 +329,85 @@ export function setup(host) {
       ctx.restore();
     }
 
-    ctx.save();
-    ctx.translate(state.x, state.y);
-
-    for (let i = 0; i < state.glyphRings.length; i++) {
-      const ring = state.glyphRings[i];
-      const img = state.glyphRingCanvases[i];
-
-      ring.angle += ring.speed * 0.05;
-
+    if (!uldm) {
       ctx.save();
-      ctx.rotate(ring.angle);
+      ctx.translate(state.x, state.y);
 
-      ctx.globalAlpha = Math.max(
-        0.1,
-        state.beamAlpha <= 0.5 ? state.beamAlpha * 1.5 : 0,
-      );
+      for (let i = 0; i < state.glyphRings.length; i++) {
+        const ring = state.glyphRings[i];
+        const img = state.glyphRingCanvases[i];
 
-      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        ring.angle += ring.speed * 0.05;
+
+        ctx.save();
+        ctx.rotate(ring.angle);
+
+        ctx.globalAlpha = Math.max(
+          0.1,
+          state.beamAlpha <= 0.5 ? state.beamAlpha * 1.5 : 0,
+        );
+
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+        ctx.restore();
+      }
 
       ctx.restore();
-    }
-
-    ctx.restore();
-
-    ctx.save();
-    const glow = ctx.createRadialGradient(
-      state.x,
-      state.y,
-      0,
-      state.x,
-      state.y,
-      200,
-    );
-    glow.addColorStop(0, rainbow(0, 0.2));
-    glow.addColorStop(1, rainbow(1, 0));
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(state.x, state.y, 200, 0, Math.PI * 2);
-    ctx.fill();
-    for (const c of state.trailCircles) {
-      const p = c.t / c.life;
 
       ctx.save();
-
-      ctx.globalAlpha = 1 - p;
-      ctx.fillStyle = rainbow(c.t * 5);
-
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-    }
-    ctx.restore();
-
-    if (state.phase === "indicator") {
       const glow = ctx.createRadialGradient(
-        mouse.x,
-        mouse.y,
+        state.x,
+        state.y,
         0,
-        mouse.x,
-        mouse.y,
-        50,
+        state.x,
+        state.y,
+        200,
       );
-
-      glow.addColorStop(0, rainbow(0, 0.6));
+      glow.addColorStop(0, rainbow(0, 0.2));
       glow.addColorStop(1, rainbow(1, 0));
-
-      ctx.save();
-      ctx.globalAlpha = state.beamAlpha;
+      ctx.globalAlpha = 1;
       ctx.fillStyle = glow;
-
       ctx.beginPath();
-      ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
+      ctx.arc(state.x, state.y, 200, 0, Math.PI * 2);
       ctx.fill();
+      for (const c of state.trailCircles) {
+        const p = c.t / c.life;
+
+        ctx.save();
+
+        ctx.globalAlpha = 1 - p;
+        ctx.fillStyle = rainbow(c.t * 5);
+
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
       ctx.restore();
+
+      if (state.phase === "indicator") {
+        const glow = ctx.createRadialGradient(
+          mouse.x,
+          mouse.y,
+          0,
+          mouse.x,
+          mouse.y,
+          50,
+        );
+
+        glow.addColorStop(0, rainbow(0, 0.6));
+        glow.addColorStop(1, rainbow(1, 0));
+
+        ctx.save();
+        ctx.globalAlpha = state.beamAlpha;
+        ctx.fillStyle = glow;
+
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
     }
 
     ctx.globalAlpha = state.opacity;

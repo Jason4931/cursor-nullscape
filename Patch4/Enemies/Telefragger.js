@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
@@ -157,52 +157,54 @@ export function setup(host, hardMode, deafMode) {
       ctx.restore();
     }
 
-    const trailRadius = Math.round(
-      state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
-    );
-    ctx.globalAlpha = 0.15;
-    ctx.fillStyle = "#9fdfff";
-    ctx.beginPath();
-    ctx.arc(
-      Math.round(state.x),
-      Math.round(state.y),
-      trailRadius,
-      0,
-      Math.PI * 2,
-    );
-    ctx.fill();
-
-    if (state.flashTime > 0) {
-      const t = state.flashTime / state.flashDuration;
-      const alpha = t * t;
-
-      ctx.save();
-
-      ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.rotate(state.flashAngle);
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(-100, -3, 200, 6);
-
-      ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = "#ffd200";
-      ctx.fillRect(-100, -3, 200, 6);
-
-      ctx.restore();
-
-      const rippleRadius = Math.round((1 - t) * 80 + 20);
-      ctx.globalAlpha = alpha * 0.35;
+    if (!uldm) {
+      const trailRadius = Math.round(
+        state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
+      );
+      ctx.globalAlpha = 0.15;
       ctx.fillStyle = "#9fdfff";
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x),
         Math.round(state.y),
-        rippleRadius,
+        trailRadius,
         0,
         Math.PI * 2,
       );
       ctx.fill();
+
+      if (state.flashTime > 0) {
+        const t = state.flashTime / state.flashDuration;
+        const alpha = t * t;
+
+        ctx.save();
+
+        ctx.translate(Math.round(state.x), Math.round(state.y));
+        ctx.rotate(state.flashAngle);
+
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(-100, -3, 200, 6);
+
+        ctx.rotate(Math.PI / 2);
+        ctx.fillStyle = "#ffd200";
+        ctx.fillRect(-100, -3, 200, 6);
+
+        ctx.restore();
+
+        const rippleRadius = Math.round((1 - t) * 80 + 20);
+        ctx.globalAlpha = alpha * 0.35;
+        ctx.fillStyle = "#9fdfff";
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(state.x),
+          Math.round(state.y),
+          rippleRadius,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
     }
 
     ctx.globalAlpha = state.opacity;

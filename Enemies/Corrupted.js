@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, moveCamera, TILE } from "../main.js";
+import { getCameraPos, moveCamera, TILE, uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -664,11 +664,11 @@ export function setup(host, casualMode, hardMode) {
       if (circle.t < 1) {
         const e = 1 - Math.pow(1 - circle.t / 1, 3);
         fillRadius = circle.radius * (circle.t / 2);
-        fillAlpha = 0.5;
+        fillAlpha = uldm ? 0 : 0.5;
         outlineRadius = circle.radius * e;
       } else if (circle.t < 2) {
         fillRadius = circle.radius * (circle.t / 2);
-        fillAlpha = 0.5;
+        fillAlpha = uldm ? 0 : 0.5;
         outlineRadius = circle.radius;
       } else if (circle.t < 2.333) {
         const e = 1 - Math.pow(1 - (circle.t - 2) / 0.333, 3);
@@ -707,18 +707,20 @@ export function setup(host, casualMode, hardMode) {
 
       ctx.setLineDash([]);
 
-      ctx.globalAlpha = fillAlpha;
-      ctx.fillStyle =
-        circle.t >= 2
-          ? circle.t <= 2.1
-            ? "#fff"
-            : circle.color > 0
-              ? "#ff4f9f"
-              : "#fe1f6f"
-          : "#fe1f6f";
-      ctx.beginPath();
-      ctx.arc(circle.x, circle.y, fillRadius, 0, Math.PI * 2);
-      ctx.fill();
+      if (fillAlpha > 0) {
+        ctx.globalAlpha = fillAlpha;
+        ctx.fillStyle =
+          circle.t >= 2
+            ? circle.t <= 2.1
+              ? "#fff"
+              : circle.color > 0
+                ? "#ff4f9f"
+                : "#fe1f6f"
+            : "#fe1f6f";
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, fillRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       ctx.restore();
     }
