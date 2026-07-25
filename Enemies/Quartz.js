@@ -232,7 +232,7 @@ export function setup(host) {
         const ry = dx * sin + dy * cos;
 
         if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
-          death("Sigil");
+          death("Quartz");
         }
       }
 
