@@ -830,6 +830,7 @@ const ProgressionEvents = [
 ];
 
 let jesusAppear = false;
+let vineBoom = null;
 const jesus = new Image();
 jesus.src = "./ASSET/Misc/Jesus.png";
 const oblivionBGimg = new Image();
@@ -5846,6 +5847,17 @@ function loop(now) {
     shieldLostMsg[1]--;
     // rare jesus
     if (shieldLostMsg[2] || jesusAppear) {
+      if (!jesusAppear && !vineBoom) {
+        vineBoom = playSound(
+          "./ASSET/Sound/Enemies/vine-boom.mp3",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            vineBoom = null;
+          },
+        );
+      }
       jesusAppear = true;
       if (shieldLostMsg[1] - 150 <= 0) jesusAppear = false;
       ctx.save();

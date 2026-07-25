@@ -93,7 +93,7 @@ export function setup(host, hardMode) {
     state.y = p.y;
     state.timer = 0;
     const randMode = Math.random();
-    state.mode = randMode < 0.2 ? "high" : randMode < 0.4 ? "tweak" : "normal";
+    state.mode = randMode < 0.25 ? "high" : randMode < 0.5 ? "tweak" : "normal";
     state.nextDelay = 19 + Math.random();
   }
 
