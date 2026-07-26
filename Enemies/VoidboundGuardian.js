@@ -315,7 +315,7 @@ export function setup(host, casualMode, hardMode) {
             )}.ogg`,
           );
 
-          const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+          const beamCount = hardMode ? 3 : casualMode ? 1 : 2;
           const beamHalfWidth = 45;
 
           const dx = mouse.x - p.x;
@@ -469,7 +469,7 @@ export function setup(host, casualMode, hardMode) {
           ctx.rotate(p.beamAngle);
 
           const glow = 25;
-          const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+          const beamCount = hardMode ? 3 : casualMode ? 1 : 2;
           for (let b = 0; b < beamCount; b++) {
             ctx.save();
             ctx.rotate((Math.PI * b) / beamCount);
@@ -526,7 +526,7 @@ export function setup(host, casualMode, hardMode) {
 
         ctx.rotate(p.beamAngle);
 
-        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+        const beamCount = hardMode ? 3 : casualMode ? 1 : 2;
         for (let b = 0; b < beamCount; b++) {
           ctx.save();
           ctx.rotate((Math.PI * b) / beamCount);
@@ -608,7 +608,7 @@ export function setup(host, casualMode, hardMode) {
 
         ctx.rotate(p.beamAngle);
 
-        const beamCount = hardMode ? 4 : casualMode ? 2 : 3;
+        const beamCount = hardMode ? 3 : casualMode ? 1 : 2;
         for (let b = 0; b < beamCount; b++) {
           ctx.save();
           ctx.rotate((Math.PI * b) / beamCount);

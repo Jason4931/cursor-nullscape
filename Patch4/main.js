@@ -409,6 +409,7 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
+export let esp = JSON.parse(localStorage.getItem("esp")) ?? false;
 let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
 let enablePonderer =
   JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
@@ -435,6 +436,7 @@ document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
+document.getElementById("toggle-esp").checked = esp;
 document.getElementById("toggle-parry").checked = parry;
 document.getElementById("toggle-enable-ponderer").checked = enablePonderer;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
@@ -514,6 +516,9 @@ toggle("toggle-tripmine-hell", (v) => {
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
 });
+toggle("toggle-esp", (v) => {
+  esp = v;
+});
 toggle("toggle-parry", (v) => {
   parry = v;
 });
@@ -590,6 +595,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
+  localStorage.removeItem("esp");
   localStorage.removeItem("parry");
   localStorage.removeItem("enable-ponderer");
   localStorage.removeItem("accurate-cursor");
@@ -609,6 +615,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   tripmineHell = false;
   enableVoid = true;
+  esp = false;
   parry = false;
   enablePonderer = true;
   accurateCursor = false;
@@ -627,6 +634,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-enable-void").checked = true;
+  document.getElementById("toggle-esp").checked = false;
   document.getElementById("toggle-parry").checked = false;
   document.getElementById("toggle-enable-ponderer").checked = true;
   document.getElementById("toggle-accurate-cursor").checked = false;
@@ -3385,6 +3393,7 @@ function loop(now) {
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
   if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
+  if (giftMultiplier > 5) giftMultiplier = 5;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }

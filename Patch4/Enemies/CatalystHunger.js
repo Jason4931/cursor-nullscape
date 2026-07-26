@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera, playSound } from "../main.js";
+import { despawnCatalyst, moveCamera, playSound, uldm } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const enemy = new Image();
@@ -128,18 +128,20 @@ export function setup(host, overshootBrake) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    for (const t of state.trail) {
-      const a = t.life / state.trailLife;
-      ctx.fillStyle = `rgba(0,0,0,${a * 2})`;
-      ctx.beginPath();
-      ctx.arc(
-        Math.round(t.x),
-        Math.round(t.y),
-        Math.round((40 + Math.random() * 10) * a),
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
+    if (!uldm) {
+      for (const t of state.trail) {
+        const a = t.life / state.trailLife;
+        ctx.fillStyle = `rgba(0,0,0,${a * 2})`;
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(t.x),
+          Math.round(t.y),
+          Math.round((40 + Math.random() * 10) * a),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
     }
 
     if (state.screaming) {

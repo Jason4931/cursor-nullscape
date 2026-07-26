@@ -6,6 +6,7 @@ import {
   beaconed,
   actualCollectedCount,
   setGiftMultiplier,
+  uldm,
 } from "../main.js";
 
 const CatalystOptim = [];
@@ -481,41 +482,49 @@ export function setup(host) {
       }
     }
 
-    for (const p of state.extraTrail) {
-      let r;
+    if (!uldm) {
+      for (const p of state.extraTrail) {
+        let r;
 
-      if (p.t < 0.75) {
-        r = 25;
-      } else {
-        const k = (p.t - 0.75) / 0.25;
-        const eased = k * k;
-        r = 25 * (1 - eased);
+        if (p.t < 0.75) {
+          r = 25;
+        } else {
+          const k = (p.t - 0.75) / 0.25;
+          const eased = k * k;
+          r = 25 * (1 - eased);
+        }
+
+        const glow = 25;
+        const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
+        ctx.fill();
       }
+      for (const p of state.extraTrail) {
+        let r;
 
-      const glow = 25;
-      const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
-      grad.addColorStop(0, "rgba(255,0,192,1)");
-      grad.addColorStop(1, "rgba(255,0,192,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    for (const p of state.extraTrail) {
-      let r;
+        if (p.t < 0.75) {
+          r = 25;
+        } else {
+          const k = (p.t - 0.75) / 0.25;
+          const eased = k * k;
+          r = 25 * (1 - eased);
+        }
 
-      if (p.t < 0.75) {
-        r = 25;
-      } else {
-        const k = (p.t - 0.75) / 0.25;
-        const eased = k * k;
-        r = 25 * (1 - eased);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(p.x),
+          Math.round(p.y),
+          Math.round(r),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
       }
-
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
-      ctx.fill();
     }
 
     if (state.screaming) {
@@ -566,7 +575,7 @@ export function setup(host) {
       ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
-    if (!beaconed && state.layers != Catalyst_Shock) {
+    if (!beaconed && state.layers != Catalyst_Shock && !uldm) {
       for (let i = 0; i < 3; i++) {
         ctx.save();
 
@@ -596,10 +605,12 @@ export function setup(host) {
         Math.round(p.x + (-5 + Math.random() * 10)),
         Math.round(p.y + (-5 + Math.random() * 10)),
       );
-      ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
-      ctx.beginPath();
-      ctx.arc(0, 0, PELLET_RADIUS, 0, Math.PI * 2);
-      ctx.fill();
+      if (!uldm) {
+        ctx.fillStyle = Math.random() < 0.5 ? "#111" : "#000";
+        ctx.beginPath();
+        ctx.arc(0, 0, PELLET_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.drawImage(
         state.enemy,
         -PELLET_RADIUS / 2,

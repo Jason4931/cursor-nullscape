@@ -9,6 +9,7 @@ import {
   actualCollectedCount,
   startCelestialPhase4,
   setGiftMultiplier,
+  uldm,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -2306,7 +2307,7 @@ export function setup(
       const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
       const w = 1000;
 
-      if (len > 0) {
+      if (len > 0 && !uldm) {
         const grad = ctx.createLinearGradient(
           -len / 2 - glowSize,
           0,
@@ -2430,7 +2431,7 @@ export function setup(
       const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
       const w = 1000;
 
-      if (len > 0) {
+      if (len > 0 && !uldm) {
         ctx.fillStyle = "black";
         ctx.fillRect(-len / 2, -w / 2, len, w);
       }
@@ -3438,24 +3439,26 @@ export function setup(
     const s = stateDeathInBloom;
 
     if (s.active) {
-      for (const p of s.particles) {
-        ctx.save();
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
 
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-
-        ctx.beginPath();
-        if (!p.ellipse) {
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
-          ctx.stroke();
-        }
 
-        ctx.restore();
+          ctx.beginPath();
+          if (!p.ellipse) {
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.save();
@@ -3638,57 +3641,59 @@ export function setup(
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
 
       ctx.restore();
-      for (const p of s.particles) {
-        ctx.save();
-
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "black";
-
-        // if (s.t < 5 && p.ellipse) {
-        //   ctx.save();
-        //   ctx.globalAlpha = s.t < 0.25 ? s.t * 4 : 1;
-        //   const angle = s.angle;
-        //   const long = p.r * 0.5;
-        //   const short = p.r * 0.1;
-
-        //   ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
-
-        //   ctx.strokeStyle = "#ff00cc";
-        //   ctx.lineWidth = 1;
-        //   ctx.stroke();
-
-        //   ctx.fillStyle = "black";
-        //   ctx.fill();
-        //   ctx.restore();
-        // } else {
-        //   ctx.beginPath();
-        //   ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        //   ctx.fill();
-        // }
-        if (s.t < 5 && p.ellipse) {
+      if (!uldm) {
+        for (const p of s.particles) {
           ctx.save();
-          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
-          const angle = s.angle;
-          const long = p.r * 0.5;
-          const short = p.r * 0.1;
 
-          ctx.beginPath();
-          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
-
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
-          ctx.stroke();
-
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
           ctx.fillStyle = "black";
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
 
-        ctx.restore();
+          // if (s.t < 5 && p.ellipse) {
+          //   ctx.save();
+          //   ctx.globalAlpha = s.t < 0.25 ? s.t * 4 : 1;
+          //   const angle = s.angle;
+          //   const long = p.r * 0.5;
+          //   const short = p.r * 0.1;
+
+          //   ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+          //   ctx.strokeStyle = "#ff00cc";
+          //   ctx.lineWidth = 1;
+          //   ctx.stroke();
+
+          //   ctx.fillStyle = "black";
+          //   ctx.fill();
+          //   ctx.restore();
+          // } else {
+          //   ctx.beginPath();
+          //   ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          //   ctx.fill();
+          // }
+          if (s.t < 5 && p.ellipse) {
+            ctx.save();
+            ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+            const angle = s.angle;
+            const long = p.r * 0.5;
+            const short = p.r * 0.1;
+
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.restore();
@@ -5092,24 +5097,26 @@ export function setup(
     const s = stateDeathInBloomCrumble;
 
     if (s.active) {
-      for (const p of s.particles) {
-        ctx.save();
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
 
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-
-        ctx.beginPath();
-        if (!p.ellipse) {
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
-          ctx.stroke();
-        }
 
-        ctx.restore();
+          ctx.beginPath();
+          if (!p.ellipse) {
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.save();
@@ -5325,36 +5332,38 @@ export function setup(
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
 
       ctx.restore();
-      for (const p of s.particles) {
-        ctx.save();
-
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "black";
-
-        if (s.t < 5 && p.ellipse) {
+      if (!uldm) {
+        for (const p of s.particles) {
           ctx.save();
-          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
-          const angle = s.angle;
-          const long = p.r * 0.5;
-          const short = p.r * 0.1;
 
-          ctx.beginPath();
-          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
-
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
-          ctx.stroke();
-
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
           ctx.fillStyle = "black";
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
 
-        ctx.restore();
+          if (s.t < 5 && p.ellipse) {
+            ctx.save();
+            ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+            const angle = s.angle;
+            const long = p.r * 0.5;
+            const short = p.r * 0.1;
+
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.restore();
@@ -7121,24 +7130,26 @@ export function setup(
     const s = stateSecondSilence;
 
     if (s.active) {
-      for (const p of s.particles) {
-        ctx.save();
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
 
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-
-        ctx.beginPath();
-        if (!p.ellipse) {
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
 
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
-          ctx.stroke();
-        }
 
-        ctx.restore();
+          ctx.beginPath();
+          if (!p.ellipse) {
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.save();
@@ -7320,7 +7331,7 @@ export function setup(
       const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
       const w = 1000;
 
-      if (len > 0) {
+      if (len > 0 && !uldm) {
         const grad = ctx.createLinearGradient(
           -len / 2 - glowSize,
           0,
@@ -7559,36 +7570,38 @@ export function setup(
       ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
 
       ctx.restore();
-      for (const p of s.particles) {
-        ctx.save();
-
-        ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
-        ctx.fillStyle = "black";
-
-        if (s.t < 5 && p.ellipse) {
+      if (!uldm) {
+        for (const p of s.particles) {
           ctx.save();
-          ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
-          const angle = s.angle;
-          const long = p.r * 0.5;
-          const short = p.r * 0.1;
 
-          ctx.beginPath();
-          ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
-
-          ctx.strokeStyle = "#ff00cc";
-          ctx.lineWidth = 1;
-          ctx.stroke();
-
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
           ctx.fillStyle = "black";
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
 
-        ctx.restore();
+          if (s.t < 5 && p.ellipse) {
+            ctx.save();
+            ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+            const angle = s.angle;
+            const long = p.r * 0.5;
+            const short = p.r * 0.1;
+
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
       }
 
       ctx.restore();
@@ -7637,7 +7650,7 @@ export function setup(
       const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
       const w = 1000;
 
-      if (len > 0) {
+      if (len > 0 && !uldm) {
         ctx.fillStyle = "black";
         ctx.fillRect(-len / 2, -w / 2, len, w);
       }
@@ -8088,7 +8101,7 @@ export function setup(
     if (state.enemyTransition == "none" && !state.scream)
       state.currentPattern.draw(ctx);
 
-    if (celestialDevOnly) {
+    if (celestialDevOnly && !uldm) {
       for (const t of state.enemyTrail) {
         ctx.save();
         ctx.translate(t.x, t.y);

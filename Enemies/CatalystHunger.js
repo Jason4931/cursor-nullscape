@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera, playSound } from "../main.js";
+import { despawnCatalyst, moveCamera, playSound, uldm } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const Catalysthungerpatch5 = [];
@@ -168,61 +168,81 @@ export function setup(host, overshootBrake) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    for (const p of state.extraTrail) {
-      let r;
+    if (!uldm) {
+      for (const p of state.extraTrail) {
+        let r;
 
-      if (p.t < 0.75) {
-        r = 25;
-      } else {
-        const k = (p.t - 0.75) / 0.25;
-        const eased = k * k;
-        r = 25 * (1 - eased);
+        if (p.t < 0.75) {
+          r = 25;
+        } else {
+          const k = (p.t - 0.75) / 0.25;
+          const eased = k * k;
+          r = 25 * (1 - eased);
+        }
+
+        const glow = 25;
+        const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
+        ctx.fill();
       }
+      for (const p of state.extraTrail) {
+        let r;
 
-      const glow = 25;
-      const grad = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r + glow);
-      grad.addColorStop(0, "rgba(255,0,192,1)");
-      grad.addColorStop(1, "rgba(255,0,192,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r + glow, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    for (const p of state.extraTrail) {
-      let r;
+        if (p.t < 0.75) {
+          r = 15;
+        } else {
+          const k = (p.t - 0.75) / 0.25;
+          const eased = k * k;
+          r = 15 * (1 - eased);
+        }
 
-      if (p.t < 0.75) {
-        r = 15;
-      } else {
-        const k = (p.t - 0.75) / 0.25;
-        const eased = k * k;
-        r = 15 * (1 - eased);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(p.x),
+          Math.round(p.y),
+          Math.round(r),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
       }
-
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.arc(Math.round(p.x), Math.round(p.y), Math.round(r), 0, Math.PI * 2);
-      ctx.fill();
-    }
-    for (const t of state.trail) {
-      const a = t.life / state.trailLife;
-      const r = (40 + Math.random() * 10) * a;
-      const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, r);
-      grad.addColorStop(0, "rgba(0,0,255,1)");
-      grad.addColorStop(0.5, "rgba(0,0,255,0.75)");
-      grad.addColorStop(1, "rgba(255,0,255,0.5)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
-      ctx.fill();
-    }
-    for (const t of state.trail) {
-      const a = t.life / state.trailLife;
-      const r = (40 + Math.random() * 10) * a * a * a;
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
-      ctx.fill();
+      for (const t of state.trail) {
+        const a = t.life / state.trailLife;
+        const r = (40 + Math.random() * 10) * a;
+        const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, r);
+        grad.addColorStop(0, "rgba(0,0,255,1)");
+        grad.addColorStop(0.5, "rgba(0,0,255,0.75)");
+        grad.addColorStop(1, "rgba(255,0,255,0.5)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(t.x),
+          Math.round(t.y),
+          Math.round(r),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      for (const t of state.trail) {
+        const a = t.life / state.trailLife;
+        const r = (40 + Math.random() * 10) * a * a * a;
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(t.x),
+          Math.round(t.y),
+          Math.round(r),
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
     }
 
     if (state.screaming) {

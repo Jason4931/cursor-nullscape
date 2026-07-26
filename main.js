@@ -235,7 +235,7 @@ let celestialBG = false;
 let scrollCelestial = 0;
 export let stopAllEntity = false;
 export let onCelestial = false;
-let onCelestialIntro = false;
+export let onCelestialIntro = false;
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 const spawnedCurses = new Set();
@@ -831,8 +831,8 @@ const ProgressionEvents = [
 
 let jesusAppear = false;
 let vineBoom = null;
-const jesus = new Image();
-jesus.src = "./ASSET/Misc/Jesus.png";
+const jesusImg = new Image();
+jesusImg.src = "./ASSET/Misc/Jesus.png";
 const oblivionBGimg = new Image();
 oblivionBGimg.src = "./ASSET/Misc/OblivionBG.png";
 const celestialBGimg = new Image();
@@ -862,6 +862,8 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
+export let esp = JSON.parse(localStorage.getItem("esp")) ?? false;
+let jesus = JSON.parse(localStorage.getItem("jesus")) ?? false;
 let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
@@ -887,6 +889,8 @@ document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
+document.getElementById("toggle-esp").checked = esp;
+document.getElementById("toggle-jesus").checked = jesus;
 document.getElementById("toggle-parry").checked = parry;
 document.getElementById("toggle-accurate-cursor").checked = accurateCursor;
 document.getElementById("sfx-volume").value = sfxVolume;
@@ -970,6 +974,12 @@ toggle("toggle-tripmine-hell", (v) => {
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
 });
+toggle("toggle-esp", (v) => {
+  esp = v;
+});
+toggle("toggle-jesus", (v) => {
+  jesus = v;
+});
 toggle("toggle-parry", (v) => {
   parry = v;
 });
@@ -1044,6 +1054,8 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
+  localStorage.removeItem("enable-esp");
+  localStorage.removeItem("enable-jesus");
   localStorage.removeItem("parry");
   localStorage.removeItem("accurate-cursor");
   localStorage.removeItem("graphicsLevel");
@@ -1063,6 +1075,8 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   tripmineHell = false;
   enableVoid = true;
+  esp = false;
+  jesus = false;
   parry = false;
   accurateCursor = false;
   sfxVolume = 50;
@@ -1081,6 +1095,8 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-enable-void").checked = true;
+  document.getElementById("toggle-esp").checked = false;
+  document.getElementById("toggle-jesus").checked = false;
   document.getElementById("toggle-parry").checked = false;
   document.getElementById("toggle-accurate-cursor").checked = false;
   document.getElementById("sfx-volume").value = 50;
@@ -5853,8 +5869,8 @@ function loop(now) {
   }
   if (shieldLostMsg[1] > 0) {
     shieldLostMsg[1]--;
-    // rare jesus
-    if (shieldLostMsg[2] || jesusAppear) {
+    // jesus
+    if (jesus || jesusAppear) {
       if (!jesusAppear && !vineBoom) {
         vineBoom = playSound(
           "./ASSET/Sound/Enemies/vine-boom.mp3",
@@ -5870,7 +5886,13 @@ function loop(now) {
       if (shieldLostMsg[1] - 150 <= 0) jesusAppear = false;
       ctx.save();
       ctx.globalAlpha = Math.max(0, (shieldLostMsg[1] - 150) / 30);
-      ctx.drawImage(jesus, -camX, -camY, window.innerWidth, window.innerHeight);
+      ctx.drawImage(
+        jesusImg,
+        -camX,
+        -camY,
+        window.innerWidth,
+        window.innerHeight,
+      );
       ctx.restore();
     }
     ctx.save();
@@ -6003,6 +6025,7 @@ function loop(now) {
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
   if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
+  if (giftMultiplier > 5) giftMultiplier = 5;
   grindrailScale -= 0.017;
   if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;

@@ -137,9 +137,11 @@ export function setup(host, hardMode, deafMode) {
       (state.instruments.length == 1 ? !state.instruments[0].pickedUp : true)
     ) {
       const target = getNearestInstrument();
-      const dx = target.x - mouse.x;
-      const dy = target.y - mouse.y;
-      state.arrowAngle = Math.atan2(dy, dx);
+      if (target && mouse) {
+        const dx = target.x - mouse.x;
+        const dy = target.y - mouse.y;
+        state.arrowAngle = Math.atan2(dy, dx);
+      }
     }
 
     for (let i = state.instruments.length - 1; i >= 0; i--) {

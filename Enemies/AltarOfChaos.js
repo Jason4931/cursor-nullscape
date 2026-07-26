@@ -19,7 +19,7 @@ export function setup(host, hardMode) {
     y: 0,
     size: 200,
     timer: 0,
-    nextDelay: 19 + Math.random(),
+    nextDelay: 39 + Math.random(),
     resultTimer: 0,
   };
 
