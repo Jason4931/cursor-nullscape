@@ -138,7 +138,7 @@ export function setup(host, overshootBrake) {
     }
 
     for (let i = state.trail.length - 1; i >= 0; i--) {
-      state.trail[i].life -= dt;
+      state.trail[i].life -= dt * (uldm ? 4 : 1);
       if (state.trail[i].life <= 0) {
         state.trail.splice(i, 1);
       }
@@ -211,38 +211,26 @@ export function setup(host, overshootBrake) {
         );
         ctx.fill();
       }
-      for (const t of state.trail) {
-        const a = t.life / state.trailLife;
-        const r = (40 + Math.random() * 10) * a;
-        const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, r);
-        grad.addColorStop(0, "rgba(0,0,255,1)");
-        grad.addColorStop(0.5, "rgba(0,0,255,0.75)");
-        grad.addColorStop(1, "rgba(255,0,255,0.5)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(
-          Math.round(t.x),
-          Math.round(t.y),
-          Math.round(r),
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-      }
-      for (const t of state.trail) {
-        const a = t.life / state.trailLife;
-        const r = (40 + Math.random() * 10) * a * a * a;
-        ctx.fillStyle = "black";
-        ctx.beginPath();
-        ctx.arc(
-          Math.round(t.x),
-          Math.round(t.y),
-          Math.round(r),
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-      }
+    }
+    for (const t of state.trail) {
+      const a = t.life / state.trailLife;
+      const r = (40 + Math.random() * 10) * a;
+      const grad = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, r);
+      grad.addColorStop(0, "rgba(0,0,255,1)");
+      grad.addColorStop(0.5, "rgba(0,0,255,0.75)");
+      grad.addColorStop(1, "rgba(255,0,255,0.5)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (const t of state.trail) {
+      const a = t.life / state.trailLife;
+      const r = (40 + Math.random() * 10) * a * a * a;
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(Math.round(t.x), Math.round(t.y), Math.round(r), 0, Math.PI * 2);
+      ctx.fill();
     }
 
     if (state.screaming) {

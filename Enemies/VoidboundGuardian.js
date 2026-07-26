@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, passageGoldPattern, uldm } from "../main.js";
+import { playSound, passageGoldPattern, uldm, ESP } from "../main.js";
 
 const Guardian_Idle_Animation = [];
 for (let i = 1; i <= 40; i++) {
@@ -431,6 +431,7 @@ export function setup(host, casualMode, hardMode) {
         ctx.restore();
       }
     }
+    ESP(state.x, state.y, 200, "voidboundguardian");
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - 100),

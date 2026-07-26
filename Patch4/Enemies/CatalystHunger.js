@@ -114,7 +114,7 @@ export function setup(host, overshootBrake) {
     });
 
     for (let i = state.trail.length - 1; i >= 0; i--) {
-      state.trail[i].life -= dt;
+      state.trail[i].life -= dt * (uldm ? 4 : 1);
       if (state.trail[i].life <= 0) {
         state.trail.splice(i, 1);
       }
@@ -128,20 +128,18 @@ export function setup(host, overshootBrake) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    if (!uldm) {
-      for (const t of state.trail) {
-        const a = t.life / state.trailLife;
-        ctx.fillStyle = `rgba(0,0,0,${a * 2})`;
-        ctx.beginPath();
-        ctx.arc(
-          Math.round(t.x),
-          Math.round(t.y),
-          Math.round((40 + Math.random() * 10) * a),
-          0,
-          Math.PI * 2,
-        );
-        ctx.fill();
-      }
+    for (const t of state.trail) {
+      const a = t.life / state.trailLife;
+      ctx.fillStyle = `rgba(0,0,0,${a * 2})`;
+      ctx.beginPath();
+      ctx.arc(
+        Math.round(t.x),
+        Math.round(t.y),
+        Math.round((40 + Math.random() * 10) * a),
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
     }
 
     if (state.screaming) {
