@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { ESP, playSound, uldm } from "../main.js";
+import { canvas, ESP, playSound, uldm } from "../main.js";
 
 const Telefragger = [];
 for (let i = 1; i <= 2; i++) {
@@ -296,16 +296,48 @@ export function setup(host, casualMode, hardMode, deafMode) {
     }
 
     if (!uldm) {
-      const trailRadius = Math.round(
-        state.size * 0.6 + Math.sin(state.ripplePhase) * 6,
-      );
-      ctx.globalAlpha = 0.15;
-      ctx.fillStyle = "#9fdfff";
+      function bulge(ctx, sourceCanvas, cx, cy, radius, strength = 0.25) {
+        const rings = 32;
+
+        for (let i = rings; i > 0; i--) {
+          const r1 = ((i - 1) / rings) * radius;
+          const r2 = (i / rings) * radius;
+
+          const t = r2 / radius;
+          const srcR = r2 * (1 - strength * (1 - t * t));
+
+          ctx.save();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+          ctx.arc(cx, cy, r1, 0, Math.PI * 2, true);
+          ctx.clip("evenodd");
+
+          const size = srcR * 2;
+
+          ctx.drawImage(
+            sourceCanvas,
+            cx - srcR,
+            cy - srcR,
+            size,
+            size,
+            cx - r2,
+            cy - r2,
+            r2 * 2,
+            r2 * 2,
+          );
+
+          ctx.restore();
+        }
+      }
+      bulge(ctx, canvas, state.x, state.y, state.size * 0.6, 1);
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = "#000";
       ctx.beginPath();
       ctx.arc(
         Math.round(state.x),
         Math.round(state.y),
-        trailRadius,
+        state.size * 0.6,
         0,
         Math.PI * 2,
       );
@@ -321,12 +353,37 @@ export function setup(host, casualMode, hardMode, deafMode) {
         ctx.rotate(state.flashAngle);
 
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(-100, -3, 200, 6);
 
-        ctx.rotate(Math.PI / 2);
-        ctx.fillStyle = "#ffd200";
-        ctx.fillRect(-100, -3, 200, 6);
+        const armLength = 100;
+        const armWidth = 50;
+        const curve = 0.01;
+
+        for (let i = 0; i < 4; i++) {
+          ctx.save();
+          ctx.rotate((i * Math.PI) / 2);
+
+          const grad = ctx.createLinearGradient(0, 0, armLength, 0);
+
+          if (i % 2 === 0) {
+            grad.addColorStop(0, "#ffffff");
+            grad.addColorStop(1, "#ffffff");
+          } else {
+            grad.addColorStop(0, "#ffffff");
+            grad.addColorStop(1, "#ffd200");
+          }
+
+          ctx.fillStyle = grad;
+
+          ctx.beginPath();
+          ctx.moveTo(0, -armWidth / 2);
+          ctx.quadraticCurveTo(armLength * 0.28, -curve, armLength, 0);
+          ctx.quadraticCurveTo(armLength * 0.28, curve, 0, armWidth / 2);
+          ctx.quadraticCurveTo(curve * 0.25, 0, 0, -armWidth / 2);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.restore();
+        }
 
         ctx.restore();
 
@@ -351,7 +408,7 @@ export function setup(host, casualMode, hardMode, deafMode) {
     ctx.scale(state.flipX, -1);
 
     const size = Math.round(state.size * 0.8);
-    ESP(state.x, state.y, state.size, "telefragger");
+    ESP(state.x, state.y, state.size * 1.2, "telefragger");
     ctx.drawImage(
       state.enemy,
       Math.round(-size / 2),
