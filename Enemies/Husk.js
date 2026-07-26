@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, soundStopped, uldm } from "../main.js";
+import { ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const Huskback = [new Image()];
 Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
@@ -297,6 +297,7 @@ export function setup(host, stack, hardMode) {
 
         const height = state.size;
         const width = state.size;
+        ESP(state.x, state.y, state.size, "husk");
         ctx.drawImage(
           state.enemy,
           Math.round(p.x - width / 2),
@@ -332,6 +333,7 @@ export function setup(host, stack, hardMode) {
 
         const height = state.size * 1.25;
         const width = state.size * (2 / 3) * 1.25;
+        ESP(state.x, state.y, state.size, "husk");
         ctx.drawImage(
           state.enemy,
           Math.round(p.x - width / 2),

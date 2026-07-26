@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { moveCamera, uldm } from "../main.js";
+import { ESP, moveCamera, uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -145,6 +145,8 @@ export function setup(host, casualMode, hardMode) {
     ctx.strokeStyle = "rgba(70,70,70,0.5)";
     ctx.lineWidth = 10;
     ctx.stroke();
+
+    ESP(state.x, state.y, state.radius * 3, "blackhole");
 
     ctx.restore();
   }

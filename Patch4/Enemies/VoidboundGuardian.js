@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm } from "../main.js";
+import { ESP, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
@@ -172,6 +172,7 @@ export function setup(host, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
+    ESP(state.x, state.y, 100, "voidboundguardian");
     ctx.drawImage(
       Enemy,
       Math.round(state.x - 50),

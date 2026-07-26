@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { uldm } from "../main.js";
+import { ESP, uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -363,6 +363,8 @@ export function setup(host, casualMode, hardMode) {
 
     if (state.patternTime >= (hardMode ? 1 : casualMode ? 3 : 2))
       state.currentPattern.draw(ctx);
+
+    if (scale > 0) ESP(burst.x, burst.y, 100, "cascade");
 
     ctx.restore();
   }

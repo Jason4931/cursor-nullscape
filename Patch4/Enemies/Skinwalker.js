@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, soundStopped, uldm } from "../main.js";
+import { ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Skinwalker.png";
@@ -183,6 +183,7 @@ export function setup(host, stack, hardMode) {
         ctx.fill();
       }
     }
+    ESP(state.x, state.y, state.size, "skinwalker");
     ctx.drawImage(
       enemy,
       Math.round(state.x - state.size / 2),
