@@ -829,7 +829,6 @@ const ProgressionEvents = [
   },
 ];
 
-let jesusAppear = false;
 let vineBoom = null;
 const jesusImg = new Image();
 jesusImg.src = "./ASSET/Misc/Jesus.png";
@@ -5908,8 +5907,8 @@ function loop(now) {
   if (shieldLostMsg[1] > 0) {
     shieldLostMsg[1]--;
     // jesus
-    if (jesus || jesusAppear) {
-      if (!jesusAppear && !vineBoom) {
+    if (jesus) {
+      if (shieldLostMsg[1] - 175 > 0 && !vineBoom) {
         vineBoom = playSound(
           "./ASSET/Sound/Enemies/vine-boom.mp3",
           undefined,
@@ -5920,8 +5919,6 @@ function loop(now) {
           },
         );
       }
-      jesusAppear = true;
-      if (shieldLostMsg[1] - 150 <= 0) jesusAppear = false;
       ctx.save();
       ctx.globalAlpha = Math.max(0, (shieldLostMsg[1] - 150) / 30);
       ctx.drawImage(
