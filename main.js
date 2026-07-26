@@ -6255,6 +6255,31 @@ function loop(now) {
     ctx.arc(mouse.x, mouse.y, tilerand, 0, Math.PI * 2);
     ctx.fillStyle = bellg;
     ctx.fill();
+    const border = 200;
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    const color = "0,0,0";
+    let grad = ctx.createLinearGradient(0, screenY, 0, screenY + border);
+    grad.addColorStop(0, `rgba(${color},1)`);
+    grad.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY, w, border);
+    grad = ctx.createLinearGradient(0, screenY + h - border, 0, screenY + h);
+    grad.addColorStop(0, `rgba(${color},0)`);
+    grad.addColorStop(1, `rgba(${color},1)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY + h - border, w, border);
+    grad = ctx.createLinearGradient(screenX, 0, screenX + border, 0);
+    grad.addColorStop(0, `rgba(${color},1)`);
+    grad.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX, screenY, border, h);
+    grad = ctx.createLinearGradient(screenX + w - border, 0, screenX + w, 0);
+    grad.addColorStop(0, `rgba(${color},0)`);
+    grad.addColorStop(1, `rgba(${color},1)`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(screenX + w - border, screenY, border, h);
+    ctx.restore();
   }
 
   //tips
