@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm } from "../main.js";
+import { ESP, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Telefragger.png";
@@ -213,6 +213,7 @@ export function setup(host, hardMode, deafMode) {
     ctx.scale(state.flipX, -1);
 
     const size = Math.round(state.size);
+    ESP(state.x, state.y, size, "telefragger");
     ctx.drawImage(
       enemy,
       Math.round(-size / 2),

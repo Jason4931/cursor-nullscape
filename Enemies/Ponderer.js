@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, pondererPositions, soundStopped } from "../main.js";
+import { ESP, playSound, pondererPositions, soundStopped } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Ponderer.png";
@@ -155,6 +155,7 @@ export function setup(host, hardMode) {
     ctx.globalAlpha = state.opacity * (darken ? 0.7 : 1);
 
     const size = Math.round(state.size);
+    ESP(state.x, state.y, state.size, "ponderer");
     ctx.drawImage(
       enemy,
       Math.round(-size * 0.4),

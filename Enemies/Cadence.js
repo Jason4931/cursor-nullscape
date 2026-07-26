@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, moveCamera, playSound, uldm } from "../main.js";
+import {
+  pickRandomPlaced4or5,
+  moveCamera,
+  playSound,
+  uldm,
+  ESP,
+} from "../main.js";
 
 const Cadence_idle_patch_5 = [];
 for (let i = 1; i <= 12; i++) {
@@ -355,6 +361,7 @@ export function setup(host, hardMode, deafMode) {
     }
 
     const size = state.layers == CadenceEnragedPatch5 ? 400 : 200;
+    ESP(state.x, state.y, size, "cadence");
     ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
 
     for (const it of state.instruments) {

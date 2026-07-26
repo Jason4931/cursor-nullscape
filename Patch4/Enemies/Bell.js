@@ -7,6 +7,7 @@ import {
   moveCamera,
   uldm,
   getCameraPos,
+  ESP,
 } from "../main.js";
 
 const enemy = new Image();
@@ -205,6 +206,7 @@ export function setup(host, hardMode, immunebell) {
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ctx.rotate(state.rotation);
+      ESP(state.x, state.y, state.size, "bell");
       ctx.drawImage(enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
       ctx.restore();
     }

@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { ESP, playSound } from "../main.js";
 import { setup as spawnVoidboundBaby } from "./VoidboundBaby.js";
 
 const Babyidle = [];
@@ -309,6 +309,7 @@ export function setup(host, hardMode, scale = 1) {
 
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
+    ESP(state.x, state.y, state.size, "baby");
     ctx.drawImage(
       state.enemy,
       Math.round(-state.size / 2),

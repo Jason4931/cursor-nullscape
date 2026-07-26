@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound, uldm } from "../main.js";
+import { ESP, getCameraPos, playSound, uldm } from "../main.js";
 
 const ICBM = [];
 for (let i = 1; i <= 7; i++) {
@@ -197,6 +197,8 @@ export function setup(host, hardMode) {
       ctx.rotate(state.markerRotation);
 
       const size = Math.round(state.circleRadius * 2);
+      if (state.phase === "idle" && state.timer <= 3)
+        ESP(state.lockPosX, state.lockPosY, state.maxCircleRadius, "icbm");
       ctx.drawImage(marker, -size / 2, -size / 2, size, size);
 
       if (state.nuclearRadius > 0 && nuclearBombActive[0]) {

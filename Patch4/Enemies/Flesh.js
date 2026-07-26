@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { fleshPositions, playSound, isCursorOnFloor } from "../main.js";
+import { fleshPositions, playSound, isCursorOnFloor, ESP } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Flesh.png";
@@ -200,6 +200,7 @@ export function setup(host, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
+    ESP(state.x, state.y, state.size, "flesh");
     ctx.drawImage(
       enemy,
       Math.round(state.x - state.size / 2),

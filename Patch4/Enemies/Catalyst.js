@@ -7,6 +7,7 @@ import {
   actualCollectedCount,
   setGiftMultiplier,
   uldm,
+  ESP,
 } from "../main.js";
 
 const layers = [];
@@ -442,6 +443,7 @@ export function setup(host) {
       ctx.fillRect(0, 0, host.canvas.width, host.canvas.height);
     }
 
+    ESP(state.x, state.y, 200, "catalyst");
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - 100),

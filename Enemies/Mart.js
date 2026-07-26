@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, soundStopped, MartStack } from "../main.js";
+import { playSound, soundStopped, MartStack, ESP } from "../main.js";
 
 const Probably_Improper_Speeded_Mart = [];
 for (let i = 1; i <= 24; i++) {
@@ -254,6 +254,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
       ctx.restore();
     }
 
+    ESP(state.x, state.y, state.size, "mart");
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - state.size / 2),

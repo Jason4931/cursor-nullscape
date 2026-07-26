@@ -1,5 +1,5 @@
 import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
-import { moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
+import { ESP, moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Springer.png";
@@ -317,6 +317,12 @@ export function setup(host, hardMode) {
             ? Math.round(state.timer * 10)
             : 0);
 
+      ESP(
+        state.ringCenterX,
+        state.ringCenterY - state.size * 0.333,
+        state.size * 1.25,
+        "springer",
+      );
       ctx.drawImage(
         enemy,
         Math.round(state.ringCenterX - s / 2),

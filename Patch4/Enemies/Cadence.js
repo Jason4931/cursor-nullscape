@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { pickRandomPlaced4or5, moveCamera, playSound, uldm } from "../main.js";
+import {
+  pickRandomPlaced4or5,
+  moveCamera,
+  playSound,
+  uldm,
+  ESP,
+} from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Cadence.png";
@@ -300,6 +306,7 @@ export function setup(host, hardMode, deafMode) {
       ctx.fill();
     }
 
+    ESP(state.x, state.y, 200, "cadence");
     ctx.drawImage(enemy, sx - 100, sy - 100, 200, 200);
 
     for (const it of state.instruments) {

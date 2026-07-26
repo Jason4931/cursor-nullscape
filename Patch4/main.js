@@ -409,7 +409,7 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
-export let esp = JSON.parse(localStorage.getItem("esp")) ?? false;
+let esp = JSON.parse(localStorage.getItem("esp")) ?? false;
 let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
 let enablePonderer =
   JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
@@ -1379,6 +1379,44 @@ function playNextMusic() {
     },
     false,
   );
+}
+
+/* ===== ESP ===== */
+const espQueue = [];
+export function ESP(x, y, size, text = "") {
+  espQueue.push({ x, y, size, text });
+}
+export function drawESP(ctx) {
+  ctx.save();
+
+  ctx.strokeStyle = "#00ff00";
+  ctx.fillStyle = "#00ff00";
+  ctx.lineWidth = 2;
+  ctx.font = "14px Arial";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+
+  for (const e of espQueue) {
+    ctx.strokeRect(
+      Math.round(e.x - e.size / 2),
+      Math.round(e.y - e.size / 2),
+      Math.round(e.size),
+      Math.round(e.size),
+    );
+
+    if (e.text) {
+      ctx.textBaseline = "bottom";
+      ctx.fillText(
+        e.text,
+        Math.round(e.x - e.size / 2 + 4),
+        Math.round(e.y + e.size / 2 - 2),
+      );
+    }
+  }
+
+  ctx.restore();
+
+  espQueue.length = 0;
 }
 
 /* ===== HELPERS ===== */
@@ -3374,6 +3412,7 @@ function loop(now) {
   // entityCtx.fillStyle = "red";
   // entityCtx.fillRect(0, 0, 100, 100);
   entityHost.draw();
+  if (esp) drawESP(ctx);
 
   // slowness
   if (slowness || sorrowActive) {

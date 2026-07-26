@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, getCameraPos } from "../main.js";
+import { canvas, ESP, getCameraPos } from "../main.js";
 
 const VisageFont = new FontFace(
   "VisageFont",
@@ -141,6 +141,7 @@ export function setup(host) {
     ctx.globalAlpha = state.opacity;
     const cam = getCameraPos();
 
+    ESP(state.x, state.y, state.size, "visage");
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - state.size / 2),

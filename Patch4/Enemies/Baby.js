@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound } from "../main.js";
+import { ESP, playSound } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Baby.png";
@@ -235,6 +235,7 @@ export function setup(host, hardMode) {
     ctx.save();
     ctx.translate(drawX, drawY);
     ctx.rotate(rot);
+    ESP(state.x, state.y, state.size, "baby");
     ctx.drawImage(
       enemy,
       Math.round(-state.size / 2),

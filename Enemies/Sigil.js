@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, playSound, soundStopped, uldm } from "../main.js";
+import { canvas, ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const Sigil = [];
 for (let i = 1; i <= 75; i++) {
@@ -385,6 +385,7 @@ export function setup(host) {
     }
 
     ctx.globalAlpha = state.opacity;
+    ESP(state.x, state.y, 400, "sigil");
     ctx.drawImage(state.enemy, state.x - 200, state.y - 200, 400, 400);
 
     ctx.restore();

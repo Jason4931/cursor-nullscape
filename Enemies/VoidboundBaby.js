@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm } from "../main.js";
+import { ESP, playSound, uldm } from "../main.js";
 
 const VoidboundBaby_Idle = [];
 for (let i = 1; i <= 18; i++) {
@@ -365,6 +365,7 @@ export function setup(host, hardMode, rebirth = null) {
     ctx.translate(Math.round(state.x), Math.round(state.y));
     if (state.enemy) {
       const sizescale = state.layers == VBbabyLockOnTarget ? 1.5 : 1.2;
+      ESP(state.x, state.y, state.size, "voidboundbaby");
       ctx.drawImage(
         state.enemy,
         Math.round((-state.size / 2) * sizescale),

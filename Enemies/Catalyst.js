@@ -7,6 +7,7 @@ import {
   actualCollectedCount,
   setGiftMultiplier,
   uldm,
+  ESP,
 } from "../main.js";
 
 const CatalystOptim = [];
@@ -591,6 +592,7 @@ export function setup(host) {
         ctx.restore();
       }
     }
+    ESP(state.x, state.y, 200, "catalyst");
     ctx.drawImage(
       state.enemy,
       Math.round(state.x - 100),

@@ -8,6 +8,7 @@ import {
   moveCamera,
   getCameraPos,
   uldm,
+  ESP,
 } from "../main.js";
 
 const Bell_New_Idle_Animated = [];
@@ -269,6 +270,7 @@ export function setup(host, hardMode, immunebell) {
       const s = Math.round(state.size * state.bellScale);
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
+      ESP(state.x, state.y, state.size, "bell");
       ctx.drawImage(state.enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
       ctx.restore();
     }

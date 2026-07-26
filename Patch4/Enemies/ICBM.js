@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm } from "../main.js";
+import { ESP, playSound, uldm } from "../main.js";
 
 const missile = new Image();
 missile.src = "./ASSET/Enemies/ICBM.png";
@@ -174,6 +174,8 @@ export function setup(host, hardMode) {
       ctx.fillStyle = grad;
 
       ctx.beginPath();
+      if (state.phase === "idle" && state.timer <= 3)
+        ESP(state.lockPosX, state.lockPosY, state.maxCircleRadius, "icbm");
       ctx.arc(
         Math.round(state.lockPosX),
         Math.round(state.lockPosY),

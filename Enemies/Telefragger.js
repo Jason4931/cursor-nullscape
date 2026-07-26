@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm } from "../main.js";
+import { ESP, playSound, uldm } from "../main.js";
 
 const Telefragger = [];
 for (let i = 1; i <= 2; i++) {
@@ -351,6 +351,7 @@ export function setup(host, casualMode, hardMode, deafMode) {
     ctx.scale(state.flipX, -1);
 
     const size = Math.round(state.size * 0.8);
+    ESP(state.x, state.y, state.size, "telefragger");
     ctx.drawImage(
       state.enemy,
       Math.round(-size / 2),
