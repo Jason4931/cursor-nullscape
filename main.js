@@ -5913,7 +5913,7 @@ function loop(now) {
     shieldLostMsg[1]--;
     // jesus
     if (jesus) {
-      if (shieldLostMsg[1] - 175 > 0 && !vineBoom) {
+      if (shieldLostMsg[1] - 177 > 0 && !vineBoom) {
         vineBoom = playSound(
           "./ASSET/Sound/Enemies/vine-boom.mp3",
           undefined,
