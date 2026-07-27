@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { ESP, moveCamera, uldm } from "../main.js";
+import { canvas, ESP, moveCamera, uldm } from "../main.js";
 
 export function setup(host, casualMode, hardMode) {
   const state = {
@@ -93,6 +93,47 @@ export function setup(host, casualMode, hardMode) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
+    if (!uldm) {
+      function bulge(ctx, sourceCanvas, cx, cy, radius, strength = 0.25) {
+        const rings = 100;
+
+        for (let i = rings; i > 0; i--) {
+          const r1 = ((i - 1) / rings) * radius;
+          const r2 = (i / rings) * radius;
+
+          const t = r2 / radius;
+          const ease = 1 - (1 - t) * (1 - t);
+          const srcR = r2 * (1 - strength * (1 - ease));
+
+          ctx.save();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+          ctx.arc(cx, cy, r1, 0, Math.PI * 2, true);
+          ctx.fillStyle = "#000";
+          ctx.fill();
+          ctx.clip("evenodd");
+
+          const size = srcR * 2;
+
+          ctx.drawImage(
+            sourceCanvas,
+            cx - srcR,
+            cy - srcR,
+            size,
+            size,
+            cx - r2,
+            cy - r2,
+            r2 * 2,
+            r2 * 2,
+          );
+
+          ctx.restore();
+        }
+      }
+      bulge(ctx, canvas, state.x, state.y, state.radius * state.scale * 2, 4);
+    }
+
     ctx.translate(state.x, state.y);
     ctx.scale(state.scale, state.scale);
 
@@ -146,7 +187,7 @@ export function setup(host, casualMode, hardMode) {
     ctx.lineWidth = 10;
     ctx.stroke();
 
-    ESP(state.x, state.y, state.radius * 3, "blackhole");
+    ESP(state.x, state.y, state.radius * 4, "blackhole");
 
     ctx.restore();
   }

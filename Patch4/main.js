@@ -2854,6 +2854,11 @@ function updateCamera() {
     speedBoostScale *
     ultrafastScale *
     spaceHeldScale;
+  // camera smoothing
+  camX += camVX;
+  camY += camVY;
+  camVX *= 0.88;
+  camVY *= 0.88;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
@@ -3349,12 +3354,6 @@ function loop(now) {
     );
     ctx.fill();
   }
-
-  // camera smoothing
-  camX += camVX;
-  camY += camVY;
-  camVX *= 0.88;
-  camVY *= 0.88;
 
   // lag detection
   const dx = mouse.x - prevMouseWorld.x;

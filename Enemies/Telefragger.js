@@ -311,6 +311,8 @@ export function setup(host, casualMode, hardMode, deafMode) {
           ctx.beginPath();
           ctx.arc(cx, cy, r2, 0, Math.PI * 2);
           ctx.arc(cx, cy, r1, 0, Math.PI * 2, true);
+          ctx.fillStyle = "#000";
+          ctx.fill();
           ctx.clip("evenodd");
 
           const size = srcR * 2;
