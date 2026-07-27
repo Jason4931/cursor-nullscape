@@ -9,7 +9,6 @@ export async function preloadAssets(onProgress = () => {}) {
     paths.map((path) => {
       return new Promise((resolve) => {
         const timeout = setTimeout(() => {
-          console.warn("Timed out:", path);
           done();
         }, 3000);
         let finished = false;

@@ -1,7 +1,9 @@
 import { preloadAssets } from "./assets.js";
 await preloadAssets((loaded, total) => {
+  const progress = loaded / total;
+  const displayed = Math.floor(total * (1 - (1 - progress) ** 2));
   document.getElementById("intro-start").innerHTML =
-    `Loading... (${loaded}/${total})`;
+    `Loading... (${displayed}/${total})`;
 });
 
 import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
