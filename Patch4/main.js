@@ -1,3 +1,9 @@
+import { preloadAssets } from "./assets.js";
+await preloadAssets((loaded, total) => {
+  document.getElementById("intro-start").innerHTML =
+    `Loading... (${loaded}/${total})`;
+});
+
 import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
 import {
   createEntityHost,
