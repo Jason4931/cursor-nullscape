@@ -6484,6 +6484,10 @@ const unlock = () => {
       const pick = basicEnemies[(Math.random() * basicEnemies.length) | 0];
       pick.spawn();
     }
+    if (bellHit.count <= 2) {
+      bellHit.count -= 1;
+      if (bellHit.count < 0) bellHit.count = 0;
+    }
   }, 60000);
   startTimer();
   loop();
@@ -6541,12 +6545,6 @@ setInterval(() => {
     }
   }
 }, 6000);
-setInterval(() => {
-  if (bellHit.count <= 2) {
-    bellHit.count -= 1;
-    if (bellHit.count < 0) bellHit.count = 0;
-  }
-}, 10000);
 
 let originalVolume = [0, 0];
 export function onFinalContact() {
