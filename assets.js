@@ -10,7 +10,7 @@ export async function preloadAssets(onProgress = () => {}) {
       return new Promise((resolve) => {
         const timeout = setTimeout(() => {
           done();
-        }, 3000);
+        }, 10000);
         let finished = false;
         function done(asset = null) {
           if (finished) return;
