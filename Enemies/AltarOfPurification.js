@@ -159,12 +159,12 @@ export function setup(host, hardMode) {
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
       ctx.strokeText(
-        `Removed ${state.result[0]}. Gained ${state.result[1]}.`,
+        `Payment: ${state.result[2]} Gift. Removed ${state.result[0]}. Gained ${state.result[1]}.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
-        `Removed ${state.result[0]}. Gained ${state.result[1]}.`,
+        `Payment: ${state.result[2]} Gift. Removed ${state.result[0]}. Gained ${state.result[1]}.`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );

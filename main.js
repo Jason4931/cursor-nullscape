@@ -3668,7 +3668,7 @@ export function activatePurification() {
     counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
     lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
   }
-  return [replacedEntity, newEntity];
+  return [replacedEntity, newEntity, chosen.start / 2];
 }
 
 /* ===== PRECOMPUTE ROTATED PATTERNS ===== */
@@ -5204,19 +5204,19 @@ function updateCamera() {
       }
     } else {
       if (keysPressed["w"] || keysPressed["arrowup"]) {
-        vy = MAX_SPEED;
+        vy = MAX_SPEED * 0.667;
         edgeFactorY = 1;
       }
       if (keysPressed["s"] || keysPressed["arrowdown"]) {
-        vy = -MAX_SPEED;
+        vy = -MAX_SPEED * 0.667;
         edgeFactorY = 1;
       }
       if (keysPressed["a"] || keysPressed["arrowleft"]) {
-        vx = MAX_SPEED;
+        vx = MAX_SPEED * 0.667;
         edgeFactorX = 1;
       }
       if (keysPressed["d"] || keysPressed["arrowright"]) {
-        vx = -MAX_SPEED;
+        vx = -MAX_SPEED * 0.667;
         edgeFactorX = 1;
       }
       if (
