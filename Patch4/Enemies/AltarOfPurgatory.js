@@ -37,8 +37,8 @@ export function setup(host, hardMode) {
   function onClick(e) {
     if (collectedCount >= (hardMode ? 9000 : 4500)) return;
     const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
+    const mx = e.clientX ? e.clientX - rect.left : mouse.x;
+    const my = e.clientY ? e.clientY - rect.top : mouse.y;
 
     const dx = mx - state.x;
     const dy = my - state.y;
@@ -52,6 +52,11 @@ export function setup(host, hardMode) {
   }
 
   entityCanvas2.addEventListener("click", onClick);
+  window.addEventListener("keydown", (e) => {
+    if (e.key == "Enter") {
+      onClick(e);
+    }
+  });
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
