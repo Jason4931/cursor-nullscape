@@ -819,10 +819,14 @@ topLeftInput.addEventListener("keydown", function (event) {
             spawnJumpPad(entityHost, i >= 8);
           }
         } else if (input.toLowerCase().startsWith("altar")) {
-          const name = input.slice(5).toLowerCase();
-          const altar = altars.find((a) => a.name === name);
-          if (altar) {
-            altar.spawn(entityHost, hardMode);
+          const name = input.slice(5).trim().toLowerCase();
+          if (!name) {
+            altars.forEach((altar) => altar.spawn(entityHost, hardMode));
+          } else {
+            const altar = altars.find((a) => a.name === name);
+            if (altar) {
+              altar.spawn(entityHost, hardMode);
+            }
           }
         } else if (entity.name === "Random") {
           const randUnlocked = ENTITY_POOL.filter((e) => {

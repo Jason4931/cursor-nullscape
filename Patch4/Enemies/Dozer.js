@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound, ability } from "../main.js";
+import { getCameraPos, playSound, ability, wasdMode } from "../main.js";
 
 const enemy = new Image();
 enemy.src = "./ASSET/Enemies/Dozer.png";
@@ -59,8 +59,8 @@ export function setup(host, hardMode) {
         state.timer = 0;
         state.stillTimer = 0;
 
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
         state.idleSound = playSound(
           "./ASSET/Sound/Enemies/Dozer/DozerIdle.ogg",
         );
@@ -79,8 +79,8 @@ export function setup(host, hardMode) {
         state.jitterRot = (Math.random() - 0.5) * 0.2;
       }
 
-      const dx = mouse._clientX - state.lastMouseX;
-      const dy = mouse._clientY - state.lastMouseY;
+      const dx = (wasdMode ? mouse.x : mouse._clientX) - state.lastMouseX;
+      const dy = (wasdMode ? mouse.y : mouse._clientY) - state.lastMouseY;
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
@@ -93,8 +93,8 @@ export function setup(host, hardMode) {
         }
       } else {
         state.stillTimer = 0;
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
       }
 
       if (

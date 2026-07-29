@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound, ability } from "../main.js";
+import { getCameraPos, playSound, ability, wasdMode } from "../main.js";
 
 const OperatorIdle = new Image();
 OperatorIdle.src = "./ASSET/Enemies/Malfunction/Voidbound_Operator_Idle.png";
@@ -99,8 +99,8 @@ export function setup(host) {
         state.timer = 0;
         state.stillTimer = 0;
 
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
         state.opacity = 1;
         state.idleSound = playSound(
           "./ASSET/Sound/Enemies/Malfunction/Voidbound_Operator_Ticking.ogg",
@@ -118,8 +118,8 @@ export function setup(host) {
         else state.jitterRot = 0.1;
       }
 
-      const dx = mouse._clientX - state.lastMouseX;
-      const dy = mouse._clientY - state.lastMouseY;
+      const dx = (wasdMode ? mouse.x : mouse._clientX) - state.lastMouseX;
+      const dy = (wasdMode ? mouse.y : mouse._clientY) - state.lastMouseY;
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
@@ -133,8 +133,8 @@ export function setup(host) {
       } else {
         state.safe = false;
         state.stillTimer = 0;
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
       }
 
       if (
@@ -193,8 +193,8 @@ export function setup(host) {
         else state.jitterRot = 0.1;
       }
 
-      const dx = mouse._clientX - state.lastMouseX;
-      const dy = mouse._clientY - state.lastMouseY;
+      const dx = (wasdMode ? mouse.x : mouse._clientX) - state.lastMouseX;
+      const dy = (wasdMode ? mouse.y : mouse._clientY) - state.lastMouseY;
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
@@ -208,8 +208,8 @@ export function setup(host) {
       } else {
         state.safe = false;
         state.stillTimer = 0;
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
       }
 
       if (
@@ -268,8 +268,8 @@ export function setup(host) {
         else state.jitterRot = 0.1;
       }
 
-      const dx = mouse._clientX - state.lastMouseX;
-      const dy = mouse._clientY - state.lastMouseY;
+      const dx = (wasdMode ? mouse.x : mouse._clientX) - state.lastMouseX;
+      const dy = (wasdMode ? mouse.y : mouse._clientY) - state.lastMouseY;
 
       if (dx === 0 && dy === 0) {
         state.stillTimer += dt;
@@ -283,8 +283,8 @@ export function setup(host) {
       } else {
         state.safe = false;
         state.stillTimer = 0;
-        state.lastMouseX = mouse._clientX;
-        state.lastMouseY = mouse._clientY;
+        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
+        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
       }
 
       if (
