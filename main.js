@@ -250,6 +250,7 @@ const spawnedCurses = new Set();
 let jumppadSpawns = [];
 let fleshSpawns = [];
 export let spaceHeld = false;
+const keysPressed = {};
 export let shiftlockEase = 1;
 export let ability = false;
 export let usedAbility = null;
@@ -869,6 +870,7 @@ let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
 let drunkCamera = JSON.parse(localStorage.getItem("drunk-camera")) ?? false;
 let tripmineHell = JSON.parse(localStorage.getItem("tripmine-hell")) ?? false;
 let enableVoid = JSON.parse(localStorage.getItem("enable-void")) ?? true;
+export let wasdMode = JSON.parse(localStorage.getItem("wasd")) ?? false;
 let esp = JSON.parse(localStorage.getItem("esp")) ?? false;
 let jesus = JSON.parse(localStorage.getItem("jesus")) ?? false;
 let parry = JSON.parse(localStorage.getItem("parry")) ?? false;
@@ -896,6 +898,7 @@ document.getElementById("toggle-deaf-mode").checked = deafMode;
 document.getElementById("toggle-drunk-camera").checked = drunkCamera;
 document.getElementById("toggle-tripmine-hell").checked = tripmineHell;
 document.getElementById("toggle-enable-void").checked = enableVoid;
+document.getElementById("toggle-wasd").checked = wasdMode;
 document.getElementById("toggle-esp").checked = esp;
 document.getElementById("toggle-jesus").checked = jesus;
 document.getElementById("toggle-parry").checked = parry;
@@ -981,6 +984,9 @@ toggle("toggle-tripmine-hell", (v) => {
 toggle("toggle-enable-void", (v) => {
   enableVoid = v;
 });
+toggle("toggle-wasd", (v) => {
+  wasdMode = v;
+});
 toggle("toggle-esp", (v) => {
   esp = v;
 });
@@ -1061,6 +1067,7 @@ document.getElementById("reset-settings").onclick = () => {
   localStorage.removeItem("drunk-camera");
   localStorage.removeItem("tripmine-hell");
   localStorage.removeItem("enable-void");
+  localStorage.removeItem("wasd");
   localStorage.removeItem("enable-esp");
   localStorage.removeItem("enable-jesus");
   localStorage.removeItem("parry");
@@ -1082,6 +1089,7 @@ document.getElementById("reset-settings").onclick = () => {
   drunkCamera = false;
   tripmineHell = false;
   enableVoid = true;
+  wasdMode = false;
   esp = false;
   jesus = false;
   parry = false;
@@ -1102,6 +1110,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-drunk-camera").checked = false;
   document.getElementById("toggle-tripmine-hell").checked = false;
   document.getElementById("toggle-enable-void").checked = true;
+  document.getElementById("toggle-wasd").checked = false;
   document.getElementById("toggle-esp").checked = false;
   document.getElementById("toggle-jesus").checked = false;
   document.getElementById("toggle-parry").checked = false;
@@ -1313,6 +1322,7 @@ window.addEventListener("keydown", (e) => {
     spaceHeld = true;
     shiftlockEase = 0;
   }
+  keysPressed[e.key.toLowerCase()] = true;
   if (abilityCooldown == 0 && !slowness) {
     if (e.key.toLowerCase() === "e") {
       abilityCooldown = 45;
@@ -1722,6 +1732,7 @@ topLeftInput.addEventListener("keydown", function (event) {
 let reducedMotionHoldActive = false;
 let reducedMotionBeforeHold = reducedMotion;
 window.addEventListener("keydown", (e) => {
+  if (e.repeat) return;
   if (reducedMotionHoldActive) return;
   if (e.key !== "Shift" && e.key !== "Control") return;
 
@@ -1734,6 +1745,7 @@ window.addEventListener("keyup", (e) => {
     spaceHeld = false;
     shiftlockEase = 0;
   }
+  keysPressed[e.key.toLowerCase()] = false;
 
   if (!reducedMotionHoldActive) return;
   if (e.key !== "Shift" && e.key !== "Control") return;
@@ -2418,7 +2430,7 @@ export function isCursorOnFloor(custom) {
           if (t.wall[1] == 6 || t.wall[1] == 66) {
             wallScale = 0.5;
           } else if (t.wall[1] == 36) {
-            wallScale = 0;
+            wallScale = 0.01;
           }
         if (t.highrise[0] && t.highrise[1] == 38) {
           scorched = true;
@@ -2996,7 +3008,7 @@ function ENTITY_SPAWN(
   chaosIncluded = false,
 ) {
   let name = null;
-  const unlocked =
+  let unlocked =
     chaosMode || chaosIncluded
       ? ENTITY_POOL.filter((e) => {
           if (e.name === "Celestial" || e.name === "Catalyst") return false;
@@ -3011,7 +3023,13 @@ function ENTITY_SPAWN(
           if (exceptEntity && e.name === exceptEntity) return false;
           return true;
         });
-
+  if (unlocked.length == 0) {
+    unlocked = ENTITY_POOL.filter((e) => {
+      if (e.chaosOnly) return false;
+      if (e.start != 0) return false;
+      return true;
+    });
+  }
   if (unlocked.length > 0) {
     let pick;
     if (collectedCount >= (hardMode ? 10000 : 5000) && !spawnedCatalyst) {
@@ -5151,27 +5169,60 @@ function updateCamera() {
     edgeFactorX = 1;
     edgeFactorY = 1;
   } else {
-    cameraRadius = spaceHeld ? 0.49 : 0.4;
-    if (mouse._clientX < w * cameraRadius) {
-      vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
-      edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
-    } else if (mouse._clientX > w * (1 - cameraRadius)) {
-      vx =
-        -MAX_SPEED *
-        ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
-      edgeFactorX =
-        (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
-    }
+    if (!wasdMode) {
+      cameraRadius = spaceHeld ? 0.49 : 0.4;
+      if (mouse._clientX < w * cameraRadius) {
+        vx = MAX_SPEED * (1 - mouse._clientX / (w * cameraRadius));
+        edgeFactorX = 1 - mouse._clientX / (w * cameraRadius);
+      } else if (mouse._clientX > w * (1 - cameraRadius)) {
+        vx =
+          -MAX_SPEED *
+          ((mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius));
+        edgeFactorX =
+          (mouse._clientX - w * (1 - cameraRadius)) / (w * cameraRadius);
+      }
 
-    if (mouse._clientY < h * cameraRadius) {
-      vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
-      edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
-    } else if (mouse._clientY > h * (1 - cameraRadius)) {
-      vy =
-        -MAX_SPEED *
-        ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
-      edgeFactorY =
-        (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
+      if (mouse._clientY < h * cameraRadius) {
+        vy = MAX_SPEED * (1 - mouse._clientY / (h * cameraRadius));
+        edgeFactorY = 1 - mouse._clientY / (h * cameraRadius);
+      } else if (mouse._clientY > h * (1 - cameraRadius)) {
+        vy =
+          -MAX_SPEED *
+          ((mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius));
+        edgeFactorY =
+          (mouse._clientY - h * (1 - cameraRadius)) / (h * cameraRadius);
+      }
+    } else {
+      if (keysPressed["w"] || keysPressed["arrowup"]) {
+        vy = MAX_SPEED;
+        edgeFactorY = 1;
+      }
+      if (keysPressed["s"] || keysPressed["arrowdown"]) {
+        vy = -MAX_SPEED;
+        edgeFactorY = 1;
+      }
+      if (keysPressed["a"] || keysPressed["arrowleft"]) {
+        vx = MAX_SPEED;
+        edgeFactorX = 1;
+      }
+      if (keysPressed["d"] || keysPressed["arrowright"]) {
+        vx = -MAX_SPEED;
+        edgeFactorX = 1;
+      }
+      if (
+        (keysPressed["w"] || keysPressed["arrowup"]) &&
+        (keysPressed["s"] || keysPressed["arrowdown"])
+      ) {
+        vy = 0;
+        edgeFactorY = 0;
+      }
+      if (
+        (keysPressed["a"] || keysPressed["arrowleft"]) &&
+        (keysPressed["d"] || keysPressed["arrowright"])
+      ) {
+        vx = 0;
+        edgeFactorX = 0;
+      }
     }
   }
 
@@ -5198,7 +5249,7 @@ function updateCamera() {
   const disableCollectScale = disableCollect ? 0.01 : 1;
   const extremeScale = hardMode ? 0.667 : 1;
   const ultrafastScale = ultrafastmode ? 3 : 1;
-  const spaceHeldScale = spaceHeld ? 1.5 : 1;
+  const spaceHeldScale = spaceHeld || wasdMode ? 1.5 : 1;
   isCursorOnFloor();
   if (iceEffect) {
     camVX +=
@@ -5780,7 +5831,7 @@ function loop(now) {
   //shiftlock
   shiftlockEase += 0.133;
   if (shiftlockEase > 1) shiftlockEase = 1;
-  if (spaceHeld || shiftlockEase < 1) {
+  if (spaceHeld || wasdMode || shiftlockEase < 1) {
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -5796,22 +5847,24 @@ function loop(now) {
       ctx.lineTo(mouse.x + tX[i] * tOuter, mouse.y + tY[i] * tOuter);
       ctx.stroke();
     }
-    const dotX = mouse._clientX - camX;
-    const dotY = mouse._clientY - camY;
-    ctx.beginPath();
-    ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(mouse.x, mouse.y);
-    ctx.lineTo(dotX, dotY);
-    ctx.strokeStyle = "rgba(255,255,255,0.5)";
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    if (!wasdMode) {
+      const dotX = mouse._clientX - camX;
+      const dotY = mouse._clientY - camY;
+      ctx.beginPath();
+      ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(mouse.x, mouse.y);
+      ctx.lineTo(dotX, dotY);
+      ctx.strokeStyle = "rgba(255,255,255,0.5)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
   }
 
   // simple cursor
-  if (accurateCursor || spaceHeld || shiftlockEase < 1) {
+  if (accurateCursor || spaceHeld || wasdMode || shiftlockEase < 1) {
     ctx.beginPath();
     ctx.arc(mouse.x, mouse.y, 8, 0, Math.PI * 2);
     ctx.fillStyle = "white";

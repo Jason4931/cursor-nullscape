@@ -200,7 +200,7 @@ export function setup(host) {
       floatingText.duration = 2.5 + floatingText.text.split("\n").length * 0.5;
       floatingText.active = true;
       playSound(
-        `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(1 + Math.random() * 3)}.ogg`,
+        `./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_${Math.floor(6 + Math.random() * 3)}.ogg`,
         undefined,
         undefined,
         undefined,

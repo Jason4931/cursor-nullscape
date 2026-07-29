@@ -25,9 +25,10 @@ import {
   shiftlockEase,
   playSound,
   onCelestialIntro,
+  wasdMode,
 } from "./main.js";
 export function updateMouseWorld(canvas, camX, camY) {
-  if (!spaceHeld) {
+  if (!spaceHeld && !wasdMode) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
