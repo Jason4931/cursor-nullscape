@@ -3504,7 +3504,8 @@ function loop(now) {
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
   if (Math.abs(giftMultiplier - 1) < change) giftMultiplier = 1;
-  if (giftMultiplier > 5) giftMultiplier = 5;
+  if (giftMultiplier > 5)
+    giftMultiplier -= Math.min(Math.abs(giftMultiplier - 5), 1);
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }
