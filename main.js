@@ -2009,6 +2009,7 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Intro.ogg" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg" &&
     soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg" &&
@@ -2078,6 +2079,7 @@ export function playSound(
     soundPath != "./ASSET/Sound/Enemies/ending_2.mp3" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Celestial_Cutscene_Music.ogg" &&
+    soundPath != "./ASSET/Sound/Enemies/Celestial/Celestial_Intro.ogg" &&
     soundPath !=
       "./ASSET/Sound/Enemies/Celestial/Talking/Celestial_Talk_5.ogg" &&
     soundPath != "./ASSET/Sound/Enemies/BeaconSpawn.ogg" &&
@@ -2863,6 +2865,8 @@ function spawnCatalystIntro() {
   }, 15000);
 }
 export function spawnCelestialIntro() {
+  stopAllSounds();
+  soundStopped = false;
   setGiftMultiplier(1);
   onCelestial = true;
   onCelestialIntro = true;
