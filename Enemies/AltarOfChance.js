@@ -122,7 +122,7 @@ export function setup(host, hardMode) {
 
   entityCanvas2.addEventListener("click", onClick);
   window.addEventListener("keydown", (e) => {
-    if (e.key == "Enter") {
+    if (e.key == "Enter" || e.key.toLowerCase() == "f") {
       onClick(e);
     }
   });

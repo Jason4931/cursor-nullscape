@@ -701,7 +701,7 @@ let lagFactor = 1;
 
 /* ===== EVENTS ===== */
 window.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && ["w", "a", "s", "d"].includes(e.key.toLowerCase())) {
+  if (e.ctrlKey && ["w", "s", "d"].includes(e.key.toLowerCase())) {
     e.preventDefault();
   }
   if (e.repeat) return;
@@ -1015,7 +1015,7 @@ topLeftInput.addEventListener("keydown", function (event) {
 let reducedMotionHoldActive = false;
 let reducedMotionBeforeHold = reducedMotion;
 window.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && ["w", "a", "s", "d"].includes(e.key.toLowerCase())) {
+  if (e.ctrlKey && ["w", "s", "d"].includes(e.key.toLowerCase())) {
     e.preventDefault();
   }
   if (e.repeat) return;
