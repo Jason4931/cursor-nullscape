@@ -793,6 +793,22 @@
         z-index: 2000;
         cursor: default;
       }
+
+      #error-log {
+        position: fixed;
+        left: 1vw;
+        top: 1vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #f00;
+        text-shadow:
+          -1px -1px 0 black,
+          1px -1px 0 black,
+          -1px 1px 0 black,
+          1px 1px 0 black;
+        z-index: 2000;
+        cursor: default;
+      }
     </style>
     <meta
       name="google-site-verification"
@@ -801,6 +817,7 @@
   </head>
 
   <div id="secret-command">Ctrl+Shift+/ to open commands</div>
+  <div id="error-log"></div>
   <body>
     <div id="viewport">
       <input

@@ -5,6 +5,9 @@ await preloadAssets((loaded, total) => {
   document.getElementById("intro-start").innerHTML =
     `Loading... (${displayed}/${total})`;
 });
+window.addEventListener("error", (e) => {
+  document.getElementById("error-log").innerHTML = e.message;
+});
 
 import { AllPatterns, PATTERNS, TILE_SIZE, finalPatterns } from "./patterns.js";
 import {
