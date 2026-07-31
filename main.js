@@ -3299,8 +3299,18 @@ function ENTITY_SPAWN(
 }
 export function activatePurgatory() {
   lastAltar = "Purgatory";
+  const spawnCount =
+    giftMultiplier < 3.4
+      ? 5
+      : giftMultiplier < 3.8
+        ? 4
+        : giftMultiplier < 4.2
+          ? 3
+          : giftMultiplier < 4.6
+            ? 2
+            : 1;
   giftMultiplier += 2;
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < spawnCount; i++) {
     ENTITY_SPAWN(true);
   }
 }
@@ -5798,8 +5808,8 @@ function loop(now) {
 
   const displayMultiplier =
     giftMultiplier >= 1
-      ? Math.ceil(giftMultiplier * 2) / 2
-      : Math.floor(giftMultiplier * 2) / 2;
+      ? Math.ceil(giftMultiplier * 10) / 10
+      : Math.floor(giftMultiplier * 10) / 10;
   document.getElementById("entity-panel-multiplier").innerHTML =
     `${displayMultiplier}x`;
 

@@ -3273,8 +3273,8 @@ function loop(now) {
 
   const displayMultiplier =
     giftMultiplier >= 1
-      ? Math.ceil(giftMultiplier * 2) / 2
-      : Math.floor(giftMultiplier * 2) / 2;
+      ? Math.ceil(giftMultiplier * 10) / 10
+      : Math.floor(giftMultiplier * 10) / 10;
   document.getElementById("entity-panel-multiplier").innerHTML =
     `${displayMultiplier}x`;
 

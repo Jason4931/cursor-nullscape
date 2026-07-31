@@ -159,9 +159,7 @@ export function setup(host) {
     }
 
     if (state.phase === "initDarken") {
-      if (state.timer <= dt) {
-        setGiftMultiplier(0.5);
-      }
+      setGiftMultiplier(0.5);
       if (state.timer >= 3) {
         state.timer = 0;
         state.phase = "waitSpawn";
@@ -170,6 +168,7 @@ export function setup(host) {
     }
 
     if (state.phase === "waitSpawn") {
+      setGiftMultiplier(0.5);
       if (state.timer >= 7) {
         setGiftMultiplier(1);
         const p = randNearCursor();

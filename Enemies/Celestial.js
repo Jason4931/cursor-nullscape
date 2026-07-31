@@ -3278,6 +3278,7 @@ export function setup(
     const dir = mvx * bx + mvy * by;
 
     if (s.t < 22 && s.pTimer >= 0.02) {
+      setGiftMultiplier(0.5);
       s.pTimer = 0;
 
       const spawnCount = 200;
@@ -4887,6 +4888,7 @@ export function setup(
     const dir = mvx * bx + mvy * by;
 
     if (s.t < 22 && s.pTimer >= 0.02) {
+      setGiftMultiplier(0.5);
       s.pTimer = 0;
 
       const spawnCount = 200;
@@ -6723,6 +6725,7 @@ export function setup(
     const dir = mvx * bx + mvy * by;
 
     if (s.t < 14 && s.pTimer >= 0.02) {
+      setGiftMultiplier(0.5);
       s.pTimer = 0;
 
       const spawnCount = 200;
