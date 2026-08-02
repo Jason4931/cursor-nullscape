@@ -83,6 +83,7 @@ import {
 } from "./Enemies/Voidbreaker.js";
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnEvilCadence } from "./Enemies/EvilCadence.js";
+import { setup as spawnWega } from "./Enemies/Wega.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnQuartz } from "./Enemies/Quartz.js";
 import { setup as spawnVisage } from "./Enemies/Visage.js";
@@ -558,6 +559,15 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/EvilCadence.png",
     desc: "Don't collect the instruments, keep it at bay.",
+    chaosOnly: true,
+  },
+  {
+    name: "Wega",
+    spawn: () => spawnWega(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/Placeholder.png",
+    rare: true,
+    desc: "chases the nearest player",
     chaosOnly: true,
   },
   {

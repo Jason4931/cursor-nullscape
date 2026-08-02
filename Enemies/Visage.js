@@ -169,6 +169,12 @@ export function setup(host) {
       }
 
       if (t >= 1.5) {
+        setTimeout(() => {
+          document.body.classList.add("full-bnw");
+          setTimeout(() => {
+            document.body.classList.remove("full-bnw");
+          }, 60000);
+        }, 200);
         death("Visage");
       }
     }
