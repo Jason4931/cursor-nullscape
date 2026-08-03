@@ -5519,6 +5519,12 @@ function updateCamera() {
           spawnedAltar[0] = true;
           spawnAltarChance(entityHost, hardMode);
           spawnAltarChaos(entityHost, hardMode);
+          if (chaosMode) {
+            spawnAltarChance(entityHost, hardMode);
+            spawnAltarChance(entityHost, hardMode);
+            spawnAltarChance(entityHost, hardMode);
+            spawnAltarChance(entityHost, hardMode);
+          }
         }
         if (actualCollectedCount >= 800 && !spawnedAltar[1]) {
           spawnedAltar[1] = true;

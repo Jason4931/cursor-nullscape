@@ -31,7 +31,10 @@ vx big baby
 vx big springer
 vx the eye
 vx realmweaver
+x scuttlebloom -> always trying to take gift arround cursor (sigil movement + prediction)
+x lumishade -> multiple rings on cursor position (easing movement)
 vx evilcadence
+v wega
 curses
 vx legion
 vx nuclearbomb
