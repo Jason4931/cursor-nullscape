@@ -72,7 +72,7 @@ export function setup(host) {
         } else {
           state.mode = "bluim";
           state.enemy = bluimWega;
-          state.speed *= 1.5;
+          state.speed *= 1.1;
           state.bluimTimer = 0;
           state.bluimPhase = "chase";
         }
