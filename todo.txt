@@ -1,53 +1,53 @@
-vx bell
-vx baby
-vx husk
-vx icbm
-vx mart
-vx springer
-vx flesh
-vx operator
-vx guardian
-vx telefragger
-vx kolona
-vx voidbound baby
-vx cadence
-vx sigil
-vx voidbreaker
-vx voidbound guardian
-vx scrapmaw
+v bell
+v baby
+v husk
+v icbm
+v mart
+v springer
+v flesh
+v operator
+v guardian
+v telefragger
+v kolona
+v voidbound baby
+v cadence
+v sigil
+v voidbreaker
+v voidbound guardian
+v scrapmaw
 v random
-vx void implosion
-vx oblivion
-vx razorbloom
-vx voidbound operator
+v void implosion
+v oblivion
+v razorbloom
+v malfunction
 rare
-vx ponderer
-vx nil (considered separate from new nil)
+v ponderer
+v nil (considered separate from new nil)
 chaos
-vx quartz
-vx fear/visage
-vx locust/belchboy
-vx big baby
-vx big springer
-vx the eye
-vx realmweaver
+v quartz
+v visage/fear
+v locust/belchboy
+v big baby
+v big springer
+v the eye
+v realmweaver
 x scuttlebloom -> always trying to take gift arround cursor (sigil movement + prediction)
 x lumishade -> multiple rings on cursor position (easing movement)
-vx evilcadence
+v evilcadence
 v wega
 curses
-vx legion
-vx nuclearbomb
-vx Don't touch me
-vx Mart slide
-vx Shotgun
-vx Blueprint cross beams
-vx Ballet
-vx Bombard
-vx Lost embers
-vx Redacted
-vx Muted
-vx Rebirth
+v legion
+v nuclearbomb
+v Don't touch me
+v Mart slide
+v Shotgun
+v Blueprint cross beams
+v Ballet
+v Bombard
+v Lost embers
+v Redacted
+v Muted
+v Rebirth
 v Fast springer
 
 v cascade
@@ -66,5 +66,5 @@ v celestial intro
 v celestial outro
 v altars
 
-vx catalyst
-vx celestial
+v catalyst
+v celestial

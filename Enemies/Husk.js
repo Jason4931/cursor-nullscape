@@ -218,7 +218,7 @@ export function setup(host, stack, hardMode) {
       if (sounddist <= 500) {
         if (!state.sound)
           state.sound = playSound(
-            `./ASSET/Sound/Enemies/Husk/Skinwalker.ogg`,
+            `./ASSET/Sound/Enemies/Husk/Husk.ogg`,
             undefined,
             undefined,
             undefined,

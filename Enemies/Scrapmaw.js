@@ -17,6 +17,8 @@ export function setup(host, casualMode, hardMode) {
     disappearData: null,
     lasers: [],
     ellipseFX: [],
+
+    deathSound: null,
   };
 
   function update(dt) {
@@ -50,6 +52,17 @@ export function setup(host, casualMode, hardMode) {
         const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
 
         if (dist < 7) {
+          if (!state.deathSound) {
+            state.deathSound = playSound(
+              "./ASSET/Sound/Enemies/Scrapmaw/Scrapmaw_Kill.ogg",
+              undefined,
+              undefined,
+              undefined,
+              () => {
+                state.deathSound = null;
+              },
+            );
+          }
           death("Scrapmaw");
         }
       }
@@ -63,6 +76,9 @@ export function setup(host, casualMode, hardMode) {
 
     state.phaseT += dt;
     if (state.phase === "idle") {
+      if (state.phaseT >= 1.25 && state.phaseT <= 1.25 + dt) {
+        playSound("./ASSET/Sound/Enemies/Scrapmaw/Scrapmaw_PortalLeave.ogg");
+      }
       if (state.phaseT >= state.idleDuration) {
         state.phaseT = 0;
         state.phase = "appear";
@@ -188,6 +204,17 @@ export function setup(host, casualMode, hardMode) {
         const dist = Math.hypot(mouse.x - px, mouse.y - py);
 
         if (dist < l.baseThickness) {
+          if (!state.deathSound) {
+            state.deathSound = playSound(
+              "./ASSET/Sound/Enemies/Scrapmaw/Scrapmaw_Kill.ogg",
+              undefined,
+              undefined,
+              undefined,
+              () => {
+                state.deathSound = null;
+              },
+            );
+          }
           death("Scrapmaw");
         }
       }
@@ -314,6 +341,10 @@ export function setup(host, casualMode, hardMode) {
       if (d.t >= moveEnd) {
         d.x = d.targetX;
         d.y = d.targetY;
+      }
+
+      if (state.phaseT >= 0.25 && state.phaseT <= 0.25 + dt) {
+        playSound("./ASSET/Sound/Enemies/Scrapmaw/Scrapmaw_Leave.ogg");
       }
 
       if (state.phaseT >= 0.5) {

@@ -181,6 +181,7 @@ export function setup(host, hardMode, scale = 1) {
 
         if (kb.timer > 0.1) {
           moveCamera(-nx * strength, -ny * strength);
+          playSound("./ASSET/Sound/Enemies/Springer/Springer_-_Shockwaved.ogg");
           applyTripmineLeniency(power01);
         }
       }
@@ -208,7 +209,6 @@ export function setup(host, hardMode, scale = 1) {
           if (!state.deathSound) {
             playSound(
               "./ASSET/Sound/Enemies/Springer/Springer_-_JumpKill_Layer.ogg",
-              1 + fasterSpringer[0],
             );
             state.deathSound = true;
           }

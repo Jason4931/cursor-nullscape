@@ -136,6 +136,17 @@ export function setup(host) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (despawnCatalyst) return;
 
+    if (state.phase === "initDarken" && state.timer < dt) {
+      playSound(
+        "./ASSET/Sound/Enemies/Catalyst/Level100Start_Final.ogg",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
     if (beaconed) {
       state.phase = "scream";
       state.screaming = true;

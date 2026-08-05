@@ -88,6 +88,7 @@ export function setup(host, hardMode) {
           state.stillTimer >= (hardMode ? 0.5 : 0.25) &&
           state.abilityLongerCooldown == 0
         ) {
+          playSound("./ASSET/Sound/Enemies/Dozer/DozerSurvive.ogg");
           enterIdle();
           return;
         }
@@ -107,12 +108,11 @@ export function setup(host, hardMode) {
 
       if (state.timer >= state.watchDuration && !state.death) {
         state.death = true;
-        death("Dozer");
-        playSound("./ASSET/Sound/Enemies/Dozer/DozerJumpTextFull.wav");
-        playSound("./ASSET/Sound/Enemies/Dozer/DozerDeathEffect.wav");
+        playSound("./ASSET/Sound/Enemies/Dozer/DozerKill.ogg");
         setTimeout(() => {
           enterIdle();
         }, 500);
+        death("Dozer");
       }
     }
   }

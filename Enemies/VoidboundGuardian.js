@@ -85,6 +85,11 @@ export function setup(host, casualMode, hardMode) {
       "./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardianMove3.ogg",
     ];
     playSound(moveSound[Math.floor(Math.random() * 3)]);
+    if (Math.random() < 0.1) {
+      playSound(
+        `./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardian_ShoopDaWhoop.ogg`,
+      );
+    }
   }
 
   function startIdleShoot() {
@@ -234,9 +239,15 @@ export function setup(host, casualMode, hardMode) {
           state.layer = state.layers.length;
           if (state.shotsFired == 2) state.layerChange[0] = true;
         }
-        playSound(
-          `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Firing${state.shotsFired + (shotgunVBGuardianActive[0] ? 2 : 1)}.ogg`,
-        );
+        if (shotgunVBGuardianActive[0]) {
+          playSound(
+            `./ASSET/Sound/Enemies/VoidboundGuardian/VoidboundGuardianShotgun.ogg`,
+          );
+        } else {
+          playSound(
+            `./ASSET/Sound/Enemies/VoidboundGuardian/Patch5_VoidboundGuardian_Firing${state.shotsFired + (shotgunVBGuardianActive[0] ? 2 : 1)}.ogg`,
+          );
+        }
         state.shotsFired++;
       }
 

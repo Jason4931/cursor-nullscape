@@ -1375,7 +1375,7 @@ export function setup(
           shakeScreen();
           playSound(
             `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
-            3,
+            4,
           );
         }
         c.phase = 2;
@@ -1857,6 +1857,7 @@ export function setup(
       statePizzaCutterCrumble.t = 0;
       statePizzaCutterCrumble.cycle++;
       shakeScreen(2);
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
       if (statePizzaCutterCrumble.cycle < 4) {
         statePizzaCutterCrumble.spawned = false;
         statePizzaCutterCrumble.change = false;
@@ -2149,10 +2150,26 @@ export function setup(
         undefined,
         "50",
       );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Crack.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
     } else if (r.t >= 1 && r.t <= 1 + dt) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
         undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Fire.ogg`,
+        0.9,
         undefined,
         undefined,
         undefined,
@@ -2537,9 +2554,6 @@ export function setup(
     const my = mouse.y;
     let needsCompact = false;
     stateCrumble.t += dt;
-    if (stateCrumble.t >= 2 && stateCrumble.t <= 2 + dt) {
-      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
-    }
     for (const c of stateCrumble.circles) {
       c.t += dt;
 
@@ -2562,6 +2576,9 @@ export function setup(
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          if (stateCrumble.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
         }
         c.r -= dt * 200;
         if (c.r <= 0) {
@@ -3806,6 +3823,22 @@ export function setup(
         undefined,
         "50",
       );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_2.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_3.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
     } else if (s.t >= 2 && s.t <= 2 + dt) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Swordprep.ogg`,
@@ -3833,6 +3866,7 @@ export function setup(
         "50",
       );
     } else if (s.t >= 7 && s.t <= 7 + dt) {
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
       playSound(
         `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
         0.9,
@@ -5077,6 +5111,9 @@ export function setup(
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          if (s.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
         }
         c.r -= dt * 200;
         if (c.r <= 0) {
@@ -5473,7 +5510,7 @@ export function setup(
           shakeScreen();
           playSound(
             `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
-            3,
+            4,
           );
         }
         c.phase = 2;
@@ -5502,6 +5539,37 @@ export function setup(
 
       const spinDuration = 1.5;
       const moveDuration = 0.5;
+
+      if (s.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2 && d.t <= 2 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
 
       if (d.t <= spinDuration) {
         const p = d.t / spinDuration;
@@ -5966,6 +6034,7 @@ export function setup(
       stateFirstSilence.t = 0;
       stateFirstSilence.cycle++;
       shakeScreen(stateFirstSilence.cycle % 2 == 0 ? 2 : 3);
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
       if (stateFirstSilence.cycle < 4) {
         stateFirstSilence.spawned = false;
         stateFirstSilence.change = false;
@@ -6031,6 +6100,37 @@ export function setup(
 
       const spinDuration = 1.5;
       const moveDuration = 0.5;
+
+      if (stateFirstSilence.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2 && d.t <= 2 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
 
       if (d.t <= spinDuration) {
         const p = d.t / spinDuration;
@@ -6146,8 +6246,8 @@ export function setup(
       stateFirstSilence.beams.length == 0
     ) {
       playSound(
-        `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
-        0.75,
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.667,
         undefined,
         undefined,
         undefined,
@@ -6916,6 +7016,9 @@ export function setup(
         if (!c.shake) {
           c.shake = true;
           shakeScreen();
+          if (s.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
         }
         c.r -= dt * 200;
         if (c.r <= 0) {
@@ -6939,8 +7042,8 @@ export function setup(
 
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
       playSound(
-        `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
-        0.75,
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.667,
         undefined,
         undefined,
         undefined,
@@ -7036,10 +7139,26 @@ export function setup(
         undefined,
         "50",
       );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Crack.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
     } else if (r.t >= 1 && r.t <= 1 + dt) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
         undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Fire.ogg`,
+        0.9,
         undefined,
         undefined,
         undefined,

@@ -82,7 +82,7 @@ export function setup(host, casualMode, hardMode) {
   }
   resetIdle();
 
-  function spawnSword(dir) {
+  function spawnSword(dir, lastBallet = false) {
     const targetAngle = Math.atan2(dir[1], dir[0]);
 
     const sword = {
@@ -108,15 +108,24 @@ export function setup(host, casualMode, hardMode) {
       flash: 0,
       flashX: 0,
       flashY: 0,
+
+      lastBallet,
     };
 
     state.swords.push(sword);
 
     const randSound = Math.random() < 0.5;
-    playSound(
-      `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Sword_Summon${randSound ? "" : "_2"}.ogg`,
-      (randSound ? 0.857 : 1) * (bladeBombardmentActive[0] ? 0.75 : 1),
-    );
+    if (balletOfBladesActive[0]) {
+      playSound(
+        `./ASSET/Sound/Enemies/Voidbreaker/Voidbreaker_BalletBlades_Spawn.ogg`,
+        bladeBombardmentActive[0] ? 0.5 : 0.75,
+      );
+    } else {
+      playSound(
+        `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_Sword_Summon${randSound ? "" : "_2"}.ogg`,
+        (randSound ? 0.857 : 1) * (bladeBombardmentActive[0] ? 0.75 : 1),
+      );
+    }
   }
   function updateSword(sword, dt) {
     sword.timer += dt;
@@ -153,10 +162,20 @@ export function setup(host, casualMode, hardMode) {
           playSound(
             `./ASSET/Sound/Enemies/Voidbreaker/Voidbreaker_Bombardment_Fire.ogg`,
           );
+          if (balletOfBladesActive[0] && sword.lastBallet) {
+            playSound(
+              `./ASSET/Sound/Enemies/Voidbreaker/Voidbreaker_BalletBlades_FireLast.ogg`,
+            );
+          }
         } else if (balletOfBladesActive[0]) {
           playSound(
             `./ASSET/Sound/Enemies/Voidbreaker/Voidbreaker_BalletBlades_Fire${1 + Math.floor(Math.random() * 4)}.ogg`,
           );
+          if (sword.lastBallet) {
+            playSound(
+              `./ASSET/Sound/Enemies/Voidbreaker/Voidbreaker_BalletBlades_FireLast.ogg`,
+            );
+          }
         } else {
           playSound(
             `./ASSET/Sound/Enemies/Voidbreaker/Patch5_Voidbreaker_SwordLaunch${Math.random() < 0.5 ? "" : "_2"}.ogg`,
@@ -317,7 +336,7 @@ export function setup(host, casualMode, hardMode) {
           ) {
             const index = (Math.random() * availableDirections.length) | 0;
             const dir = availableDirections.splice(index, 1)[0];
-            spawnSword(dir);
+            spawnSword(dir, !hardMode);
           }
         } else if (
           hardMode &&
@@ -335,7 +354,7 @@ export function setup(host, casualMode, hardMode) {
           ) {
             const index = (Math.random() * availableDirections.length) | 0;
             const dir = availableDirections.splice(index, 1)[0];
-            spawnSword(dir);
+            spawnSword(dir, true);
           }
         }
       }

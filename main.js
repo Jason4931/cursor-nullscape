@@ -5090,10 +5090,12 @@ function drawGrid() {
   if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
     slownessTime = 0;
     slowness = true;
+    playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_Apply.ogg");
   }
   slownessTime++;
   if (slownessTime >= 90 && slowness) {
     slowness = false;
+    playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_End.ogg");
     slownessCooldown = true;
     setTimeout(() => {
       slownessCooldown = false;

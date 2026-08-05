@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, ESP, getCameraPos } from "../main.js";
+import { canvas, ESP, getCameraPos, playSound, soundStopped } from "../main.js";
 
 const VisageFont = new FontFace(
   "VisageFont",
@@ -36,7 +36,9 @@ export function setup(host) {
     randomDirX: 0,
     randomDirY: 0,
 
-    sound: null,
+    sound1: null,
+    sound2: null,
+    sound3: null,
     wobbleTime: 0,
     _targetDuration: 9 + Math.random(),
 
@@ -132,6 +134,67 @@ export function setup(host) {
 
     state.x += (dx + wx) * state.speed * dt;
     state.y += (dy + wy) * state.speed * dt;
+
+    if (!soundStopped) {
+      if (dist <= 1000) {
+        if (!state.sound1)
+          state.sound1 = playSound(
+            `./ASSET/Sound/Enemies/Visage/Visage_Breathing.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound1 = null;
+            },
+          );
+        if (!state.sound2)
+          state.sound2 = playSound(
+            `./ASSET/Sound/Enemies/Visage/Visage_Heartbeat.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound2 = null;
+            },
+          );
+        if (!state.sound3)
+          state.sound3 = playSound(
+            `./ASSET/Sound/Enemies/Visage/Visage_Tapping.ogg`,
+            undefined,
+            undefined,
+            undefined,
+            () => {
+              state.sound3 = null;
+            },
+          );
+      } else {
+        if (state.sound1) {
+          state.sound1();
+          state.sound1 = null;
+        }
+        if (state.sound2) {
+          state.sound2();
+          state.sound2 = null;
+        }
+        if (state.sound3) {
+          state.sound3();
+          state.sound3 = null;
+        }
+      }
+    } else {
+      if (state.sound1) {
+        state.sound1();
+        state.sound1 = null;
+      }
+      if (state.sound2) {
+        state.sound2();
+        state.sound2 = null;
+      }
+      if (state.sound3) {
+        state.sound3();
+        state.sound3 = null;
+      }
+    }
   }
 
   function draw(ctx) {

@@ -48,6 +48,8 @@ export function setup(host, hardMode) {
     pellets: [],
     shotsFired: 0,
     shootDuration: 0,
+
+    bulletSound: null,
   };
 
   const DASH_RADIUS = 640;
@@ -65,9 +67,9 @@ export function setup(host, hardMode) {
     state.dashTargetX = mouse.x + Math.cos(a) * r;
     state.dashTargetY = mouse.y + Math.sin(a) * r;
     let moveSound = [
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove1.ogg",
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove2.ogg",
-      "./ASSET/Sound/Enemies/Guardian/GuardianMove3.ogg",
+      "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_Move.ogg",
+      "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_Move_2.ogg",
+      "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_Move_3.ogg",
     ];
     playSound(moveSound[Math.floor(Math.random() * 3)], 0.75);
   }
@@ -119,6 +121,19 @@ export function setup(host, hardMode) {
     }
 
     state.pellets.push(pellet);
+    if (state.bulletSound) {
+      state.bulletSound();
+      state.bulletSound = null;
+    }
+    state.bulletSound = playSound(
+      "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_BulletRadius.ogg",
+      undefined,
+      undefined,
+      undefined,
+      () => {
+        state.bulletSound = null;
+      },
+    );
   }
 
   function update(dt) {
@@ -186,7 +201,11 @@ export function setup(host, hardMode) {
           if (state.shotsFired == (hardMode ? 4 : 3))
             state.layerChange[0] = true;
         }
-        playSound("./ASSET/Sound/Enemies/Guardian/GuardianShoot.ogg");
+        if (shotgunGuardianActive[0]) {
+          playSound("./ASSET/Sound/Enemies/Guardian/GuardianShotgun.ogg");
+        } else {
+          playSound("./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_Shoot.ogg");
+        }
         state.shotsFired++;
       }
 
@@ -213,12 +232,15 @@ export function setup(host, hardMode) {
     const now = performance.now();
     for (let i = state.pellets.length - 1; i >= 0; i--) {
       const p = state.pellets[i];
+      const age = now - p.born;
 
-      p.trail.push({
-        x: p.x,
-        y: p.y,
-        life: 1,
-      });
+      if (age < 13000) {
+        p.trail.push({
+          x: p.x,
+          y: p.y,
+          life: 1,
+        });
+      }
 
       for (let i = p.trail.length - 1; i >= 0; i--) {
         const t = p.trail[i];
@@ -229,25 +251,33 @@ export function setup(host, hardMode) {
         }
       }
 
-      if (p.center) {
-        const t = (performance.now() - p.born) / 1000;
-        const r = 100 * t;
+      if (age < 13000) {
+        if (p.center) {
+          const t = (performance.now() - p.born) / 1000;
+          const r = 100 * t;
 
-        p.x = p.center.x + Math.cos(p.offsetAngle) * r;
-        p.y = p.center.y + Math.sin(p.offsetAngle) * r;
-      } else {
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-      }
-
-      if (now - p.born > 10500) {
+          p.x = p.center.x + Math.cos(p.offsetAngle) * r;
+          p.y = p.center.y + Math.sin(p.offsetAngle) * r;
+        } else {
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+        }
+      } else if (age > 13500) {
         state.pellets.splice(i, 1);
         continue;
       }
 
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
-      if (dx * dx + dy * dy < 12 * 12) {
+      if (dx * dx + dy * dy < 12 * 12 && age < 13000) {
+        p.born = now - 13000;
+        playSound(
+          "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_BulletCollide.ogg",
+        );
+        if (state.pellets.length === 1 && state.bulletSound) {
+          state.bulletSound();
+          state.bulletSound = null;
+        }
         death("Guardian");
       }
     }
@@ -325,8 +355,9 @@ export function setup(host, hardMode) {
       ctx.stroke();
     }
 
-    ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
+    const now = performance.now();
     for (const p of state.pellets) {
+      const age = now - p.born;
       ctx.globalAlpha = 1;
       if (!uldm) {
         for (const t of p.trail) {
@@ -337,10 +368,26 @@ export function setup(host, hardMode) {
           ctx.stroke();
         }
       }
-
-      ctx.beginPath();
-      ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
+      ctx.strokeStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
+      ctx.lineWidth = 2;
+      if (age < 13000) {
+        ctx.beginPath();
+        ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        const progress = (age - 13000) / 500;
+        ctx.globalAlpha = 1 - progress;
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(p.x),
+          Math.round(p.y),
+          progress * 40,
+          0,
+          Math.PI * 2,
+        );
+        ctx.stroke();
+      }
     }
 
     ctx.restore();

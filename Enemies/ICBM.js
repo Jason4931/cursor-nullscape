@@ -159,6 +159,11 @@ export function setup(host, hardMode) {
         }
         state.timer = 0;
         state.phase = "idle";
+        if (nuclearBombActive[0]) {
+          playSound(
+            "./ASSET/Sound/Enemies/ICBM/ICBM_NuclearBomb_Explosion.ogg",
+          );
+        }
         state.idleDuration = (nuclearBombActive[0] ? 10 : 9) + Math.random();
       }
     } else if (state.phase === "idle") {
