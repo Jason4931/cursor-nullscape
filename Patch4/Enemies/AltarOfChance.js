@@ -6,6 +6,7 @@ import {
   canvas,
   getCameraPos,
   collectedCount,
+  playSound,
 } from "../main.js";
 
 const altar = new Image();
@@ -54,6 +55,7 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       state.result = activateChance();
+      playSound("./ASSET/Sound/Global/Main_Altar_sfx.ogg");
       state.resultTimer = 0;
       teleport();
     }

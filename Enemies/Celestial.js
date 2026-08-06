@@ -954,7 +954,7 @@ export function setup(
   }
   function spawnCircle(targetR = 1, maxdist = 1000) {
     const angle = Math.random() * Math.PI * 2;
-    const dist = Math.random() * maxdist;
+    const dist = Math.random() * maxdist * targetR;
 
     const sx = mouse.x + (Math.random() - 0.5) * 5000;
     const sy = mouse.y + (Math.random() - 0.5) * 5000;

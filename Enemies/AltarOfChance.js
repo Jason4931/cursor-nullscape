@@ -7,6 +7,7 @@ import {
   getCameraPos,
   actualCollectedCount,
   onCelestial,
+  playSound,
 } from "../main.js";
 
 const altar = new Image();
@@ -114,6 +115,7 @@ export function setup(host, hardMode) {
       } else {
         state.result = activateChance(state.mode);
       }
+      playSound("./ASSET/Sound/Global/Main_Altar_sfx.ogg");
       state.resultMode = state.mode;
       state.resultTimer = 0;
       teleport();

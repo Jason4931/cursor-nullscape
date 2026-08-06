@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, moveCamera, uldm } from "../main.js";
+import { TILE, moveCamera, playSound, uldm } from "../main.js";
 
 export function setup(host) {
   const state = {
@@ -63,6 +63,7 @@ export function setup(host) {
           moveCamera((dx / len) * TILE * -1.25, (dy / len) * TILE * -1.25);
 
           p.active = false;
+          playSound("./ASSET/Sound/Global/Tria_Orb_Launch.ogg");
           p.shrinking = true;
           p.radiusT = 0;
         }
@@ -91,6 +92,7 @@ export function setup(host) {
         state.activated = true;
 
         p.active = true;
+        playSound("./ASSET/Sound/Global/Tria_Orb_Grab.ogg");
         p.shrinking = false;
         p.radiusT = 0;
       }

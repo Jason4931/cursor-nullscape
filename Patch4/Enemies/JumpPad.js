@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { TILE, moveCamera, jumppadHit, uldm } from "../main.js";
+import { TILE, moveCamera, jumppadHit, uldm, playSound } from "../main.js";
 
 const jumppad = new Image();
 jumppad.src = "./ASSET/Misc/Jumppad.png";
@@ -66,6 +66,13 @@ export function setup(host, red = false) {
           dx * TILE * (red ? 1.25 : 0.75),
           dy * TILE * (red ? 1.25 : 0.75),
         );
+        if (red) {
+          playSound(`./ASSET/Sound/Global/Grapple_Points_Use.ogg`);
+        } else {
+          playSound(
+            `./ASSET/Sound/Global/Jump_Pad_Use${1 + Math.floor(Math.random() * 3)}.ogg`,
+          );
+        }
         jumppadHit("set");
         state.activated = true;
         setTimeout(() => {

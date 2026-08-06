@@ -7,6 +7,7 @@ import {
   getCameraPos,
   actualCollectedCount,
   onCelestial,
+  playSound,
 } from "../main.js";
 
 const altar = new Image();
@@ -47,6 +48,7 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       activatePurgatory();
+      playSound("./ASSET/Sound/Global/Main_Altar_sfx.ogg");
       state.resultTimer = 4;
       teleport();
     }

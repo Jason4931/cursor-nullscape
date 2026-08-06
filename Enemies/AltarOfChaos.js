@@ -7,6 +7,7 @@ import {
   getCameraPos,
   actualCollectedCount,
   onCelestial,
+  playSound,
 } from "../main.js";
 
 const altar = new Image();
@@ -47,6 +48,7 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       activateChaos();
+      playSound("./ASSET/Sound/Global/ChaosAltar_Active.ogg");
       state.resultTimer = 4;
       teleport();
     }
@@ -143,12 +145,12 @@ export function setup(host, hardMode) {
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
       ctx.strokeText(
-        `Good luck.`,
+        `You feel uneasy...`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );
       ctx.fillText(
-        `Good luck.`,
+        `You feel uneasy...`,
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );

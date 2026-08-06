@@ -5436,8 +5436,18 @@ function updateCamera() {
         (g.golden ? 4 : 1) *
         (Math.floor(giftMultiplier) +
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
-      if (!disableCollect && !insidePylon && !stopCollect)
+      if (!disableCollect && !insidePylon && !stopCollect) {
         actualCollectedCount += value;
+        if (g.golden) {
+          if (Math.random() > 0.00001) {
+            playSound("./ASSET/Sound/Global/GoldGiftCollect.ogg");
+          } else {
+            playSound("./ASSET/Sound/Global/RareGoldGiftCollect.ogg");
+          }
+        } else {
+          playSound("./ASSET/Sound/Global/GiftCollect.ogg");
+        }
+      }
       collectedCount = hardMode
         ? actualCollectedCount
         : Math.floor(actualCollectedCount / 2);
@@ -6021,7 +6031,7 @@ function loop(now) {
     if (jesus) {
       if (shieldLostMsg[1] - 177 > 0 && !vineBoom) {
         vineBoom = playSound(
-          "./ASSET/Sound/Enemies/vine-boom.mp3",
+          "./ASSET/Sound/Global/vine-boom.mp3",
           undefined,
           undefined,
           undefined,
@@ -6040,6 +6050,18 @@ function loop(now) {
         window.innerHeight,
       );
       ctx.restore();
+    } else {
+      if (shieldLostMsg[1] - 177 > 0 && !vineBoom) {
+        vineBoom = playSound(
+          "./ASSET/Sound/Global/Shield_Break.ogg",
+          undefined,
+          undefined,
+          undefined,
+          () => {
+            vineBoom = null;
+          },
+        );
+      }
     }
     ctx.save();
     const boxHeight = 100;
@@ -6206,7 +6228,7 @@ function loop(now) {
     if (!soundParry) {
       soundParry = true;
       speedBoostScale = 2;
-      playSound("./ASSET/Sound/Enemies/parry-ultrakill.mp3");
+      playSound("./ASSET/Sound/Global/parry-ultrakill.mp3");
       setTimeout(() => {
         parried = false;
         soundParry = false;
