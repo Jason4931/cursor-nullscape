@@ -5,18 +5,30 @@ const ROOTPatch4 = path.resolve("./Patch4/ASSET");
 const ROOTPatch5 = path.resolve("./ASSET");
 
 const EXTENSIONS = new Set([
-  ".png",
-  ".jpg",
-  ".jpeg",
-  ".webp",
-  ".gif",
-  ".bmp",
-  ".svg",
-
+  // // Images
+  // ".png",
+  // ".jpg",
+  // ".jpeg",
+  // ".webp",
+  // ".gif",
+  // ".bmp",
+  // ".svg",
+  // Audio
   ".mp3",
-  ".wav",
+  ".mpeg",
   ".ogg",
+  ".wav",
   ".m4a",
+  ".aac",
+  ".flac",
+  ".opus",
+  ".weba",
+  ".oga",
+  ".mid",
+  ".midi",
+  ".aif",
+  ".aiff",
+  ".caf",
 ]);
 
 let assets = [];
