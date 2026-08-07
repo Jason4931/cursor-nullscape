@@ -77,7 +77,10 @@ export function setup(host, casualMode, hardMode) {
   function resetIdle() {
     state.phase = "idle";
     state.timer = 0;
-    state.delay = (9 + Math.random()) / voidbreakerCount;
+    state.delay =
+      (9 + Math.random()) / voidbreakerCount +
+      (bladeBombardmentActive[0] ? 1 : 0) +
+      (balletOfBladesActive[0] ? 1 : 0);
     state.opacity = 0;
   }
   resetIdle();
