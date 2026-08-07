@@ -133,9 +133,8 @@ export function setup(host, casualMode, hardMode) {
         const py = nx;
         const midX = (l.cx + l.tx) * 0.5;
         const midY = (l.cy + l.ty) * 0.5;
-        const width = Math.abs(dx * px + dy * py) * 3;
         const laserCount = 60;
-        const spacing = (width / (laserCount - 1)) * 1.5;
+        const spacing = 150;
         for (let i = 0; i < laserCount; i++) {
           const offset = (i - (laserCount - 1) / 2) * spacing;
           lasers.push({

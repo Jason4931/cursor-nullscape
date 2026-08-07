@@ -6573,9 +6573,6 @@ function startTimer() {
 export function stopTimer() {
   clearInterval(timerInterval);
   timerInterval = null;
-  setTimeout(() => {
-    document.getElementById("timer").style.bottom = "6vw";
-  }, 5000);
 }
 const unlock = () => {
   if (isMobile) return;
