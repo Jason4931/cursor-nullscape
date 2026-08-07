@@ -2,6 +2,13 @@ import { death, mouse } from "../entityHost.js";
 import { ability, getCameraPos, playSound, slowness, uldm } from "../main.js";
 import { operatorActive } from "./Operator.js";
 
+const KolonaFont = new FontFace(
+  "KolonaFont",
+  "url(./ASSET/Misc/KolonaFont.ttf)",
+);
+await KolonaFont.load();
+document.fonts.add(KolonaFont);
+
 const Kolona_Eyes = [];
 for (let i = 1; i <= 6; i++) {
   const img = new Image();
@@ -306,7 +313,7 @@ export function setup(host, casualMode) {
 
     if (!state.showEntity) {
       ctx.save();
-      ctx.font = `bold ${RING_RADIUS / 2}px monospace`;
+      ctx.font = `900 ${RING_RADIUS / 3}px KolonaFont`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       const text =

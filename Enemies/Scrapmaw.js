@@ -51,7 +51,7 @@ export function setup(host, casualMode, hardMode) {
 
         const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
 
-        if (dist < 7) {
+        if (dist < 7 * (lz.bold ? 2 : 1)) {
           if (!state.deathSound) {
             state.deathSound = playSound(
               "./ASSET/Sound/Enemies/Scrapmaw/Scrapmaw_Kill.ogg",
@@ -296,6 +296,7 @@ export function setup(host, casualMode, hardMode) {
             ny,
             t: 0,
             life: 1,
+            bold: true,
           });
           playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerFire.ogg", 2);
         }
@@ -434,7 +435,7 @@ export function setup(host, casualMode, hardMode) {
       const perpX = -lz.ny;
       const perpY = lz.nx;
 
-      const thickness = 7 * scale;
+      const thickness = 7 * (lz.bold ? 1 + Math.random() : 1) * scale;
 
       const halfLen = 20000;
 
