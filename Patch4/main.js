@@ -178,7 +178,7 @@ let highestEntitySpawned = [];
 const pickedOnce = new Set();
 const spawnedUnstackables = new Set();
 export let spaceHeld = false;
-const keysPressed = {};
+export const keysPressed = {};
 export let shiftlockEase = 1;
 export let ability = false;
 export let usedAbility = null;
@@ -687,6 +687,7 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
+let giftCollectSound = null;
 let giftMultiplier = 1;
 export function setGiftMultiplier(v) {
   giftMultiplier = v;
@@ -3000,14 +3001,40 @@ function updateCamera() {
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect) {
         actualCollectedCount += value;
-        if (g.golden) {
-          if (Math.random() > 0.00001) {
-            playSound("./ASSET/Sound/Global/GoldGiftCollect.ogg");
+        if (!giftCollectSound) {
+          if (g.golden) {
+            if (Math.random() > 0.00001) {
+              giftCollectSound = playSound(
+                "./ASSET/Sound/Global/GoldGiftCollect.ogg",
+                undefined,
+                undefined,
+                undefined,
+                () => {
+                  giftCollectSound = null;
+                },
+              );
+            } else {
+              giftCollectSound = playSound(
+                "./ASSET/Sound/Global/RareGoldGiftCollect.ogg",
+                undefined,
+                undefined,
+                undefined,
+                () => {
+                  giftCollectSound = null;
+                },
+              );
+            }
           } else {
-            playSound("./ASSET/Sound/Global/RareGoldGiftCollect.ogg");
+            giftCollectSound = playSound(
+              "./ASSET/Sound/Global/GiftCollect.ogg",
+              undefined,
+              undefined,
+              undefined,
+              () => {
+                giftCollectSound = null;
+              },
+            );
           }
-        } else {
-          playSound("./ASSET/Sound/Global/GiftCollect.ogg");
         }
       }
       collectedCount = hardMode

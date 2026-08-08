@@ -435,7 +435,10 @@ export function setup(host, casualMode, hardMode) {
       const perpX = -lz.ny;
       const perpY = lz.nx;
 
-      const thickness = 7 * (lz.bold ? 1 + Math.random() : 1) * scale;
+      const thickness =
+        7 *
+        (lz.bold ? (lz.t > lz.life - 0.5 ? 2 : 1 + Math.random()) : 1) *
+        scale;
 
       const halfLen = 20000;
 

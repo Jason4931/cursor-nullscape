@@ -143,12 +143,12 @@ const beaten =
   localStorage.getItem("lv50-normal") != null ||
   localStorage.getItem("lv50-hard") != null;
 const difficulties = beaten
-  ? ["Casual", "Standard", "Extreme", "CHAOS"]
+  ? ["Casual", "Standard", "Extreme"]
   : ["Casual", "Standard"];
 let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
 let casualMode = difficultyIndex === 0;
 export let hardMode = difficultyIndex === 2;
-let chaosMode = difficultyIndex === 3;
+let chaosMode = JSON.parse(localStorage.getItem("chaos")) ?? false;
 const diffLabel = document.getElementById("diff-label");
 const diffLeft = document.getElementById("diff-left");
 const diffRight = document.getElementById("diff-right");
@@ -176,19 +176,8 @@ function applyDifficulty(firstLoad = false, direction = 0) {
   } else {
     diffLabel.textContent = diff;
   }
-
-  if (diff === "Casual") {
-    diffLabel.style.color = "#0f0";
-  } else if (diff === "Extreme") {
-    diffLabel.style.color = "#f00";
-  } else if (diff === "CHAOS") {
-    diffLabel.style.color = "#600";
-  } else {
-    diffLabel.style.color = "#fff";
-  }
   casualMode = diff === "Casual";
   hardMode = diff === "Extreme";
-  chaosMode = diff === "CHAOS";
   if (!firstLoad) localStorage.setItem("difficulty", difficultyIndex);
   checkDiff();
 }
@@ -254,7 +243,7 @@ const spawnedCurses = new Set();
 let jumppadSpawns = [];
 let fleshSpawns = [];
 export let spaceHeld = false;
-const keysPressed = {};
+export const keysPressed = {};
 export let shiftlockEase = 1;
 export let ability = false;
 export let usedAbility = null;
@@ -897,6 +886,7 @@ let musicVolume = localStorage.getItem("musicVolume")
   : 30;
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
+document.getElementById("toggle-chaos").checked = chaosMode;
 document.getElementById("toggle-grids").checked = showGrids;
 document.getElementById("toggle-skybox").checked = showSkybox;
 document.getElementById("toggle-timer").checked = showTimer;
@@ -921,14 +911,24 @@ document.getElementById("music-volume").value = musicVolume;
 graphicsSlider.dispatchEvent(new Event("input"));
 
 function checkDiff() {
-  if (casualMode) {
-    document.getElementById("entity-panel-diff").textContent = "Casual";
+  if (chaosMode) {
+    diffLabel.style.color = "#600";
+  } else if (casualMode) {
+    diffLabel.style.color = "#0f0";
   } else if (hardMode) {
-    document.getElementById("entity-panel-diff").textContent = "Extreme";
-  } else if (chaosMode) {
-    document.getElementById("entity-panel-diff").textContent = "CHAOS";
+    diffLabel.style.color = "#f00";
   } else {
-    document.getElementById("entity-panel-diff").textContent = "Standard";
+    diffLabel.style.color = "#fff";
+  }
+  if (casualMode) {
+    document.getElementById("entity-panel-diff").textContent =
+      `Casual${chaosMode ? " (CHAOS)" : ""}`;
+  } else if (hardMode) {
+    document.getElementById("entity-panel-diff").textContent =
+      `Extreme${chaosMode ? " (CHAOS)" : ""}`;
+  } else {
+    document.getElementById("entity-panel-diff").textContent =
+      `Standard${chaosMode ? " (CHAOS)" : ""}`;
   }
 }
 settingsBtn.addEventListener("click", () => {
@@ -946,6 +946,10 @@ graphicsSlider.addEventListener("input", () => {
   else if (v === 1) setGraphicsMedium();
   else if (v === 2) setGraphicsHigh();
   else setGraphicsUltra();
+});
+toggle("toggle-chaos", (v) => {
+  chaosMode = v;
+  checkDiff();
 });
 toggle("toggle-grids", (v) => {
   showGrids = v;
@@ -1291,6 +1295,7 @@ export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let collectedCountBeforeCelestial = 0;
+let giftCollectSound = null;
 let giftMultiplier = 1;
 export function setGiftMultiplier(v) {
   giftMultiplier = v;
@@ -5438,14 +5443,40 @@ function updateCamera() {
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect && !insidePylon && !stopCollect) {
         actualCollectedCount += value;
-        if (g.golden) {
-          if (Math.random() > 0.00001) {
-            playSound("./ASSET/Sound/Global/GoldGiftCollect.ogg");
+        if (!giftCollectSound) {
+          if (g.golden) {
+            if (Math.random() > 0.00001) {
+              giftCollectSound = playSound(
+                "./ASSET/Sound/Global/GoldGiftCollect.ogg",
+                undefined,
+                undefined,
+                undefined,
+                () => {
+                  giftCollectSound = null;
+                },
+              );
+            } else {
+              giftCollectSound = playSound(
+                "./ASSET/Sound/Global/RareGoldGiftCollect.ogg",
+                undefined,
+                undefined,
+                undefined,
+                () => {
+                  giftCollectSound = null;
+                },
+              );
+            }
           } else {
-            playSound("./ASSET/Sound/Global/RareGoldGiftCollect.ogg");
+            giftCollectSound = playSound(
+              "./ASSET/Sound/Global/GiftCollect.ogg",
+              undefined,
+              undefined,
+              undefined,
+              () => {
+                giftCollectSound = null;
+              },
+            );
           }
-        } else {
-          playSound("./ASSET/Sound/Global/GiftCollect.ogg");
         }
       }
       collectedCount = hardMode

@@ -24,6 +24,7 @@ export function setup(host, hardMode) {
     result: null,
     resultTimer: 0,
     flashTimer: 0,
+    arrowOpacity: 1,
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -36,6 +37,7 @@ export function setup(host, hardMode) {
     state.y = p.y;
     state.timer = 0;
     state.nextDelay = 19 + Math.random();
+    state.arrowOpacity = 1;
   }
 
   function onClick(e) {
@@ -84,6 +86,10 @@ export function setup(host, hardMode) {
         state.resultTimer = 0;
       }
     }
+    if (state.arrowOpacity > 0) {
+      state.arrowOpacity -= dt;
+      if (state.arrowOpacity < 0) state.arrowOpacity = 0;
+    }
 
     if (state.timer <= 1) {
       state.opacity = 0;
@@ -113,6 +119,52 @@ export function setup(host, hardMode) {
       size * 0.3,
       size,
     );
+
+    if (state.flashTimer > 0) {
+      ctx.save();
+      const radius = state.size * 0.1;
+      const intensity = state.flashTimer;
+
+      const gradient = ctx.createRadialGradient(
+        state.x,
+        state.y - 5,
+        0,
+        state.x,
+        state.y - 5,
+        radius,
+      );
+
+      gradient.addColorStop(0, `rgba(255, 0, 0, ${0.7 * intensity})`);
+      gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(state.x, state.y - 5, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    if (state.arrowOpacity > 0) {
+      const dx = state.x - mouse.x;
+      const dy = state.y - mouse.y;
+      const angle = Math.atan2(dy, dx);
+
+      const offset = 30;
+      const ax = mouse.x + Math.cos(angle) * offset;
+      const ay = mouse.y + Math.sin(angle) * offset;
+
+      ctx.save();
+      ctx.translate(ax, ay);
+      ctx.rotate(angle);
+      ctx.scale(1.5, 1);
+      ctx.fillStyle = "magenta";
+      ctx.globalAlpha = state.arrowOpacity;
+      ctx.font = "Bold 30px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🡒", 0, 0);
+      ctx.restore();
+    }
 
     if (state.result !== null && state.resultTimer > 0) {
       const cam = getCameraPos();
@@ -170,30 +222,6 @@ export function setup(host, hardMode) {
         boxX + screenW * 0.25,
         boxY + boxHeight / 2 + 20,
       );
-    }
-
-    if (state.flashTimer > 0) {
-      ctx.save();
-      const radius = state.size * 0.1;
-      const intensity = state.flashTimer;
-
-      const gradient = ctx.createRadialGradient(
-        state.x,
-        state.y - 5,
-        0,
-        state.x,
-        state.y - 5,
-        radius,
-      );
-
-      gradient.addColorStop(0, `rgba(255, 0, 0, ${0.7 * intensity})`);
-      gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
-
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(state.x, state.y - 5, radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
     }
 
     ctx.restore();

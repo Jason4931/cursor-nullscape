@@ -30,6 +30,7 @@ export function setup(host, hardMode) {
     resultTimer: 0,
     resultMode: "normal",
     mode: "normal",
+    arrowOpacity: 1,
   };
 
   const RESULT_TEXT = {
@@ -96,6 +97,7 @@ export function setup(host, hardMode) {
     const randMode = Math.random();
     state.mode = randMode < 0.25 ? "high" : randMode < 0.5 ? "tweak" : "normal";
     state.nextDelay = 19 + Math.random();
+    state.arrowOpacity = 1;
   }
 
   function onClick(e) {
@@ -142,6 +144,10 @@ export function setup(host, hardMode) {
         state.resultTimer = 0;
       }
     }
+    if (state.arrowOpacity > 0) {
+      state.arrowOpacity -= dt;
+      if (state.arrowOpacity < 0) state.arrowOpacity = 0;
+    }
 
     if (state.timer <= 1) {
       state.opacity = 0;
@@ -175,6 +181,28 @@ export function setup(host, hardMode) {
       size * 0.3,
       size,
     );
+
+    if (state.arrowOpacity > 0) {
+      const dx = state.x - mouse.x;
+      const dy = state.y - mouse.y;
+      const angle = Math.atan2(dy, dx);
+
+      const offset = 30;
+      const ax = mouse.x + Math.cos(angle) * offset;
+      const ay = mouse.y + Math.sin(angle) * offset;
+
+      ctx.save();
+      ctx.translate(ax, ay);
+      ctx.rotate(angle);
+      ctx.scale(1.5, 1);
+      ctx.fillStyle = "white";
+      ctx.globalAlpha = state.arrowOpacity;
+      ctx.font = "Bold 30px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🡒", 0, 0);
+      ctx.restore();
+    }
 
     if (state.result !== null && state.resultTimer > 0) {
       const cam = getCameraPos();

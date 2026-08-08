@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, playSound, ability, wasdMode } from "../main.js";
+import { getCameraPos, playSound, ability, keysPressed } from "../main.js";
 import { kolonaActive } from "./Kolona.js";
 import { setup as spawnMalfunction } from "./Malfunction.js";
 
@@ -107,8 +107,8 @@ export function setup(host, hardMode) {
         state.timer = 0;
         state.stillTimer = 0;
 
-        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
-        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
+        state.lastMouseX = mouse._clientX;
+        state.lastMouseY = mouse._clientY;
         state.enemy = OperatorWaiting;
         state.opacity = 1;
         if (hardMode) {
@@ -135,13 +135,13 @@ export function setup(host, hardMode) {
         else state.jitterRot = 0.1;
       }
 
-      const dx = (wasdMode ? mouse.x : mouse._clientX) - state.lastMouseX;
-      const dy = (wasdMode ? mouse.y : mouse._clientY) - state.lastMouseY;
+      const dx = mouse._clientX - state.lastMouseX;
+      const dy = mouse._clientY - state.lastMouseY;
 
-      if (dx === 0 && dy === 0) {
+      if (dx === 0 && dy === 0 && !Object.values(keysPressed).some(Boolean)) {
         state.stillTimer += dt;
         if (
-          state.stillTimer >= (hardMode ? 0.5 : 0.25) &&
+          state.stillTimer >= 0.25 &&
           state.abilityLongerCooldown == 0 &&
           !state.death
         ) {
@@ -155,8 +155,8 @@ export function setup(host, hardMode) {
         }
       } else {
         state.stillTimer = 0;
-        state.lastMouseX = wasdMode ? mouse.x : mouse._clientX;
-        state.lastMouseY = wasdMode ? mouse.y : mouse._clientY;
+        state.lastMouseX = mouse._clientX;
+        state.lastMouseY = mouse._clientY;
       }
 
       if (

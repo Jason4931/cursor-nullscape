@@ -311,10 +311,7 @@
       }
 
       .slider-toggle,
-      .slider-toggle-green,
-      .slider-toggle-red,
-      .slider-toggle-purple,
-      .slider-toggle-black {
+      .slider-toggle-chaos {
         position: absolute;
         cursor: pointer;
         background: #333;
@@ -326,9 +323,7 @@
         transition: 0.2s;
       }
 
-      .slider-toggle::before,
-      .slider-toggle-green::before,
-      .slider-toggle-red::before {
+      .slider-toggle::before {
         content: "";
         position: absolute;
         height: 1vw;
@@ -339,22 +334,28 @@
         border-radius: 50%;
         transition: 0.2s;
       }
+      .slider-toggle-chaos::before {
+        content: "";
+        position: absolute;
+        height: 1vw;
+        width: 1vw;
+        left: 0.15vw;
+        bottom: 0.15vw;
+        background: #f00;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
 
       .toggle input:checked + .slider-toggle {
         background: #4caf50;
       }
 
-      .toggle input:checked + .slider-toggle-green {
-        background: #0f0;
-      }
-
-      .toggle input:checked + .slider-toggle-red {
-        background: #f00;
+      .toggle input:checked + .slider-toggle-chaos {
+        background: #600;
       }
 
       .toggle input:checked + .slider-toggle::before,
-      .toggle input:checked + .slider-toggle-green::before,
-      .toggle input:checked + .slider-toggle-red::before {
+      .toggle input:checked + .slider-toggle-chaos::before {
         transform: translateX(1.3vw);
       }
 
@@ -934,6 +935,13 @@
 
             <div id="diff-right" class="diff-arrow">&gt;</div>
           </div>
+        </div>
+        <div class="setting-row">
+          <span style="color: #600; font-weight: bolder">C H A O S</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-chaos" />
+            <span class="slider-toggle-chaos"></span>
+          </label>
         </div>
         <hr />
         <div class="setting-row">
