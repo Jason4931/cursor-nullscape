@@ -687,7 +687,6 @@ canvas.height = 10000;
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
-let giftCollectSound = null;
 let lastGiftCollectSound = 0;
 let giftMultiplier = 1;
 export function setGiftMultiplier(v) {
@@ -3002,7 +3001,7 @@ function updateCamera() {
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect) {
         actualCollectedCount += value;
-        if (performance.now() - lastGiftCollectSound >= 0.25) {
+        if (performance.now() - lastGiftCollectSound >= 100) {
           lastGiftCollectSound = performance.now();
           if (g.golden) {
             if (Math.random() > 0.00001) {

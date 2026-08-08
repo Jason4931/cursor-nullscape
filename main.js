@@ -5443,7 +5443,7 @@ function updateCamera() {
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect && !insidePylon && !stopCollect) {
         actualCollectedCount += value;
-        if (performance.now() - lastGiftCollectSound >= 0.25) {
+        if (performance.now() - lastGiftCollectSound >= 100) {
           lastGiftCollectSound = performance.now();
           if (g.golden) {
             if (Math.random() > 0.00001) {
