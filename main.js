@@ -1295,7 +1295,7 @@ export let latestCollectedCount = 0;
 export let collectedCount = 0;
 export let actualCollectedCount = 0;
 let collectedCountBeforeCelestial = 0;
-let giftCollectSound = null;
+let lastGiftCollectSound = 0;
 let giftMultiplier = 1;
 export function setGiftMultiplier(v) {
   giftMultiplier = v;
@@ -5443,39 +5443,16 @@ function updateCamera() {
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
       if (!disableCollect && !insidePylon && !stopCollect) {
         actualCollectedCount += value;
-        if (!giftCollectSound) {
+        if (performance.now() - lastGiftCollectSound >= 0.25) {
+          lastGiftCollectSound = performance.now();
           if (g.golden) {
             if (Math.random() > 0.00001) {
-              giftCollectSound = playSound(
-                "./ASSET/Sound/Global/GoldGiftCollect.ogg",
-                undefined,
-                undefined,
-                undefined,
-                () => {
-                  giftCollectSound = null;
-                },
-              );
+              playSound("./ASSET/Sound/Global/GoldGiftCollect.ogg");
             } else {
-              giftCollectSound = playSound(
-                "./ASSET/Sound/Global/RareGoldGiftCollect.ogg",
-                undefined,
-                undefined,
-                undefined,
-                () => {
-                  giftCollectSound = null;
-                },
-              );
+              playSound("./ASSET/Sound/Global/RareGoldGiftCollect.ogg");
             }
           } else {
-            giftCollectSound = playSound(
-              "./ASSET/Sound/Global/GiftCollect.ogg",
-              undefined,
-              undefined,
-              undefined,
-              () => {
-                giftCollectSound = null;
-              },
-            );
+            playSound("./ASSET/Sound/Global/GiftCollect.ogg");
           }
         }
       }
