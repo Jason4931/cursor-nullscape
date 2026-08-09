@@ -3,16 +3,18 @@ import { playSound, uldm } from "../main.js";
 import { operatorActive } from "./Operator.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Voidbreaker.png";
-
 const swordImg = new Image();
-swordImg.src = "./ASSET/Misc/Sword.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Enemies/Voidbreaker.png";
+  swordImg.src = "./ASSET/Misc/Sword.png";
+}
 
 let voidbreakerActive = false;
 let voidbreakerCount = 0;
 export let balletOfBladesActive = [false];
 export let bladeBombardmentActive = [false];
 export function setup(host, casualMode, hardMode) {
+  loadAssets();
   voidbreakerCount++;
   if (voidbreakerActive) {
     const unregister = host.register({

@@ -2,9 +2,12 @@ import { death, mouse } from "../entityHost.js";
 import { despawnCatalyst, playSound } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/CatalystHand.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Enemies/CatalystHand.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     phase: "circleGrow",
 

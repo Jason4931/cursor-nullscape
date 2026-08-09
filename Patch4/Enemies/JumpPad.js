@@ -2,9 +2,15 @@ import { death, mouse } from "../entityHost.js";
 import { TILE, moveCamera, jumppadHit, uldm, playSound } from "../main.js";
 
 const jumppad = new Image();
-jumppad.src = "./ASSET/Misc/Jumppad.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  jumppad.src = "./ASSET/Misc/Jumppad.png";
+}
 
 export function setup(host, red = false) {
+  loadAssets();
   const state = {
     activated: false,
     pads: [],

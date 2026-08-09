@@ -2,11 +2,14 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, canvas } from "../main.js";
 
 const idle = new Image();
-idle.src = "./ASSET/Enemies/Locust/Locust1.png";
 const agro = new Image();
-agro.src = "./ASSET/Enemies/Locust/Locust2.png";
+function loadAssets() {
+  idle.src = "./ASSET/Enemies/Locust/Locust1.png";
+  agro.src = "./ASSET/Enemies/Locust/Locust2.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const SPEED = 3000;
   const TRIGGER_TIME = 0.4;
   const BLACK_TIME = 0.5;

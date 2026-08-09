@@ -2,38 +2,42 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, passageGoldPattern, uldm, ESP } from "../main.js";
 
 const Guardian_Idle_Animation = [];
-for (let i = 1; i <= 40; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Idle/Layer ${i}.png`;
-  Guardian_Idle_Animation.push(img);
-}
 const GuardianSHOOT = [];
-for (let i = 1; i <= 30; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Shoot/Layer ${i}.png`;
-  GuardianSHOOT.push(img);
-}
 const GuardianEnragedIdle = [];
-for (let i = 1; i <= 40; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedIdle/Layer ${i}.png`;
-  GuardianEnragedIdle.push(img);
-}
 const GuardianEnragedSHOOT = [];
-for (let i = 1; i <= 25; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedShoot/Layer ${i}.png`;
-  GuardianEnragedSHOOT.push(img);
-}
 const GuardianEnraging = [];
-for (let i = 1; i <= 75; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Enraging/Layer ${i}.png`;
-  GuardianEnraging.push(img);
+function loadAssets() {
+  if (Guardian_Idle_Animation.length) return;
+  for (let i = 1; i <= 40; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Idle/Layer ${i}.png`;
+    Guardian_Idle_Animation.push(img);
+  }
+  for (let i = 1; i <= 30; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Shoot/Layer ${i}.png`;
+    GuardianSHOOT.push(img);
+  }
+  for (let i = 1; i <= 40; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedIdle/Layer ${i}.png`;
+    GuardianEnragedIdle.push(img);
+  }
+  for (let i = 1; i <= 25; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedShoot/Layer ${i}.png`;
+    GuardianEnragedSHOOT.push(img);
+  }
+  for (let i = 1; i <= 75; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Enraging/Layer ${i}.png`;
+    GuardianEnraging.push(img);
+  }
 }
 
 export let shotgunVBGuardianActive = [false];
 export function setup(host, casualMode, hardMode) {
+  loadAssets();
   const state = {
     x: 0,
     y: 0,

@@ -8,14 +8,19 @@ import {
 } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Cadence.png";
-
 const violin = new Image();
-violin.src = "./ASSET/Misc/Violin.png";
 const harp = new Image();
-harp.src = "./ASSET/Misc/Harp.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Cadence.png";
+  violin.src = "./ASSET/Misc/Violin.png";
+  harp.src = "./ASSET/Misc/Harp.png";
+}
 
 export function setup(host, hardMode, deafMode) {
+  loadAssets();
   const canvas = host.canvas;
 
   const state = {

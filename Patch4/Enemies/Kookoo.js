@@ -2,11 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { ability, getCameraPos, playSound, slowness, uldm } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Kookoo.png";
 const arrow = new Image();
-arrow.src = "./ASSET/Misc/Arrow.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Kookoo.png";
+  arrow.src = "./ASSET/Misc/Arrow.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     phase: "intro",
     timer: 0,

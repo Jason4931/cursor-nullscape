@@ -2,11 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, uldm } from "../main.js";
 
 const missile = new Image();
-missile.src = "./ASSET/Enemies/ICBM.png";
 const explode = new Image();
-explode.src = "./ASSET/Misc/Explode.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  missile.src = "./ASSET/Enemies/ICBM.png";
+  explode.src = "./ASSET/Misc/Explode.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 0,
     explodeOpacity: 0,

@@ -2,9 +2,15 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, ability, keysPressed } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Dozer.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Dozer.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
 

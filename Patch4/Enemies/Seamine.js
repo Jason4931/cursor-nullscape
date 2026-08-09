@@ -8,9 +8,15 @@ import {
 } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Curses/Seamine.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Curses/Seamine.png";
+}
 
 export function setup(host, casualMode, hardMode) {
+  loadAssets();
   const state = {
     x: 0,
     y: 0,

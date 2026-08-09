@@ -2,21 +2,25 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, soundStopped, MartStack, ESP } from "../main.js";
 
 const Probably_Improper_Speeded_Mart = [];
-for (let i = 1; i <= 24; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Mart/Probably_Improper_Speeded_Mart/Layer ${i}.png`;
-  Probably_Improper_Speeded_Mart.push(img);
-}
 const MartSlideAnimation = [];
-for (let i = 1; i <= 24; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Mart/MartSlideAnimation/Layer ${i}.png`;
-  MartSlideAnimation.push(img);
+function loadAssets() {
+  if (Probably_Improper_Speeded_Mart.length) return;
+  for (let i = 1; i <= 24; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Mart/Probably_Improper_Speeded_Mart/Layer ${i}.png`;
+    Probably_Improper_Speeded_Mart.push(img);
+  }
+  for (let i = 1; i <= 24; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Mart/MartSlideAnimation/Layer ${i}.png`;
+    MartSlideAnimation.push(img);
+  }
 }
 
 export let fasterMart = [0];
 export let martSlideActive = [false];
 export function setup(host, hardMode, stack = 1, position = null) {
+  loadAssets();
   const state = {
     _speedMultiplier: 1 + fasterMart[0],
     opacity: 1,

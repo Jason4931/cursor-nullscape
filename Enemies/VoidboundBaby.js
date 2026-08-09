@@ -2,31 +2,35 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, uldm } from "../main.js";
 
 const VoidboundBaby_Idle = [];
-for (let i = 1; i <= 18; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundBaby/VoidboundBaby_Idle/Layer ${i}.png`;
-  VoidboundBaby_Idle.push(img);
-}
 const VBbabyLockOnTarget = [];
-for (let i = 1; i <= 7; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyLockOnTarget/Layer ${i}.png`;
-  VBbabyLockOnTarget.push(img);
-}
 const Vbabytrans = [];
-for (let i = 1; i <= 4; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundBaby/Vbabytrans/Layer ${i}.png`;
-  Vbabytrans.push(img);
-}
 const VBbabyCharging = [];
-for (let i = 1; i <= 6; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyCharging/Layer ${i}.png`;
-  VBbabyCharging.push(img);
+function loadAssets() {
+  if (VoidboundBaby_Idle.length) return;
+  for (let i = 1; i <= 18; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundBaby/VoidboundBaby_Idle/Layer ${i}.png`;
+    VoidboundBaby_Idle.push(img);
+  }
+  for (let i = 1; i <= 7; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyLockOnTarget/Layer ${i}.png`;
+    VBbabyLockOnTarget.push(img);
+  }
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundBaby/Vbabytrans/Layer ${i}.png`;
+    Vbabytrans.push(img);
+  }
+  for (let i = 1; i <= 6; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyCharging/Layer ${i}.png`;
+    VBbabyCharging.push(img);
+  }
 }
 
 export function setup(host, hardMode, rebirth = null) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: VoidboundBaby_Idle,

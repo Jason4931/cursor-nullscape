@@ -11,9 +11,12 @@ import {
 } from "../main.js";
 
 const altar = new Image();
-altar.src = "./ASSET/Misc/AltarOfPassage.png";
+function loadAssets() {
+  altar.src = "./ASSET/Misc/AltarOfPassage.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     x: 0,

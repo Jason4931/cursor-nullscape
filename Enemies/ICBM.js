@@ -2,20 +2,24 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, getCameraPos, playSound, uldm } from "../main.js";
 
 const ICBM = [];
-for (let i = 1; i <= 7; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/ICBM/Layer ${i}.png`;
-  ICBM.push(img);
-}
 const marker = new Image();
-marker.src = "./ASSET/Misc/ICBMMarker.png";
 const nuclearMarker = new Image();
-nuclearMarker.src = "./ASSET/Misc/NuclearBombMarker.png";
 const explode = new Image();
-explode.src = "./ASSET/Misc/Explode.png";
+function loadAssets() {
+  if (ICBM.length) return;
+  for (let i = 1; i <= 7; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/ICBM/Layer ${i}.png`;
+    ICBM.push(img);
+  }
+  marker.src = "./ASSET/Misc/ICBMMarker.png";
+  nuclearMarker.src = "./ASSET/Misc/NuclearBombMarker.png";
+  explode.src = "./ASSET/Misc/Explode.png";
+}
 
 export let nuclearBombActive = [false];
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 0,
     explodeOpacity: 0,

@@ -3,13 +3,17 @@ import { despawnCatalyst, moveCamera, playSound, uldm } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const Catalysthungerpatch5 = [];
-for (let i = 1; i <= 16; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/Catalysthungerpatch5/Layer ${i}.png`;
-  Catalysthungerpatch5.push(img);
+function loadAssets() {
+  if (Catalysthungerpatch5.length) return;
+  for (let i = 1; i <= 16; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Catalyst/Catalysthungerpatch5/Layer ${i}.png`;
+    Catalysthungerpatch5.push(img);
+  }
 }
 
 export function setup(host, overshootBrake) {
+  loadAssets();
   const canvas = host.ctx.canvas;
 
   const state = {

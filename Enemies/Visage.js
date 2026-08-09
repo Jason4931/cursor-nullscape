@@ -9,13 +9,19 @@ await VisageFont.load();
 document.fonts.add(VisageFont);
 
 const Visage = [];
-for (let i = 1; i <= 10; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Visage/Layer ${i}.png`;
-  Visage.push(img);
+const deathScreen = new Image();
+function loadAssets() {
+  if (Visage.length) return;
+  for (let i = 1; i <= 10; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Visage/Layer ${i}.png`;
+    Visage.push(img);
+  }
+  deathScreen.src = "./ASSET/Misc/VisageDeathScreen.png";
 }
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Visage,
@@ -44,7 +50,7 @@ export function setup(host) {
 
     dying: false,
     deathTimer: 0,
-    deathScreen: new Image(),
+    deathScreen: deathScreen,
   };
 
   const entry = { state, unregister: null };
@@ -62,7 +68,6 @@ export function setup(host) {
 
       state.x = cx + Math.cos(a) * r;
       state.y = cy + Math.sin(a) * r;
-      state.deathScreen.src = "./ASSET/Misc/VisageDeathScreen.png";
       state.initialized = true;
     }
 

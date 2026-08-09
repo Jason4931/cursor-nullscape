@@ -10,33 +10,36 @@ await KolonaFont.load();
 document.fonts.add(KolonaFont);
 
 const Kolona_Eyes = [];
-for (let i = 1; i <= 6; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Kolona/Kolona_Eyes/Layer ${i}.png`;
-  Kolona_Eyes.push(img);
-}
 const Kolona_Fire = [];
-for (let i = 1; i <= 6; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Kolona/Kolona_Fire/Layer ${i}.png`;
-  Kolona_Fire.push(img);
-}
 const Kolona_Fleshed = [];
-for (let i = 1; i <= 3; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Kolona/Kolona_Fleshed/Layer ${i}.png`;
-  Kolona_Fleshed.push(img);
-}
 const Kolona_Text = [];
-for (let i = 1; i <= 3; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Kolona/Kolona_Text/Layer ${i}.png`;
-  Kolona_Text.push(img);
-}
 const KolonaWreath = new Image();
-KolonaWreath.src = "./ASSET/Enemies/Kolona/KolonaWreath.png";
 const Pillar = new Image();
-Pillar.src = "./ASSET/Enemies/Kolona/Pillar.png";
+function loadAssets() {
+  if (Kolona_Eyes.length) return;
+  for (let i = 1; i <= 6; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Kolona/Kolona_Eyes/Layer ${i}.png`;
+    Kolona_Eyes.push(img);
+  }
+  for (let i = 1; i <= 6; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Kolona/Kolona_Fire/Layer ${i}.png`;
+    Kolona_Fire.push(img);
+  }
+  for (let i = 1; i <= 3; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Kolona/Kolona_Fleshed/Layer ${i}.png`;
+    Kolona_Fleshed.push(img);
+  }
+  for (let i = 1; i <= 3; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Kolona/Kolona_Text/Layer ${i}.png`;
+    Kolona_Text.push(img);
+  }
+  KolonaWreath.src = "./ASSET/Enemies/Kolona/KolonaWreath.png";
+  Pillar.src = "./ASSET/Enemies/Kolona/Pillar.png";
+}
 
 let kolonaExisted = false;
 let kolonaCount = 0;
@@ -53,6 +56,7 @@ export function setup(host, casualMode) {
   } else {
     kolonaExisted = true;
   }
+  loadAssets();
   const state = {
     phase: "intro",
     timer: 0,

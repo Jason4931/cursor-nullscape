@@ -11,20 +11,24 @@ import {
 } from "../main.js";
 
 const CatalystOptim = [];
-for (let i = 1; i <= 8; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/CatalystOptim/Layer ${i}.png`;
-  CatalystOptim.push(img);
-}
 const Catalyst_Shock = [];
-for (let i = 1; i <= 4; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/Catalyst_Shock/Layer ${i}.png`;
-  Catalyst_Shock.push(img);
+function loadAssets() {
+  if (CatalystOptim.length) return;
+  for (let i = 1; i <= 8; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Catalyst/CatalystOptim/Layer ${i}.png`;
+    CatalystOptim.push(img);
+  }
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Catalyst/Catalyst_Shock/Layer ${i}.png`;
+    Catalyst_Shock.push(img);
+  }
 }
 
 export let catalystPos = { x: 0, y: 0 };
 export function setup(host) {
+  loadAssets();
   const state = {
     phase: "initDarken",
 

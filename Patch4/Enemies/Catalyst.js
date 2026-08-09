@@ -11,14 +11,20 @@ import {
 } from "../main.js";
 
 const layers = [];
-for (let i = 1; i <= 8; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
-  layers.push(img);
+let _layersLoaded = false;
+function loadAssets() {
+  if (_layersLoaded) return;
+  _layersLoaded = true;
+  for (let i = 1; i <= 8; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Catalyst/Layer ${i}.png`;
+    layers.push(img);
+  }
 }
 
 export let catalystPos = { x: 0, y: 0 };
 export function setup(host) {
+  loadAssets();
   const state = {
     phase: "initDarken",
 

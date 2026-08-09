@@ -2,13 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { canvas, ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const Quartz = [];
-for (let i = 1; i <= 75; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Quartz/Layer ${i}.png`;
-  Quartz.push(img);
+function loadAssets() {
+  if (Quartz.length) return;
+  for (let i = 1; i <= 75; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Quartz/Layer ${i}.png`;
+    Quartz.push(img);
+  }
 }
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Quartz,

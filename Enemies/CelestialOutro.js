@@ -2,9 +2,12 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, spawnCelestialAfterEnding } from "../main.js";
 
 const Blossom = new Image();
-Blossom.src = "./ASSET/Misc/Blossom.png";
+function loadAssets() {
+  Blossom.src = "./ASSET/Misc/Blossom.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     BGopacity: 1,
     BGcolor: 255,

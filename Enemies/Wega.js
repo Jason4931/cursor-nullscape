@@ -2,16 +2,19 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, uldm, getCameraPos } from "../main.js";
 
 const wega = new Image();
-wega.src = "./ASSET/Enemies/Wega/Wega.png";
 const enragedWega = new Image();
-enragedWega.src = "./ASSET/Enemies/Wega/Enragedwega.png";
 const bluimWega = new Image();
-bluimWega.src = "./ASSET/Enemies/Wega/Bluimwega.png";
 const scaryWega = new Image();
-scaryWega.src = "./ASSET/Enemies/Wega/Scary_wega.png";
+function loadAssets() {
+  wega.src = "./ASSET/Enemies/Wega/Wega.png";
+  enragedWega.src = "./ASSET/Enemies/Wega/Enragedwega.png";
+  bluimWega.src = "./ASSET/Enemies/Wega/Bluimwega.png";
+  scaryWega.src = "./ASSET/Enemies/Wega/Scary_wega.png";
+}
 
 const wegaPositions = [];
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     enemy: wega,

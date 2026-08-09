@@ -11,9 +11,15 @@ import {
 } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Bell.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Bell.png";
+}
 
 export function setup(host, hardMode, immunebell) {
+  loadAssets();
   const state = {
     opacity: 1,
 

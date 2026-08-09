@@ -11,13 +11,16 @@ import {
 } from "../main.js";
 
 const altar = new Image();
-altar.src = "./ASSET/Misc/AltarOfChance.png";
 const altarHigh = new Image();
-altarHigh.src = "./ASSET/Misc/AltarOfChanceHigh.png";
 const altarTweak = new Image();
-altarTweak.src = "./ASSET/Misc/AltarOfChanceTweak.png";
+function loadAssets() {
+  altar.src = "./ASSET/Misc/AltarOfChance.png";
+  altarHigh.src = "./ASSET/Misc/AltarOfChanceHigh.png";
+  altarTweak.src = "./ASSET/Misc/AltarOfChanceTweak.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     x: 0,

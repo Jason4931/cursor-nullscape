@@ -2,9 +2,15 @@ import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
 import { ESP, moveCamera, pickRandomPlaced4or5, playSound } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Springer.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Springer.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
 

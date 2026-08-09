@@ -8,9 +8,12 @@ import {
 } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Curses/Seamine.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Curses/Seamine.png";
+}
 
 export function setup(host, casualMode, hardMode) {
+  loadAssets();
   const state = {
     x: 0,
     y: 0,

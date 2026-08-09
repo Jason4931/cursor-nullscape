@@ -2,25 +2,28 @@ import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
 import { moveCamera, pickRandomPlaced4or5, playSound, ESP } from "../main.js";
 
 const Springerback = new Image();
-Springerback.src = "./ASSET/Enemies/Springer/Springer-back.png";
 const Springerfront = new Image();
-Springerfront.src = "./ASSET/Enemies/Springer/Springer-front.png";
 const Springerright = new Image();
-Springerright.src = "./ASSET/Enemies/Springer/Springer-right.png";
 const Springerleft = new Image();
-Springerleft.src = "./ASSET/Enemies/Springer/Springer-left.png";
 const Springerbackglow = new Image();
-Springerbackglow.src = "./ASSET/Enemies/Springer/Springer-back-glow.png";
 const Springerfrontglow = new Image();
-Springerfrontglow.src = "./ASSET/Enemies/Springer/Springer-front-glow.png";
 const Springerrightglow = new Image();
-Springerrightglow.src = "./ASSET/Enemies/Springer/Springer-right-glow.png";
 const Springerleftglow = new Image();
-Springerleftglow.src = "./ASSET/Enemies/Springer/Springer-left-glow.png";
+function loadAssets() {
+  Springerback.src = "./ASSET/Enemies/Springer/Springer-back.png";
+  Springerfront.src = "./ASSET/Enemies/Springer/Springer-front.png";
+  Springerright.src = "./ASSET/Enemies/Springer/Springer-right.png";
+  Springerleft.src = "./ASSET/Enemies/Springer/Springer-left.png";
+  Springerbackglow.src = "./ASSET/Enemies/Springer/Springer-back-glow.png";
+  Springerfrontglow.src = "./ASSET/Enemies/Springer/Springer-front-glow.png";
+  Springerrightglow.src = "./ASSET/Enemies/Springer/Springer-right-glow.png";
+  Springerleftglow.src = "./ASSET/Enemies/Springer/Springer-left-glow.png";
+}
 
 export let fasterSpringer = [0];
 export let fastSpringerActive = [false];
 export function setup(host, hardMode, scale = 1) {
+  loadAssets();
   const state = {
     _speedMultiplier: 1 + fasterSpringer[0],
     opacity: 1,

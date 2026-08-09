@@ -1,4 +1,4 @@
-import { preloadAssets } from "./assets.js";
+import { getAsset, preloadAssets } from "./assets.js";
 await preloadAssets((loaded, total) => {
   const progress = loaded / total;
   const displayed = Math.floor(total * (1 - (1 - progress) ** 2));
@@ -1161,7 +1161,8 @@ export function playSound(
   )
     return;
   rate = Math.min(16, rate);
-  const audio = new Audio(soundPath);
+  const cachedAudio = getAsset(soundPath);
+  const audio = cachedAudio ? cachedAudio.cloneNode() : new Audio(soundPath);
   audio.playbackRate = rate * (ultrafastmode ? 3 : slowmode ? 0.5 : 1);
   if (typeof important === "string") {
     audio.volume = Math.max(0, Math.min(1, sfxVolume / Number(important)));

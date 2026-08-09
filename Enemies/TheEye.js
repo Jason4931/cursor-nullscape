@@ -2,13 +2,16 @@ import { death, mouse } from "../entityHost.js";
 import { moveCamera, uldm } from "../main.js";
 
 const TheEyeclosed = new Image();
-TheEyeclosed.src = "./ASSET/Enemies/TheEye/TheEye-closed.png";
 const TheEyehalfopen = new Image();
-TheEyehalfopen.src = "./ASSET/Enemies/TheEye/TheEye-halfopen.png";
 const TheEyeopen = new Image();
-TheEyeopen.src = "./ASSET/Enemies/TheEye/TheEye-open.png";
+function loadAssets() {
+  TheEyeclosed.src = "./ASSET/Enemies/TheEye/TheEye-closed.png";
+  TheEyehalfopen.src = "./ASSET/Enemies/TheEye/TheEye-halfopen.png";
+  TheEyeopen.src = "./ASSET/Enemies/TheEye/TheEye-open.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
 

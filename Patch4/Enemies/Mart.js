@@ -2,9 +2,15 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, soundStopped } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Mart.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Mart.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
 

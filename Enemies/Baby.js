@@ -3,32 +3,37 @@ import { ESP, playSound } from "../main.js";
 import { setup as spawnVoidboundBaby } from "./VoidboundBaby.js";
 
 const Babyidle = [];
-for (let i = 1; i <= 8; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Baby/Babyidle/Layer ${i}.png`;
-  Babyidle.push(img);
-}
 const BabyLockOnTarget = [];
-for (let i = 1; i <= 15; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Baby/BabyLockOnTarget/Layer ${i}.png`;
-  BabyLockOnTarget.push(img);
-}
 const Babytransition = [];
-for (let i = 1; i <= 4; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Baby/Babytransition/Layer ${i}.png`;
-  Babytransition.push(img);
-}
 const Babycharge = [];
-for (let i = 1; i <= 13; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Baby/Babycharge/Layer ${i}.png`;
-  Babycharge.push(img);
+
+function loadAssets() {
+  if (Babyidle.length) return;
+  for (let i = 1; i <= 8; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Baby/Babyidle/Layer ${i}.png`;
+    Babyidle.push(img);
+  }
+  for (let i = 1; i <= 15; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Baby/BabyLockOnTarget/Layer ${i}.png`;
+    BabyLockOnTarget.push(img);
+  }
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Baby/Babytransition/Layer ${i}.png`;
+    Babytransition.push(img);
+  }
+  for (let i = 1; i <= 13; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Baby/Babycharge/Layer ${i}.png`;
+    Babycharge.push(img);
+  }
 }
 
 export let rebirthActive = [false];
 export function setup(host, hardMode, scale = 1) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Babyidle,

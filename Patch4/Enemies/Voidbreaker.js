@@ -8,12 +8,17 @@ import {
 } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Voidbreaker.png";
-
 const sword = new Image();
-sword.src = "./ASSET/Misc/Sword.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Voidbreaker.png";
+  sword.src = "./ASSET/Misc/Sword.png";
+}
 
 export function setup(host, stack, hardMode) {
+  loadAssets();
   if (stack == 0) {
     const state = {
       phase: "idle",

@@ -2,14 +2,18 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, getCameraPos, soundStopped, uldm } from "../main.js";
 
 const NIL = [];
-for (let i = 1; i <= 4; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/NIL/Layer ${i}.png`;
-  NIL.push(img);
+function loadAssets() {
+  if (NIL.length) return;
+  for (let i = 1; i <= 4; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/NIL/Layer ${i}.png`;
+    NIL.push(img);
+  }
 }
 
 export let redactedActive = [false];
 export function setup(host, deafMode) {
+  loadAssets();
   const state = {
     opacity: 0.1,
     layers: NIL,

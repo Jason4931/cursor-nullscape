@@ -2,9 +2,15 @@ import { death, mouse } from "../entityHost.js";
 import { canvas, ESP, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Telefragger.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/Telefragger.png";
+}
 
 export function setup(host, hardMode, deafMode) {
+  loadAssets();
   const state = {
     opacity: 1,
 

@@ -2,15 +2,18 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, ability, keysPressed } from "../main.js";
 
 const OperatorIdle = new Image();
-OperatorIdle.src = "./ASSET/Enemies/Malfunction/Voidbound_Operator_Idle.png";
 const OperatorDanger = new Image();
-OperatorDanger.src =
-  "./ASSET/Enemies/Malfunction/Voidbound_Operator_Active.png";
 const OperatorKilling = new Image();
-OperatorKilling.src =
-  "./ASSET/Enemies/Malfunction/Voidbound_Operator_Killing.png";
+function loadAssets() {
+  OperatorIdle.src = "./ASSET/Enemies/Malfunction/Voidbound_Operator_Idle.png";
+  OperatorDanger.src =
+    "./ASSET/Enemies/Malfunction/Voidbound_Operator_Active.png";
+  OperatorKilling.src =
+    "./ASSET/Enemies/Malfunction/Voidbound_Operator_Killing.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     enemy: OperatorIdle,

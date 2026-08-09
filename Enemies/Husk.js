@@ -2,22 +2,26 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const Huskback = [new Image()];
-Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
 const Huskfront = [new Image()];
-Huskfront[0].src = "./ASSET/Enemies/Husk/Husk-front.png";
 const Huskright = [new Image()];
-Huskright[0].src = "./ASSET/Enemies/Husk/Husk-right.png";
 const Huskleft = [new Image()];
-Huskleft[0].src = "./ASSET/Enemies/Husk/Husk-left.png";
 const Huskspawn = [];
-for (let i = 1; i <= 2; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Husk/Huskspawn/Layer ${i}.png`;
-  Huskspawn.push(img);
+function loadAssets() {
+  if (Huskspawn.length) return;
+  Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
+  Huskfront[0].src = "./ASSET/Enemies/Husk/Husk-front.png";
+  Huskright[0].src = "./ASSET/Enemies/Husk/Husk-right.png";
+  Huskleft[0].src = "./ASSET/Enemies/Husk/Husk-left.png";
+  for (let i = 1; i <= 2; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Husk/Huskspawn/Layer ${i}.png`;
+    Huskspawn.push(img);
+  }
 }
 
 export let legionActive = [false];
 export function setup(host, stack, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Huskspawn,

@@ -68,3 +68,7 @@ export async function preloadAssets(onProgress = () => {}) {
 
   return cache;
 }
+
+export function getAsset(path) {
+  return cache.get(path);
+}

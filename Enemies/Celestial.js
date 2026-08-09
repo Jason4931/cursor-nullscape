@@ -69,46 +69,49 @@ gctx.fillRect(0, 0, bladeGlowCanvas.width, bladeGlowCanvas.height);
 gctx.globalCompositeOperation = "source-over";
 
 const Celestial_Idle = [];
-for (let i = 1; i <= 25; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_Idle/Layer ${i}.png`;
-  Celestial_Idle.push(img);
-}
 const Celestial_CutterStart = [];
-for (let i = 1; i <= 60; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterStart/Layer ${i}.png`;
-  Celestial_CutterStart.push(img);
-}
 const Celestial_CutterLoop = [];
-for (let i = 1; i <= 60; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterLoop/Layer ${i}.png`;
-  Celestial_CutterLoop.push(img);
-}
 const Celestial_CutterEnd = [];
-for (let i = 1; i <= 60; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_CutterEnd/Layer ${i}.png`;
-  Celestial_CutterEnd.push(img);
-}
 const Celestial_Swing = [];
-for (let i = 1; i <= 25; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_Swing/Layer ${i}.png`;
-  Celestial_Swing.push(img);
-}
 const Celestial_SwingFlipped = [];
-for (let i = 1; i <= 25; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_SwingFlipped/Layer ${i}.png`;
-  Celestial_SwingFlipped.push(img);
-}
 const Celestial_FinalSwing = [];
-for (let i = 1; i <= 25; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_FinalSwing/Layer ${i}.png`;
-  Celestial_FinalSwing.push(img);
+function loadAssets() {
+  if (Celestial_Idle.length) return;
+  for (let i = 1; i <= 25; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_Idle/Layer ${i}.png`;
+    Celestial_Idle.push(img);
+  }
+  for (let i = 1; i <= 60; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterStart/Layer ${i}.png`;
+    Celestial_CutterStart.push(img);
+  }
+  for (let i = 1; i <= 60; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterLoop/Layer ${i}.png`;
+    Celestial_CutterLoop.push(img);
+  }
+  for (let i = 1; i <= 60; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterEnd/Layer ${i}.png`;
+    Celestial_CutterEnd.push(img);
+  }
+  for (let i = 1; i <= 25; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_Swing/Layer ${i}.png`;
+    Celestial_Swing.push(img);
+  }
+  for (let i = 1; i <= 25; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_SwingFlipped/Layer ${i}.png`;
+    Celestial_SwingFlipped.push(img);
+  }
+  for (let i = 1; i <= 25; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_FinalSwing/Layer ${i}.png`;
+    Celestial_FinalSwing.push(img);
+  }
 }
 
 let phase = 1;
@@ -118,6 +121,7 @@ export function setup(
   truePattern = false,
   silenceOnly = false,
 ) {
+  loadAssets();
   const patternFall = [
     {
       duration: 0,

@@ -2,10 +2,13 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, uldm } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Scrapmaw.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Enemies/Scrapmaw.png";
+}
 
 export let blueprintCrossBeamsActive = [false];
 export function setup(host, casualMode, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     phase: "idle",

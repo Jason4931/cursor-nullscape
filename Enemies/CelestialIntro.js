@@ -2,31 +2,35 @@ import { death, mouse } from "../entityHost.js";
 import { getCameraPos, playSound, spawnCelestialAfterIntro } from "../main.js";
 
 const Celestial_Cocoon = [];
-for (let i = 1; i <= 30; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_Cocoon/Layer ${i}.png`;
-  Celestial_Cocoon.push(img);
-}
 const Celestial_CocoonEyesOpening = [];
-for (let i = 1; i <= 30 * 1.5; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonEyesOpening/Layer ${Math.ceil(i / 1.5)}.png`;
-  Celestial_CocoonEyesOpening.push(img);
-}
 const Celestial_CocoonBreakFree = [];
-for (let i = 1; i <= 30 * 1.5; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonBreakFree/Layer ${Math.ceil(i / 1.5)}.png`;
-  Celestial_CocoonBreakFree.push(img);
-}
 const BG = new Image();
-BG.src = "./ASSET/Misc/CelestialIntroBG.png";
 const Flower = new Image();
-Flower.src = "./ASSET/Misc/CelestialFlower.png";
 const Title = new Image();
-Title.src = "./ASSET/Misc/CelestialTitle.png";
+function loadAssets() {
+  if (Celestial_Cocoon.length) return;
+  for (let i = 1; i <= 30; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_Cocoon/Layer ${i}.png`;
+    Celestial_Cocoon.push(img);
+  }
+  for (let i = 1; i <= 30 * 1.5; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonEyesOpening/Layer ${Math.ceil(i / 1.5)}.png`;
+    Celestial_CocoonEyesOpening.push(img);
+  }
+  for (let i = 1; i <= 30 * 1.5; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonBreakFree/Layer ${Math.ceil(i / 1.5)}.png`;
+    Celestial_CocoonBreakFree.push(img);
+  }
+  BG.src = "./ASSET/Misc/CelestialIntroBG.png";
+  Flower.src = "./ASSET/Misc/CelestialFlower.png";
+  Title.src = "./ASSET/Misc/CelestialTitle.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     BGopacity: 1,
     sound: [false, false, false, false, false, false, false],

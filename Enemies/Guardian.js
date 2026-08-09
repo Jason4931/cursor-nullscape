@@ -2,26 +2,30 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, passageGoldPattern, uldm, ESP } from "../main.js";
 
 const Guardian_Idle_Animation = [];
-for (let i = 1; i <= 16; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Guardian/Guardian_Idle_Animation/Layer ${i}.png`;
-  Guardian_Idle_Animation.push(img);
-}
 const GuardianSHOOT = [];
-for (let i = 1; i <= 23; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Guardian/GuardianSHOOT/Layer ${i}.png`;
-  GuardianSHOOT.push(img);
-}
 const GuardianEnragedIdle = [];
-for (let i = 1; i <= 16; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Guardian/GuardianEnragedIdle/Layer ${i}.png`;
-  GuardianEnragedIdle.push(img);
+function loadAssets() {
+  if (Guardian_Idle_Animation.length) return;
+  for (let i = 1; i <= 16; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Guardian/Guardian_Idle_Animation/Layer ${i}.png`;
+    Guardian_Idle_Animation.push(img);
+  }
+  for (let i = 1; i <= 23; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Guardian/GuardianSHOOT/Layer ${i}.png`;
+    GuardianSHOOT.push(img);
+  }
+  for (let i = 1; i <= 16; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Guardian/GuardianEnragedIdle/Layer ${i}.png`;
+    GuardianEnragedIdle.push(img);
+  }
 }
 
 export let shotgunGuardianActive = [false];
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     x: 0,
     y: 0,

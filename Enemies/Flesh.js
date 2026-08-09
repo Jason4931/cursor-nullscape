@@ -2,13 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { fleshPositions, playSound, isCursorOnFloor, ESP } from "../main.js";
 
 const Flesh = [];
-for (let i = 1; i <= 5 * 3; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Flesh/Layer ${Math.ceil(i / 3)}.png`;
-  Flesh.push(img);
+function loadAssets() {
+  if (Flesh.length) return;
+  for (let i = 1; i <= 5 * 3; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Flesh/Layer ${Math.ceil(i / 3)}.png`;
+    Flesh.push(img);
+  }
 }
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Flesh,

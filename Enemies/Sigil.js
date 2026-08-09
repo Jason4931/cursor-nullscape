@@ -2,13 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { canvas, ESP, playSound, soundStopped, uldm } from "../main.js";
 
 const Sigil = [];
-for (let i = 1; i <= 75; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Sigil/Layer ${i}.png`;
-  Sigil.push(img);
+function loadAssets() {
+  if (Sigil.length) return;
+  for (let i = 1; i <= 75; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Sigil/Layer ${i}.png`;
+    Sigil.push(img);
+  }
 }
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Sigil,

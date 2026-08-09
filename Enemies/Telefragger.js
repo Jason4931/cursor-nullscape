@@ -2,14 +2,18 @@ import { death, mouse } from "../entityHost.js";
 import { canvas, ESP, playSound, uldm } from "../main.js";
 
 const Telefragger = [];
-for (let i = 1; i <= 2; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Telefragger/Layer ${i}.png`;
-  Telefragger.push(img);
+function loadAssets() {
+  if (Telefragger.length) return;
+  for (let i = 1; i <= 2; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Telefragger/Layer ${i}.png`;
+    Telefragger.push(img);
+  }
 }
 
 export let mutedActive = [false];
 export function setup(host, casualMode, hardMode, deafMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     enemy: null,

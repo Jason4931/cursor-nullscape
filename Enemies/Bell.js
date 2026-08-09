@@ -12,20 +12,24 @@ import {
 } from "../main.js";
 
 const Bell_New_Idle_Animated = [];
-for (let i = 1; i <= 35; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Bell/Bell_New_Idle_Animated/Layer ${i}.png`;
-  Bell_New_Idle_Animated.push(img);
-}
 const Bell_Ring_Anim = [];
-for (let i = 1; i <= 24; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Bell/Bell_Ring_Anim/Layer ${i}.png`;
-  Bell_Ring_Anim.push(img);
+function loadAssets() {
+  if (Bell_New_Idle_Animated.length) return;
+  for (let i = 1; i <= 35; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Bell/Bell_New_Idle_Animated/Layer ${i}.png`;
+    Bell_New_Idle_Animated.push(img);
+  }
+  for (let i = 1; i <= 24; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Bell/Bell_Ring_Anim/Layer ${i}.png`;
+    Bell_Ring_Anim.push(img);
+  }
 }
 
 export let dontTouchMeActive = [false];
 export function setup(host, hardMode, immunebell) {
+  loadAssets();
   const state = {
     opacity: 1,
     layers: Bell_New_Idle_Animated,

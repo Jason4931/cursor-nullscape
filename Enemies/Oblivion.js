@@ -9,9 +9,13 @@ import {
   uldm,
 } from "../main.js";
 const Oblivion_Convergence_Particles = new Image();
-Oblivion_Convergence_Particles.src =
-  "./ASSET/Curses/Oblivion_Convergence_Particles.png";
+function loadAssets() {
+  Oblivion_Convergence_Particles.src =
+    "./ASSET/Curses/Oblivion_Convergence_Particles.png";
+}
+
 export function setup(host, showFloor) {
+  loadAssets();
   const state = {
     time: 0,
     phase: 3,

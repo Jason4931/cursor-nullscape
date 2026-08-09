@@ -2,30 +2,33 @@ import { death, mouse } from "../entityHost.js";
 import { pickRandomPlaced4or5, moveCamera, playSound, uldm } from "../main.js";
 
 const Cadence_idle_patch_5 = [];
-for (let i = 1; i <= 12; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Cadence/Cadence_idle_patch_5/Layer ${i}.png`;
-  Cadence_idle_patch_5.push(img);
-}
 const Cadence_enraged_opening = [];
-for (let i = 1; i <= 10; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Cadence/Cadence_enraged_opening/Layer ${i}.png`;
-  Cadence_enraged_opening.push(img);
-}
 const CadenceEnragedPatch5 = [];
-for (let i = 1; i <= 24; i++) {
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Cadence/CadenceEnragedPatch5/Layer ${i}.png`;
-  CadenceEnragedPatch5.push(img);
-}
-
 const violin = new Image();
-violin.src = "./ASSET/Misc/Violin.png";
 const harp = new Image();
-harp.src = "./ASSET/Misc/Harp.png";
+function loadAssets() {
+  if (Cadence_idle_patch_5.length) return;
+  for (let i = 1; i <= 12; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Cadence/Cadence_idle_patch_5/Layer ${i}.png`;
+    Cadence_idle_patch_5.push(img);
+  }
+  for (let i = 1; i <= 10; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Cadence/Cadence_enraged_opening/Layer ${i}.png`;
+    Cadence_enraged_opening.push(img);
+  }
+  for (let i = 1; i <= 24; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Cadence/CadenceEnragedPatch5/Layer ${i}.png`;
+    CadenceEnragedPatch5.push(img);
+  }
+  violin.src = "./ASSET/Misc/Violin.png";
+  harp.src = "./ASSET/Misc/Harp.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const canvas = host.canvas;
 
   const state = {

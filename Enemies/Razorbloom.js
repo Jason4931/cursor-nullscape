@@ -2,19 +2,22 @@ import { death, mouse } from "../entityHost.js";
 import { playSound, jumppadHit, getCameraPos } from "../main.js";
 
 const Razorbloom_closedright = new Image();
-Razorbloom_closedright.src =
-  "./ASSET/Curses/Razorbloom/Razorbloom_closed-right.png";
 const Razorbloom_closedleft = new Image();
-Razorbloom_closedleft.src =
-  "./ASSET/Curses/Razorbloom/Razorbloom_closed-left.png";
 const Razorbloom_closed = new Image();
-Razorbloom_closed.src = "./ASSET/Curses/Razorbloom/Razorbloom_closed.png";
 const Razorbloom_open = new Image();
-Razorbloom_open.src = "./ASSET/Curses/Razorbloom/Razorbloom_open.png";
 const Razorbloom_open2 = new Image();
-Razorbloom_open2.src = "./ASSET/Curses/Razorbloom/Razorbloom_open2.png";
+function loadAssets() {
+  Razorbloom_closedright.src =
+    "./ASSET/Curses/Razorbloom/Razorbloom_closed-right.png";
+  Razorbloom_closedleft.src =
+    "./ASSET/Curses/Razorbloom/Razorbloom_closed-left.png";
+  Razorbloom_closed.src = "./ASSET/Curses/Razorbloom/Razorbloom_closed.png";
+  Razorbloom_open.src = "./ASSET/Curses/Razorbloom/Razorbloom_open.png";
+  Razorbloom_open2.src = "./ASSET/Curses/Razorbloom/Razorbloom_open2.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     phase: "idle",
     timer: 0,

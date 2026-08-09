@@ -4,17 +4,20 @@ import { kolonaActive } from "./Kolona.js";
 import { setup as spawnMalfunction } from "./Malfunction.js";
 
 const OperatorIdle = new Image();
-OperatorIdle.src = "./ASSET/Enemies/Operator/Operator_Idle.png";
 const OperatorWaiting = new Image();
-OperatorWaiting.src = "./ASSET/Enemies/Operator/Operator_Waiting.png";
 const OperatorDanger = new Image();
-OperatorDanger.src = "./ASSET/Enemies/Operator/Operator_Danger.png";
 const OperatorKilling = new Image();
-OperatorKilling.src = "./ASSET/Enemies/Operator/Operator_Killing.png";
+function loadAssets() {
+  OperatorIdle.src = "./ASSET/Enemies/Operator/Operator_Idle.png";
+  OperatorWaiting.src = "./ASSET/Enemies/Operator/Operator_Waiting.png";
+  OperatorDanger.src = "./ASSET/Enemies/Operator/Operator_Danger.png";
+  OperatorKilling.src = "./ASSET/Enemies/Operator/Operator_Killing.png";
+}
 
 export let operatorActive = false;
 export let malfunctionActive = [false];
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
     enemy: OperatorIdle,

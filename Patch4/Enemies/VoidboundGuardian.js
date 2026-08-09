@@ -2,11 +2,17 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
 const enemy2 = new Image();
-enemy2.src = "./ASSET/Enemies/Skull.png";
+let _loaded = false;
+function loadAssets() {
+  if (_loaded) return;
+  _loaded = true;
+  enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
+  enemy2.src = "./ASSET/Enemies/Skull.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     x: 0,
     y: 0,

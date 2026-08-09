@@ -1,9 +1,12 @@
 import { death, mouse } from "../entityHost.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Bell.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Enemies/Bell.png";
+}
 
 export function setup(host) {
+  loadAssets();
   const state = {
     opacity: 1,
     //state

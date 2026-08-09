@@ -1,14 +1,17 @@
 import { death, mouse } from "../entityHost.js";
 
 const layers = [];
-for (let i = 1; i <= 5; i++) {
-  1;
-  const img = new Image();
-  img.src = `./ASSET/Enemies/Glitch/Layer ${i}.png`;
-  layers.push(img);
+function loadAssets() {
+  if (layers.length) return;
+  for (let i = 1; i <= 5; i++) {
+    const img = new Image();
+    img.src = `./ASSET/Enemies/Glitch/Layer ${i}.png`;
+    layers.push(img);
+  }
 }
 
 export function setup(host, insanelyFast = false) {
+  loadAssets();
   const state = {
     opacity: 1,
     layer: 0,

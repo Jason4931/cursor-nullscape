@@ -2,9 +2,12 @@ import { death, mouse } from "../entityHost.js";
 import { ESP, playSound, pondererPositions, soundStopped } from "../main.js";
 
 const enemy = new Image();
-enemy.src = "./ASSET/Enemies/Ponderer.png";
+function loadAssets() {
+  enemy.src = "./ASSET/Enemies/Ponderer.png";
+}
 
 export function setup(host, hardMode) {
+  loadAssets();
   const state = {
     opacity: 1,
 
