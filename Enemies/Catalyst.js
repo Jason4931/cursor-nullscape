@@ -12,18 +12,25 @@ import {
 
 const CatalystOptim = [];
 const Catalyst_Shock = [];
-function loadAssets() {
+async function loadAssets() {
   if (CatalystOptim.length) return;
-  for (let i = 1; i <= 8; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Catalyst/CatalystOptim/Layer ${i}.png`;
-    CatalystOptim.push(img);
-  }
-  for (let i = 1; i <= 4; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Catalyst/Catalyst_Shock/Layer ${i}.png`;
-    Catalyst_Shock.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Catalyst/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(CatalystOptim, "CatalystOptim", 8);
+  loadBatch(Catalyst_Shock, "Catalyst_Shock", 4);
 }
 
 export let catalystPos = { x: 0, y: 0 };

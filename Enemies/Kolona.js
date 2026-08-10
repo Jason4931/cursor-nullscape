@@ -15,28 +15,27 @@ const Kolona_Fleshed = [];
 const Kolona_Text = [];
 const KolonaWreath = new Image();
 const Pillar = new Image();
-function loadAssets() {
+async function loadAssets() {
   if (Kolona_Eyes.length) return;
-  for (let i = 1; i <= 6; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Kolona/Kolona_Eyes/Layer ${i}.png`;
-    Kolona_Eyes.push(img);
-  }
-  for (let i = 1; i <= 6; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Kolona/Kolona_Fire/Layer ${i}.png`;
-    Kolona_Fire.push(img);
-  }
-  for (let i = 1; i <= 3; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Kolona/Kolona_Fleshed/Layer ${i}.png`;
-    Kolona_Fleshed.push(img);
-  }
-  for (let i = 1; i <= 3; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Kolona/Kolona_Text/Layer ${i}.png`;
-    Kolona_Text.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Kolona/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Kolona_Eyes, "Kolona_Eyes", 6);
+  loadBatch(Kolona_Fire, "Kolona_Fire", 6);
+  loadBatch(Kolona_Fleshed, "Kolona_Fleshed", 3);
+  loadBatch(Kolona_Text, "Kolona_Text", 3);
   KolonaWreath.src = "./ASSET/Enemies/Kolona/KolonaWreath.png";
   Pillar.src = "./ASSET/Enemies/Kolona/Pillar.png";
 }

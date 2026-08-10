@@ -5,28 +5,27 @@ const VoidboundBaby_Idle = [];
 const VBbabyLockOnTarget = [];
 const Vbabytrans = [];
 const VBbabyCharging = [];
-function loadAssets() {
+async function loadAssets() {
   if (VoidboundBaby_Idle.length) return;
-  for (let i = 1; i <= 18; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundBaby/VoidboundBaby_Idle/Layer ${i}.png`;
-    VoidboundBaby_Idle.push(img);
-  }
-  for (let i = 1; i <= 7; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyLockOnTarget/Layer ${i}.png`;
-    VBbabyLockOnTarget.push(img);
-  }
-  for (let i = 1; i <= 4; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundBaby/Vbabytrans/Layer ${i}.png`;
-    Vbabytrans.push(img);
-  }
-  for (let i = 1; i <= 6; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundBaby/VBbabyCharging/Layer ${i}.png`;
-    VBbabyCharging.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/VoidboundBaby/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(VoidboundBaby_Idle, "VoidboundBaby_Idle", 18);
+  loadBatch(VBbabyLockOnTarget, "VBbabyLockOnTarget", 7);
+  loadBatch(Vbabytrans, "Vbabytrans", 4);
+  loadBatch(VBbabyCharging, "VBbabyCharging", 6);
 }
 
 export function setup(host, hardMode, rebirth = null) {

@@ -6,29 +6,27 @@ const Babyidle = [];
 const BabyLockOnTarget = [];
 const Babytransition = [];
 const Babycharge = [];
-
-function loadAssets() {
+async function loadAssets() {
   if (Babyidle.length) return;
-  for (let i = 1; i <= 8; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Baby/Babyidle/Layer ${i}.png`;
-    Babyidle.push(img);
-  }
-  for (let i = 1; i <= 15; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Baby/BabyLockOnTarget/Layer ${i}.png`;
-    BabyLockOnTarget.push(img);
-  }
-  for (let i = 1; i <= 4; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Baby/Babytransition/Layer ${i}.png`;
-    Babytransition.push(img);
-  }
-  for (let i = 1; i <= 13; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Baby/Babycharge/Layer ${i}.png`;
-    Babycharge.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Baby/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Babyidle, "Babyidle", 8);
+  loadBatch(BabyLockOnTarget, "BabyLockOnTarget", 15);
+  loadBatch(Babytransition, "Babytransition", 4);
+  loadBatch(Babycharge, "Babycharge", 13);
 }
 
 export let rebirthActive = [false];

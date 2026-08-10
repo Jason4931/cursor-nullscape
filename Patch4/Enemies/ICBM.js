@@ -3,10 +3,7 @@ import { ESP, playSound, uldm } from "../main.js";
 
 const missile = new Image();
 const explode = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   missile.src = "./ASSET/Enemies/ICBM.png";
   explode.src = "./ASSET/Misc/Explode.png";
 }

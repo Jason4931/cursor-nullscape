@@ -4,23 +4,26 @@ import { playSound, passageGoldPattern, uldm, ESP } from "../main.js";
 const Guardian_Idle_Animation = [];
 const GuardianSHOOT = [];
 const GuardianEnragedIdle = [];
-function loadAssets() {
+async function loadAssets() {
   if (Guardian_Idle_Animation.length) return;
-  for (let i = 1; i <= 16; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Guardian/Guardian_Idle_Animation/Layer ${i}.png`;
-    Guardian_Idle_Animation.push(img);
-  }
-  for (let i = 1; i <= 23; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Guardian/GuardianSHOOT/Layer ${i}.png`;
-    GuardianSHOOT.push(img);
-  }
-  for (let i = 1; i <= 16; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Guardian/GuardianEnragedIdle/Layer ${i}.png`;
-    GuardianEnragedIdle.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Guardian/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Guardian_Idle_Animation, "Guardian_Idle_Animation", 16);
+  loadBatch(GuardianSHOOT, "GuardianSHOOT", 23);
+  loadBatch(GuardianEnragedIdle, "GuardianEnragedIdle", 16);
 }
 
 export let shotgunGuardianActive = [false];

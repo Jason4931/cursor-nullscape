@@ -3,10 +3,7 @@ import { ESP, playSound, uldm } from "../main.js";
 
 const enemy = new Image();
 const enemy2 = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   enemy.src = "./ASSET/Enemies/VoidboundGuardian.png";
   enemy2.src = "./ASSET/Enemies/Skull.png";
 }

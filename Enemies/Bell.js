@@ -13,18 +13,25 @@ import {
 
 const Bell_New_Idle_Animated = [];
 const Bell_Ring_Anim = [];
-function loadAssets() {
+async function loadAssets() {
   if (Bell_New_Idle_Animated.length) return;
-  for (let i = 1; i <= 35; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Bell/Bell_New_Idle_Animated/Layer ${i}.png`;
-    Bell_New_Idle_Animated.push(img);
-  }
-  for (let i = 1; i <= 24; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Bell/Bell_Ring_Anim/Layer ${i}.png`;
-    Bell_Ring_Anim.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Baby/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Bell_New_Idle_Animated, "Bell_New_Idle_Animated", 35);
+  loadBatch(Bell_Ring_Anim, "Bell_Ring_Anim", 24);
 }
 
 export let dontTouchMeActive = [false];

@@ -8,15 +8,15 @@ const Huskleft = [new Image()];
 const Huskspawn = [];
 function loadAssets() {
   if (Huskspawn.length) return;
-  Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
-  Huskfront[0].src = "./ASSET/Enemies/Husk/Husk-front.png";
-  Huskright[0].src = "./ASSET/Enemies/Husk/Husk-right.png";
-  Huskleft[0].src = "./ASSET/Enemies/Husk/Husk-left.png";
   for (let i = 1; i <= 2; i++) {
     const img = new Image();
     img.src = `./ASSET/Enemies/Husk/Huskspawn/Layer ${i}.png`;
     Huskspawn.push(img);
   }
+  Huskback[0].src = "./ASSET/Enemies/Husk/Husk-back.png";
+  Huskfront[0].src = "./ASSET/Enemies/Husk/Husk-front.png";
+  Huskright[0].src = "./ASSET/Enemies/Husk/Husk-right.png";
+  Huskleft[0].src = "./ASSET/Enemies/Husk/Husk-left.png";
 }
 
 export let legionActive = [false];

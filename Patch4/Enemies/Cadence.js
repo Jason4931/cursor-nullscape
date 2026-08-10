@@ -10,10 +10,7 @@ import {
 const enemy = new Image();
 const violin = new Image();
 const harp = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   enemy.src = "./ASSET/Enemies/Cadence.png";
   violin.src = "./ASSET/Misc/Violin.png";
   harp.src = "./ASSET/Misc/Harp.png";

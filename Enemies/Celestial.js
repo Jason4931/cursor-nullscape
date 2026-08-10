@@ -75,43 +75,30 @@ const Celestial_CutterEnd = [];
 const Celestial_Swing = [];
 const Celestial_SwingFlipped = [];
 const Celestial_FinalSwing = [];
-function loadAssets() {
+async function loadAssets() {
   if (Celestial_Idle.length) return;
-  for (let i = 1; i <= 25; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_Idle/Layer ${i}.png`;
-    Celestial_Idle.push(img);
-  }
-  for (let i = 1; i <= 60; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterStart/Layer ${i}.png`;
-    Celestial_CutterStart.push(img);
-  }
-  for (let i = 1; i <= 60; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterLoop/Layer ${i}.png`;
-    Celestial_CutterLoop.push(img);
-  }
-  for (let i = 1; i <= 60; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_CutterEnd/Layer ${i}.png`;
-    Celestial_CutterEnd.push(img);
-  }
-  for (let i = 1; i <= 25; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_Swing/Layer ${i}.png`;
-    Celestial_Swing.push(img);
-  }
-  for (let i = 1; i <= 25; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_SwingFlipped/Layer ${i}.png`;
-    Celestial_SwingFlipped.push(img);
-  }
-  for (let i = 1; i <= 25; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_FinalSwing/Layer ${i}.png`;
-    Celestial_FinalSwing.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Celestial/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Celestial_Idle, "Celestial_Idle", 25);
+  loadBatch(Celestial_CutterStart, "Celestial_CutterStart", 60);
+  loadBatch(Celestial_CutterLoop, "Celestial_CutterLoop", 60);
+  loadBatch(Celestial_CutterEnd, "Celestial_CutterEnd", 60);
+  loadBatch(Celestial_Swing, "Celestial_Swing", 25);
+  loadBatch(Celestial_SwingFlipped, "Celestial_SwingFlipped", 25);
+  loadBatch(Celestial_FinalSwing, "Celestial_FinalSwing", 25);
 }
 
 let phase = 1;

@@ -6,33 +6,28 @@ const GuardianSHOOT = [];
 const GuardianEnragedIdle = [];
 const GuardianEnragedSHOOT = [];
 const GuardianEnraging = [];
-function loadAssets() {
+async function loadAssets() {
   if (Guardian_Idle_Animation.length) return;
-  for (let i = 1; i <= 40; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Idle/Layer ${i}.png`;
-    Guardian_Idle_Animation.push(img);
-  }
-  for (let i = 1; i <= 30; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Shoot/Layer ${i}.png`;
-    GuardianSHOOT.push(img);
-  }
-  for (let i = 1; i <= 40; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedIdle/Layer ${i}.png`;
-    GuardianEnragedIdle.push(img);
-  }
-  for (let i = 1; i <= 25; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_EnragedShoot/Layer ${i}.png`;
-    GuardianEnragedSHOOT.push(img);
-  }
-  for (let i = 1; i <= 75; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/VoidboundGuardian/VoidboundGuardian_Enraging/Layer ${i}.png`;
-    GuardianEnraging.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/VoidboundGuardian/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Guardian_Idle_Animation, "VoidboundGuardian_Idle", 40);
+  loadBatch(GuardianSHOOT, "VoidboundGuardian_Shoot", 30);
+  loadBatch(GuardianEnragedIdle, "VoidboundGuardian_EnragedIdle", 40);
+  loadBatch(GuardianEnragedSHOOT, "VoidboundGuardian_EnragedShoot", 25);
+  loadBatch(GuardianEnraging, "VoidboundGuardian_Enraging", 75);
 }
 
 export let shotgunVBGuardianActive = [false];

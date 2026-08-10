@@ -3,10 +3,7 @@ import { despawnCatalyst, moveCamera, playSound, uldm } from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const enemy = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   enemy.src = "./ASSET/Enemies/CatalystMinion.png";
 }
 

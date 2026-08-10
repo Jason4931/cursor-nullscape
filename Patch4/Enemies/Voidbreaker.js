@@ -9,10 +9,7 @@ import {
 
 const enemy = new Image();
 const sword = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   enemy.src = "./ASSET/Enemies/Voidbreaker.png";
   sword.src = "./ASSET/Misc/Sword.png";
 }

@@ -3,18 +3,25 @@ import { playSound, soundStopped, MartStack, ESP } from "../main.js";
 
 const Probably_Improper_Speeded_Mart = [];
 const MartSlideAnimation = [];
-function loadAssets() {
+async function loadAssets() {
   if (Probably_Improper_Speeded_Mart.length) return;
-  for (let i = 1; i <= 24; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Mart/Probably_Improper_Speeded_Mart/Layer ${i}.png`;
-    Probably_Improper_Speeded_Mart.push(img);
-  }
-  for (let i = 1; i <= 24; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Mart/MartSlideAnimation/Layer ${i}.png`;
-    MartSlideAnimation.push(img);
-  }
+  const loadBatch = async (target, folder, count) => {
+    const promises = [];
+    for (let i = 1; i <= count; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Mart/${folder}/Layer ${i}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Probably_Improper_Speeded_Mart, "Probably_Improper_Speeded_Mart", 24);
+  loadBatch(MartSlideAnimation, "MartSlideAnimation", 24);
 }
 
 export let fasterMart = [0];

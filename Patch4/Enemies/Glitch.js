@@ -1,12 +1,9 @@
 import { death, mouse } from "../entityHost.js";
 
 const layers = [];
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
+  if (layers.length) return;
   for (let i = 1; i <= 5; i++) {
-    1;
     const img = new Image();
     img.src = `./ASSET/Enemies/Glitch/Layer ${i}.png`;
     layers.push(img);

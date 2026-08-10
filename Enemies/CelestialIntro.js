@@ -7,23 +7,31 @@ const Celestial_CocoonBreakFree = [];
 const BG = new Image();
 const Flower = new Image();
 const Title = new Image();
-function loadAssets() {
+async function loadAssets() {
   if (Celestial_Cocoon.length) return;
-  for (let i = 1; i <= 30; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_Cocoon/Layer ${i}.png`;
-    Celestial_Cocoon.push(img);
-  }
-  for (let i = 1; i <= 30 * 1.5; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonEyesOpening/Layer ${Math.ceil(i / 1.5)}.png`;
-    Celestial_CocoonEyesOpening.push(img);
-  }
-  for (let i = 1; i <= 30 * 1.5; i++) {
-    const img = new Image();
-    img.src = `./ASSET/Enemies/Celestial/Celestial_CocoonBreakFree/Layer ${Math.ceil(i / 1.5)}.png`;
-    Celestial_CocoonBreakFree.push(img);
-  }
+  const loadBatch = async (target, folder, count, time = 1) => {
+    const promises = [];
+    for (let i = 1; i <= count * time; i++) {
+      const img = new Image();
+      target.push(img);
+      promises.push(
+        new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = `./ASSET/Enemies/Celestial/${folder}/Layer ${Math.ceil(i / time)}.png`;
+        }),
+      );
+    }
+    await Promise.all(promises);
+  };
+  await loadBatch(Celestial_Cocoon, "Celestial_Cocoon", 30);
+  loadBatch(
+    Celestial_CocoonEyesOpening,
+    "Celestial_CocoonEyesOpening",
+    30,
+    1.5,
+  );
+  loadBatch(Celestial_CocoonBreakFree, "Celestial_CocoonBreakFree", 30, 1.5);
   BG.src = "./ASSET/Misc/CelestialIntroBG.png";
   Flower.src = "./ASSET/Misc/CelestialFlower.png";
   Title.src = "./ASSET/Misc/CelestialTitle.png";

@@ -11,10 +11,7 @@ import {
 } from "../main.js";
 
 const altar = new Image();
-let _loaded = false;
 function loadAssets() {
-  if (_loaded) return;
-  _loaded = true;
   altar.src = "./ASSET/Misc/AltarOfChaos.png";
 }
 
