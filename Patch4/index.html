@@ -526,7 +526,6 @@
       }
 
       #intro-start {
-        margin-top: 2vw;
         font-size: 1.1vw;
         color: #888;
         letter-spacing: 0.1vw;
@@ -1122,7 +1121,37 @@
             the run is considered illegitimate and will not be submitted.
           </p>
 
-          <div id="intro-start">Loading...</div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 1vw;
+              padding: 0;
+              margin: 0;
+            "
+          >
+            <div id="intro-start">Loading...</div>
+
+            <button
+              id="skip-loading"
+              style="
+                display: none;
+                padding: 0;
+                margin: 0;
+                background: #111;
+                color: #fff;
+                border: 0.1vw solid #444;
+                font-family: monospace;
+                cursor: pointer;
+                width: 5vw;
+                height: 2vw;
+                font-size: 0.9vw;
+              "
+            >
+              Skip
+            </button>
+          </div>
         </div>
       </div>
       <div id="mobile-screen" style="display: none">
@@ -1133,7 +1162,9 @@
 
           <p>Please open this on a PC or laptop for proper gameplay.</p>
 
-          <div id="intro-start">Mobile is not supported</div>
+          <div id="intro-start" style="margin-top: 2vw">
+            Mobile is not supported
+          </div>
         </div>
       </div>
       <div id="death-screen">

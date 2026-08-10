@@ -1,12 +1,30 @@
-import { getAsset, preloadAssets } from "./assets.js";
+import { getAsset, preloadAssets, cancelPreloadAssets } from "./assets.js";
+const introScreen = document.getElementById("intro-screen");
+const skipLoading = document.getElementById("skip-loading");
+let introClicks = 0;
+introScreen.addEventListener("click", () => {
+  introClicks++;
+  if (introClicks == 2) {
+    skipLoading.style.display = "block";
+  }
+});
+skipLoading.addEventListener("click", (e) => {
+  e.stopPropagation();
+  cancelPreloadAssets();
+  skipLoading.style.display = "none";
+});
 await preloadAssets((loaded, total) => {
   const progress = loaded / total;
   const displayed = Math.floor(total * (1 - (1 - progress) ** 2));
   document.getElementById("intro-start").innerHTML =
     `Loading... (${displayed}/${total})`;
+  if (progress >= 0.9) {
+    skipLoading.style.display = "none";
+  }
 });
 window.addEventListener("error", (e) => {
-  document.getElementById("error-log").innerHTML = e.message;
+  document.getElementById("error-log").innerHTML =
+    `${e.message}<br>${e.filename}:${e.lineno}:${e.colno}`;
 });
 
 import {

@@ -24,7 +24,7 @@ async function loadAssets() {
         new Promise((resolve) => {
           img.onload = resolve;
           img.onerror = resolve;
-          img.src = `./ASSET/Enemies/Baby/${folder}/Layer ${i}.png`;
+          img.src = `./ASSET/Enemies/Bell/${folder}/Layer ${i}.png`;
         }),
       );
     }
