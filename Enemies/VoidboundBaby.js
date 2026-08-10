@@ -354,13 +354,15 @@ export function setup(host, hardMode, rebirth = null) {
         ctx.save();
         ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
         ctx.translate(Math.round(trail.x), Math.round(trail.y));
-        ctx.drawImage(
-          trail.image,
-          Math.round((-state.size / 2) * 0.9),
-          Math.round((-state.size / 2) * 0.9),
-          Math.round(state.size * 0.9),
-          Math.round(state.size * 0.9),
-        );
+        if (trail.image) {
+          ctx.drawImage(
+            trail.image,
+            Math.round((-state.size / 2) * 0.9),
+            Math.round((-state.size / 2) * 0.9),
+            Math.round(state.size * 0.9),
+            Math.round(state.size * 0.9),
+          );
+        }
         ctx.restore();
       }
     }
@@ -369,13 +371,15 @@ export function setup(host, hardMode, rebirth = null) {
     if (state.enemy) {
       const sizescale = state.layers == VBbabyLockOnTarget ? 1.5 : 1.2;
       ESP(state.x, state.y, state.size, "voidboundbaby");
-      ctx.drawImage(
-        state.enemy,
-        Math.round((-state.size / 2) * sizescale),
-        Math.round((-state.size / 2) * sizescale),
-        Math.round(state.size * sizescale),
-        Math.round(state.size * sizescale),
-      );
+      if (state.enemy) {
+        ctx.drawImage(
+          state.enemy,
+          Math.round((-state.size / 2) * sizescale),
+          Math.round((-state.size / 2) * sizescale),
+          Math.round(state.size * sizescale),
+          Math.round(state.size * sizescale),
+        );
+      }
     }
 
     ctx.restore();

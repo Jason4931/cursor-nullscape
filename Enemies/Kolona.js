@@ -266,13 +266,15 @@ export function setup(host, casualMode) {
     if (slowness && !uldm) {
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.drawImage(
-        state.Flesheddraw,
-        Math.round(-RING_RADIUS * 1.3),
-        Math.round(-RING_RADIUS * 1.3),
-        Math.round(RING_RADIUS * 2.6),
-        Math.round(RING_RADIUS * 2.6),
-      );
+      if (state.Flesheddraw) {
+        ctx.drawImage(
+          state.Flesheddraw,
+          Math.round(-RING_RADIUS * 1.3),
+          Math.round(-RING_RADIUS * 1.3),
+          Math.round(RING_RADIUS * 2.6),
+          Math.round(RING_RADIUS * 2.6),
+        );
+      }
       ctx.restore();
     }
     ctx.save();
@@ -305,13 +307,15 @@ export function setup(host, casualMode) {
     ctx.restore();
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
-    ctx.drawImage(
-      state.Firedraw,
-      Math.round(-RING_RADIUS * 0.667),
-      Math.round(-RING_RADIUS * 0.75),
-      Math.round(RING_RADIUS * 1.333),
-      Math.round(RING_RADIUS * 1.333),
-    );
+    if (state.Firedraw) {
+      ctx.drawImage(
+        state.Firedraw,
+        Math.round(-RING_RADIUS * 0.667),
+        Math.round(-RING_RADIUS * 0.75),
+        Math.round(RING_RADIUS * 1.333),
+        Math.round(RING_RADIUS * 1.333),
+      );
+    }
     ctx.restore();
 
     if (!state.showEntity) {
@@ -347,24 +351,28 @@ export function setup(host, casualMode) {
         Math.round(state.y + RING_RADIUS * 1.25),
       );
       ctx.scale(1, Math.max(0, Math.min(1, (state.timer - 0.25) * 4)));
-      ctx.drawImage(
-        state.Textdraw,
-        Math.round(-RING_RADIUS * 1.5),
-        Math.round(-RING_RADIUS * 0.233),
-        Math.round(RING_RADIUS * 3),
-        Math.round(RING_RADIUS * 0.466),
-      );
+      if (state.Textdraw) {
+        ctx.drawImage(
+          state.Textdraw,
+          Math.round(-RING_RADIUS * 1.5),
+          Math.round(-RING_RADIUS * 0.233),
+          Math.round(RING_RADIUS * 3),
+          Math.round(RING_RADIUS * 0.466),
+        );
+      }
       ctx.restore();
     }
 
     if (state.phase === "strike" && state.showEntity && state.Eyesdraw) {
-      ctx.drawImage(
-        state.Eyesdraw,
-        Math.round(state.x - RING_RADIUS * 0.5),
-        Math.round(state.y - RING_RADIUS * 0.5),
-        Math.round(RING_RADIUS),
-        Math.round(RING_RADIUS),
-      );
+      if (state.Eyesdraw) {
+        ctx.drawImage(
+          state.Eyesdraw,
+          Math.round(state.x - RING_RADIUS * 0.5),
+          Math.round(state.y - RING_RADIUS * 0.5),
+          Math.round(RING_RADIUS),
+          Math.round(RING_RADIUS),
+        );
+      }
     }
 
     ctx.restore();

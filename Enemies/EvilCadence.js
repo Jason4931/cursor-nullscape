@@ -343,7 +343,9 @@ export function setup(host, hardMode) {
     const size = state.layers == CadenceEnragedPatch5 ? 400 : 200;
     ctx.save();
     ctx.filter = "sepia(100%) saturate(5000%) hue-rotate(-5deg)";
-    ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
+    if (state.enemy) {
+      ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
+    }
     ctx.restore();
     // const exportCanvas = document.createElement("canvas");
     // exportCanvas.width = size;

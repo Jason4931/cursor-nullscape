@@ -20,7 +20,11 @@ async function loadAssets() {
     }
     await Promise.all(promises);
   };
-  await loadBatch(Probably_Improper_Speeded_Mart, "Probably_Improper_Speeded_Mart", 24);
+  await loadBatch(
+    Probably_Improper_Speeded_Mart,
+    "Probably_Improper_Speeded_Mart",
+    24,
+  );
   loadBatch(MartSlideAnimation, "MartSlideAnimation", 24);
 }
 
@@ -266,13 +270,15 @@ export function setup(host, hardMode, stack = 1, position = null) {
     }
 
     ESP(state.x, state.y, state.size, "mart");
-    ctx.drawImage(
-      state.enemy,
-      Math.round(state.x - state.size / 2),
-      Math.round(state.y - state.size / 2),
-      Math.round(state.size),
-      Math.round(state.size),
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - state.size / 2),
+        Math.round(state.y - state.size / 2),
+        Math.round(state.size),
+        Math.round(state.size),
+      );
+    }
 
     ctx.restore();
   }

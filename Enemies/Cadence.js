@@ -368,7 +368,9 @@ export function setup(host, hardMode, deafMode) {
 
     const size = state.layers == CadenceEnragedPatch5 ? 400 : 200;
     ESP(state.x, state.y, size, "cadence");
-    ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
+    if (state.enemy) {
+      ctx.drawImage(state.enemy, sx - size / 2, sy - size / 2, size, size);
+    }
 
     for (const it of state.instruments) {
       const ix = Math.round(it.x);

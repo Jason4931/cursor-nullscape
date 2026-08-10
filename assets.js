@@ -10,7 +10,7 @@ export async function preloadAssets(onProgress = () => {}) {
     while (index < paths.length) {
       const path = paths[index++];
 
-      await new Promise((resolve) => {
+      await new Promise(async (resolve) => {
         const timeout = setTimeout(() => {
           done();
         }, 10000);
@@ -51,13 +51,13 @@ export async function preloadAssets(onProgress = () => {}) {
             "caf",
           ].includes(ext)
         ) {
-          const audio = new Audio();
-
+          const response = await fetch(path);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
           audio.oncanplaythrough = () => done(audio);
           audio.onerror = () => done();
-
-          audio.preload = "auto";
-          audio.src = path;
+          audio.load();
         } else {
           done();
         }

@@ -321,13 +321,15 @@ export function setup(host) {
 
       ctx.save();
       ctx.translate(Math.round(x), Math.round(y));
-      ctx.drawImage(
-        state.enemy,
-        Math.round(-celestialSize / 2),
-        Math.round(-celestialSize / 2),
-        celestialSize,
-        celestialSize,
-      );
+      if (state.enemy) {
+        ctx.drawImage(
+          state.enemy,
+          Math.round(-celestialSize / 2),
+          Math.round(-celestialSize / 2),
+          celestialSize,
+          celestialSize,
+        );
+      }
       ctx.restore();
     }
 

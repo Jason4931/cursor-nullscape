@@ -313,13 +313,15 @@ export function setup(host, hardMode, scale = 1) {
     ctx.save();
     ctx.translate(Math.round(state.x), Math.round(state.y));
     ESP(state.x, state.y, state.size, "baby");
-    ctx.drawImage(
-      state.enemy,
-      Math.round(-state.size / 2),
-      Math.round(-state.size / 2),
-      Math.round(state.size),
-      Math.round(state.size),
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(-state.size / 2),
+        Math.round(-state.size / 2),
+        Math.round(state.size),
+        Math.round(state.size),
+      );
+    }
 
     ctx.restore();
   }

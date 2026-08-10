@@ -614,13 +614,15 @@ export function setup(host) {
       }
     }
     ESP(state.x, state.y, 200, "catalyst");
-    ctx.drawImage(
-      state.enemy,
-      Math.round(state.x - 100),
-      Math.round(state.y - 100),
-      200,
-      200,
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - 100),
+        Math.round(state.y - 100),
+        200,
+        200,
+      );
+    }
 
     for (const p of state.pellets) {
       ctx.save();
@@ -634,13 +636,15 @@ export function setup(host) {
         ctx.arc(0, 0, PELLET_RADIUS, 0, Math.PI * 2);
         ctx.fill();
       }
-      ctx.drawImage(
-        state.enemy,
-        -PELLET_RADIUS / 2,
-        -PELLET_RADIUS / 2,
-        PELLET_RADIUS,
-        PELLET_RADIUS,
-      );
+      if (state.enemy) {
+        ctx.drawImage(
+          state.enemy,
+          -PELLET_RADIUS / 2,
+          -PELLET_RADIUS / 2,
+          PELLET_RADIUS,
+          PELLET_RADIUS,
+        );
+      }
       ctx.restore();
     }
 

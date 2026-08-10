@@ -8284,7 +8284,9 @@ export function setup(
       ctx.save();
       ctx.translate(state.enemyX, state.enemyY);
       const size = 700 * state.enemyScale;
-      ctx.drawImage(state.enemy, -size / 2, -size / 2, size, size);
+      if (state.enemy) {
+        ctx.drawImage(state.enemy, -size / 2, -size / 2, size, size);
+      }
       ctx.restore();
     }
 

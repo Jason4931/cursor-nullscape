@@ -431,24 +431,28 @@ export function setup(host, casualMode, hardMode) {
         ctx.save();
         ctx.globalAlpha = 0.5 * (1 - trail.age / 0.5);
         ctx.translate(Math.round(trail.x), Math.round(trail.y));
-        ctx.drawImage(
-          trail.image,
-          Math.round(-100 * 0.9),
-          Math.round(-100 * 0.9),
-          Math.round(200 * 0.9),
-          Math.round(200 * 0.9),
-        );
+        if (trail.image) {
+          ctx.drawImage(
+            trail.image,
+            Math.round(-100 * 0.9),
+            Math.round(-100 * 0.9),
+            Math.round(200 * 0.9),
+            Math.round(200 * 0.9),
+          );
+        }
         ctx.restore();
       }
     }
     ESP(state.x, state.y, 200, "voidboundguardian");
-    ctx.drawImage(
-      state.enemy,
-      Math.round(state.x - 100),
-      Math.round(state.y - 100),
-      200,
-      200,
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - 100),
+        Math.round(state.y - 100),
+        200,
+        200,
+      );
+    }
 
     if (state.shootCirc < 60 && !uldm) {
       ctx.beginPath();

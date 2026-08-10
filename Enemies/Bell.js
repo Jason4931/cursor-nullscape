@@ -282,7 +282,15 @@ export function setup(host, hardMode, immunebell) {
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
       ESP(state.x, state.y, state.size, "bell");
-      ctx.drawImage(state.enemy, Math.round(-s / 2), Math.round(-s / 2), s, s);
+      if (state.enemy) {
+        ctx.drawImage(
+          state.enemy,
+          Math.round(-s / 2),
+          Math.round(-s / 2),
+          s,
+          s,
+        );
+      }
       ctx.restore();
     }
 

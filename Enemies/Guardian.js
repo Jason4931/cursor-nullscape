@@ -340,13 +340,15 @@ export function setup(host, hardMode) {
     }
 
     ESP(state.x, state.y, 100, "guardian");
-    ctx.drawImage(
-      state.enemy,
-      Math.round(state.x - 50),
-      Math.round(state.y - 50),
-      100,
-      100,
-    );
+    if (state.enemy) {
+      ctx.drawImage(
+        state.enemy,
+        Math.round(state.x - 50),
+        Math.round(state.y - 50),
+        100,
+        100,
+      );
+    }
 
     if (state.shootCirc < 30 && !uldm) {
       ctx.beginPath();
