@@ -1520,7 +1520,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       setTimeout(() => {
         set("crnsc-message", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
         lastValue = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
-      }, 1000);
+      }, 2000);
       topLeftInput.value = "";
     }
     if (input.toLowerCase().startsWith("globalspawn")) {
@@ -1534,7 +1534,7 @@ topLeftInput.addEventListener("keydown", function (event) {
         setTimeout(() => {
           set("crnsc-spawnentity", "ce5f87fe-78ea-4779-9530-6c842ca30da6");
           lastValueEntity = "ce5f87fe-78ea-4779-9530-6c842ca30da6";
-        }, 1000);
+        }, 2000);
         topLeftInput.value = "";
       }
     }
