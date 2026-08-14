@@ -1,5 +1,5 @@
 import { mouse } from "../entityHost.js";
-import { onFinalContact, TILE, getCameraPos } from "../main.js";
+import { onFinalContact, TILE, getCameraPos, uldm } from "../main.js";
 
 export function setup(host, deafMode) {
   const TEXT_DELAY = 8.333;
@@ -27,6 +27,11 @@ export function setup(host, deafMode) {
   const FADE_IN = 1.0;
   const FADE_OUT = 1.0;
 
+  const BEACON_RING_COUNT = 10;
+  const BEACON_RING_RADIUS = SIZE;
+  const BEACON_RING_LINE_WIDTH = 16;
+  const BEACON_RING_SPEED = 1;
+
   const state = {
     opacity: 1,
 
@@ -38,6 +43,9 @@ export function setup(host, deafMode) {
     phase: "initHold",
     timer: 0,
     scale: START_SCALE,
+
+    ringRotations: Array(BEACON_RING_COUNT).fill(0),
+    ringSpeeds: Array(BEACON_RING_COUNT).fill(0),
   };
 
   function easeOut(t) {
@@ -51,6 +59,27 @@ export function setup(host, deafMode) {
     state.y = Math.round(host.canvas.height * 0.5);
 
     state.timer += dt;
+
+    for (let i = 0; i < BEACON_RING_COUNT; i++) {
+      const prev =
+        state.ringRotations[(i - 1 + BEACON_RING_COUNT) % BEACON_RING_COUNT];
+      const next = state.ringRotations[(i + 1) % BEACON_RING_COUNT];
+      const current = state.ringRotations[i];
+      const prevDistance = Math.abs(
+        Math.atan2(Math.sin(current - prev), Math.cos(current - prev)),
+      );
+      const nextDistance = Math.abs(
+        Math.atan2(Math.sin(current - next), Math.cos(current - next)),
+      );
+      const closestDistance = Math.min(prevDistance, nextDistance);
+      // 0 when far away, 1 when almost overlapping
+      const proximity = Math.max(0, 1 - closestDistance / (Math.PI / 2));
+      const baseSpeed = BEACON_RING_SPEED * (1 + i * 0.25);
+      const targetSpeed = baseSpeed * (1 + proximity);
+      state.ringSpeeds[i] += (targetSpeed - state.ringSpeeds[i]) * dt * 5;
+      state.ringRotations[i] +=
+        state.ringSpeeds[i] * (i % 2 === 0 ? 1 : -1) * dt;
+    }
 
     if (state.phase === "initHold") {
       state.scale = START_SCALE;
@@ -232,6 +261,45 @@ export function setup(host, deafMode) {
 
     if (state.phase === "active" && deafMode) {
       drawArrow(ctx);
+    }
+
+    if (!uldm) {
+      const ringTime = performance.now() / 1000;
+      ctx.save();
+      ctx.globalAlpha *= state.scale;
+      ctx.translate(cx, cy);
+      for (let i = 0; i < BEACON_RING_COUNT; i++) {
+        const rotation =
+          state.ringRotations[i] + (i * Math.PI * 2) / BEACON_RING_COUNT;
+        const radius = BEACON_RING_RADIUS * (0.8 + 0.1 * i);
+        const startAngle = Math.PI * 0.1;
+        const endAngle = Math.PI * 0.9;
+        const segments = 20;
+        ctx.save();
+        ctx.rotate(rotation);
+        ctx.beginPath();
+        for (let j = 0; j <= segments; j++) {
+          const t = j / segments;
+          const angle = startAngle + (endAngle - startAngle) * t;
+          const thickness =
+            BEACON_RING_LINE_WIDTH * Math.sin(Math.PI * t) * state.scale;
+          const r = radius + thickness;
+          ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+        }
+        for (let j = segments; j >= 0; j--) {
+          const t = j / segments;
+          const angle = startAngle + (endAngle - startAngle) * t;
+          const thickness =
+            BEACON_RING_LINE_WIDTH * Math.sin(Math.PI * t) * state.scale;
+          const r = radius - thickness;
+          ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+        }
+        ctx.closePath();
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
     }
 
     ctx.restore();

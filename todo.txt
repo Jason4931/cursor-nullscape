@@ -60,6 +60,7 @@ v seamine
 v jumppad
 v triaorb
 v grindrail
+v beacon
 v pylons
 v reality collapse
 v celestial intro

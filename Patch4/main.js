@@ -821,6 +821,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       input.toLowerCase() === "catalyst" ||
       input.toLowerCase() === "seamine" ||
       input.toLowerCase() === "jumppad" ||
+      input.toLowerCase() === "beacon" ||
       input.toLowerCase().startsWith("altar");
     if (entity) {
       let spawned = 0;
@@ -836,6 +837,8 @@ topLeftInput.addEventListener("keydown", function (event) {
           registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
         } else if (input.toLowerCase() === "seamine") {
           spawnSeamine(entityHost, casualMode);
+        } else if (input.toLowerCase() === "beacon") {
+          spawnBeacon(entityHost, deafMode);
         } else if (input.toLowerCase() === "jumppad") {
           for (let i = 1; i <= 10; i++) {
             spawnJumpPad(entityHost, i >= 8);

@@ -1440,6 +1440,7 @@ topLeftInput.addEventListener("keydown", function (event) {
       input.toLowerCase() === "jumppad" ||
       input.toLowerCase() === "realitycollapse" ||
       input.toLowerCase() === "grindrail" ||
+      input.toLowerCase() === "beacon" ||
       input.toLowerCase().startsWith("altar");
     if (entity) {
       let spawned = 0;
@@ -1461,6 +1462,8 @@ topLeftInput.addEventListener("keydown", function (event) {
           spawnSeamine(entityHost, casualMode, hardMode);
         } else if (input.toLowerCase() === "grindrail") {
           spawnGrindrail(entityHost);
+        } else if (input.toLowerCase() === "beacon") {
+          spawnBeacon(entityHost, deafMode);
         } else if (input.toLowerCase() === "jumppad") {
           for (let i = 1; i <= 10; i++) {
             if (i <= 5) {
