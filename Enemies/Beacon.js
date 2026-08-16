@@ -75,7 +75,7 @@ export function setup(host, deafMode) {
       // 0 when far away, 1 when almost overlapping
       const proximity = Math.max(0, 1 - closestDistance / (Math.PI / 2));
       const baseSpeed = BEACON_RING_SPEED * (1 + i * 0.25);
-      const targetSpeed = baseSpeed * (1 + proximity);
+      const targetSpeed = baseSpeed * (1 + proximity * Math.random());
       state.ringSpeeds[i] += (targetSpeed - state.ringSpeeds[i]) * dt * 5;
       state.ringRotations[i] +=
         state.ringSpeeds[i] * (i % 2 === 0 ? 1 : -1) * dt;
