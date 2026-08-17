@@ -371,7 +371,13 @@ export function setup(host, hardMode) {
       if (!uldm) {
         for (const t of p.trail) {
           ctx.beginPath();
-          ctx.arc(Math.round(t.x), Math.round(t.y), 8, 0, Math.PI * 2);
+          ctx.arc(
+            Math.round(t.x),
+            Math.round(t.y),
+            (1.25 - t.life / 2) * 8,
+            0,
+            Math.PI * 2,
+          );
           ctx.strokeStyle = `rgba(255,255,255,${t.life / 2})`;
           ctx.lineWidth = 2;
           ctx.stroke();
