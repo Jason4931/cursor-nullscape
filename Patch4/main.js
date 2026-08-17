@@ -1064,6 +1064,17 @@ window.addEventListener("keyup", (e) => {
   reducedMotion = reducedMotionBeforeHold;
   reducedMotionHoldActive = false;
 });
+window.addEventListener("blur", () => {
+  for (const key in keysPressed) {
+    keysPressed[key] = false;
+  }
+  spaceHeld = false;
+  shiftlockEase = 0;
+  if (reducedMotionHoldActive) {
+    reducedMotion = reducedMotionBeforeHold;
+    reducedMotionHoldActive = false;
+  }
+});
 const input = document.getElementById("death-input");
 const img = document.getElementById("death-image");
 let wobbleTimer;
