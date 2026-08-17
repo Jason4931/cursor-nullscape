@@ -3487,7 +3487,7 @@ export function setup(
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
-      const randLineWidth = 18 * (Math.random() + 2);
+      const randLineWidth = 0;
 
       const isLethal = s.t >= 5;
 
@@ -5166,7 +5166,7 @@ export function setup(
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
-      const randLineWidth = 18 * (Math.random() + 2);
+      const randLineWidth = 0;
 
       const isLethal = s.t >= 5;
 
@@ -7282,7 +7282,7 @@ export function setup(
       const rx = dx * cos - dy * sin;
       const x = rx - BEAM_RADIUS;
       const len = BEAM_RADIUS * 2;
-      const randLineWidth = 18 * (Math.random() + 2);
+      const randLineWidth = 0;
 
       const isLethal = s.t >= 5;
 
@@ -8062,6 +8062,12 @@ export function setup(
       y: state.enemyY + (Math.random() - 0.5) * 300,
       r: 100,
       speed: 1,
+    });
+    state.enemyTrail.push({
+      x: state.enemyX + (Math.random() - 0.5) * 1500,
+      y: state.enemyY + (Math.random() - 0.5) * 1500,
+      r: 50,
+      speed: 4,
     });
     if (state.scream) {
       shakeScreen();
