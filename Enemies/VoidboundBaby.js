@@ -208,14 +208,6 @@ export function setup(host, hardMode, rebirth = null) {
       state.x = state.startX + state.dirX * state.lineLength * easedT;
       state.y = state.startY + state.dirY * state.lineLength * easedT;
 
-      const dx = mouse.x - state.x;
-      const dy = mouse.y - state.y;
-
-      if (Math.hypot(dx, dy) <= state.size * 0.4) {
-        death("VoidboundBaby");
-        return;
-      }
-
       if (t >= 1) {
         state.state = hardMode ? "charging2" : "idle";
         state.timer = 0;
@@ -258,14 +250,6 @@ export function setup(host, hardMode, rebirth = null) {
       state.x = state.startX2 + state.dirX2 * state.lineLength * easedT;
       state.y = state.startY2 + state.dirY2 * state.lineLength * easedT;
 
-      const dx = mouse.x - state.x;
-      const dy = mouse.y - state.y;
-
-      if (Math.hypot(dx, dy) <= state.size * 0.4) {
-        death("VoidboundBaby");
-        return;
-      }
-
       if (t >= 1) {
         state.state = "idle";
         state.timer = 0;
@@ -275,6 +259,12 @@ export function setup(host, hardMode, rebirth = null) {
         state.layerChange[3] = false;
         state.layerChange[4] = false;
       }
+    }
+
+    const dx = mouse.x - state.x;
+    const dy = mouse.y - state.y;
+    if (Math.hypot(dx, dy) <= state.size * 0.4) {
+      death("VoidboundBaby");
     }
   }
 
