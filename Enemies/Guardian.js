@@ -114,6 +114,8 @@ export function setup(host, hardMode) {
     const pellet = {
       x: state.x,
       y: state.y + 20,
+      startX: state.x,
+      startY: state.y + 20,
       vx: (dx / len) * speed,
       vy: (dy / len) * speed,
       born: performance.now(),
@@ -123,7 +125,10 @@ export function setup(host, hardMode) {
     if (offsetAngle === null) {
       state.centerPellet = pellet;
     } else {
-      pellet.center = state.centerPellet;
+      pellet.centerX = pellet.x;
+      pellet.centerY = pellet.y;
+      pellet.centerVx = pellet.vx;
+      pellet.centerVy = pellet.vy;
       pellet.offsetAngle = offsetAngle;
     }
 
@@ -197,8 +202,9 @@ export function setup(host, hardMode) {
         state.opacity = 1;
         firePellet();
         if (shotgunGuardianActive[0]) {
+          const randRot = Math.random() * Math.PI * 2;
           for (let i = 0; i < 7; i++) {
-            firePellet((i * Math.PI * 2) / 7);
+            firePellet((i * Math.PI * 2) / 7 + randRot);
           }
         }
         state.shootCirc = 0;
@@ -259,15 +265,15 @@ export function setup(host, hardMode) {
       }
 
       if (age < 13000) {
-        if (p.center) {
-          const t = (performance.now() - p.born) / 1000;
+        if (p.offsetAngle !== undefined) {
+          const t = (now - p.born) / 1000;
           const r = 100 * t;
-
-          p.x = p.center.x + Math.cos(p.offsetAngle) * r;
-          p.y = p.center.y + Math.sin(p.offsetAngle) * r;
+          p.x = p.centerX + p.centerVx * t + Math.cos(p.offsetAngle) * r;
+          p.y = p.centerY + p.centerVy * t + Math.sin(p.offsetAngle) * r;
         } else {
-          p.x += p.vx * dt;
-          p.y += p.vy * dt;
+          const t = (now - p.born) / 1000;
+          p.x = p.startX + p.vx * t;
+          p.y = p.startY + p.vy * t;
         }
       } else if (age > 13500) {
         state.pellets.splice(i, 1);
