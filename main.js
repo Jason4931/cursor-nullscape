@@ -2919,12 +2919,8 @@ export function spawnCelestialIntro() {
   onCelestial = true;
   onCelestialIntro = true;
   disableCollect = true;
-  if (!shieldActive[0]) {
-    activateShield();
-  }
-  if (!shieldActive[1]) {
-    activateShield();
-  }
+  activateShield();
+  activateShield();
   startCelestialIntro(entityHost);
   stopAllEntity = true;
   disablespawn = true;
