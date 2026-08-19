@@ -30,6 +30,8 @@ export function setup(host, hardMode) {
     nextDelay: 19 + Math.random(),
     result: null,
     resultTweak: null,
+    resultDet: null,
+    resultDetTweak: null,
     resultTimer: 0,
     resultMode: "normal",
     mode: "normal",
@@ -38,54 +40,45 @@ export function setup(host, hardMode) {
 
   const RESULT_TEXT = {
     0: "No Tripmines For 1 Minute",
-    1: "+0.5x Gift Multiplier Increase",
-    2: "+0.75x Gift Multiplier Increase",
-    3: "Flesh BEGONE",
-    4: "Extra Shield",
-    5: "Payment 1000 Gift",
-    6: "Martpocalypse",
-    7: "2 Random Enemies",
-    8: "Mart and Springer",
-    9: "It's Here",
-    10: "40% Less Jump Pads",
-    11: "60% Less Jump Pads",
-    12: "40% More Seamines",
-    13: "60% More Seamines",
-    14: "Oops, all Flesh!",
+    1: `+{}x Gift Multiplier Increase`,
+    2: "Flesh BEGONE",
+    3: "Extra Shield",
+    4: "Payment 1000 Gift",
+    5: "Martpocalypse",
+    6: "2 Random Enemies",
+    7: "Mart and Springer",
+    8: "It's Here",
+    9: "{}% Less Jump Pads",
+    10: "{}% More Seamines",
+    11: "Oops, all Flesh!",
   };
   const RESULT_TEXT_HIGH = {
     0: "No Tripmines For 1 Minute",
-    1: "+0.75x Gift Multiplier Increase",
-    2: "+1.25x Gift Multiplier Increase",
-    3: "Flesh BEGONE",
-    4: "Extra Shield",
-    5: "Payment 2000 Gift",
-    6: "Martpocalypse",
-    7: "4 Random Enemies",
-    8: "Mart and Springer",
-    9: "It's Here",
-    10: "100% Less Jump Pads",
-    11: "100% Less Jump Pads",
-    12: "100% More Seamines",
-    13: "120% More Seamines",
-    14: "Oops, all Flesh!",
+    1: "+{}x Gift Multiplier Increase",
+    2: "Flesh BEGONE",
+    3: "Extra Shield",
+    4: "Payment 2000 Gift",
+    5: "Martpocalypse",
+    6: "4 Random Enemies",
+    7: "Mart and Springer",
+    8: "It's Here",
+    9: "{}% Less Jump Pads",
+    10: "{}% More Seamines",
+    11: "Oops, all Flesh!",
   };
   const RESULT_TEXT_TWEAK = {
     0: null,
-    1: "+0.25x Gift Multiplier Increase",
-    2: "+0.5x Gift Multiplier Increase",
-    3: "Flesh BEGONE",
-    4: "Extra Shield",
-    5: "Payment 1000 Gift",
-    6: "Martpocalypse",
-    7: "2 Random Enemies",
-    8: "Mart and Springer",
-    9: "It's Here",
-    10: "40% Less Jump Pads",
-    11: "60% Less Jump Pads",
-    12: "40% More Seamines",
-    13: "60% More Seamines",
-    14: "Oops, all Flesh!",
+    1: "+{}x Gift Multiplier Increase",
+    2: "Flesh BEGONE",
+    3: "Extra Shield",
+    4: "Payment 1000 Gift",
+    5: "Martpocalypse",
+    6: "2 Random Enemies",
+    7: "Mart and Springer",
+    8: "It's Here",
+    9: "{}% Less Jump Pads",
+    10: "{}% More Seamines",
+    11: "Oops, all Flesh!",
   };
 
   const pos = pickRandomPlaced4or5(1000);
@@ -115,10 +108,22 @@ export function setup(host, hardMode) {
 
     if (dx * dx + dy * dy <= r * r) {
       if (state.mode == "tweak") {
-        state.result = activateChance(state.mode, "positive");
-        state.resultTweak = activateChance(state.mode, "negative");
+        const resPos = activateChance(state.mode, "positive");
+        const resNeg = activateChance(state.mode, "negative");
+        state.result = resPos[0];
+        state.resultTweak = resNeg[0];
+        if (resPos[1] != null) {
+          state.resultDet = resPos[1];
+        }
+        if (resNeg[1] != null) {
+          state.resultDetTweak = resNeg[1];
+        }
       } else {
-        state.result = activateChance(state.mode);
+        const res = activateChance(state.mode);
+        state.result = res[0];
+        if (res[1] != null) {
+          state.resultDet = res[1];
+        }
       }
       playSound("./ASSET/Sound/Global/Main_Altar_sfx.ogg");
       state.resultMode = state.mode;
@@ -254,28 +259,31 @@ export function setup(host, hardMode) {
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#fff";
       if (state.resultTweak == null) {
-        ctx.strokeText(
+        let text =
           state.resultMode == "high"
             ? RESULT_TEXT_HIGH[state.result]
-            : RESULT_TEXT[state.result],
-          boxX + screenW * 0.25,
-          boxY + boxHeight / 2 + 20,
-        );
-        ctx.fillText(
-          state.resultMode == "high"
-            ? RESULT_TEXT_HIGH[state.result]
-            : RESULT_TEXT[state.result],
-          boxX + screenW * 0.25,
-          boxY + boxHeight / 2 + 20,
-        );
+            : RESULT_TEXT[state.result];
+        if (text.includes("{}")) {
+          text = text.replace("{}", state.resultDet);
+        }
+        ctx.strokeText(text, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
+        ctx.fillText(text, boxX + screenW * 0.25, boxY + boxHeight / 2 + 20);
       } else {
+        let text1 = RESULT_TEXT_TWEAK[state.result];
+        let text2 = RESULT_TEXT_TWEAK[state.resultTweak];
+        if (text1.includes("{}")) {
+          text1 = text1.replace("{}", state.resultDet);
+        }
+        if (text2.includes("{}")) {
+          text2 = text2.replace("{}", state.resultDetTweak);
+        }
         ctx.strokeText(
-          `${RESULT_TEXT_TWEAK[state.result]} and ${RESULT_TEXT_TWEAK[state.resultTweak]}`,
+          `${text1} and ${text2}`,
           boxX + screenW * 0.25,
           boxY + boxHeight / 2 + 20,
         );
         ctx.fillText(
-          `${RESULT_TEXT_TWEAK[state.result]} and ${RESULT_TEXT_TWEAK[state.resultTweak]}`,
+          `${text1} and ${text2}`,
           boxX + screenW * 0.25,
           boxY + boxHeight / 2 + 20,
         );

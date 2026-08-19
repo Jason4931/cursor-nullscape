@@ -3365,14 +3365,16 @@ export function activateChaos() {
 export function activateChance(mode = "normal", outcome = null) {
   lastAltar = "Chance";
   let chance;
-  if (outcome) {
-    if (outcome == "positive") {
-      chance = 1 + Math.floor(Math.random() * 4);
-    } else if (outcome == "negative") {
-      chance = 5 + Math.floor(Math.random() * 10);
+  let resultDet;
+  if (!outcome) outcome = Math.random() < 0.5 ? "positive" : "negative";
+  if (outcome == "positive") {
+    if (mode == "tweak") {
+      chance = 1 + Math.floor(Math.random() * 3);
+    } else {
+      chance = 0 + Math.floor(Math.random() * 4);
     }
-  } else {
-    chance = Math.floor(Math.random() * 15);
+  } else if (outcome == "negative") {
+    chance = 4 + Math.floor(Math.random() * 8);
   }
   switch (chance) {
     case 0:
@@ -3388,14 +3390,17 @@ export function activateChance(mode = "normal", outcome = null) {
       }, 60000);
       break;
     case 1:
-      // +0.5x Gift Multiplier Increase
-      giftMultiplier += mode == "high" ? 0.75 : mode == "tweak" ? 0.25 : 0.5;
+      // +0.5x / +0.75x Gift Multiplier Increase
+      let plus;
+      if (Math.random() < 0.5) {
+        plus = mode == "high" ? 0.75 : mode == "tweak" ? 0.25 : 0.5;
+      } else {
+        plus = mode == "high" ? 1.25 : mode == "tweak" ? 0.5 : 0.75;
+      }
+      giftMultiplier += plus;
+      resultDet = `${plus}`;
       break;
     case 2:
-      // +0.75x Gift Multiplier Increase
-      giftMultiplier += mode == "high" ? 1.25 : mode == "tweak" ? 0.5 : 0.75;
-      break;
-    case 3:
       // Flesh BEGONE
       fleshPositions.clear();
       slowness = false;
@@ -3422,11 +3427,11 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 4:
+    case 3:
       // Extra Shield
       activateShield();
       break;
-    case 5:
+    case 4:
       // Payment 1000 Gift
       actualCollectedCount -= mode == "high" ? 2000 : 1000;
       collectedCount = hardMode
@@ -3443,7 +3448,7 @@ export function activateChance(mode = "normal", outcome = null) {
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
       break;
-    case 6:
+    case 5:
       // Martpocalypse
       for (let i = 0; i < 6; i++) {
         const unregister = spawnMart(
@@ -3456,16 +3461,16 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 7:
+    case 6:
       // 2 Random Enemies
       for (let i = 0; i < (mode == "high" ? 4 : 2); i++) ENTITY_SPAWN(true);
       break;
-    case 8:
+    case 7:
       // Mart and Springer
       fasterMart[0]++;
       fasterSpringer[0]++;
       break;
-    case 9:
+    case 8:
       // It's Here
       for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
         const unregister = spawnSpringer(entityHost, hardMode, 3);
@@ -3474,12 +3479,14 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 10:
-      // 40% Less Jump Pads
+    case 9:
+      // 40-60% Less Jump Pads
+      const percentJ = mode == "high" ? 1 : 0.4 + Math.random() * 0.2;
+      resultDet = `${Math.round(percentJ * 100)}`;
       if (jumppadSpawns.length != 0) {
         const removeCount = Math.max(
           1,
-          Math.floor(jumppadSpawns.length * (mode == "high" ? 1 : 0.4)),
+          Math.floor(jumppadSpawns.length * percentJ),
         );
         const indices = [...Array(jumppadSpawns.length).keys()];
         for (let i = indices.length - 1; i > 0; i--) {
@@ -3499,56 +3506,21 @@ export function activateChance(mode = "normal", outcome = null) {
           for (const index of removed) {
             jumppadSpawns.push(spawnJumpPad(entityHost));
           }
+        }, 60000);
+      }
+      break;
+    case 10:
+      // 40-60% More Seamines
+      const percentS = (mode == "high" ? 1 : 0.4) + Math.random() * 0.2;
+      resultDet = `${Math.round(percentS * 100)}`;
+      for (let i = 0; i < Math.round(percentS * 3); i++) {
+        const unregister = spawnSeamine(entityHost, casualMode, hardMode);
+        setTimeout(() => {
+          unregister();
         }, 60000);
       }
       break;
     case 11:
-      // 60% Less Jump Pads
-      if (jumppadSpawns.length != 0) {
-        const removeCount = Math.max(
-          1,
-          Math.floor(jumppadSpawns.length * (mode == "high" ? 1 : 0.6)),
-        );
-        const indices = [...Array(jumppadSpawns.length).keys()];
-        for (let i = indices.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [indices[i], indices[j]] = [indices[j], indices[i]];
-        }
-        const removed = [];
-        indices
-          .slice(0, removeCount)
-          .sort((a, b) => b - a)
-          .forEach((index) => {
-            jumppadSpawns[index]();
-            jumppadSpawns.splice(index, 1);
-            removed.push(index);
-          });
-        setTimeout(() => {
-          for (const index of removed) {
-            jumppadSpawns.push(spawnJumpPad(entityHost));
-          }
-        }, 60000);
-      }
-      break;
-    case 12:
-      // 40% More Seamines
-      for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
-        const unregister = spawnSeamine(entityHost, casualMode, hardMode);
-        setTimeout(() => {
-          unregister();
-        }, 60000);
-      }
-      break;
-    case 13:
-      // 60% More Seamines
-      for (let i = 0; i < (mode == "high" ? 4 : 2); i++) {
-        const unregister = spawnSeamine(entityHost, casualMode, hardMode);
-        setTimeout(() => {
-          unregister();
-        }, 60000);
-      }
-      break;
-    case 14:
       // Oops, all Flesh!
       fleshPositions.add({
         x: 0,
@@ -3564,7 +3536,7 @@ export function activateChance(mode = "normal", outcome = null) {
       }
       break;
   }
-  return chance;
+  return [chance, resultDet];
 }
 export function activateProtection(echo = false) {
   if (echo) {
