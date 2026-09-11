@@ -29,11 +29,10 @@ export function setup(host) {
     starSize: 200,
     starGrowDuration: 0.5,
 
-    pillarCount: 10,
     pillarSize: 100,
     pillarMinDistance: 600,
     pillarMaxDistance: 1200,
-    pillarMinSeparation: 500,
+    pillarMinSeparation: 400,
     pillarFadeInDuration: 0.5,
     pillarFadeOutDuration: 0.5,
 
@@ -318,12 +317,13 @@ export function setup(host) {
 
     state.pillars = [];
 
-    for (let i = 0; i < state.pillarCount; i++) {
+    while (true) {
       let x;
       let y;
+      let tryCount = 0;
       let valid = false;
 
-      while (!valid) {
+      while (!valid && tryCount < 100) {
         const pillarAngle = randomAngle();
 
         const distance = random(
@@ -335,6 +335,7 @@ export function setup(host) {
         y = state.star.y + Math.sin(pillarAngle) * distance;
 
         valid = true;
+        tryCount++;
 
         for (const pillar of state.pillars) {
           const dx = x - pillar.x;
@@ -345,6 +346,10 @@ export function setup(host) {
             break;
           }
         }
+      }
+
+      if (!valid) {
+        break;
       }
 
       state.pillars.push({
