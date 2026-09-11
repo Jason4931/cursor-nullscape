@@ -102,6 +102,7 @@ import {
 import { setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnEvilCadence } from "./Enemies/EvilCadence.js";
 import { setup as spawnWega } from "./Enemies/Wega.js";
+import { setup as spawnTerminusGaze } from "./Enemies/TerminusGaze.js";
 import { setup as spawnSigil } from "./Enemies/Sigil.js";
 import { setup as spawnQuartz } from "./Enemies/Quartz.js";
 import { setup as spawnVisage } from "./Enemies/Visage.js";
@@ -575,6 +576,16 @@ const ENTITY_POOL = [
     src: "./ASSET/Enemies/Placeholder.png",
     rare: true,
     desc: "chases the nearest player",
+    chaosOnly: true,
+  },
+  {
+    name: "TerminusGaze",
+    altName: "Gaze",
+    spawn: () => spawnTerminusGaze(entityHost),
+    start: 0,
+    src: "./ASSET/Enemies/TerminusGaze.png",
+    rare: true,
+    desc: "Raises pillars to shield you from its gaze.",
     chaosOnly: true,
   },
   {

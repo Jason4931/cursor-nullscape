@@ -35,6 +35,7 @@ x scuttlebloom -> always trying to take gift arround cursor (sigil movement + pr
 x lumishade -> multiple rings on cursor position (easing movement)
 v evilcadence
 v wega
+v terminus gaze
 curses
 v legion
 v nuclearbomb
