@@ -30,11 +30,9 @@ export function setup(host) {
     pillarFadeInDuration: 0.5,
     pillarFadeOutDuration: 0.5,
 
-    lightningStartAlpha: 0.125,
     lightningEndAlpha: 0.25,
     lightningFadeInDuration: 1,
-    lightningChargeDuration: 3,
-    lightningIncreaseDuration: 1,
+    lightningChargeDuration: 4,
 
     flashStartAlpha: 1,
     flashDuration: 0.5,
@@ -60,8 +58,8 @@ export function setup(host) {
     return 1 - Math.pow(1 - t, 3);
   }
 
-  function easeIn(t) {
-    return t * t * t;
+  function easeIn(t, power = 3) {
+    return Math.pow(t, power);
   }
 
   function random(min, max) {
@@ -412,7 +410,8 @@ export function setup(host) {
           (state.lightningFadeInDuration + state.lightningChargeDuration),
         1,
       );
-      state.lightningAlpha = state.lightningStartAlpha * lightningProgress;
+      state.lightningAlpha =
+        state.lightningEndAlpha * easeIn(lightningProgress, 5);
 
       if (state.timer >= state.lightningFadeInDuration) {
         state.phase = "charge";
@@ -428,27 +427,10 @@ export function setup(host) {
           (state.lightningFadeInDuration + state.lightningChargeDuration),
         1,
       );
-      state.lightningAlpha = state.lightningStartAlpha * lightningProgress;
+      state.lightningAlpha =
+        state.lightningEndAlpha * easeIn(lightningProgress, 5);
 
       if (state.timer >= state.lightningChargeDuration) {
-        state.phase = "strike";
-        state.timer = 0;
-      }
-
-      return;
-    }
-
-    if (state.phase === "strike") {
-      const progress = Math.min(
-        state.timer / state.lightningIncreaseDuration,
-        1,
-      );
-
-      state.lightningAlpha =
-        state.lightningStartAlpha +
-        (state.lightningEndAlpha - state.lightningStartAlpha) * progress;
-
-      if (state.timer >= state.lightningIncreaseDuration) {
         if (isPlayerInLightning()) {
           death("TerminusGaze");
         }
