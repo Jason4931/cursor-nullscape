@@ -613,7 +613,14 @@
 
       body.full-bnw {
         filter: grayscale(1) contrast(10) brightness(1.2);
-        transition: filter 0.05s linear;
+      }
+
+      body.full-bnr {
+        filter: sepia(1) saturate(10) hue-rotate(300deg) contrast(10);
+      }
+
+      body.full-invert {
+        filter: invert(1);
       }
 
       body.player-dead {

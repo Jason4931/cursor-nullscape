@@ -224,6 +224,7 @@ let voidScale = 1;
 let seamineScale = 1;
 let grindrailScale = 1;
 let wallScale = 1;
+let pillarGazeScale = 1;
 let speedBoostScale = 1;
 let iceEffect = false;
 let lastTouchedIce;
@@ -288,6 +289,9 @@ export function setOblivionActive(v) {
 }
 export function setVoidScale(v) {
   voidScale = v;
+}
+export function setPillarGazeScale(v) {
+  pillarGazeScale = v;
 }
 export function setParried(v) {
   parried = v;
@@ -5317,6 +5321,7 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
+      pillarGazeScale *
       disableCollectScale *
       speedBoostScale *
       extremeScale *
@@ -5332,6 +5337,7 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
+      pillarGazeScale *
       disableCollectScale *
       speedBoostScale *
       extremeScale *
@@ -5348,6 +5354,7 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
+      pillarGazeScale *
       disableCollectScale *
       speedBoostScale *
       extremeScale *
@@ -5362,6 +5369,7 @@ function updateCamera() {
       seamineScale *
       grindrailScale *
       wallScale *
+      pillarGazeScale *
       disableCollectScale *
       speedBoostScale *
       extremeScale *
@@ -6214,6 +6222,8 @@ function loop(now) {
   if (grindrailScale < 1) grindrailScale = 1;
   wallScale += 0.017;
   if (wallScale > 1) wallScale = 1;
+  pillarGazeScale += 0.017;
+  if (pillarGazeScale > 1) pillarGazeScale = 1;
   for (const f of [...fleshPositions]) {
     if (f.until <= now) fleshPositions.delete(f);
   }

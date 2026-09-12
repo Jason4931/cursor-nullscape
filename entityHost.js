@@ -89,6 +89,7 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
     let celestial = [];
     let catalyst = [];
     let celestialcutscene = [];
+    let terminusGaze = [];
     let beacon;
     for (const e of entities) {
       if (e.name === "Pylons" || e.name === "TruePylons") {
@@ -123,6 +124,9 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
         } else if (e.name === "CelestialCutscene") {
           celestialcutscene.push(e);
           continue;
+        } else if (e.name === "TerminusGaze") {
+          terminusGaze.push(e);
+          continue;
         }
         if (e.name === "Bell") {
           e.draw?.(backctx);
@@ -130,6 +134,9 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
           Math.random() < 0.5 ? e.draw?.(ctx) : e.draw?.(ctx2);
         }
       }
+    }
+    for (const e of terminusGaze) {
+      e?.draw?.(ctx2);
     }
     for (const e of celestial) {
       e?.draw?.(ctx2);
@@ -678,6 +685,7 @@ export function death(name = "Unknown", color = "#f70000") {
         "CodeAudios/Virrevicke_Similarities",
       ];
       deathSound.push(
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
         ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
       );
       playSound(

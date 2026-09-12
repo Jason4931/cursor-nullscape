@@ -1,21 +1,15 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos } from "../main.js";
-
-const enemy = new Image();
-
-function loadAssets() {
-  enemy.src = "./ASSET/Enemies/TerminusGaze.png";
-}
+import { getCameraPos, setPillarGazeScale } from "../main.js";
 
 let terminusGazeActive = false;
 let terminusGazeCount = 0;
 export function setup(host) {
-  loadAssets();
   terminusGazeCount++;
   if (terminusGazeActive) {
     const unregister = host.register({
       update: () => {},
       draw: () => {},
+      name: "TerminusGaze",
     });
     return unregister;
   } else {
@@ -26,7 +20,7 @@ export function setup(host) {
     opacity: 1,
 
     starDistance: 600,
-    starSize: 200,
+    starSize: 150,
     starGrowDuration: 0.5,
 
     pillarSize: 100,
@@ -47,7 +41,6 @@ export function setup(host) {
     idleDuration: 10,
 
     timer: 0,
-    swapTimer: 0,
     phase: "idle",
     attackCount: 0,
 
@@ -376,11 +369,21 @@ export function setup(host) {
     }
 
     state.timer += dt;
-    state.swapTimer += dt;
 
     if (state.phase !== "idle" && state.star) {
       updateLightningCamera();
     }
+
+    const touchingPillar = state.pillars.some((pillar) => {
+      const half = state.pillarSize / 2;
+      return (
+        mouse.x >= pillar.x - half &&
+        mouse.x <= pillar.x + half &&
+        mouse.y >= pillar.y - half &&
+        mouse.y <= pillar.y + half
+      );
+    });
+    if (touchingPillar) setPillarGazeScale(0.5);
 
     if (state.phase === "idle") {
       if (state.timer >= state.idleDuration) {
@@ -405,12 +408,11 @@ export function setup(host) {
       }
 
       const lightningProgress = Math.min(
-        state.timer / state.lightningFadeInDuration,
+        state.timer /
+          (state.lightningFadeInDuration + state.lightningChargeDuration),
         1,
       );
-
-      state.lightningAlpha =
-        state.lightningStartAlpha * easeOut(lightningProgress);
+      state.lightningAlpha = state.lightningStartAlpha * lightningProgress;
 
       if (state.timer >= state.lightningFadeInDuration) {
         state.phase = "charge";
@@ -421,7 +423,12 @@ export function setup(host) {
     }
 
     if (state.phase === "charge") {
-      state.lightningAlpha = state.lightningStartAlpha;
+      const lightningProgress = Math.min(
+        (state.timer + state.lightningFadeInDuration) /
+          (state.lightningFadeInDuration + state.lightningChargeDuration),
+        1,
+      );
+      state.lightningAlpha = state.lightningStartAlpha * lightningProgress;
 
       if (state.timer >= state.lightningChargeDuration) {
         state.phase = "strike";
@@ -446,19 +453,38 @@ export function setup(host) {
           death("TerminusGaze");
         }
 
+        state.phase = "impact";
+        state.timer = 0;
+      }
+
+      return;
+    }
+
+    if (state.phase === "impact") {
+      const duration = 0.1;
+      if (state.timer <= duration) {
+        document.body.classList.add("full-bnr");
+      } else if (state.timer <= duration * 2) {
+        document.body.classList.remove("full-bnr");
+        document.body.classList.add("full-bnw");
+      } else if (state.timer <= duration * 3) {
+        document.body.classList.remove("full-bnr");
+        document.body.classList.remove("full-bnw");
+        document.body.classList.add("full-invert");
+      } else {
+        document.body.classList.remove("full-bnr");
+        document.body.classList.remove("full-bnw");
+        document.body.classList.remove("full-invert");
         state.phase = "flash";
         state.timer = 0;
 
         state.flashAlpha = state.flashStartAlpha;
-
         state.star = null;
 
         for (const pillar of state.pillars) {
           pillar.fadeTimer = 0;
         }
       }
-
-      return;
     }
 
     if (state.phase === "flash") {
@@ -516,8 +542,13 @@ export function setup(host) {
 
     ctx.clip();
 
-    ctx.fillStyle = `rgba(255, 0, 0, ${state.lightningAlpha})`;
+    const shadowPath = new Path2D();
+    shadowPath.rect(camera.x, camera.y, window.innerWidth, window.innerHeight);
+    shadowPath.addPath(state.lightningPath);
+    ctx.fillStyle = `rgba(0, 0, 0, ${state.lightningAlpha * 2})`;
+    ctx.fill(shadowPath, "evenodd");
 
+    ctx.fillStyle = `rgba(255, 0, 0, ${state.lightningAlpha})`;
     ctx.fill(state.lightningPath);
 
     ctx.restore();
@@ -564,10 +595,98 @@ export function setup(host) {
     ctx.save();
 
     ctx.translate(state.star.x, state.star.y);
-    ctx.rotate(state.swapTimer * 0.25);
 
     ctx.globalAlpha = state.star.scale;
-    ctx.drawImage(enemy, -size / 2, -size / 2, size, size);
+
+    const time = performance.now() / 1000;
+
+    for (let i = 0; i < 3; i++) {
+      ctx.save();
+
+      ctx.rotate(
+        time * (1.5 - i * 0.4) +
+          Math.sin(time * (0.73 + i * 0.19)) * 2.7 +
+          Math.sin(time * (1.37 + i * 0.31)) * 1.4 +
+          Math.sin(time * (2.11 + i * 0.47)) * 0.8,
+      );
+
+      ctx.scale(1, 0.35 + Math.sin(time * (1.5 + i * 0.3) + i) * 0.25);
+
+      ctx.strokeStyle = `rgba(255, ${255 * (0.5 - i * 0.25)}, ${255 * (0.5 - i * 0.25)}, 1)`;
+      ctx.lineWidth = 5 + i * 7.5;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, size * (0.5 + i * 0.2), 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    const lSize = size * 0.2;
+    const lDistance = size * 0.5;
+
+    const drawL = (x, y, rotation) => {
+      ctx.save();
+
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+
+      ctx.fillStyle = "#ff0000";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(-lSize, -lSize);
+      ctx.lineTo(-lSize * 0.45, -lSize);
+      ctx.lineTo(-lSize * 0.45, lSize * 0.45);
+      ctx.lineTo(lSize, lSize * 0.45);
+      ctx.lineTo(lSize, lSize);
+      ctx.lineTo(-lSize, lSize);
+      ctx.closePath();
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.restore();
+    };
+
+    drawL(-lDistance, -lDistance, Math.PI / 2);
+    drawL(lDistance, -lDistance, Math.PI);
+    drawL(-lDistance, lDistance, 0);
+    drawL(lDistance, lDistance, -Math.PI / 2);
+
+    ctx.fillStyle = "#ff0000";
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    for (let i = 0; i < 5; i++) {
+      const outerAngle = -Math.PI / 2 + i * ((Math.PI * 2) / 5);
+      const innerAngle = outerAngle + Math.PI / 5;
+
+      const outerRadius = size * 0.5;
+      const innerRadius = size * 0.2;
+
+      const outerX = Math.cos(outerAngle) * outerRadius;
+      const outerY = Math.sin(outerAngle) * outerRadius;
+
+      const innerX = Math.cos(innerAngle) * innerRadius;
+      const innerY = Math.sin(innerAngle) * innerRadius;
+
+      if (i === 0) {
+        ctx.moveTo(outerX, outerY);
+      } else {
+        ctx.lineTo(outerX, outerY);
+      }
+
+      ctx.lineTo(innerX, innerY);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
     ctx.restore();
   }
@@ -602,7 +721,13 @@ export function setup(host) {
     const starX = state.star.x;
     const starY = state.star.y;
 
-    if (starX >= left && starX <= right && starY >= top && starY <= bottom) {
+    const offset = 100;
+    if (
+      starX >= left - offset &&
+      starX <= right + offset &&
+      starY >= top - offset &&
+      starY <= bottom + offset
+    ) {
       return;
     }
 
@@ -633,7 +758,98 @@ export function setup(host) {
 
     const size = 100 * state.star.scale;
 
-    ctx.drawImage(enemy, 0, -size / 2, size, size);
+    const time = performance.now() / 1000;
+
+    for (let i = 0; i < 3; i++) {
+      ctx.save();
+
+      ctx.rotate(
+        time * (1.5 - i * 0.4) +
+          Math.sin(time * (0.73 + i * 0.19)) * 2.7 +
+          Math.sin(time * (1.37 + i * 0.31)) * 1.4 +
+          Math.sin(time * (2.11 + i * 0.47)) * 0.8,
+      );
+
+      ctx.scale(1, 0.35 + Math.sin(time * (1.5 + i * 0.3) + i) * 0.25);
+
+      ctx.strokeStyle = `rgba(255, ${255 * (0.5 - i * 0.25)}, ${255 * (0.5 - i * 0.25)}, 1)`;
+      ctx.lineWidth = 5 + i * 7.5;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, size * (0.5 + i * 0.2), 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.rotate(-ang);
+    const lSize = size * 0.2;
+    const lDistance = size * 0.5;
+
+    const drawL = (x, y, rotation) => {
+      ctx.save();
+
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+
+      ctx.fillStyle = "#ff0000";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(-lSize, -lSize);
+      ctx.lineTo(-lSize * 0.45, -lSize);
+      ctx.lineTo(-lSize * 0.45, lSize * 0.45);
+      ctx.lineTo(lSize, lSize * 0.45);
+      ctx.lineTo(lSize, lSize);
+      ctx.lineTo(-lSize, lSize);
+      ctx.closePath();
+
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.restore();
+    };
+
+    drawL(-lDistance, -lDistance, Math.PI / 2);
+    drawL(lDistance, -lDistance, Math.PI);
+    drawL(-lDistance, lDistance, 0);
+    drawL(lDistance, lDistance, -Math.PI / 2);
+    ctx.restore();
+
+    ctx.fillStyle = "#ff0000";
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    for (let i = 0; i < 5; i++) {
+      const outerAngle = -Math.PI / 2 + i * ((Math.PI * 2) / 5);
+      const innerAngle = outerAngle + Math.PI / 5;
+
+      const outerRadius = size * 0.5;
+      const innerRadius = size * 0.2;
+
+      const outerX = Math.cos(outerAngle) * outerRadius;
+      const outerY = Math.sin(outerAngle) * outerRadius;
+
+      const innerX = Math.cos(innerAngle) * innerRadius;
+      const innerY = Math.sin(innerAngle) * innerRadius;
+
+      if (i === 0) {
+        ctx.moveTo(outerX, outerY);
+      } else {
+        ctx.lineTo(outerX, outerY);
+      }
+
+      ctx.lineTo(innerX, innerY);
+    }
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
     ctx.fillStyle = "#ff0000";
     ctx.font = `${size / 2}px monospace`;
@@ -670,6 +886,7 @@ export function setup(host) {
   const unregister = host.register({
     update,
     draw,
+    name: "TerminusGaze",
   });
 
   return unregister;
