@@ -89,10 +89,8 @@ export function setup(host, casualMode) {
 
     tickingsound: null,
     strikesound: false,
-    deathsound: false,
   };
 
-  const EYE_TIME = 0.35;
   const RING_RADIUS = 125;
   const INTRO_TIME = 3.5;
   const STRIKE_TIME = 1;
@@ -102,14 +100,13 @@ export function setup(host, casualMode) {
     state.timer = INTRO_TIME;
     state.target = casualMode
       ? 8 + Math.floor(Math.random() * 3)
-      : 5 + Math.floor(Math.random() * 11);
+      : 5 + Math.floor(Math.random() * 8);
     state.count = state.target;
     state.showEntity = false;
     state.screenX = window.innerWidth / 4;
     state.screenY = window.innerHeight / 2;
     state.strikesound = false;
     state.deathStrike = false;
-    state.deathsound = false;
     kolonaActive = true;
     playSound("./ASSET/Sound/Enemies/Kolona/Kolona_Warning.ogg");
   }
@@ -196,10 +193,9 @@ export function setup(host, casualMode) {
         if (state.timer <= 0) {
           if (state.deathStrike) {
             death("Kolona");
-            if (!state.deathsound) {
-              playSound("./ASSET/Sound/Enemies/Kolona/Kolona_Kill.ogg");
-              state.deathsound = true;
-            }
+            playSound("./ASSET/Sound/Enemies/Kolona/Kolona_Kill.ogg");
+          } else {
+            playSound("./ASSET/Sound/Enemies/Kolona/Kolona_Clear.ogg");
           }
 
           state.phase = "idle";

@@ -396,6 +396,34 @@ export function setup(host, hardMode) {
         ctx.beginPath();
         ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
         ctx.fill();
+        const vx = p.offsetAngle !== undefined ? p.centerVx : p.vx;
+        const vy = p.offsetAngle !== undefined ? p.centerVy : p.vy;
+        const angle = Math.atan2(vy, vx);
+        const indicatorLength = 200;
+        const indicatorCount = 10;
+        ctx.save();
+        ctx.translate(Math.round(p.x), Math.round(p.y));
+        ctx.rotate(angle);
+        ctx.font = "30px sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const indicatorSpeed = 30;
+        const spacing = indicatorLength / indicatorCount;
+        const movement =
+          ((performance.now() / 1000) * indicatorSpeed) % indicatorLength;
+
+        for (let i = 0; i < indicatorCount; i++) {
+          const distance = (i * spacing + movement) % indicatorLength;
+          const progress = distance / indicatorLength;
+
+          ctx.globalAlpha = 1 - progress;
+
+          ctx.save();
+          ctx.rotate(Math.PI / 2);
+          ctx.fillText("ᛝ", 0, -distance);
+          ctx.restore();
+        }
+        ctx.restore();
       } else {
         const progress = (age - 13000) / 500;
         ctx.globalAlpha = 1 - progress;

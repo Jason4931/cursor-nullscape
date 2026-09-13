@@ -226,8 +226,8 @@ export function setup(host, casualMode, hardMode) {
         state.opacity = 1;
         if (shotgunVBGuardianActive[0]) {
           const randRot = Math.random() * Math.PI * 2;
-          for (let i = 0; i < 8; i++) {
-            firePellet(false, (i * Math.PI * 2) / 8 + randRot);
+          for (let i = 0; i < 4; i++) {
+            firePellet(false, (i * Math.PI * 2) / 4 + randRot);
           }
         } else {
           firePellet();

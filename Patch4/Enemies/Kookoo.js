@@ -31,7 +31,6 @@ export function setup(host) {
 
     remembersound: null,
     strikesound: false,
-    deathsound: false,
   };
 
   const EYE_TIME = 0.35;
@@ -49,7 +48,6 @@ export function setup(host) {
     state.screenY = window.innerHeight / 2;
     state.strikesound = false;
     state.deathStrike = true;
-    state.deathsound = false;
     state.remembersound = playSound(
       "./ASSET/Sound/Enemies/Kookoo/KookooRemember.ogg",
       undefined,
@@ -131,10 +129,7 @@ export function setup(host) {
         if (state.timer <= 0) {
           if (state.deathStrike) {
             death("Kookoo");
-            if (!state.deathsound) {
-              playSound("./ASSET/Sound/Enemies/Kookoo/KookooKill.ogg", 1);
-              state.deathsound = true;
-            }
+            playSound("./ASSET/Sound/Enemies/Kookoo/KookooKill.ogg", 1);
           }
 
           state.phase = "idle";
