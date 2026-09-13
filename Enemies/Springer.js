@@ -156,15 +156,15 @@ export function setup(host, hardMode, scale = 1) {
 
         insideRing = dist >= inner && dist <= outer;
 
-        if (hardMode) {
-          const innerRingRadius = ringRadius - state.innerRingDist;
-          const innerInner = innerRingRadius - thickness * 8;
-          const innerOuter = innerRingRadius;
+        // if (hardMode) {
+        //   const innerRingRadius = ringRadius - state.innerRingDist;
+        //   const innerInner = innerRingRadius - thickness * 8;
+        //   const innerOuter = innerRingRadius;
 
-          if (dist >= innerInner && dist <= innerOuter) {
-            death("Springer");
-          }
-        }
+        //   if (dist >= innerInner && dist <= innerOuter) {
+        //     death("Springer");
+        //   }
+        // }
       } else {
         state.knockbacks.splice(i, 1);
         continue;
@@ -366,28 +366,28 @@ export function setup(host, hardMode, scale = 1) {
         ctx.stroke();
       }
 
-      if (hardMode) {
-        const innerRadius = Math.max(0, radius - state.innerRingDist);
+      // if (hardMode) {
+      //   const innerRadius = Math.max(0, radius - state.innerRingDist);
 
-        const grad2 = ctx.createRadialGradient(
-          0,
-          0,
-          Math.round(Math.max(0, innerRadius - thickness)),
-          0,
-          0,
-          Math.round(innerRadius),
-        );
+      //   const grad2 = ctx.createRadialGradient(
+      //     0,
+      //     0,
+      //     Math.round(Math.max(0, innerRadius - thickness)),
+      //     0,
+      //     0,
+      //     Math.round(innerRadius),
+      //   );
 
-        grad2.addColorStop(0, `rgba(255,0,0,0)`);
-        grad2.addColorStop(0.7, `rgba(255,0,0,0)`);
-        grad2.addColorStop(0.71, `rgba(255,0,0,${alpha})`);
-        grad2.addColorStop(1, `rgba(255,0,0,${alpha})`);
+      //   grad2.addColorStop(0, `rgba(255,0,0,0)`);
+      //   grad2.addColorStop(0.7, `rgba(255,0,0,0)`);
+      //   grad2.addColorStop(0.71, `rgba(255,0,0,${alpha})`);
+      //   grad2.addColorStop(1, `rgba(255,0,0,${alpha})`);
 
-        ctx.fillStyle = grad2;
-        ctx.beginPath();
-        ctx.arc(0, 0, Math.round(innerRadius), 0, Math.PI * 2);
-        ctx.fill();
-      }
+      //   ctx.fillStyle = grad2;
+      //   ctx.beginPath();
+      //   ctx.arc(0, 0, Math.round(innerRadius), 0, Math.PI * 2);
+      //   ctx.fill();
+      // }
 
       ctx.restore();
     }
