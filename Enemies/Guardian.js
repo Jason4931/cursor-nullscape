@@ -411,13 +411,10 @@ export function setup(host, hardMode) {
         const spacing = indicatorLength / indicatorCount;
         const movement =
           ((performance.now() / 1000) * indicatorSpeed) % indicatorLength;
-
         for (let i = 0; i < indicatorCount; i++) {
           const distance = (i * spacing + movement) % indicatorLength;
           const progress = distance / indicatorLength;
-
-          ctx.globalAlpha = 1 - progress;
-
+          ctx.globalAlpha = (1 - progress) * 0.5;
           ctx.save();
           ctx.rotate(Math.PI / 2);
           ctx.fillText("ᛝ", 0, -distance);
