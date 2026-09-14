@@ -104,7 +104,11 @@ export function setup(host, hardMode) {
     return 1 - Math.pow(1 - t, 3);
   }
 
-  function firePellet(offsetAngle = null) {
+  function firePellet(
+    offsetAngle = null,
+    indicator = true,
+    trailActive = true,
+  ) {
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y - 20;
     const len = Math.hypot(dx, dy) || 1;
@@ -120,6 +124,8 @@ export function setup(host, hardMode) {
       vy: (dy / len) * speed,
       born: performance.now(),
       trail: [],
+      indicator: indicator,
+      trailActive: trailActive,
     };
 
     if (offsetAngle === null) {
@@ -200,12 +206,18 @@ export function setup(host, hardMode) {
         state.timer >= interval * state.shotsFired
       ) {
         state.opacity = 1;
-        firePellet();
         if (shotgunGuardianActive[0]) {
-          const randRot = Math.random() * Math.PI * 2;
-          for (let i = 0; i < 7; i++) {
-            firePellet((i * Math.PI * 2) / 7 + randRot);
-          }
+          const aimAngle = Math.atan2(
+            mouse.y - state.y - 20,
+            mouse.x - state.x,
+          );
+          firePellet((2 * Math.PI * 2) / 4 + aimAngle, false);
+          firePellet((3 * Math.PI * 2) / 4 + aimAngle);
+          firePellet(null, false, false);
+          firePellet((1 * Math.PI * 2) / 4 + aimAngle);
+          firePellet((0 * Math.PI * 2) / 4 + aimAngle, true, false);
+        } else {
+          firePellet();
         }
         state.shootCirc = 0;
         if (!state.layerChange[0]) {
@@ -247,7 +259,7 @@ export function setup(host, hardMode) {
       const p = state.pellets[i];
       const age = now - p.born;
 
-      if (age < 13000) {
+      if (age < 13000 && p.trailActive) {
         p.trail.push({
           x: p.x,
           y: p.y,
@@ -267,7 +279,7 @@ export function setup(host, hardMode) {
       if (age < 13000) {
         if (p.offsetAngle !== undefined) {
           const t = (now - p.born) / 1000;
-          const r = 100 * t;
+          const r = Math.min(64 * t, 32);
           p.x = p.centerX + p.centerVx * t + Math.cos(p.offsetAngle) * r;
           p.y = p.centerY + p.centerVy * t + Math.sin(p.offsetAngle) * r;
         } else {
@@ -282,7 +294,8 @@ export function setup(host, hardMode) {
 
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
-      if (dx * dx + dy * dy < 12 * 12 && age < 13000) {
+      const size = shotgunGuardianActive[0] ? 18 : 12;
+      if (dx * dx + dy * dy < size * size && age < 13000) {
         p.born = now - 13000;
         playSound(
           "./ASSET/Sound/Enemies/Guardian/Patch5_Guardian_BulletCollide.ogg",
@@ -380,7 +393,7 @@ export function setup(host, hardMode) {
           ctx.arc(
             Math.round(t.x),
             Math.round(t.y),
-            (1.25 - t.life / 2) * 8,
+            (1.25 - t.life / 2) * (shotgunGuardianActive[0] ? 12 : 8),
             0,
             Math.PI * 2,
           );
@@ -389,38 +402,130 @@ export function setup(host, hardMode) {
           ctx.stroke();
         }
       }
-      ctx.fillStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
+      const grad = ctx.createRadialGradient(
+        Math.round(p.x),
+        Math.round(p.y),
+        0,
+        Math.round(p.x),
+        Math.round(p.y),
+        shotgunGuardianActive[0] ? 12 : 8,
+      );
+      grad.addColorStop(0, "#fcc");
+      grad.addColorStop(0.8, "#f00");
+      grad.addColorStop(1, "#f44");
+      ctx.fillStyle = grad;
       ctx.strokeStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
       ctx.lineWidth = 2;
       if (age < 13000) {
-        ctx.beginPath();
-        ctx.arc(Math.round(p.x), Math.round(p.y), 8, 0, Math.PI * 2);
-        ctx.fill();
-        const vx = p.offsetAngle !== undefined ? p.centerVx : p.vx;
-        const vy = p.offsetAngle !== undefined ? p.centerVy : p.vy;
-        const angle = Math.atan2(vy, vx);
-        const indicatorLength = 200;
-        const indicatorCount = 10;
-        ctx.save();
-        ctx.translate(Math.round(p.x), Math.round(p.y));
-        ctx.rotate(angle);
-        ctx.font = "30px sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        const indicatorSpeed = 30;
-        const spacing = indicatorLength / indicatorCount;
-        const movement =
-          ((performance.now() / 1000) * indicatorSpeed) % indicatorLength;
-        for (let i = 0; i < indicatorCount; i++) {
-          const distance = (i * spacing + movement) % indicatorLength;
-          const progress = distance / indicatorLength;
-          ctx.globalAlpha = (1 - progress) * 0.5;
+        if (p.indicator) {
+          const vx = p.offsetAngle !== undefined ? p.centerVx : p.vx;
+          const vy = p.offsetAngle !== undefined ? p.centerVy : p.vy;
+          const angle = Math.atan2(vy, vx);
           ctx.save();
-          ctx.rotate(Math.PI / 2);
-          ctx.fillText("ᛝ", 0, -distance);
+          ctx.translate(Math.round(p.x), Math.round(p.y));
+          ctx.rotate(angle);
+          const indicatorLength = 200;
+          const indicatorWidth = (shotgunGuardianActive[0] ? 12 : 8) * 3;
+          const indicatorStart = -4;
+          const indicatorEnd = indicatorLength;
+          const indicatorRadiusX = (indicatorEnd - indicatorStart) / 2;
+          const indicatorRadiusY = indicatorWidth / 2;
+          const indicatorCanvas = document.createElement("canvas");
+          indicatorCanvas.width = indicatorEnd - indicatorStart;
+          indicatorCanvas.height = indicatorWidth;
+          const indicatorCtx = indicatorCanvas.getContext("2d");
+          const horizontalGrad = indicatorCtx.createLinearGradient(
+            0,
+            0,
+            indicatorCanvas.width,
+            0,
+          );
+          horizontalGrad.addColorStop(0, "rgba(255,0,0,0.5)");
+          horizontalGrad.addColorStop(0.5, "rgba(255,0,0,0.5)");
+          horizontalGrad.addColorStop(1, "rgba(255,0,0,0)");
+          indicatorCtx.fillStyle = horizontalGrad;
+          indicatorCtx.beginPath();
+          indicatorCtx.ellipse(
+            indicatorCanvas.width / 2,
+            indicatorCanvas.height / 2,
+            indicatorRadiusX,
+            indicatorRadiusY,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          indicatorCtx.fill();
+          const verticalGrad = indicatorCtx.createLinearGradient(
+            0,
+            0,
+            0,
+            indicatorCanvas.height,
+          );
+          verticalGrad.addColorStop(0, "rgba(0,0,0,0)");
+          verticalGrad.addColorStop(0.5, "rgba(0,0,0,1)");
+          verticalGrad.addColorStop(1, "rgba(0,0,0,0)");
+          indicatorCtx.globalCompositeOperation = "destination-in";
+          indicatorCtx.fillStyle = verticalGrad;
+          indicatorCtx.fillRect(
+            0,
+            0,
+            indicatorCanvas.width,
+            indicatorCanvas.height,
+          );
+          ctx.drawImage(indicatorCanvas, indicatorStart, -indicatorWidth / 2);
+          if (!uldm) {
+            const now = performance.now();
+            const movementSpeed = 8;
+            const movement = (now / movementSpeed) % indicatorLength;
+            ctx.save();
+            const lineGrad = ctx.createLinearGradient(0, 0, indicatorLength, 0);
+            lineGrad.addColorStop(0, "rgba(0,0,0,0)");
+            lineGrad.addColorStop(0.1, "rgba(0,0,0,0.5)");
+            lineGrad.addColorStop(0.75, "rgba(0,0,0,0.5)");
+            lineGrad.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.strokeStyle = lineGrad;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (
+              let offset = -indicatorLength;
+              offset <= indicatorLength;
+              offset += indicatorLength
+            ) {
+              const startX = offset + movement;
+              ctx.moveTo(startX, -indicatorWidth * 0.2);
+              ctx.bezierCurveTo(
+                startX + indicatorRadiusX * 0.45,
+                -indicatorWidth * 0.2,
+                startX + indicatorLength - indicatorRadiusX * 0.45,
+                indicatorWidth * 0.2,
+                startX + indicatorLength,
+                indicatorWidth * 0.2,
+              );
+              ctx.moveTo(startX + indicatorLength, -indicatorWidth * 0.2);
+              ctx.bezierCurveTo(
+                startX + indicatorLength - indicatorRadiusX * 0.45,
+                -indicatorWidth * 0.2,
+                startX + indicatorRadiusX * 0.45,
+                indicatorWidth * 0.2,
+                startX,
+                indicatorWidth * 0.2,
+              );
+            }
+            ctx.stroke();
+            ctx.restore();
+          }
           ctx.restore();
         }
-        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(
+          Math.round(p.x),
+          Math.round(p.y),
+          shotgunGuardianActive[0] ? 12 : 8,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
       } else {
         const progress = (age - 13000) / 500;
         ctx.globalAlpha = 1 - progress;

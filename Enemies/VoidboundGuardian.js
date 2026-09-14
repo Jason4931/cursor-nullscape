@@ -126,8 +126,8 @@ export function setup(host, casualMode, hardMode) {
     let vy = Math.sin(angle) * speed;
 
     if (offsetAngle !== null) {
-      vx += Math.cos(offsetAngle) * 300;
-      vy += Math.sin(offsetAngle) * 300;
+      vx += Math.cos(offsetAngle) * 200;
+      vy += Math.sin(offsetAngle) * 200;
     }
 
     state.pellets.push({
@@ -225,9 +225,12 @@ export function setup(host, casualMode, hardMode) {
       ) {
         state.opacity = 1;
         if (shotgunVBGuardianActive[0]) {
-          const randRot = Math.random() * Math.PI * 2;
+          const aimAngle = Math.atan2(
+            mouse.y - state.y - 40,
+            mouse.x - state.x,
+          );
           for (let i = 0; i < 4; i++) {
-            firePellet(false, (i * Math.PI * 2) / 4 + randRot);
+            firePellet(false, (i * Math.PI * 2) / 4 + aimAngle);
           }
         } else {
           firePellet();

@@ -2725,6 +2725,19 @@ export function setup(
       }
       if (b.t >= 2) {
         const speed = 1500;
+        const turnSpeed = 0.5;
+
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const targetX = dx / len;
+        const targetY = dy / len;
+
+        b.dirX += (targetX - b.dirX) * turnSpeed * dt;
+        b.dirY += (targetY - b.dirY) * turnSpeed * dt;
+
+        const dirLen = Math.sqrt(b.dirX * b.dirX + b.dirY * b.dirY) || 1;
+
+        b.dirX /= dirLen;
+        b.dirY /= dirLen;
 
         b.x += b.dirX * speed * dt;
         b.y += b.dirY * speed * dt;
@@ -4488,6 +4501,19 @@ export function setup(
       }
       if (b.t >= 2) {
         const speed = 1500;
+        const turnSpeed = 0.5;
+
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const targetX = dx / len;
+        const targetY = dy / len;
+
+        b.dirX += (targetX - b.dirX) * turnSpeed * dt;
+        b.dirY += (targetY - b.dirY) * turnSpeed * dt;
+
+        const dirLen = Math.sqrt(b.dirX * b.dirX + b.dirY * b.dirY) || 1;
+
+        b.dirX /= dirLen;
+        b.dirY /= dirLen;
 
         b.x += b.dirX * speed * dt;
         b.y += b.dirY * speed * dt;
