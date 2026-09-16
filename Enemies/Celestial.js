@@ -1125,7 +1125,10 @@ export function setup(
           "50",
         );
         if (!hardMode) {
-          const base = Math.random() * Math.PI * 2;
+          const base =
+            mvx !== 0 || mvy !== 0
+              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+              : Math.random() * Math.PI * 2;
           const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
           const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
@@ -1133,7 +1136,10 @@ export function setup(
           stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
           stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         } else {
-          const base = Math.random() * Math.PI * 2;
+          const base =
+            mvx !== 0 || mvy !== 0
+              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+              : Math.random() * Math.PI * 2;
           const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
           const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
           const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -1145,9 +1151,16 @@ export function setup(
         }
       } else if (cycle < 3) {
         if (!hardMode) {
-          stateSlash.beams.push(spawnBeam(px, py, undefined, 1));
+          const base =
+            mvx !== 0 || mvy !== 0
+              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+              : Math.random() * Math.PI * 2;
+          stateSlash.beams.push(spawnBeam(px, py, base, 1));
         } else {
-          const base = Math.random() * Math.PI * 2;
+          const base =
+            mvx !== 0 || mvy !== 0
+              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+              : Math.random() * Math.PI * 2;
           const spread = Math.PI / 12 + (Math.PI / 1.2) * Math.random();
 
           stateSlash.beams.push(spawnBeam(px, py, base));
@@ -2201,7 +2214,8 @@ export function setup(
       sn.vy += py * side * TURN_STRENGTH * dt;
 
       const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
-      const speed = 2500;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const speed = 2500 * Math.max(1, Math.min(2, dist / 1000));
 
       sn.vx = (sn.vx / newLen) * speed;
       sn.vy = (sn.vy / newLen) * speed;
@@ -2725,7 +2739,8 @@ export function setup(
       }
       if (b.t >= 2) {
         const speed = 1500;
-        const turnSpeed = 0.5;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const turnSpeed = Math.min(1, dist / 1000);
 
         const len = Math.sqrt(dx * dx + dy * dy) || 1;
         const targetX = dx / len;
@@ -4501,7 +4516,8 @@ export function setup(
       }
       if (b.t >= 2) {
         const speed = 1500;
-        const turnSpeed = 0.5;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const turnSpeed = Math.min(1, dist / 1000);
 
         const len = Math.sqrt(dx * dx + dy * dy) || 1;
         const targetX = dx / len;
@@ -6271,7 +6287,10 @@ export function setup(
         "50",
       );
       if (!hardMode) {
-        const base = Math.random() * Math.PI * 2;
+        const base =
+          mvx !== 0 || mvy !== 0
+            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+            : Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -6281,7 +6300,10 @@ export function setup(
         stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
       } else {
-        const base = Math.random() * Math.PI * 2;
+        const base =
+          mvx !== 0 || mvy !== 0
+            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+            : Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
@@ -7067,7 +7089,10 @@ export function setup(
         "50",
       );
       if (!hardMode) {
-        const base = Math.random() * Math.PI * 2;
+        const base =
+          mvx !== 0 || mvy !== 0
+            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+            : Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -7077,7 +7102,10 @@ export function setup(
         s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
       } else {
-        const base = Math.random() * Math.PI * 2;
+        const base =
+          mvx !== 0 || mvy !== 0
+            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
+            : Math.random() * Math.PI * 2;
         const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
@@ -7216,7 +7244,8 @@ export function setup(
       sn.vy += py * side * TURN_STRENGTH * dt;
 
       const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
-      const speed = 2500;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const speed = 2500 * Math.max(1, Math.min(2, dist / 1000));
 
       sn.vx = (sn.vx / newLen) * speed;
       sn.vy = (sn.vy / newLen) * speed;
