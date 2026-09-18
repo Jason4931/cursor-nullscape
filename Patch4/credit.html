@@ -214,6 +214,22 @@
         color: #ffcc00 !important;
       }
 
+      #reset-data-btn {
+        position: fixed;
+        left: 1.5vw;
+        bottom: 13vw;
+        font-size: 1vw;
+        font-family: monospace;
+        color: #f00;
+        padding: 0;
+        margin: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        opacity: 0.5;
+        z-index: 2000;
+      }
+
       #highest-level-display {
         position: fixed;
         left: 1.5vw;
@@ -282,6 +298,7 @@
     </style>
   </head>
 
+  <button id="reset-data-btn">Reset Data</button>
   <div id="highest-level-display">
     Highest level reached: 0<br />(Normal & Hard only)
   </div>
@@ -417,6 +434,14 @@
     <a href="./gallery.html" id="secret-gallery">▣</a>
     <a href="./" id="return-btn">⮌</a>
     <script>
+      document
+        .getElementById("reset-data-btn")
+        .addEventListener("click", () => {
+          if (confirm("Are you sure you want to reset all data?")) {
+            localStorage.clear();
+            location.reload();
+          }
+        });
       (function renderHighestLevel() {
         const el = document.getElementById("highest-level-display");
         const raw = localStorage.getItem("highest-level-reached");

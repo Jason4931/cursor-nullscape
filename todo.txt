@@ -1,3 +1,5 @@
+keybind setting
+
 v bell
 v baby
 v husk
