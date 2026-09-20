@@ -874,7 +874,7 @@ export function setup(
     state.shakeStrength += strength;
     if (state.shakeStrength > 1) state.shakeStrength = 1;
   }
-  function enterFixed(x, y, transition = true) {
+  function enterFixed(x, y, transition = true, endFunc = null) {
     state.enemyMode = "fixed";
     state.enemyFixed.x = x;
     state.enemyFixed.y = y;
@@ -882,16 +882,21 @@ export function setup(
     if (transition == true) {
       state.enemyTransition = "shrink";
       state.enemyTransitionT = 0;
+      if (endFunc) state.endFunc = endFunc;
     } else {
       state.enemyX = state.enemyFixed.x;
       state.enemyY = state.enemyFixed.y;
+      if (endFunc) endFunc();
     }
   }
-  function enterOrbit() {
+  function enterOrbit(endFunc = null) {
     if (state.enemyMode == "fixed") {
       state.enemyMode = "orbit";
       state.enemyTransition = "shrink";
       state.enemyTransitionT = 0;
+      if (endFunc) state.endFunc = endFunc;
+    } else {
+      if (endFunc) endFunc();
     }
   }
 
@@ -1089,12 +1094,13 @@ export function setup(
     flipped: 1,
   };
   function enterSlash() {
-    enterOrbit();
-    stateSlash.beams = [];
-    stateSlash.timer = 0;
-    stateSlash.cycle = 0;
-    stateSlash.prevMx = mouse.x;
-    stateSlash.prevMy = mouse.y;
+    enterOrbit(() => {
+      stateSlash.beams = [];
+      stateSlash.timer = 0;
+      stateSlash.cycle = 0;
+      stateSlash.prevMx = mouse.x;
+      stateSlash.prevMy = mouse.y;
+    });
 
     if (truePattern == false) showText("FALL.");
   }
@@ -1340,10 +1346,11 @@ export function setup(
     spawned: 0,
   };
   function enterImplosion() {
-    enterOrbit();
-    stateImplosion.circles = [];
-    stateImplosion.spawnTimer = 0;
-    stateImplosion.spawned = 0;
+    enterOrbit(() => {
+      stateImplosion.circles = [];
+      stateImplosion.spawnTimer = 0;
+      stateImplosion.spawned = 0;
+    });
 
     if (truePattern == false) showText("BOOM.");
   }
@@ -1522,18 +1529,19 @@ export function setup(
     cy: 0,
   };
   function enterPizzaCutter() {
-    statePizzaCutter.spokes = [];
-    statePizzaCutter.t = 0;
-    statePizzaCutter.cycle = 0;
-    statePizzaCutter.spawned = false;
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    statePizzaCutter.cx = cx;
-    statePizzaCutter.cy = cy;
     changeEnemy(Celestial_CutterStart, false, () => {
       changeEnemy(Celestial_CutterLoop, true);
     });
-    enterFixed(cx, cy);
+    enterFixed(cx, cy, true, () => {
+      statePizzaCutter.spokes = [];
+      statePizzaCutter.t = 0;
+      statePizzaCutter.cycle = 0;
+      statePizzaCutter.spawned = false;
+      statePizzaCutter.cx = cx;
+      statePizzaCutter.cy = cy;
+    });
   }
   function updatePizzaCutter(dt) {
     const mx = mouse.x;
@@ -1774,19 +1782,20 @@ export function setup(
     circles: [],
   };
   function enterPizzaCutterCrumble() {
-    statePizzaCutterCrumble.spokes = [];
-    statePizzaCutterCrumble.t = 0;
-    statePizzaCutterCrumble.cycle = 0;
-    statePizzaCutterCrumble.spawned = false;
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    statePizzaCutterCrumble.cx = cx;
-    statePizzaCutterCrumble.cy = cy;
-    enterFixed(cx, cy);
     changeEnemy(Celestial_CutterStart, false, () => {
       changeEnemy(Celestial_CutterLoop, true);
     });
-    statePizzaCutterCrumble.circles = [];
+    enterFixed(cx, cy, true, () => {
+      statePizzaCutterCrumble.spokes = [];
+      statePizzaCutterCrumble.t = 0;
+      statePizzaCutterCrumble.cycle = 0;
+      statePizzaCutterCrumble.spawned = false;
+      statePizzaCutterCrumble.cx = cx;
+      statePizzaCutterCrumble.cy = cy;
+      statePizzaCutterCrumble.circles = [];
+    });
   }
   function updatePizzaCutterCrumble(dt) {
     const mx = mouse.x;
@@ -2124,15 +2133,14 @@ export function setup(
     trail: [],
   };
   function enterFutile() {
-    const s = stateFutile;
-
-    s.t = 0;
-    s.cycle = 0;
-    s.snake = null;
-
-    s.rift = spawnFutileRift();
-    s.trail = [];
-    enterFixed(-1000, -1000);
+    enterFixed(-1000, -1000, true, () => {
+      const s = stateFutile;
+      s.t = 0;
+      s.cycle = 0;
+      s.snake = null;
+      s.rift = spawnFutileRift();
+      s.trail = [];
+    });
 
     if (truePattern == false) showText("FUTILE.");
   }
@@ -2546,11 +2554,12 @@ export function setup(
     t: 0,
   };
   function enterCrumble() {
-    enterOrbit();
-    stateCrumble.circles = [];
-    for (let i = 0; i < 400; i++) {
-      stateCrumble.circles.push(spawnCircle());
-    }
+    enterOrbit(() => {
+      stateCrumble.circles = [];
+      for (let i = 0; i < 400; i++) {
+        stateCrumble.circles.push(spawnCircle());
+      }
+    });
 
     if (truePattern == false) showText("CRUMBLE.");
   }
@@ -2674,16 +2683,16 @@ export function setup(
     cy: 0,
   };
   function enterBitter() {
-    stateBitter.spokes = [];
-    stateBitter.t = 0;
-    stateBitter.cycle = 0;
-    stateBitter.spawned = false;
-
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    stateBitter.cx = cx;
-    stateBitter.cy = cy;
-    enterFixed(cx, cy);
+    enterFixed(cx, cy, true, () => {
+      stateBitter.spokes = [];
+      stateBitter.t = 0;
+      stateBitter.cycle = 0;
+      stateBitter.spawned = false;
+      stateBitter.cx = cx;
+      stateBitter.cy = cy;
+    });
 
     if (truePattern == false) showText("BITTER.");
   }
@@ -2942,18 +2951,19 @@ export function setup(
     positions: [],
   };
   function enterCease() {
-    enterOrbit();
-    stateCease.beams = [];
-    stateCease.timer = 0;
-    stateCease.rapidTimer = 0;
-    stateCease.circle = {
-      t: 0,
-      active: true,
-      x: mouse.x,
-      y: mouse.y,
-    };
-    stateCease.positions = [];
-    stateCease.change = false;
+    enterOrbit(() => {
+      stateCease.beams = [];
+      stateCease.timer = 0;
+      stateCease.rapidTimer = 0;
+      stateCease.circle = {
+        t: 0,
+        active: true,
+        x: mouse.x,
+        y: mouse.y,
+      };
+      stateCease.positions = [];
+      stateCease.change = false;
+    });
 
     if (truePattern == false) showText("CEASE.");
   }
@@ -3263,24 +3273,22 @@ export function setup(
   };
   function enterDeathInBloom() {
     const s = stateDeathInBloom;
-
-    s.t = 0;
-    s.active = true;
-
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
-    enterFixed(s.cx, s.cy);
-    s.w = hardMode ? 800 : 625;
-    s.angle = 0;
-    s.prevAngle = 0;
-
-    s.ex = mouse.x;
-    s.ey = mouse.y;
-    s.particles = [];
-    s.pTimer = 0;
+    enterFixed(s.cx, s.cy, true, () => {
+      s.t = 0;
+      s.active = true;
+      s.w = hardMode ? 800 : 625;
+      s.angle = 0;
+      s.prevAngle = 0;
+      s.ex = mouse.x;
+      s.ey = mouse.y;
+      s.particles = [];
+      s.pTimer = 0;
+    });
     setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
@@ -3771,52 +3779,47 @@ export function setup(
     crumbles: [],
   };
   function enterSuperPizzaCutter() {
-    const s = stateSuperPizzaCutter;
-
-    s.t = 0;
-    s.spawned = false;
-    s.blades = [];
-    s.startChange = false;
-    s.change = false;
-
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    s.cx = cx;
-    s.cy = cy;
-    enterFixed(cx, cy);
-
-    const baseAngles = [
-      Math.PI / 2,
-      Math.PI / 2 + (Math.PI * 2) / 3,
-      Math.PI / 2 + (Math.PI * 4) / 3,
-    ];
-    const offsetAng = Math.random() * Math.PI * 2;
-
-    for (let i = 0; i < 3; i++) {
-      s.blades.push({
-        x: cx,
-        y: cy,
-        cx,
-        cy,
-        dirX: Math.cos(baseAngles[i] + offsetAng),
-        dirY: Math.sin(baseAngles[i] + offsetAng),
-        baseAngle: baseAngles[i] + offsetAng,
-        angle: 0,
-        scale: 0,
-        startDelay: i * 0.1,
-        rotDur: 0.75 - i * 0.1,
-        upOffset: -1000,
-      });
-
-      stateSuperPizzaCutter.cutters[i].spokes = [];
-      stateSuperPizzaCutter.cutters[i].t = 0;
-      stateSuperPizzaCutter.cutters[i].cycle = 0;
-      stateSuperPizzaCutter.cutters[i].spawned = false;
-      stateSuperPizzaCutter.cutters[i].cx = 0;
-      stateSuperPizzaCutter.cutters[i].cy = 0;
-    }
-
-    stateSuperPizzaCutter.circles = [];
+    enterFixed(cx, cy, true, () => {
+      const s = stateSuperPizzaCutter;
+      s.t = 0;
+      s.spawned = false;
+      s.blades = [];
+      s.startChange = false;
+      s.change = false;
+      s.cx = cx;
+      s.cy = cy;
+      const baseAngles = [
+        Math.PI / 2,
+        Math.PI / 2 + (Math.PI * 2) / 3,
+        Math.PI / 2 + (Math.PI * 4) / 3,
+      ];
+      const offsetAng = Math.random() * Math.PI * 2;
+      for (let i = 0; i < 3; i++) {
+        s.blades.push({
+          x: cx,
+          y: cy,
+          cx,
+          cy,
+          dirX: Math.cos(baseAngles[i] + offsetAng),
+          dirY: Math.sin(baseAngles[i] + offsetAng),
+          baseAngle: baseAngles[i] + offsetAng,
+          angle: 0,
+          scale: 0,
+          startDelay: i * 0.1,
+          rotDur: 0.75 - i * 0.1,
+          upOffset: -1000,
+        });
+        s.cutters[i].spokes = [];
+        s.cutters[i].t = 0;
+        s.cutters[i].cycle = 0;
+        s.cutters[i].spawned = false;
+        s.cutters[i].cx = 0;
+        s.cutters[i].cy = 0;
+      }
+      s.circles = [];
+    });
   }
   function updateSuperPizzaCutter(dt) {
     const s = stateSuperPizzaCutter;
@@ -4425,20 +4428,19 @@ export function setup(
     lastAng: Math.random() * Math.PI * 2,
   };
   function enterBitter3Stars() {
-    stateBitter3Stars.spokes = [];
-    stateBitter3Stars.t = 0;
-    stateBitter3Stars.cycle = 0;
-    stateBitter3Stars.spawned = false;
-
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    stateBitter3Stars.cx = cx;
-    stateBitter3Stars.cy = cy;
-    enterFixed(cx, cy);
-
-    stateBitter3Stars.extraStars = [];
-    stateBitter3Stars.extraT = 0;
-    stateBitter3Stars.extraSpawned = 0;
+    enterFixed(cx, cy, true, () => {
+      stateBitter3Stars.spokes = [];
+      stateBitter3Stars.t = 0;
+      stateBitter3Stars.cycle = 0;
+      stateBitter3Stars.spawned = false;
+      stateBitter3Stars.cx = cx;
+      stateBitter3Stars.cy = cy;
+      stateBitter3Stars.extraStars = [];
+      stateBitter3Stars.extraT = 0;
+      stateBitter3Stars.extraSpawned = 0;
+    });
 
     if (truePattern == false) showText("BITTER.");
   }
@@ -4901,27 +4903,24 @@ export function setup(
   };
   function enterDeathInBloomCrumble() {
     const s = stateDeathInBloomCrumble;
-
-    s.t = 0;
-    s.active = true;
-
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
-    enterFixed(s.cx, s.cy);
-    s.w = hardMode ? 800 : 625;
-    s.angle = 0;
-    s.prevAngle = 0;
-
-    s.ex = mouse.x;
-    s.ey = mouse.y;
-    s.particles = [];
-    s.pTimer = 0;
-
-    s.crumbleT = 0;
-    s.circles = [];
+    enterFixed(s.cx, s.cy, true, () => {
+      s.t = 0;
+      s.active = true;
+      s.w = hardMode ? 800 : 625;
+      s.angle = 0;
+      s.prevAngle = 0;
+      s.ex = mouse.x;
+      s.ey = mouse.y;
+      s.particles = [];
+      s.pTimer = 0;
+      s.crumbleT = 0;
+      s.circles = [];
+    });
     setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("DEATH IN BLOOM.");
@@ -5477,26 +5476,27 @@ export function setup(
     daggers: [],
   };
   function enterImplosionBreaker() {
-    enterOrbit();
-    stateImplosionBreaker.circles = [];
-    stateImplosionBreaker.spawnTimer = 0;
-    stateImplosionBreaker.spawned = 0;
+    enterOrbit(() => {
+      stateImplosionBreaker.circles = [];
+      stateImplosionBreaker.spawnTimer = 0;
+      stateImplosionBreaker.spawned = 0;
 
-    const dir = Math.random() < 0.5 ? 1 : -1;
-    stateImplosionBreaker.daggers = [];
-    for (let i = 0; i < 4; i++) {
-      const baseAngle = (i / 4) * Math.PI * 2;
-      stateImplosionBreaker.daggers.push({
-        t: 0,
-        baseAngle,
-        startAngle: baseAngle,
-        targetAngle: baseAngle + Math.PI * 2 * dir,
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      stateImplosionBreaker.daggers = [];
+      for (let i = 0; i < 4; i++) {
+        const baseAngle = (i / 4) * Math.PI * 2;
+        stateImplosionBreaker.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
 
-        delay: 0,
-        slashT: 0,
-        slashing: false,
-      });
-    }
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+    });
   }
   function updateImplosionBreaker(dt) {
     const mx = mouse.x;
@@ -5943,41 +5943,39 @@ export function setup(
     prevMy: 0,
   };
   function enterFirstSilence() {
-    stateFirstSilence.spokes = [];
-    stateFirstSilence.t = 0;
-    stateFirstSilence.cycle = 0;
-    stateFirstSilence.spawned = false;
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
     const cy = mouse.y + (Math.random() - 0.5) * 2000;
-    stateFirstSilence.cx = cx;
-    stateFirstSilence.cy = cy;
-    enterFixed(cx, cy);
     changeEnemy(Celestial_CutterStart, false, () => {
       changeEnemy(Celestial_CutterLoop, true);
     });
+    enterFixed(cx, cy, true, () => {
+      stateFirstSilence.spokes = [];
+      stateFirstSilence.t = 0;
+      stateFirstSilence.cycle = 0;
+      stateFirstSilence.spawned = false;
+      stateFirstSilence.cx = cx;
+      stateFirstSilence.cy = cy;
+      stateFirstSilence.circles = [];
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      stateFirstSilence.daggers = [];
+      for (let i = 0; i < 4; i++) {
+        const baseAngle = (i / 4) * Math.PI * 2;
+        stateFirstSilence.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
 
-    stateFirstSilence.circles = [];
-
-    const dir = Math.random() < 0.5 ? 1 : -1;
-    stateFirstSilence.daggers = [];
-    for (let i = 0; i < 4; i++) {
-      const baseAngle = (i / 4) * Math.PI * 2;
-      stateFirstSilence.daggers.push({
-        t: 0,
-        baseAngle,
-        startAngle: baseAngle,
-        targetAngle: baseAngle + Math.PI * 2 * dir,
-
-        delay: 0,
-        slashT: 0,
-        slashing: false,
-      });
-    }
-
-    stateFirstSilence.beams = [];
-    stateFirstSilence.timer = 0;
-    stateFirstSilence.prevMx = mouse.x;
-    stateFirstSilence.prevMy = mouse.y;
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+      stateFirstSilence.beams = [];
+      stateFirstSilence.timer = 0;
+      stateFirstSilence.prevMx = mouse.x;
+      stateFirstSilence.prevMy = mouse.y;
+    });
 
     if (truePattern == false) showText("SILENCE.");
   }
@@ -6783,41 +6781,36 @@ export function setup(
   };
   function enterSecondSilence() {
     const s = stateSecondSilence;
-
-    s.t = 0;
-    s.active = true;
-
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 1000;
     s.cy = mouse.y + Math.sin(ang) * 1000;
-    enterFixed(s.cx, s.cy);
-    s.w = hardMode ? 500 : 417;
-    s.angle = 0;
-    s.baseAngle = Math.random() * Math.PI * 2;
-    s.prevAngle = 0;
-    s.dir = Math.random() < 0.5;
-
-    s.ex = mouse.x;
-    s.ey = mouse.y;
-    s.particles = [];
-    s.pTimer = 0;
-
-    s.crumbleT = 0;
-    s.circles = [];
-
-    s.beams = [];
-    s.timer = 0;
-    s.prevMx = mouse.x;
-    s.prevMy = mouse.y;
-
-    s.cycle = 0;
-    s.futileT = 0;
-    s.snake = null;
-    s.rift = spawnFutileRift();
-    s.trail = [];
-    s.change = false;
+    enterFixed(s.cx, s.cy, true, () => {
+      s.t = 0;
+      s.active = true;
+      s.w = hardMode ? 500 : 417;
+      s.angle = 0;
+      s.baseAngle = Math.random() * Math.PI * 2;
+      s.prevAngle = 0;
+      s.dir = Math.random() < 0.5;
+      s.ex = mouse.x;
+      s.ey = mouse.y;
+      s.particles = [];
+      s.pTimer = 0;
+      s.crumbleT = 0;
+      s.circles = [];
+      s.beams = [];
+      s.timer = 0;
+      s.prevMx = mouse.x;
+      s.prevMy = mouse.y;
+      s.cycle = 0;
+      s.futileT = 0;
+      s.snake = null;
+      s.rift = spawnFutileRift();
+      s.trail = [];
+      s.change = false;
+    });
     setGiftMultiplier(0.5);
 
     if (truePattern == false) showText("SILENCE.");
@@ -8258,6 +8251,10 @@ export function setup(
       if (p >= 1) {
         state.enemyTransition = "none";
         state.enemyScale = 1;
+        if (state.endFunc) {
+          state.endFunc();
+          state.endFunc = null;
+        }
       }
     }
 
