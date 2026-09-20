@@ -167,7 +167,10 @@ const difficulties = beaten
 let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
 let casualMode = difficultyIndex === 0;
 export let hardMode = difficultyIndex === 2;
-let chaosMode = JSON.parse(localStorage.getItem("chaos")) ?? false;
+let chaosMode = beaten
+  ? (JSON.parse(localStorage.getItem("chaos")) ?? false)
+  : false;
+if (!beaten) document.getElementById("chaos-mode").style.display = "none";
 const diffLabel = document.getElementById("diff-label");
 const diffLeft = document.getElementById("diff-left");
 const diffRight = document.getElementById("diff-right");
