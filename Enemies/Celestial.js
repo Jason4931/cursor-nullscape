@@ -1589,7 +1589,7 @@ export function setup(
         let angleDiff = cursorAngle - s.targetAngle;
         if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
         if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-        const turnSpeed = 0.25;
+        const turnSpeed = 0.1;
         s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
       }
       const eased = 1 - (1 - p) * (1 - p);
@@ -1854,7 +1854,7 @@ export function setup(
         let angleDiff = cursorAngle - s.targetAngle;
         if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
         if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-        const turnSpeed = 0.25;
+        const turnSpeed = 0.1;
         s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
       }
       const eased = 1 - (1 - p) * (1 - p);
@@ -4084,7 +4084,7 @@ export function setup(
             let angleDiff = cursorAngle - s.targetAngle;
             if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
             if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            const turnSpeed = 0.25;
+            const turnSpeed = 0.1;
             s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
           }
           const eased = 1 - (1 - p) * (1 - p);
@@ -6069,7 +6069,7 @@ export function setup(
         let angleDiff = cursorAngle - s.targetAngle;
         if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
         if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-        const turnSpeed = 0.25;
+        const turnSpeed = 0.1;
         s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
       }
       const eased = 1 - (1 - p) * (1 - p);
