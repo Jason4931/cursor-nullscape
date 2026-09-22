@@ -4045,14 +4045,14 @@ export function setup(
           stateSuperPizzaCutter.cutters[i].spokes.push(
             spawnPizza(
               stateSuperPizzaCutter.cutters[i],
-              s.lastStartAng * Math.PI * 4,
+              s.lastStartAng * Math.PI * 5,
             ),
           );
           s.lastStartAng *= -1;
           if (i == 0) {
             for (let i = 0; i < 300; i++) {
               stateSuperPizzaCutter.crumbles.push(
-                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
+                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2500),
               );
             }
           }
