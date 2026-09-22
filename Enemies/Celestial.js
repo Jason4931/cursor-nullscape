@@ -1584,6 +1584,14 @@ export function setup(
       s.t += dt;
 
       const p = Math.min(s.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+        let angleDiff = cursorAngle - s.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.25;
+        s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
       const eased = 1 - (1 - p) * (1 - p);
       s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
 
@@ -1841,6 +1849,14 @@ export function setup(
       s.t += dt;
 
       const p = Math.min(s.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+        let angleDiff = cursorAngle - s.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.25;
+        s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
       const eased = 1 - (1 - p) * (1 - p);
       s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
 
@@ -4045,14 +4061,14 @@ export function setup(
           stateSuperPizzaCutter.cutters[i].spokes.push(
             spawnPizza(
               stateSuperPizzaCutter.cutters[i],
-              s.lastStartAng * Math.PI * 5,
+              s.lastStartAng * Math.PI * 4,
             ),
           );
           s.lastStartAng *= -1;
           if (i == 0) {
             for (let i = 0; i < 300; i++) {
               stateSuperPizzaCutter.crumbles.push(
-                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2500),
+                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
               );
             }
           }
@@ -4063,6 +4079,14 @@ export function setup(
           s.t += dt;
 
           const p = Math.min(s.t / 4, 1);
+          if (p < 1) {
+            const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+            let angleDiff = cursorAngle - s.targetAngle;
+            if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            const turnSpeed = 0.25;
+            s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+          }
           const eased = 1 - (1 - p) * (1 - p);
           s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
 
@@ -6040,6 +6064,14 @@ export function setup(
       s.t += dt;
 
       const p = Math.min(s.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+        let angleDiff = cursorAngle - s.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.25;
+        s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
       const eased = 1 - (1 - p) * (1 - p);
       s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
 
