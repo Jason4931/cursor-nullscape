@@ -1092,6 +1092,8 @@ export function setup(
     prevMx: 0,
     prevMy: 0,
     flipped: 1,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
   };
   function enterSlash() {
     enterOrbit(() => {
@@ -1100,6 +1102,8 @@ export function setup(
       stateSlash.cycle = 0;
       stateSlash.prevMx = mouse.x;
       stateSlash.prevMy = mouse.y;
+      stateSlash.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      stateSlash.predDirY = Math.sin(Math.random() * Math.PI * 2);
     });
 
     if (truePattern == false) showText("FALL.");
@@ -1110,12 +1114,31 @@ export function setup(
 
     const mvx = mx - stateSlash.prevMx;
     const mvy = my - stateSlash.prevMy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      stateSlash.predDirX +=
+        (tx - stateSlash.predDirX) * Math.min(1, dt * turnSpeed);
+      stateSlash.predDirY +=
+        (ty - stateSlash.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(stateSlash.predDirX, stateSlash.predDirY) || 1;
+
+      stateSlash.predDirX /= d;
+      stateSlash.predDirY /= d;
+    }
 
     stateSlash.prevMx = mx;
     stateSlash.prevMy = my;
 
-    const px = mx + mvx;
-    const py = my + mvy;
+    const predictionDistance = 100;
+    const px = mx + stateSlash.predDirX * predictionDistance;
+    const py = my + stateSlash.predDirY * predictionDistance;
 
     const cycle = stateSlash.cycle;
 
@@ -1132,9 +1155,8 @@ export function setup(
         );
         if (!hardMode) {
           const base =
-            mvx !== 0 || mvy !== 0
-              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-              : Math.random() * Math.PI * 2;
+            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
           const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
           const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
@@ -1143,9 +1165,8 @@ export function setup(
           stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
         } else {
           const base =
-            mvx !== 0 || mvy !== 0
-              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-              : Math.random() * Math.PI * 2;
+            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
           const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
           const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
           const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -1158,15 +1179,13 @@ export function setup(
       } else if (cycle < 3) {
         if (!hardMode) {
           const base =
-            mvx !== 0 || mvy !== 0
-              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-              : Math.random() * Math.PI * 2;
+            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
           stateSlash.beams.push(spawnBeam(px, py, base, 1));
         } else {
           const base =
-            mvx !== 0 || mvy !== 0
-              ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-              : Math.random() * Math.PI * 2;
+            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
           const spread = Math.PI / 12 + (Math.PI / 1.2) * Math.random();
 
           stateSlash.beams.push(spawnBeam(px, py, base));
@@ -5941,6 +5960,8 @@ export function setup(
     timer: 0,
     prevMx: 0,
     prevMy: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
   };
   function enterFirstSilence() {
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
@@ -5975,6 +5996,8 @@ export function setup(
       stateFirstSilence.timer = 0;
       stateFirstSilence.prevMx = mouse.x;
       stateFirstSilence.prevMy = mouse.y;
+      stateFirstSilence.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      stateFirstSilence.predDirY = Math.sin(Math.random() * Math.PI * 2);
     });
 
     if (truePattern == false) showText("SILENCE.");
@@ -6264,12 +6287,32 @@ export function setup(
 
     const mvx = mx - stateFirstSilence.prevMx;
     const mvy = my - stateFirstSilence.prevMy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      stateFirstSilence.predDirX +=
+        (tx - stateFirstSilence.predDirX) * Math.min(1, dt * turnSpeed);
+      stateFirstSilence.predDirY +=
+        (ty - stateFirstSilence.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d =
+        Math.hypot(stateFirstSilence.predDirX, stateFirstSilence.predDirY) || 1;
+
+      stateFirstSilence.predDirX /= d;
+      stateFirstSilence.predDirY /= d;
+    }
 
     stateFirstSilence.prevMx = mx;
     stateFirstSilence.prevMy = my;
 
-    const px = mx + mvx;
-    const py = my + mvy;
+    const predictionDistance = 100;
+    const px = mx + stateFirstSilence.predDirX * predictionDistance;
+    const py = my + stateFirstSilence.predDirY * predictionDistance;
 
     if (
       stateFirstSilence.timer >= 4.5 &&
@@ -6286,9 +6329,8 @@ export function setup(
       );
       if (!hardMode) {
         const base =
-          mvx !== 0 || mvy !== 0
-            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-            : Math.random() * Math.PI * 2;
+          Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -6299,9 +6341,8 @@ export function setup(
         stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
       } else {
         const base =
-          mvx !== 0 || mvy !== 0
-            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-            : Math.random() * Math.PI * 2;
+          Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
         const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
@@ -6772,6 +6813,8 @@ export function setup(
 
     beams: [],
     timer: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
 
     cycle: 0,
     futileT: 0,
@@ -6810,6 +6853,8 @@ export function setup(
       s.rift = spawnFutileRift();
       s.trail = [];
       s.change = false;
+      s.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      s.predDirY = Math.sin(Math.random() * Math.PI * 2);
     });
     setGiftMultiplier(0.5);
 
@@ -7069,8 +7114,26 @@ export function setup(
     }
     if (needsCompactCrumble) compact(s.circles);
 
-    const px = mx + mvx;
-    const py = my + mvy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      s.predDirX += (tx - s.predDirX) * Math.min(1, dt * turnSpeed);
+      s.predDirY += (ty - s.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(s.predDirX, s.predDirY) || 1;
+
+      s.predDirX /= d;
+      s.predDirY /= d;
+    }
+
+    const predictionDistance = 100;
+    const px = mx + s.predDirX * predictionDistance;
+    const py = my + s.predDirY * predictionDistance;
 
     if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
       playSound(
@@ -7083,9 +7146,8 @@ export function setup(
       );
       if (!hardMode) {
         const base =
-          mvx !== 0 || mvy !== 0
-            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-            : Math.random() * Math.PI * 2;
+          Math.atan2(s.predDirY, s.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
         const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
@@ -7096,9 +7158,8 @@ export function setup(
         s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
       } else {
         const base =
-          mvx !== 0 || mvy !== 0
-            ? Math.atan2(mvy, mvx) + ((Math.random() - 0.5) * Math.PI) / 3
-            : Math.random() * Math.PI * 2;
+          Math.atan2(s.predDirY, s.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
         const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
