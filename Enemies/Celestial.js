@@ -1390,6 +1390,14 @@ export function setup(
     let needsCompact = false;
     for (const c of s.circles) {
       c.t += dt;
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
       c.opacity += dt * 4;
 
       if (c.t < 0.25) {
@@ -1934,6 +1942,12 @@ export function setup(
       c.t += dt;
 
       if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
         const p = c.t / 2;
 
         const eased = 1 - (1 - p) * (1 - p);
@@ -2607,6 +2621,12 @@ export function setup(
       c.t += dt;
 
       if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
         const p = c.t / 2;
 
         const eased = 1 - (1 - p) * (1 - p);
@@ -3096,6 +3116,14 @@ export function setup(
     let needsCompact = false;
     for (const b of stateCease.beams) {
       let a = b.angle;
+      if (b.t < b.armTime) {
+        const dxToMouse = mx - b.x;
+        const dyToMouse = my - b.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        b.x += dxToMouse * followAmount;
+        b.y += dyToMouse * followAmount;
+      }
 
       if (b.t < 0.5) {
         const p = b.t / 0.5;
@@ -4129,6 +4157,12 @@ export function setup(
         c.t += dt;
 
         if (c.t < 4) {
+          const dx = mx - c.tx;
+          const dy = my - c.ty;
+          const followSpeed = 0.1;
+          const followAmount = Math.min(1, dt * followSpeed);
+          c.tx += dx * followAmount;
+          c.ty += dy * followAmount;
           const p = c.t / 4;
 
           const eased = 1 - (1 - p) * (1 - p);
@@ -5168,6 +5202,12 @@ export function setup(
       c.t += dt;
 
       if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
         const p = c.t / 2;
 
         const eased = 1 - (1 - p) * (1 - p);
@@ -5571,6 +5611,14 @@ export function setup(
     let needsCompact = false;
     for (const c of s.circles) {
       c.t += dt;
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
       c.opacity += dt * 4;
 
       if (c.t < 0.25) {
@@ -6149,6 +6197,12 @@ export function setup(
       c.t += dt;
 
       if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
         const p = c.t / 2;
 
         const eased = 1 - (1 - p) * (1 - p);
@@ -7107,6 +7161,12 @@ export function setup(
       c.t += dt;
 
       if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
         const p = c.t / 2;
 
         const eased = 1 - (1 - p) * (1 - p);
