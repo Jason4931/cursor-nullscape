@@ -750,7 +750,7 @@ window.addEventListener("keydown", (e) => {
   keysPressed[e.key.toLowerCase()] = true;
   if (abilityCooldown == 0 && !slowness) {
     if (e.key.toLowerCase() === "e") {
-      abilityCooldown = 45;
+      abilityCooldown = 60;
       ability = true;
       setTimeout(() => {
         ability = false;
@@ -758,7 +758,7 @@ window.addEventListener("keydown", (e) => {
       usedAbility = "e";
       speedBoostScale = 2;
     } else if (e.key.toLowerCase() === "r") {
-      abilityCooldown = 45;
+      abilityCooldown = 60;
       ability = true;
       setTimeout(() => {
         ability = false;
@@ -3566,7 +3566,7 @@ function loop(now) {
 
   function drawCooldownBar(x, y, width, height, cooldown) {
     ctx.save();
-    const percent = Math.max(0, Math.min(cooldown / 45, 1));
+    const percent = Math.max(0, Math.min(cooldown / 60, 1));
     ctx.globalAlpha = 0.6;
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
@@ -3588,7 +3588,7 @@ function loop(now) {
       screenY + h - 40,
       w * 0.5,
       20,
-      45 - abilityCooldown,
+      60 - abilityCooldown,
     );
   if (parried && parry) {
     if (!soundParry) {
