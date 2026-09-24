@@ -266,6 +266,7 @@ const spawnedCurses = new Set();
 let jumppadSpawns = [];
 let fleshSpawns = [];
 export let spaceHeld = false;
+let spaceHeldScale = 1;
 export const keysPressed = {};
 export let shiftlockEase = 1;
 export let ability = false;
@@ -5312,7 +5313,6 @@ function updateCamera() {
   const disableCollectScale = disableCollect ? 0.01 : 1;
   const extremeScale = hardMode ? 0.667 : 1;
   const ultrafastScale = ultrafastmode ? 3 : 1;
-  const spaceHeldScale = spaceHeld || wasdMode ? 1.5 : 1;
   isCursorOnFloor();
   if (iceEffect) {
     camVX +=
@@ -6215,6 +6215,17 @@ function loop(now) {
   if (abilityCooldown < 0) abilityCooldown = 0;
   speedBoostScale -= 0.033;
   if (speedBoostScale < 1) speedBoostScale = 1;
+  const spaceChange = 0.033;
+  spaceHeldScale +=
+    spaceHeldScale < (spaceHeld || wasdMode ? 1.5 : 1)
+      ? spaceChange
+      : spaceHeldScale > (spaceHeld || wasdMode ? 1.5 : 1)
+        ? -spaceChange
+        : 0;
+  if (
+    Math.abs(spaceHeldScale - (spaceHeld || wasdMode ? 1.5 : 1)) < spaceChange
+  )
+    spaceHeldScale = spaceHeld || wasdMode ? 1.5 : 1;
   const change = 1 / (30 * 30);
   giftMultiplier +=
     giftMultiplier < 1 ? change : giftMultiplier > 1 ? -change : 0;
