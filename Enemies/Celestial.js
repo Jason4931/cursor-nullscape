@@ -1026,6 +1026,7 @@ export function setup(
       dirX: 0,
       dirY: 0,
       shot: false,
+      turnLocked: false,
     };
   }
   function spawnFutileRift() {
@@ -2804,7 +2805,10 @@ export function setup(
       if (b.t >= 2) {
         const speed = 1500;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const turnSpeed = Math.min(1, dist / 1000);
+        if (!b.turnLocked && dist <= 1000) {
+          b.turnLocked = true;
+        }
+        const turnSpeed = b.turnLocked ? 0 : 10;
 
         const len = Math.sqrt(dx * dx + dy * dy) || 1;
         const targetX = dx / len;
@@ -2832,10 +2836,12 @@ export function setup(
           const rx = dx * cos - dy * sin;
           const ry = dx * sin + dy * cos;
 
+          const front = dx * b.dirX + dy * b.dirY;
+
           const len = 1000;
           const w = 25;
 
-          if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+          if (front > 0 && rx > 0 && rx < len && Math.abs(ry) < w / 2) {
             checkDeath("Celestial");
             break;
           }
@@ -4596,7 +4602,10 @@ export function setup(
       if (b.t >= 2) {
         const speed = 1500;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const turnSpeed = Math.min(1, dist / 1000);
+        if (!b.turnLocked && dist <= 1000) {
+          b.turnLocked = true;
+        }
+        const turnSpeed = b.turnLocked ? 0 : 10;
 
         const len = Math.sqrt(dx * dx + dy * dy) || 1;
         const targetX = dx / len;
@@ -4624,10 +4633,12 @@ export function setup(
           const rx = dx * cos - dy * sin;
           const ry = dx * sin + dy * cos;
 
+          const front = dx * b.dirX + dy * b.dirY;
+
           const len = 1000;
           const w = 25;
 
-          if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+          if (front > 0 && rx > 0 && rx < len && Math.abs(ry) < w / 2) {
             checkDeath("Celestial");
             break;
           }
@@ -6401,13 +6412,13 @@ export function setup(
     const py = my + stateFirstSilence.predDirY * predictionDistance;
 
     if (
-      stateFirstSilence.timer >= 4.5 &&
-      stateFirstSilence.timer <= 5.5 &&
+      stateFirstSilence.timer >= 4.75 &&
+      stateFirstSilence.timer <= 5.75 &&
       stateFirstSilence.beams.length == 0
     ) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
-        0.667,
+        0.8,
         undefined,
         undefined,
         undefined,
@@ -6421,10 +6432,10 @@ export function setup(
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
 
-        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
       } else {
         const base =
           Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
@@ -6434,11 +6445,11 @@ export function setup(
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
         const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.5));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread4, 1.5));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread4, 1.25));
       }
     }
 
@@ -7227,10 +7238,10 @@ export function setup(
     const px = mx + s.predDirX * predictionDistance;
     const py = my + s.predDirY * predictionDistance;
 
-    if (s.timer >= 1 && s.timer <= 2 && s.beams.length == 0) {
+    if (s.timer >= 1.25 && s.timer <= 2.25 && s.beams.length == 0) {
       playSound(
         `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
-        0.667,
+        0.8,
         undefined,
         undefined,
         undefined,
@@ -7244,10 +7255,10 @@ export function setup(
         const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
         const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
 
-        s.beams.push(spawnBeam(px, py, base, 1.5));
-        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-        s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
       } else {
         const base =
           Math.atan2(s.predDirY, s.predDirX) +
@@ -7257,11 +7268,11 @@ export function setup(
         const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
         const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-        s.beams.push(spawnBeam(px, py, base, 1.5));
-        s.beams.push(spawnBeam(px, py, base + spread, 1.5));
-        s.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-        s.beams.push(spawnBeam(px, py, base + spread3, 1.5));
-        s.beams.push(spawnBeam(px, py, base - spread4, 1.5));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
       }
     }
 
