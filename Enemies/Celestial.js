@@ -610,7 +610,7 @@ export function setup(
       },
     },
     {
-      duration: 3,
+      duration: 3.5,
       update: updateImplosionBreaker,
       draw: drawImplosionBreaker,
       drawFront: drawImplosionBreakerFront,
@@ -763,7 +763,7 @@ export function setup(
       enter: enterDeathInBloomCrumble,
     },
     {
-      duration: 3,
+      duration: 3.5,
       update: updateImplosionBreaker,
       draw: drawImplosionBreaker,
       drawFront: drawImplosionBreakerFront,
@@ -2805,7 +2805,7 @@ export function setup(
       if (b.t >= 2) {
         const speed = 1500;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (!b.turnLocked && dist <= 1000) {
+        if (!b.turnLocked && dist <= 1100) {
           b.turnLocked = true;
         }
         const turnSpeed = b.turnLocked ? 0 : 10;
@@ -4602,7 +4602,7 @@ export function setup(
       if (b.t >= 2) {
         const speed = 1500;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (!b.turnLocked && dist <= 1000) {
+        if (!b.turnLocked && dist <= 1100) {
           b.turnLocked = true;
         }
         const turnSpeed = b.turnLocked ? 0 : 10;
@@ -5694,7 +5694,7 @@ export function setup(
             undefined,
             "50",
           );
-        } else if (d.t >= 2 && d.t <= 2 + dt) {
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
           playSound(
             `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
             0.9,
@@ -5720,10 +5720,6 @@ export function setup(
         if (!d.transitionInit) {
           d.transitionInit = true;
 
-          const predictScale = 20;
-          const px = mx + vx * predictScale;
-          const py = my + vy * predictScale;
-
           const dirX = s.lastDirX ?? 0;
           const dirY = s.lastDirY ?? -1;
 
@@ -5731,13 +5727,9 @@ export function setup(
           d.targetCX = mx - dirX * backDist;
           d.targetCY = my - dirY * backDist;
 
-          const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
-
           const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          const offset = (index - 1.5) * spread;
-
-          d.targetAngle = baseAngle + offset;
+          d.offset = (index - 1.5) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -5751,11 +5743,13 @@ export function setup(
         d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
         d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
 
-        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * ease;
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
 
         d.radius = 0;
 
-        const slashStart = 2 + d.delay;
+        const slashStart = 2.5 + d.delay;
 
         if (d.t >= slashStart && !d.slashing) {
           d.slashing = true;
@@ -5767,10 +5761,7 @@ export function setup(
           d.slashT += dt;
 
           const slashDuration = 1;
-
           const p = Math.min(d.slashT / slashDuration, 1);
-
-          const ease = 1 - (1 - p) * (1 - p);
 
           const slashDist = 1000;
 
@@ -5784,8 +5775,9 @@ export function setup(
             d.slashAngle = d.angle;
           }
 
-          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * ease;
-          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * ease;
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
 
           const dx = mx - d.cx;
           const dy = my - d.cy;
@@ -5900,7 +5892,7 @@ export function setup(
       }
       if (d.slashing) {
         const slashDuration = 1;
-        const p = Math.min((d.t - 2) / slashDuration, 1);
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
         if (p > 0.75) {
           const fadeOut = (1 - p) / 0.25;
           alpha = Math.min(alpha, fadeOut);
@@ -5992,7 +5984,7 @@ export function setup(
       }
       if (d.slashing) {
         const slashDuration = 1;
-        const p = Math.min((d.t - 2) / slashDuration, 1);
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
         if (p > 0.75) {
           const fadeOut = (1 - p) / 0.25;
           alpha = Math.min(alpha, fadeOut);
@@ -6011,8 +6003,8 @@ export function setup(
 
         const drawX = 0;
 
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 9;
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
 
         ctx.beginPath();
         ctx.rect(drawX, -w / 2, len, w);
@@ -6271,7 +6263,7 @@ export function setup(
             undefined,
             "50",
           );
-        } else if (d.t >= 2 && d.t <= 2 + dt) {
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
           playSound(
             `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
             0.9,
@@ -6297,10 +6289,6 @@ export function setup(
         if (!d.transitionInit) {
           d.transitionInit = true;
 
-          const predictScale = 20;
-          const px = mx + vx * predictScale;
-          const py = my + vy * predictScale;
-
           const dirX = stateFirstSilence.lastDirX ?? 0;
           const dirY = stateFirstSilence.lastDirY ?? -1;
 
@@ -6308,13 +6296,9 @@ export function setup(
           d.targetCX = mx - dirX * backDist;
           d.targetCY = my - dirY * backDist;
 
-          const baseAngle = Math.atan2(py - d.targetCY, px - d.targetCX);
-
           const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
           const index = stateFirstSilence.daggers.indexOf(d);
-          const offset = (index - 1.5) * spread;
-
-          d.targetAngle = baseAngle + offset;
+          d.offset = (index - 1.5) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -6328,11 +6312,13 @@ export function setup(
         d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
         d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
 
-        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * ease;
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
 
         d.radius = 0;
 
-        const slashStart = 2 + d.delay;
+        const slashStart = 2.5 + d.delay;
 
         if (d.t >= slashStart && !d.slashing) {
           d.slashing = true;
@@ -6344,15 +6330,13 @@ export function setup(
           d.slashT += dt;
 
           const slashDuration = 1;
-
           const p = Math.min(d.slashT / slashDuration, 1);
-
-          const ease = 1 - (1 - p) * (1 - p);
 
           const slashDist = 1000;
 
           if (!d.slashInit) {
             d.slashInit = true;
+            shakeScreen();
 
             d.slashStartX = d.cx;
             d.slashStartY = d.cy;
@@ -6360,8 +6344,9 @@ export function setup(
             d.slashAngle = d.angle;
           }
 
-          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * ease;
-          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * ease;
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
 
           const dx = mx - d.cx;
           const dy = my - d.cy;
@@ -6375,7 +6360,7 @@ export function setup(
           const len = 140;
           const w = 60;
 
-          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.t <= 3) {
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2) {
             checkDeath("Celestial");
           }
         }
@@ -6660,7 +6645,7 @@ export function setup(
       }
       if (d.slashing) {
         const slashDuration = 1;
-        const p = Math.min((d.t - 2) / slashDuration, 1);
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
         if (p > 0.75) {
           const fadeOut = (1 - p) / 0.25;
           alpha = Math.min(alpha, fadeOut);
@@ -6856,7 +6841,7 @@ export function setup(
       }
       if (d.slashing) {
         const slashDuration = 1;
-        const p = Math.min((d.t - 2) / slashDuration, 1);
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
         if (p > 0.75) {
           const fadeOut = (1 - p) / 0.25;
           alpha = Math.min(alpha, fadeOut);
@@ -6875,8 +6860,8 @@ export function setup(
 
         const drawX = 0;
 
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 9;
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
 
         ctx.beginPath();
         ctx.rect(drawX, -w / 2, len, w);

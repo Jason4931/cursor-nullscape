@@ -4065,27 +4065,81 @@ function drawGrid() {
   entityCanvas.width = entityCanvas.width;
 
   if (showSkybox && !epilepticMode) {
-    scrollSkybox -= 5;
-    if (scrollSkybox <= -window.innerWidth) {
-      scrollSkybox += window.innerWidth;
+    if (celestialBG) {
+      scrollCelestial -= 5;
+      if (scrollCelestial <= -window.innerWidth) {
+        scrollCelestial += window.innerWidth;
+      }
+      ctx.save();
+      ctx.globalAlpha = 1;
+      ctx.drawImage(
+        celestialBGimg,
+        -camX + scrollCelestial,
+        -camY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+      ctx.drawImage(
+        celestialBGimg,
+        -camX + scrollCelestial + window.innerWidth,
+        -camY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+
+      const centerX = -camX + window.innerWidth / 2;
+      const centerY = -camY + window.innerHeight / 2;
+      const lookStrength = -0.05;
+      const cx = centerX + (mouse.x - centerX) * lookStrength;
+      const cy = centerY + (mouse.y - centerY) * lookStrength;
+      if (Number.isFinite(cx) && Number.isFinite(cy)) {
+        const grad = ctx.createRadialGradient(
+          cx,
+          cy,
+          0,
+          cx,
+          cy,
+          Math.min(window.innerWidth, window.innerHeight) * 0.5,
+        );
+        grad.addColorStop(0, "rgba(0, 0, 0, 1)");
+        grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
+        grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(
+          cx,
+          cy,
+          Math.min(window.innerWidth, window.innerHeight) * 0.5,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+      ctx.restore();
+    } else {
+      scrollSkybox -= 5;
+      if (scrollSkybox <= -window.innerWidth) {
+        scrollSkybox += window.innerWidth;
+      }
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(
+        skybox,
+        -camX + scrollSkybox,
+        -camY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+      ctx.drawImage(
+        skybox,
+        -camX + scrollSkybox + window.innerWidth,
+        -camY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+      ctx.restore();
     }
-    ctx.save();
-    ctx.globalAlpha = 0.5;
-    ctx.drawImage(
-      skybox,
-      -camX + scrollSkybox,
-      -camY,
-      window.innerWidth,
-      window.innerHeight,
-    );
-    ctx.drawImage(
-      skybox,
-      -camX + scrollSkybox + window.innerWidth,
-      -camY,
-      window.innerWidth,
-      window.innerHeight,
-    );
-    ctx.restore();
   }
   if (OblivionActive) {
     scrollOblivion -= 20;
@@ -4108,59 +4162,6 @@ function drawGrid() {
       window.innerWidth,
       window.innerHeight,
     );
-    ctx.restore();
-  }
-  if (celestialBG) {
-    scrollCelestial -= 5;
-    if (scrollCelestial <= -window.innerWidth) {
-      scrollCelestial += window.innerWidth;
-    }
-    ctx.save();
-    ctx.globalAlpha = 1;
-    ctx.drawImage(
-      celestialBGimg,
-      -camX + scrollCelestial,
-      -camY,
-      window.innerWidth,
-      window.innerHeight,
-    );
-    ctx.drawImage(
-      celestialBGimg,
-      -camX + scrollCelestial + window.innerWidth,
-      -camY,
-      window.innerWidth,
-      window.innerHeight,
-    );
-
-    const centerX = -camX + window.innerWidth / 2;
-    const centerY = -camY + window.innerHeight / 2;
-    const lookStrength = -0.05;
-    const cx = centerX + (mouse.x - centerX) * lookStrength;
-    const cy = centerY + (mouse.y - centerY) * lookStrength;
-    if (Number.isFinite(cx) && Number.isFinite(cy)) {
-      const grad = ctx.createRadialGradient(
-        cx,
-        cy,
-        0,
-        cx,
-        cy,
-        Math.min(window.innerWidth, window.innerHeight) * 0.5,
-      );
-      grad.addColorStop(0, "rgba(0, 0, 0, 1)");
-      grad.addColorStop(0.1, "rgba(0, 0, 0, 1)");
-      grad.addColorStop(0.101, "rgba(255, 0, 192, 0.5)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(
-        cx,
-        cy,
-        Math.min(window.innerWidth, window.innerHeight) * 0.5,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-    }
     ctx.restore();
   }
 
