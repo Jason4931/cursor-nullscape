@@ -552,7 +552,7 @@ export function revive() {
     immortality = true;
     setTimeout(() => {
       immortality = false;
-    }, 1000);
+    }, 3000);
   }
   const canvas = document.getElementById("screen");
   const entityCanvas = document.getElementById("entities");

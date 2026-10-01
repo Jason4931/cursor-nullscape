@@ -2606,7 +2606,7 @@ export function setup(
   function enterCrumble() {
     enterOrbit(() => {
       stateCrumble.circles = [];
-      for (let i = 0; i < 400; i++) {
+      for (let i = 0; i < 300; i++) {
         stateCrumble.circles.push(spawnCircle());
       }
     });
@@ -3843,7 +3843,7 @@ export function setup(
         cy: 0,
       },
     ],
-    lastStartAng: 1,
+    lastStartAng: Math.random() < 0.5 ? 1 : -1,
 
     crumbles: [],
   };
@@ -4739,6 +4739,23 @@ export function setup(
     }
   }
   function drawBitter3Stars(ctx) {
+    const camera = getCameraPos();
+    let bgAlpha = 0;
+    if (stateBitter3Stars.extraT < 1) {
+      bgAlpha = stateBitter3Stars.extraT * 0.5;
+    } else if (stateBitter3Stars.extraT < 7) {
+      bgAlpha = 0.5;
+    } else if (stateBitter3Stars.extraT < 8) {
+      bgAlpha = (8 - stateBitter3Stars.extraT) * 0.5;
+    }
+    if (bgAlpha > 0) {
+      ctx.save();
+      ctx.globalAlpha = bgAlpha;
+      ctx.fillStyle = "black";
+      ctx.fillRect(camera.x, camera.y, window.innerWidth, window.innerHeight);
+      ctx.restore();
+    }
+
     for (const star of stateBitter3Stars.extraStars) {
       ctx.save();
 
@@ -8375,7 +8392,7 @@ export function setup(
 
     if (state.enemyTransition != "none") state.enemyTransitionT += dt;
     if (state.enemyTransition == "shrink") {
-      const p = state.enemyTransitionT * 2;
+      const p = state.enemyTransitionT * 4;
       const eased = p * p;
 
       state.enemyScale = 1 - eased;
@@ -8392,7 +8409,7 @@ export function setup(
         state.enemyTransition = "grow";
       }
     } else if (state.enemyTransition == "grow") {
-      const p = state.enemyTransitionT * 2;
+      const p = state.enemyTransitionT * 4;
       const eased = 1 - (1 - p) * (1 - p);
 
       state.enemyScale = eased;

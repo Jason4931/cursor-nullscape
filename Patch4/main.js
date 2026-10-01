@@ -3487,7 +3487,7 @@ function loop(now) {
     lagDebt -= 0.08;
   }
   lagDebt = Math.max(0, Math.min(lagDebt, 1));
-  lagFactor = 1 + lagDebt;
+  lagFactor = 1 + lagDebt * 0.5;
   prevMouseWorld.x = mouse.x;
   prevMouseWorld.y = mouse.y;
 
