@@ -447,6 +447,10 @@ let enablePonderer =
   JSON.parse(localStorage.getItem("enable-ponderer")) ?? true;
 let accurateCursor =
   JSON.parse(localStorage.getItem("accurate-cursor")) ?? false;
+let masterVolumeOpacity = 0;
+let masterVolume = localStorage.getItem("masterVolume")
+  ? Number(localStorage.getItem("masterVolume"))
+  : 100;
 let sfxVolume = localStorage.getItem("sfxVolume")
   ? Number(localStorage.getItem("sfxVolume"))
   : 50;
@@ -771,6 +775,27 @@ window.addEventListener("keydown", (e) => {
         usedAbility = "r";
       }
     }
+  }
+  if (e.key === "=" || e.key === "-") {
+    if (e.key === "=") {
+      masterVolume = Math.min(200, masterVolume + 10);
+    } else if (e.key === "-") {
+      masterVolume = Math.max(0, masterVolume - 10);
+    }
+    localStorage.setItem("masterVolume", masterVolume);
+    for (let i = 1; i <= 10; i++) {
+      const bar = document.getElementById(`v-${i}`);
+      if (bar) {
+        bar.classList.toggle("filled", masterVolume >= i * 10);
+      }
+    }
+    for (let i = 11; i <= 20; i++) {
+      const bar = document.getElementById(`v-${i}`);
+      if (bar) {
+        bar.style.display = masterVolume >= i * 10 ? "block" : "none";
+      }
+    }
+    masterVolumeOpacity = 1;
   }
 });
 let spawnEntityRate = 200;
@@ -1208,6 +1233,7 @@ export function playSound(
       ),
     );
   }
+  audio.volume *= masterVolume / 100;
 
   audio.addEventListener("loadedmetadata", () => {
     const startTime = clip.start * audio.duration;
@@ -3542,6 +3568,10 @@ function loop(now) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
   }
+  masterVolumeOpacity -= 0.033;
+  if (masterVolumeOpacity < 0) masterVolumeOpacity = 0;
+  document.getElementById("volume-adjustment").style.opacity =
+    masterVolumeOpacity;
   seamineScale += 0.025;
   if (seamineScale > 1) seamineScale = 1;
   abilityCooldown--;

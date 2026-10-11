@@ -810,6 +810,38 @@
         z-index: 2000;
         cursor: default;
       }
+
+      #volume-adjustment {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        padding: 8px;
+        opacity: 1;
+        z-index: 999999;
+        pointer-events: none;
+      }
+
+      #volume-adjustment .volume-bar {
+        width: 12px;
+        height: 30px;
+        background: #555;
+        border: 2px solid #000;
+        transform: skew(-10deg);
+      }
+
+      #volume-adjustment .volume-bar.filled {
+        background: #fff;
+      }
+      #volume-adjustment .volume-bar.filled-red {
+        background: #f88;
+      }
+      #volume-adjustment .volume-bar.filled-pure-red {
+        background: #f00;
+      }
     </style>
     <meta
       name="google-site-verification"
@@ -819,6 +851,48 @@
 
   <div id="secret-command">Ctrl+Shift+/ to open commands</div>
   <div id="error-log"></div>
+  <div id="volume-adjustment" style="opacity: 0">
+    <div id="v-1" class="volume-bar filled"></div>
+    <div id="v-2" class="volume-bar filled"></div>
+    <div id="v-3" class="volume-bar filled"></div>
+    <div id="v-4" class="volume-bar filled"></div>
+    <div id="v-5" class="volume-bar filled"></div>
+    <div id="v-6" class="volume-bar filled"></div>
+    <div id="v-7" class="volume-bar filled"></div>
+    <div id="v-8" class="volume-bar filled"></div>
+    <div id="v-9" class="volume-bar filled"></div>
+    <div id="v-10" class="volume-bar filled"></div>
+    <div id="v-11" class="volume-bar filled-red" style="display: none"></div>
+    <div id="v-12" class="volume-bar filled-red" style="display: none"></div>
+    <div id="v-13" class="volume-bar filled-red" style="display: none"></div>
+    <div id="v-14" class="volume-bar filled-red" style="display: none"></div>
+    <div id="v-15" class="volume-bar filled-red" style="display: none"></div>
+    <div
+      id="v-16"
+      class="volume-bar filled-pure-red"
+      style="display: none"
+    ></div>
+    <div
+      id="v-17"
+      class="volume-bar filled-pure-red"
+      style="display: none"
+    ></div>
+    <div
+      id="v-18"
+      class="volume-bar filled-pure-red"
+      style="display: none"
+    ></div>
+    <div
+      id="v-19"
+      class="volume-bar filled-pure-red"
+      style="display: none"
+    ></div>
+    <div
+      id="v-20"
+      class="volume-bar filled-pure-red"
+      style="display: none"
+    ></div>
+  </div>
   <body>
     <div id="viewport">
       <input
