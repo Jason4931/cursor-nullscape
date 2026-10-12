@@ -1261,27 +1261,26 @@
       </div>
     </noscript>
     <script>
-      document.onkeydown = (e) => {
-        if (e.key == "F5" || (e.ctrlKey && e.key == "F5")) {
-          return true;
-        }
-        e.preventDefault();
-        if (e.key == 123) {
-          return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key == "I") {
-          return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key == "C") {
-          return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.key == "J") {
-          return false;
-        }
-        if (e.ctrlKey && e.key == "U") {
-          return false;
-        }
-      };
+      window.addEventListener(
+        "keydown",
+        (e) => {
+          if (e.ctrlKey && e.key.toLowerCase() === "u") {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+
+          if (
+            e.key === "F12" ||
+            (e.ctrlKey &&
+              e.shiftKey &&
+              ["i", "c", "j"].includes(e.key.toLowerCase()))
+          ) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        },
+        true,
+      );
       window.addEventListener("load", async () => {
         try {
           await import("./main.js");
