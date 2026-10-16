@@ -6636,8 +6636,12 @@ camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
 let windowClicked = false;
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 if (isMobile) {
+  const mobileScreen = document.getElementById("mobile-screen");
   document.getElementById("intro-screen").style.display = "none";
-  document.getElementById("mobile-screen").style.display = "flex";
+  mobileScreen.style.display = "flex";
+  mobileScreen.append(aboutSidebar, aboutBtn);
+  aboutBtn.style.display = "block";
+  setAboutSidebarOpen(true);
 }
 let timerInterval = null;
 let startTime = 0;

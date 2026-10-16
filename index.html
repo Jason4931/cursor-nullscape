@@ -879,7 +879,9 @@
         color: #e5c5ff;
         border: 1px solid #9b70b2;
         border-radius: 50%;
-        font: 700 0.85em Georgia, serif;
+        font:
+          700 0.85em Georgia,
+          serif;
       }
 
       #about-btn:hover {
@@ -980,7 +982,6 @@
         background: #17121b;
         color: #c4b8cb;
       }
-
     </style>
     <meta
       name="google-site-verification"
@@ -997,102 +998,254 @@
   >
     About
   </button>
-  <aside id="about-sidebar" aria-label="About Cursor Nullscape" aria-hidden="true" inert>
+  <aside
+    id="about-sidebar"
+    aria-label="About Cursor Nullscape"
+    aria-hidden="true"
+    inert
+  >
     <div id="about-sidebar-header">
       <h2>Cursor Nullscape</h2>
-      <button id="about-close" type="button" aria-label="Close About">Close</button>
+      <button id="about-close" type="button" aria-label="Close About">
+        Close
+      </button>
     </div>
     <div id="about-content">
-      <p class="about-note">A cursor-controlled survival game inspired by Roblox Nullscape. Collect gifts, adapt to escalating hazards, and see how long you can survive.</p>
+      <p class="about-note">
+        A cursor-controlled survival game inspired by Roblox Nullscape. Collect
+        gifts, adapt to escalating hazards, and see how long you can survive.
+      </p>
 
       <h3>How to play</h3>
       <ul>
-        <li>Move your cursor around the arena. Near the edges, the world scrolls to follow you.</li>
-        <li>Guide your cursor close to gifts to collect them; clicking is not required.</li>
-        <li>Collect gifts to gain levels. New entities and hazards appear as your run progresses.</li>
-        <li>Stay alert: hazards can deal damage, knock you back, or change how you move.</li>
+        <li>
+          Move your cursor around the arena. Near the edges, the world scrolls
+          to follow you.
+        </li>
+        <li>
+          Guide your cursor close to gifts to collect them; clicking is not
+          required.
+        </li>
+        <li>
+          Collect gifts to gain levels. New entities and hazards appear as your
+          run progresses.
+        </li>
+        <li>
+          Stay alert: hazards can deal damage, knock you back, or change how you
+          move.
+        </li>
       </ul>
 
       <h3>Movement & abilities</h3>
       <ul>
-        <li><strong>Mouse:</strong> steer through the world and collect gifts.</li>
-        <li><strong>WASD / Arrow keys:</strong> move when WASD mode is enabled in Settings.</li>
-        <li><strong>E:</strong> trigger a short speed boost when it is ready.</li>
-        <li><strong>R:</strong> speed boost by default; with Parry enabled, activates its alternate ability.</li>
-        <li><strong>Space:</strong> hold to change the cursor-mode camera radius.</li>
+        <li>
+          <strong>Mouse:</strong> steer through the world and collect gifts.
+        </li>
+        <li>
+          <strong>WASD / Arrow keys:</strong> move when WASD mode is enabled in
+          Settings.
+        </li>
+        <li>
+          <strong>E:</strong> trigger a short speed boost when it is ready.
+        </li>
+        <li>
+          <strong>R:</strong> speed boost by default; with Parry enabled,
+          activates its alternate ability.
+        </li>
+        <li>
+          <strong>Space:</strong> hold to change the cursor-mode camera radius.
+        </li>
         <li><strong>M:</strong> show or hide the entity panel.</li>
       </ul>
 
       <h3>Progression</h3>
-      <p>Gift collection drives your level and survival score. The level display advances in 50-gift steps on Casual and Standard, and 100-gift steps on Extreme. The HUD tracks gifts, level, time, deaths, active entities, difficulty, and your current gift multiplier.</p>
-      <p>Regular gifts add one base gift; golden gifts add four. Your multiplier scales these values, and fractional multiplier amounts may be awarded probabilistically.</p>
-      <p>Progression is more than a number: new entities and hazards become eligible as your collected-gift total rises. Your best level is saved locally in this browser, so clearing browser storage also clears that record.</p>
+      <p>
+        Gift collection drives your level and survival score. The level display
+        advances in 50-gift steps on Casual and Standard, and 100-gift steps on
+        Extreme. The HUD tracks gifts, level, time, deaths, active entities,
+        difficulty, and your current gift multiplier.
+      </p>
+      <p>
+        Regular gifts add one base gift; golden gifts add four. Your multiplier
+        scales these values, and fractional multiplier amounts may be awarded
+        probabilistically.
+      </p>
+      <p>
+        Progression is more than a number: new entities and hazards become
+        eligible as your collected-gift total rises. Your best level is saved
+        locally in this browser, so clearing browser storage also clears that
+        record.
+      </p>
       <h3>Milestones & hazards</h3>
       <ul>
         <li><strong>Level 5:</strong> Tripmines can begin appearing.</li>
         <li><strong>Level 8:</strong> ice tiles are enabled.</li>
-        <li><strong>Level 10:</strong> Grindrails and Seamines join the hazard pool.</li>
+        <li>
+          <strong>Level 10:</strong> Grindrails and Seamines join the hazard
+          pool.
+        </li>
         <li><strong>Level 14:</strong> Flesh can reach farther.</li>
         <li><strong>Level 16:</strong> expect more ICBMs.</li>
-        <li><strong>Level 18:</strong> Highrise towers and growing Marts enter progression.</li>
+        <li>
+          <strong>Level 18:</strong> Highrise towers and growing Marts enter
+          progression.
+        </li>
         <li><strong>Level 20:</strong> more Springers can appear.</li>
         <li><strong>Level 25:</strong> more Husks can appear.</li>
-        <li><strong>Level 50:</strong> enemy frequency increases and a saved level-50 run unlocks further options.</li>
+        <li>
+          <strong>Level 50:</strong> enemy frequency increases and a saved
+          level-50 run unlocks further options.
+        </li>
       </ul>
-      <p>These milestones add possibilities to the run; they do not mean every listed threat will appear at once.</p>
+      <p>
+        These milestones add possibilities to the run; they do not mean every
+        listed threat will appear at once.
+      </p>
 
       <h3>Difficulties</h3>
       <ul>
         <li><strong>Casual:</strong> a more forgiving run.</li>
         <li><strong>Standard:</strong> the default challenge.</li>
-        <li><strong>Extreme:</strong> unlocks after reaching level 50 in a saved run.</li>
-        <li><strong>Chaos:</strong> unlocks with the level-50 milestone and adds extra modifiers and threats.</li>
+        <li>
+          <strong>Extreme:</strong> unlocks after reaching level 50 in a saved
+          run.
+        </li>
+        <li>
+          <strong>Chaos:</strong> unlocks with the level-50 milestone and adds
+          extra modifiers and threats.
+        </li>
       </ul>
 
       <h3>Know your threats</h3>
       <ul>
-        <li><strong>Bell:</strong> rings on contact and can cleanse Flesh, but repeated contact is still dangerous.</li>
-        <li><strong>Baby:</strong> charges in a warned straight-line direction. Watch the tell and move out of its path.</li>
-        <li><strong>Husk:</strong> follows a delayed record of your movement. Changing direction can help break its line.</li>
-        <li><strong>Springer:</strong> marks a landing location, then creates expanding knockback waves after landing.</li>
-        <li><strong>Flesh:</strong> spreads across the arena and can hinder your abilities; Bell can cleanse it.</li>
-        <li><strong>Guardian:</strong> attacks with volleys. <strong>ICBM:</strong> explosive threat—keep clear of its blast.</li>
+        <li>
+          <strong>Bell:</strong> rings on contact and can cleanse Flesh, but
+          repeated contact is still dangerous.
+        </li>
+        <li>
+          <strong>Baby:</strong> charges in a warned straight-line direction.
+          Watch the tell and move out of its path.
+        </li>
+        <li>
+          <strong>Husk:</strong> follows a delayed record of your movement.
+          Changing direction can help break its line.
+        </li>
+        <li>
+          <strong>Springer:</strong> marks a landing location, then creates
+          expanding knockback waves after landing.
+        </li>
+        <li>
+          <strong>Flesh:</strong> spreads across the arena and can hinder your
+          abilities; Bell can cleanse it.
+        </li>
+        <li>
+          <strong>Guardian:</strong> attacks with volleys.
+          <strong>ICBM:</strong> explosive threat—keep clear of its blast.
+        </li>
         <li><strong>Operator:</strong> when it appears, stay still briefly.</li>
-        <li>Voidbound variants, Voidbreaker, and pattern-based hazards await deeper in progression.</li>
+        <li>
+          Voidbound variants, Voidbreaker, and pattern-based hazards await
+          deeper in progression.
+        </li>
       </ul>
       <h3>More entities to discover</h3>
-      <p>The roster includes more than direct pursuers: Mart, NIL, Telefragger, Random, Pylon, Catalyst, and other late-run encounters can change the pace of a run. Their availability depends on progression and difficulty. Learn each warning or movement pattern before trying to rush past it.</p>
+      <p>
+        The roster includes more than direct pursuers: Mart, NIL, Telefragger,
+        Random, Pylon, Catalyst, and other late-run encounters can change the
+        pace of a run. Their availability depends on progression and difficulty.
+        Learn each warning or movement pattern before trying to rush past it.
+      </p>
 
       <h3>Survival advice</h3>
       <ul>
-        <li>Keep moving, but look ahead before crossing an unfamiliar hazard or marked area.</li>
-        <li>Use the arena space: avoid getting trapped against an edge while a threat closes in.</li>
-        <li>Collect gifts along a safe route rather than chasing every pickup through danger.</li>
-        <li>Save E or R for a moment when the boost can create useful distance; the ability has a cooldown.</li>
-        <li>If slowed, prioritize escaping the source before relying on an ability.</li>
-        <li>Use the entity panel with M to check which entities are currently active.</li>
-        <li>Adjust graphics or visual settings if effects make important warnings hard to see.</li>
+        <li>
+          Keep moving, but look ahead before crossing an unfamiliar hazard or
+          marked area.
+        </li>
+        <li>
+          Use the arena space: avoid getting trapped against an edge while a
+          threat closes in.
+        </li>
+        <li>
+          Collect gifts along a safe route rather than chasing every pickup
+          through danger.
+        </li>
+        <li>
+          Save E or R for a moment when the boost can create useful distance;
+          the ability has a cooldown.
+        </li>
+        <li>
+          If slowed, prioritize escaping the source before relying on an
+          ability.
+        </li>
+        <li>
+          Use the entity panel with M to check which entities are currently
+          active.
+        </li>
+        <li>
+          Adjust graphics or visual settings if effects make important warnings
+          hard to see.
+        </li>
       </ul>
 
       <h3>Make it yours</h3>
-      <p>Open Settings with the gear button to customize the presentation and challenge. Settings include graphics quality, music and SFX volume, reduced motion, Deaf mode, accurate cursor, and options to show or hide the floor, border, grids, skybox, timer, players, and entity details.</p>
+      <p>
+        Open Settings with the gear button to customize the presentation and
+        challenge. Settings include graphics quality, music and SFX volume,
+        reduced motion, Deaf mode, accurate cursor, and options to show or hide
+        the floor, border, grids, skybox, timer, players, and entity details.
+      </p>
       <ul>
         <li><strong>Graphics:</strong> choose among four quality levels.</li>
-        <li><strong>Reduced motion:</strong> reduce motion-heavy visual effects.</li>
-        <li><strong>Deaf mode:</strong> an audio accessibility option; the game recommends enabling it.</li>
-        <li><strong>Accurate cursor:</strong> adjust cursor handling for movement.</li>
-        <li><strong>Display toggles:</strong> remove visual layers or HUD details you do not need.</li>
+        <li>
+          <strong>Reduced motion:</strong> reduce motion-heavy visual effects.
+        </li>
+        <li>
+          <strong>Deaf mode:</strong> an audio accessibility option; the game
+          recommends enabling it.
+        </li>
+        <li>
+          <strong>Accurate cursor:</strong> adjust cursor handling for movement.
+        </li>
+        <li>
+          <strong>Display toggles:</strong> remove visual layers or HUD details
+          you do not need.
+        </li>
       </ul>
-      <p>Optional gameplay modifiers include Enable void, Enemy ESP, Parry, Jesus, Tripmine Hell, Epileptic mode, Blindness, Drunk Camera, and WASD mode. Modifier names are intentionally more descriptive than their effects—experiment carefully and change them from Settings.</p>
-      <p class="about-note">Some modifiers can make a run much harder or change its feel. The ordinary controls and settings are enough to play; modifiers are optional.</p>
+      <p>
+        Optional gameplay modifiers include Enable void, Enemy ESP, Parry,
+        Jesus, Tripmine Hell, Epileptic mode, Blindness, Drunk Camera, and WASD
+        mode. Modifier names are intentionally more descriptive than their
+        effects—experiment carefully and change them from Settings.
+      </p>
+      <p class="about-note">
+        Some modifiers can make a run much harder or change its feel. The
+        ordinary controls and settings are enough to play; modifiers are
+        optional.
+      </p>
 
       <h3>Records & run integrity</h3>
-      <p>Your highest-level record is stored in this browser. The command input is intended for commands rather than normal play; opening it can disable progression for the current run. Avoid using it if you want a standard run record.</p>
-      <p>For an eligible run, keep the browser zoom at <strong>100%</strong>, as noted on the start screen.</p>
+      <p>
+        Your highest-level record is stored in this browser. The command input
+        is intended for commands rather than normal play; opening it can disable
+        progression for the current run. Avoid using it if you want a standard
+        run record.
+      </p>
+      <p>
+        For an eligible run, keep the browser zoom at <strong>100%</strong>, as
+        noted on the start screen.
+      </p>
 
       <h3>About this project</h3>
-      <p>Cursor Nullscape is a fan-made browser adaptation inspired by the original Roblox game. It is designed for PC and is not affiliated with or intended to replace the original experience.</p>
-      <p>For credits and acknowledgements, visit the <a href="./credit.html" style="color: #d9a4ff">Credits page</a>.</p>
+      <p>
+        Cursor Nullscape is a fan-made browser adaptation inspired by the
+        original Roblox game. It is designed for PC and is not affiliated with
+        or intended to replace the original experience.
+      </p>
+      <p>
+        For credits and acknowledgements, visit the
+        <a href="./credit.html" style="color: #d9a4ff">Credits page</a>.
+      </p>
     </div>
   </aside>
   <div id="error-log"></div>
