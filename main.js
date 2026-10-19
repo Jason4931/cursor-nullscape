@@ -1698,63 +1698,21 @@ topLeftInput.addEventListener("keydown", function (event) {
       topLeftInput.value = "";
     }
     if (input === "oneofeach") {
-      spawnBell(entityHost, hardMode, immunebell);
-      spawnMart(entityHost, hardMode, 1);
-      spawnBaby(entityHost, hardMode);
-      spawnICBM(entityHost, hardMode);
-      spawnHusk(entityHost, huskCount++, hardMode);
-      spawnSpringer(entityHost, hardMode);
-      spawnFlesh(entityHost, hardMode);
-      spawnNIL(entityHost);
-      spawnGuardian(entityHost, hardMode);
-      spawnOperator(entityHost, hardMode);
-      malfunctionActive[0] = true;
-      spawnTelefragger(entityHost, casualMode, hardMode, deafMode);
-      spawnKolona(entityHost, casualMode);
-      spawnVoidImplosions(entityHost);
-      spawnOblivion(entityHost, showFloor);
-      spawnRazorbloom(entityHost, hardMode);
-      spawnVoidboundBaby(entityHost, hardMode);
-      spawnPonderer(entityHost, hardMode);
-      spawnVoidboundGuardian(entityHost, casualMode, hardMode);
-      spawnVoidbreaker(entityHost, casualMode, hardMode);
-      spawnCadence(entityHost, hardMode, deafMode);
-      spawnSigil(entityHost);
-      spawnScrapmaw(entityHost, casualMode, hardMode);
-      spawnCatalyst(entityHost);
-      spawnCatalystIntro();
-      spawnCelestial(entityHost, hardMode);
-      registerEntitySpawn("Bell", "./ASSET/Enemies/Bell.png");
-      registerEntitySpawn("Mart", "./ASSET/Enemies/Mart.png");
-      registerEntitySpawn("Baby", "./ASSET/Enemies/Baby.png");
-      registerEntitySpawn("ICBM", "./ASSET/Enemies/ICBMIcon.png");
-      registerEntitySpawn("Husk", "./ASSET/Enemies/Husk.png");
-      registerEntitySpawn("Springer", "./ASSET/Enemies/Springer.png");
-      registerEntitySpawn("Flesh", "./ASSET/Enemies/FleshIcon.png");
-      registerEntitySpawn("NIL", "./ASSET/Enemies/NILIcon.png");
-      registerEntitySpawn("Guardian", "./ASSET/Enemies/Guardian.png");
-      registerEntitySpawn("Operator", "./ASSET/Enemies/Operator.png");
-      registerEntitySpawn("Malfunction", "./ASSET/Enemies/Malfunction.png");
-      registerEntitySpawn("Telefragger", "./ASSET/Enemies/Telefragger.png");
-      registerEntitySpawn("Kolona", "./ASSET/Enemies/Kolona.png");
-      registerEntitySpawn(
-        "VoidImplosions",
-        "./ASSET/Curses/VoidImplosions.png",
-      );
-      registerEntitySpawn("Oblivion", "./ASSET/Curses/Oblivion.png");
-      registerEntitySpawn("Razorbloom", "./ASSET/Curses/Razorbloom.png");
-      registerEntitySpawn("VoidboundBaby", "./ASSET/Enemies/VoidboundBaby.png");
-      registerEntitySpawn("Ponderer", "./ASSET/Enemies/PondererIcon.png");
-      registerEntitySpawn(
-        "VoidboundGuardian",
-        "./ASSET/Enemies/VoidboundGuardian.png",
-      );
-      registerEntitySpawn("Voidbreaker", "./ASSET/Enemies/VoidbreakerIcon.png");
-      registerEntitySpawn("Cadence", "./ASSET/Enemies/Cadence.png");
-      registerEntitySpawn("Sigil", "./ASSET/Enemies/Sigil.png");
-      registerEntitySpawn("Scrapmaw", "./ASSET/Enemies/ScrapmawIcon.png");
-      registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
-      registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
+      for (const entity of ENTITY_POOL) {
+        if (typeof entity.spawn !== "function" || entity.chaosOnly) continue;
+        entity.spawn();
+        if (entity.name === "Catalyst") spawnCatalystIntro();
+        if (entity.src) registerEntitySpawn(entity.name, entity.src);
+      }
+      topLeftInput.value = "";
+    }
+    if (input === "oneofeach+") {
+      for (const entity of ENTITY_POOL) {
+        if (typeof entity.spawn !== "function") continue;
+        entity.spawn();
+        if (entity.name === "Catalyst") spawnCatalystIntro();
+        if (entity.src) registerEntitySpawn(entity.name, entity.src);
+      }
       topLeftInput.value = "";
     }
     if (input === "youwillnotsurvivethis") {
@@ -5883,9 +5841,10 @@ function updateCamera() {
   if (current3x3 < 5) {
     forceSpawn3x3(mouse);
   }
-  if (highriseEnabled) {
+  const current5x5 = countPatterns(5);
+  if (highriseEnabled && current5x5 < 5) {
     forceSpawn5x5(mouse);
-  } else {
+  } else if (!highriseEnabled) {
     for (const p of [...patternsState.values()]) {
       if (p.pattern[0].length == 45 && p.pattern.length == 45) {
         destroyPattern(p);

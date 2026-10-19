@@ -675,8 +675,8 @@ export function setup(host) {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       const text = `${pylonDone}/10`;
-      const x = cam.x + window.innerWidth / 2;
-      const y = cam.y + window.innerHeight * 0.9;
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight * 0.9;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       ctx.strokeStyle = "rgba(255,255,255,0.125)";
