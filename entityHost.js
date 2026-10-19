@@ -687,6 +687,9 @@ export function death(name = "Unknown", color = "#f70000") {
       deathSound.push(
         ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
         ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
+        ...deathSound.filter((s) => s.startsWith("DeathVoicelines/")),
       );
       playSound(
         `./ASSET/Sound/Domasp/${deathSound[Math.floor(Math.random() * deathSound.length)]}.ogg`,

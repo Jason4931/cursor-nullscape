@@ -2518,8 +2518,21 @@ export function isCursorOnFloor(custom) {
           }, 10000);
         }
         if (t.ice) {
-          lastTouchedIce = performance.now();
-          iceEffect = true;
+          let insidePylon = false;
+          for (const py of pylonLocations) {
+            if (
+              mouse.x >= py[0] - (27 * TILE) / 2 &&
+              mouse.x < py[0] + (27 * TILE) / 2 &&
+              mouse.y >= py[1] - (27 * TILE) / 2 &&
+              mouse.y < py[1] + (27 * TILE) / 2
+            ) {
+              insidePylon = true;
+            }
+          }
+          if (!insidePylon) {
+            lastTouchedIce = performance.now();
+            iceEffect = true;
+          }
         }
         return true;
       }

@@ -95,13 +95,15 @@ export function setup(host, casualMode, hardMode) {
         if (dist < EXPLODE_RADIUS) {
           death("Seamine", "#FF6A00");
         }
-        const nx = dx / dist;
-        const ny = dy / dist;
-        moveCamera(-nx * 400, -ny * 400);
-        toggleTripmineLeniency(true);
-        setTimeout(() => {
-          toggleTripmineLeniency(false);
-        }, 1000);
+        if (dist < EXPLODE_RADIUS * 2) {
+          const nx = dx / dist;
+          const ny = dy / dist;
+          moveCamera(-nx * 400, -ny * 400);
+          toggleTripmineLeniency(true);
+          setTimeout(() => {
+            toggleTripmineLeniency(false);
+          }, 1000);
+        }
       }
     }
   }
