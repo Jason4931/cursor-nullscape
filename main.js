@@ -2777,25 +2777,60 @@ function forceSpawn5x5(mouseWorld) {
 
   destroyPattern(target);
 
-  const shuffled = pickPatternsBySize(base5x5);
-  for (let i = 0; i < shuffled.length; i++) {
-    const base = shuffled[i];
-    const baseIndex = PATTERNS.indexOf(base);
-    let pat = pickBiasedRotatedPattern(
-      baseIndex,
-      target.sx,
-      target.sy,
-      patternsState,
+  const slots = new Map();
+  for (const pattern of patternsState.values()) {
+    const hasHighriseTiles = pattern.pattern.some((row) =>
+      row.some((tile) => tile >= 31 && tile <= 42),
     );
-    if (!pat) {
-      pat = pickRotatedPattern(baseIndex);
-    }
+    if (!hasHighriseTiles) continue;
 
-    if (canPlaceSuper(target.sx, target.sy, pat)) {
-      placeSuper(target.sx, target.sy, pat);
-      break;
+    const adjacentSlots = [
+      { sx: pattern.sx - 5, sy: pattern.sy },
+      { sx: pattern.sx + pattern.pw, sy: pattern.sy },
+      { sx: pattern.sx, sy: pattern.sy - 5 },
+      { sx: pattern.sx, sy: pattern.sy + pattern.ph },
+    ];
+    for (const slot of adjacentSlots) {
+      if (slot.sx < 0 || slot.sy < 0) continue;
+      slots.set(`${slot.sx},${slot.sy}`, slot);
     }
   }
+
+  const adjacentSlots = [...slots.values()].sort(
+    (a, b) =>
+      Math.hypot(a.sx - target.sx, a.sy - target.sy) -
+      Math.hypot(b.sx - target.sx, b.sy - target.sy),
+  );
+  adjacentSlots.push({ sx: target.sx, sy: target.sy });
+
+  const shuffled = pickPatternsBySize(base5x5);
+  let fallback = null;
+
+  for (const slot of adjacentSlots) {
+    for (const base of shuffled) {
+      const baseIndex = PATTERNS.indexOf(base);
+      const pat = pickBiasedRotatedPattern(
+        baseIndex,
+        slot.sx,
+        slot.sy,
+        patternsState,
+      );
+
+      if (pat && canPlaceSuper(slot.sx, slot.sy, pat)) {
+        placeSuper(slot.sx, slot.sy, pat);
+        return;
+      }
+
+      if (!fallback) {
+        const candidate = pat || pickRotatedPattern(baseIndex);
+        if (canPlaceSuper(slot.sx, slot.sy, candidate)) {
+          fallback = { sx: slot.sx, sy: slot.sy, pattern: candidate };
+        }
+      }
+    }
+  }
+
+  if (fallback) placeSuper(fallback.sx, fallback.sy, fallback.pattern);
 }
 
 function superRangeFromRadius(x, y, r) {
@@ -2819,13 +2854,30 @@ function pickRotatedPattern(index) {
 function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
   const variants = ROTATED_PATTERNS[baseIndex];
   const scores = [];
+  const sample = variants[0];
+  const width = sample[0].length / SUPER_TILE;
+  const height = sample.length / SUPER_TILE;
+  const adjacent = { left: [], right: [], top: [], bottom: [] };
 
-  const left = patternsState.get(`${sx - 1},${sy}`);
-  const right = patternsState.get(`${sx + 1},${sy}`);
-  const top = patternsState.get(`${sx},${sy - 1}`);
-  const bot = patternsState.get(`${sx},${sy + 1}`);
+  for (const neighbor of patternsState.values()) {
+    const rightEdge = neighbor.sx + neighbor.pw;
+    const bottomEdge = neighbor.sy + neighbor.ph;
+    const verticalOverlap = neighbor.sy < sy + height && bottomEdge > sy;
+    const horizontalOverlap = neighbor.sx < sx + width && rightEdge > sx;
 
-  const hasNeighbor = left || right || top || bot;
+    if (rightEdge === sx && verticalOverlap) adjacent.left.push(neighbor);
+    if (sx + width === neighbor.sx && verticalOverlap)
+      adjacent.right.push(neighbor);
+    if (bottomEdge === sy && horizontalOverlap) adjacent.top.push(neighbor);
+    if (sy + height === neighbor.sy && horizontalOverlap)
+      adjacent.bottom.push(neighbor);
+  }
+
+  const left = adjacent.left;
+  const right = adjacent.right;
+  const top = adjacent.top;
+  const bot = adjacent.bottom;
+  const hasNeighbor = left.length || right.length || top.length || bot.length;
 
   // bootstrap: no constraints yet
   if (!hasNeighbor) {
@@ -2838,49 +2890,49 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
-    const connectors = [8, 9, 29, 39];
+    const connectors = new Set([8, 9, 29, 39]);
 
-    if (left) {
-      const p = left.pattern;
-      const pw = p[0].length;
+    for (const neighbor of left) {
+      const offsetY = (sy - neighbor.sy) * SUPER_TILE;
+      const edgeX = neighbor.pattern[0].length - 1;
       for (let y = 0; y < h; y++) {
         if (
-          connectors.includes(p[y]?.[pw - 1]) &&
-          connectors.includes(pat[y][0])
+          connectors.has(neighbor.pattern[offsetY + y]?.[edgeX]) &&
+          connectors.has(pat[y][0])
         )
           score++;
       }
     }
 
-    if (right) {
-      const p = right.pattern;
+    for (const neighbor of right) {
+      const offsetY = (sy - neighbor.sy) * SUPER_TILE;
       for (let y = 0; y < h; y++) {
         if (
-          connectors.includes(p[y]?.[0]) &&
-          connectors.includes(pat[y][w - 1])
+          connectors.has(neighbor.pattern[offsetY + y]?.[0]) &&
+          connectors.has(pat[y][w - 1])
         )
           score++;
       }
     }
 
-    if (top) {
-      const p = top.pattern;
-      const ph = p.length;
+    for (const neighbor of top) {
+      const offsetX = (sx - neighbor.sx) * SUPER_TILE;
+      const edgeY = neighbor.pattern.length - 1;
       for (let x = 0; x < w; x++) {
         if (
-          connectors.includes(p[ph - 1]?.[x]) &&
-          connectors.includes(pat[0][x])
+          connectors.has(neighbor.pattern[edgeY]?.[offsetX + x]) &&
+          connectors.has(pat[0][x])
         )
           score++;
       }
     }
 
-    if (bot) {
-      const p = bot.pattern;
+    for (const neighbor of bot) {
+      const offsetX = (sx - neighbor.sx) * SUPER_TILE;
       for (let x = 0; x < w; x++) {
         if (
-          connectors.includes(p[0]?.[x]) &&
-          connectors.includes(pat[h - 1][x])
+          connectors.has(neighbor.pattern[0]?.[offsetX + x]) &&
+          connectors.has(pat[h - 1][x])
         )
           score++;
       }

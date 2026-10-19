@@ -1771,13 +1771,30 @@ function pickRotatedPattern(index) {
 function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
   const variants = ROTATED_PATTERNS[baseIndex];
   const scores = [];
+  const sample = variants[0];
+  const width = sample[0].length / SUPER_TILE;
+  const height = sample.length / SUPER_TILE;
+  const adjacent = { left: [], right: [], top: [], bottom: [] };
 
-  const left = patternsState.get(`${sx - 1},${sy}`);
-  const right = patternsState.get(`${sx + 1},${sy}`);
-  const top = patternsState.get(`${sx},${sy - 1}`);
-  const bot = patternsState.get(`${sx},${sy + 1}`);
+  for (const neighbor of patternsState.values()) {
+    const rightEdge = neighbor.sx + neighbor.pw;
+    const bottomEdge = neighbor.sy + neighbor.ph;
+    const verticalOverlap = neighbor.sy < sy + height && bottomEdge > sy;
+    const horizontalOverlap = neighbor.sx < sx + width && rightEdge > sx;
 
-  const hasNeighbor = left || right || top || bot;
+    if (rightEdge === sx && verticalOverlap) adjacent.left.push(neighbor);
+    if (sx + width === neighbor.sx && verticalOverlap)
+      adjacent.right.push(neighbor);
+    if (bottomEdge === sy && horizontalOverlap) adjacent.top.push(neighbor);
+    if (sy + height === neighbor.sy && horizontalOverlap)
+      adjacent.bottom.push(neighbor);
+  }
+
+  const left = adjacent.left;
+  const right = adjacent.right;
+  const top = adjacent.top;
+  const bot = adjacent.bottom;
+  const hasNeighbor = left.length || right.length || top.length || bot.length;
 
   // bootstrap: no constraints yet
   if (!hasNeighbor) {
@@ -1790,34 +1807,51 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
+    const connectors = new Set([8, 9, 29, 39]);
 
-    if (left) {
-      const p = left.pattern;
-      const pw = p[0].length;
+    for (const neighbor of left) {
+      const offsetY = (sy - neighbor.sy) * SUPER_TILE;
+      const edgeX = neighbor.pattern[0].length - 1;
       for (let y = 0; y < h; y++) {
-        if (p[y]?.[pw - 1] === 9 && pat[y][0] === 9) score++;
+        if (
+          connectors.has(neighbor.pattern[offsetY + y]?.[edgeX]) &&
+          connectors.has(pat[y][0])
+        )
+          score++;
       }
     }
 
-    if (right) {
-      const p = right.pattern;
+    for (const neighbor of right) {
+      const offsetY = (sy - neighbor.sy) * SUPER_TILE;
       for (let y = 0; y < h; y++) {
-        if (p[y]?.[0] === 9 && pat[y][w - 1] === 9) score++;
+        if (
+          connectors.has(neighbor.pattern[offsetY + y]?.[0]) &&
+          connectors.has(pat[y][w - 1])
+        )
+          score++;
       }
     }
 
-    if (top) {
-      const p = top.pattern;
-      const ph = p.length;
+    for (const neighbor of top) {
+      const offsetX = (sx - neighbor.sx) * SUPER_TILE;
+      const edgeY = neighbor.pattern.length - 1;
       for (let x = 0; x < w; x++) {
-        if (p[ph - 1]?.[x] === 9 && pat[0][x] === 9) score++;
+        if (
+          connectors.has(neighbor.pattern[edgeY]?.[offsetX + x]) &&
+          connectors.has(pat[0][x])
+        )
+          score++;
       }
     }
 
-    if (bot) {
-      const p = bot.pattern;
+    for (const neighbor of bot) {
+      const offsetX = (sx - neighbor.sx) * SUPER_TILE;
       for (let x = 0; x < w; x++) {
-        if (p[0]?.[x] === 9 && pat[h - 1][x] === 9) score++;
+        if (
+          connectors.has(neighbor.pattern[0]?.[offsetX + x]) &&
+          connectors.has(pat[h - 1][x])
+        )
+          score++;
       }
     }
 
