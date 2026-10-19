@@ -6,6 +6,8 @@ import {
   getCameraPos,
   spawnCelestialEnding,
   uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
 } from "../main.js";
 import { pylonLocations } from "./Pylons.js";
 const rawpattern = [
@@ -156,8 +158,8 @@ export function setup(host) {
       if (pylonDone >= 9) count = 1;
       for (let i = 0; i < count; i++) {
         while (true) {
-          const x = Math.random() * (canvas.width - margin * 2) + margin;
-          const y = Math.random() * (canvas.height - margin * 2) + margin;
+          const x = Math.random() * (WORLD_WIDTH - margin * 2) + margin;
+          const y = Math.random() * (WORLD_HEIGHT - margin * 2) + margin;
 
           let ok = true;
 

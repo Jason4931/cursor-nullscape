@@ -1,5 +1,13 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, ESP, getCameraPos, playSound, soundStopped } from "../main.js";
+import {
+  canvas,
+  ESP,
+  getCameraPos,
+  playSound,
+  soundStopped,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const VisageFont = new FontFace(
   "VisageFont",
@@ -60,8 +68,8 @@ export function setup(host) {
 
     const cam = getCameraPos();
     if (!state.initialized) {
-      const cx = host.canvas.width / 2;
-      const cy = host.canvas.height / 2;
+      const cx = WORLD_WIDTH / 2;
+      const cy = WORLD_HEIGHT / 2;
 
       const r = Math.random() * 400;
       const a = Math.random() * Math.PI * 2;

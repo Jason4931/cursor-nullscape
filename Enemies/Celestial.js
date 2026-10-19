@@ -10,6 +10,8 @@ import {
   startCelestialPhase4,
   setGiftMultiplier,
   uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
 } from "../main.js";
 
 const CelestialFont = new FontFace(
@@ -3342,8 +3344,8 @@ export function setup(
   };
   function enterDeathInBloom() {
     const s = stateDeathInBloom;
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
@@ -5008,8 +5010,8 @@ export function setup(
   };
   function enterDeathInBloomCrumble() {
     const s = stateDeathInBloomCrumble;
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 2000;
     s.cy = mouse.y + Math.sin(ang) * 2000;
@@ -6923,8 +6925,8 @@ export function setup(
   };
   function enterSecondSilence() {
     const s = stateSecondSilence;
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
     const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
     s.cx = mouse.x + Math.cos(ang) * 1000;
     s.cy = mouse.y + Math.sin(ang) * 1000;

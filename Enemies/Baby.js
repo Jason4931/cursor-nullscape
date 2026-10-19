@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { ESP, playSound } from "../main.js";
+import { ESP, playSound, WORLD_WIDTH, WORLD_HEIGHT } from "../main.js";
 import { setup as spawnVoidboundBaby } from "./VoidboundBaby.js";
 
 const Babyidle = [];
@@ -68,8 +68,8 @@ export function setup(host, hardMode, scale = 1) {
   };
 
   function randomSpawn() {
-    const cx = host.canvas.width / 2;
-    const cy = host.canvas.height / 2;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
 
     const radius = Math.min(cx, cy) * 0.4;
     const a = Math.random() * Math.PI * 2;

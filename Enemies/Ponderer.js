@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { ESP, playSound, pondererPositions, soundStopped } from "../main.js";
+import {
+  ESP,
+  playSound,
+  pondererPositions,
+  soundStopped,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const enemy = new Image();
 function loadAssets() {
@@ -33,9 +40,8 @@ export function setup(host, hardMode) {
     deathSound: false,
   };
 
-  const canvas = host.ctx.canvas;
-  state.x = canvas.width * (0.333 + 0.333 * Math.random());
-  state.y = canvas.height * (0.333 + 0.333 * Math.random());
+  state.x = WORLD_WIDTH * (0.333 + 0.333 * Math.random());
+  state.y = WORLD_HEIGHT * (0.333 + 0.333 * Math.random());
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;

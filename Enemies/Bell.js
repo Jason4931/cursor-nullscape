@@ -6,7 +6,6 @@ import {
   TILE,
   bellHit,
   moveCamera,
-  getCameraPos,
   uldm,
   ESP,
 } from "../main.js";
@@ -295,7 +294,6 @@ export function setup(host, hardMode, immunebell) {
     }
 
     if (state.hitActive && !immunebell) {
-      const cam = getCameraPos();
       const fade = 1 - state.hitTimer / state.hitCooldown;
 
       const strength = 120 * fade;
@@ -315,6 +313,7 @@ export function setup(host, hardMode, immunebell) {
       ctx.save();
       ctx.globalAlpha = alpha;
 
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       if (!uldm) {
         for (const [ox, oy] of offsets) {
           ctx.drawImage(ctx.canvas, ox, oy);
@@ -327,8 +326,8 @@ export function setup(host, hardMode, immunebell) {
         }
         ctx.fillStyle = "black";
         ctx.fillRect(
-          cam.x,
-          cam.y,
+          0,
+          0,
           Math.round(window.innerWidth),
           Math.round(window.innerHeight),
         );

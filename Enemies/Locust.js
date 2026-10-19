@@ -1,5 +1,5 @@
 import { death, mouse } from "../entityHost.js";
-import { getCameraPos, canvas } from "../main.js";
+import { getCameraPos, WORLD_WIDTH, WORLD_HEIGHT } from "../main.js";
 
 const idle = new Image();
 const agro = new Image();
@@ -31,8 +31,8 @@ export function setup(host) {
   function randomize() {
     const cam = getCameraPos();
     do {
-      state.x = Math.random() * canvas.width;
-      state.y = Math.random() * canvas.height;
+      state.x = Math.random() * WORLD_WIDTH;
+      state.y = Math.random() * WORLD_HEIGHT;
     } while (
       state.x >= cam.x &&
       state.x <= cam.x + window.innerWidth &&

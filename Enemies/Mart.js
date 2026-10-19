@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, soundStopped, MartStack, ESP } from "../main.js";
+import {
+  playSound,
+  soundStopped,
+  MartStack,
+  ESP,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const Probably_Improper_Speeded_Mart = [];
 const MartSlideAnimation = [];
@@ -86,8 +93,8 @@ export function setup(host, hardMode, stack = 1, position = null) {
         state.x = position.x;
         state.y = position.y;
       } else {
-        const cx = host.canvas.width / 2;
-        const cy = host.canvas.height / 2;
+        const cx = WORLD_WIDTH / 2;
+        const cy = WORLD_HEIGHT / 2;
 
         const r = Math.random() * 400;
         const a = Math.random() * Math.PI * 2;

@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { fleshPositions, playSound, isCursorOnFloor, ESP } from "../main.js";
+import {
+  fleshPositions,
+  playSound,
+  isCursorOnFloor,
+  ESP,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const Flesh = [];
 function loadAssets() {
@@ -81,8 +88,8 @@ export function setup(host, hardMode) {
     state.enemy = state.layers[state.layer - 1];
 
     if (!state.initialized) {
-      const cx = host.canvas.width / 2;
-      const cy = host.canvas.height / 2;
+      const cx = WORLD_WIDTH / 2;
+      const cy = WORLD_HEIGHT / 2;
 
       const r = Math.random() * 400;
       const a = Math.random() * Math.PI * 2;
@@ -161,8 +168,8 @@ export function setup(host, hardMode) {
     state.x += dx * state.speed * dt;
     state.y += dy * state.speed * dt;
     const half = state.size / 2;
-    state.x = Math.max(half, Math.min(host.canvas.width - half, state.x));
-    state.y = Math.max(half, Math.min(host.canvas.height - half, state.y));
+    state.x = Math.max(half, Math.min(WORLD_WIDTH - half, state.x));
+    state.y = Math.max(half, Math.min(WORLD_HEIGHT - half, state.y));
 
     fleshPositions.add({
       x: state.x,

@@ -1,5 +1,12 @@
 import { death, mouse, toggleSpringerImmortality } from "../entityHost.js";
-import { moveCamera, pickRandomPlaced4or5, playSound, ESP } from "../main.js";
+import {
+  moveCamera,
+  pickRandomPlaced4or5,
+  playSound,
+  ESP,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const Springerback = new Image();
 const Springerfront = new Image();
@@ -174,7 +181,7 @@ export function setup(host, hardMode, scale = 1) {
         const power01 = clamp(1 - growT, 0, 1);
 
         const strength =
-          Math.min(host.canvas.width, host.canvas.height) *
+          Math.min(WORLD_WIDTH, WORLD_HEIGHT) *
           0.03 *
           power01 *
           (hardMode ? 2 : 1);

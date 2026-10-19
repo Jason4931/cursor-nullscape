@@ -1,5 +1,12 @@
 import { mouse } from "../entityHost.js";
-import { onFinalContact, TILE, getCameraPos, uldm } from "../main.js";
+import {
+  onFinalContact,
+  TILE,
+  getCameraPos,
+  uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 export function setup(host, deafMode) {
   const TEXT_DELAY = 8.333;
@@ -55,8 +62,8 @@ export function setup(host, deafMode) {
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
 
-    state.x = Math.round(host.canvas.width * 0.5);
-    state.y = Math.round(host.canvas.height * 0.5);
+    state.x = Math.round(WORLD_WIDTH * 0.5);
+    state.y = Math.round(WORLD_HEIGHT * 0.5);
 
     state.timer += dt;
 
@@ -191,9 +198,7 @@ export function setup(host, deafMode) {
 
   function drawFinalBurst(ctx) {
     const t = Math.min(1, state.timer / BURST_TIME);
-    const r = Math.round(
-      easeOut(t) * Math.hypot(host.canvas.width, host.canvas.height),
-    );
+    const r = Math.round(easeOut(t) * Math.hypot(WORLD_WIDTH, WORLD_HEIGHT));
 
     const cx = Math.round(state.x);
     const cy = Math.round(state.y);

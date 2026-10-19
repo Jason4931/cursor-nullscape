@@ -3,7 +3,6 @@ import {
   pickRandomPlaced4or5,
   activateEcho,
   entityCanvas2,
-  canvas,
   getCameraPos,
   actualCollectedCount,
   onCelestial,
@@ -44,15 +43,24 @@ export function setup(host, hardMode) {
 
   function onClick(e) {
     if (actualCollectedCount >= 10000 || onCelestial) return;
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX ? e.clientX - rect.left : mouse.x;
-    const my = e.clientY ? e.clientY - rect.top : mouse.y;
+    const rect = entityCanvas2.getBoundingClientRect();
+    const clientX = Number.isFinite(e.clientX) ? e.clientX : mouse._clientX;
+    const clientY = Number.isFinite(e.clientY) ? e.clientY : mouse._clientY;
+    const cam = getCameraPos();
+    const mx =
+      (clientX - rect.left) * (entityCanvas2.width / rect.width) + cam.x;
+    const my =
+      (clientY - rect.top) * (entityCanvas2.height / rect.height) + cam.y;
+    const left = state.x - state.size * 0.2;
+    const right = state.x + state.size * 0.2;
+    const top = state.y - state.size * 0.95;
 
-    const dx = mx - state.x;
-    const dy = my - state.y;
-    const r = state.size * 0.5;
-
-    if (dx * dx + dy * dy <= r * r) {
+    if (
+      mx >= left &&
+      mx <= right &&
+      my >= top &&
+      my <= state.y + state.size * 0.1
+    ) {
       state.result = activateEcho();
       playSound("./ASSET/Sound/Global/Main_Altar_sfx.ogg");
       state.resultTimer = 0;

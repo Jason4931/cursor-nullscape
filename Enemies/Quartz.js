@@ -1,5 +1,13 @@
 import { death, mouse } from "../entityHost.js";
-import { canvas, ESP, playSound, soundStopped, uldm } from "../main.js";
+import {
+  canvas,
+  ESP,
+  playSound,
+  soundStopped,
+  uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const Quartz = [];
 function loadAssets() {
@@ -33,8 +41,8 @@ export function setup(host) {
 
     beamAlpha: 0,
     beamActive: false,
-    x: canvas.width / 2,
-    y: canvas.height / 2,
+    x: WORLD_WIDTH / 2,
+    y: WORLD_HEIGHT / 2,
 
     wanderDirX: 0,
     wanderDirY: 0,

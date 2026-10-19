@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { WORLD_WIDTH, WORLD_HEIGHT } from "../main.js";
 
 const layers = [];
 function loadAssets() {
@@ -18,8 +19,8 @@ export function setup(host, insanelyFast = false) {
     enemy: layers[0],
     size: 100,
 
-    x: Math.random() * host.canvas.width,
-    y: Math.random() * host.canvas.height,
+    x: Math.random() * WORLD_WIDTH,
+    y: Math.random() * WORLD_HEIGHT,
 
     startX: 0,
     startY: 0,
@@ -32,8 +33,8 @@ export function setup(host, insanelyFast = false) {
 
   state.startX = state.x;
   state.startY = state.y;
-  state.targetX = Math.random() * host.canvas.width;
-  state.targetY = Math.random() * host.canvas.height;
+  state.targetX = Math.random() * WORLD_WIDTH;
+  state.targetY = Math.random() * WORLD_HEIGHT;
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
@@ -56,8 +57,8 @@ export function setup(host, insanelyFast = false) {
       state.startX = state.x;
       state.startY = state.y;
 
-      state.targetX = Math.random() * host.canvas.width;
-      state.targetY = Math.random() * host.canvas.height;
+      state.targetX = Math.random() * WORLD_WIDTH;
+      state.targetY = Math.random() * WORLD_HEIGHT;
     }
 
     const dx = mouse.x - state.x;

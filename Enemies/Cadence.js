@@ -5,6 +5,8 @@ import {
   playSound,
   uldm,
   ESP,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
 } from "../main.js";
 
 const Cadence_idle_patch_5 = [];
@@ -38,11 +40,10 @@ async function loadAssets() {
 
 export function setup(host, hardMode, deafMode) {
   loadAssets();
-  const canvas = host.canvas;
 
   const state = {
-    x: canvas.width / 2 + 200,
-    y: canvas.height / 2 + 200,
+    x: WORLD_WIDTH / 2 + 200,
+    y: WORLD_HEIGHT / 2 + 200,
     layers: Cadence_idle_patch_5,
     enemy: null,
     layer: 0,

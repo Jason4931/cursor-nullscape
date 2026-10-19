@@ -336,7 +336,15 @@ export function setup(host, casualMode, hardMode, deafMode) {
           ctx.restore();
         }
       }
-      bulge(ctx, canvas, state.x, state.y, state.size * 0.6, 1);
+      const transform = ctx.getTransform();
+      const centerX =
+        transform.a * state.x + transform.c * state.y + transform.e;
+      const centerY =
+        transform.b * state.x + transform.d * state.y + transform.f;
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      bulge(ctx, canvas, centerX, centerY, state.size * 0.6, 1);
+      ctx.restore();
       ctx.globalAlpha = 0.5;
       ctx.fillStyle = "#000";
       ctx.beginPath();

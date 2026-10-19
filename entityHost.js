@@ -37,9 +37,9 @@ export function updateMouseWorld(canvas, camX, camY) {
     const dirY = mouse._clientY - prevMouse.y;
     const len = Math.hypot(dirX, dirY) || 1;
     const targetX =
-      (mouse._clientX - rect.left) * scaleX + (dirX / len) * TILE * 0.5;
+      (mouse._clientX - rect.left) * scaleX - camX + (dirX / len) * TILE * 0.5;
     const targetY =
-      (mouse._clientY - rect.top) * scaleY + (dirY / len) * TILE * 0.5;
+      (mouse._clientY - rect.top) * scaleY - camY + (dirY / len) * TILE * 0.5;
 
     mouse.x += (targetX - mouse.x) * shiftlockEase;
     mouse.y += (targetY - mouse.y) * shiftlockEase;

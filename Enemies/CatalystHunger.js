@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { despawnCatalyst, moveCamera, playSound, uldm } from "../main.js";
+import {
+  despawnCatalyst,
+  moveCamera,
+  playSound,
+  uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 import { catalystPos } from "./Catalyst.js";
 
 const Catalysthungerpatch5 = [];
@@ -254,7 +261,7 @@ export function setup(host, overshootBrake) {
         g.addColorStop(1, "rgba(0,0,0,0)");
 
         ctx.fillStyle = g;
-        ctx.fillRect(0, 0, Math.round(canvas.width), Math.round(canvas.height));
+        ctx.fillRect(0, 0, Math.round(WORLD_WIDTH), Math.round(WORLD_HEIGHT));
       }
 
       const maxR = 500;
@@ -279,7 +286,7 @@ export function setup(host, overshootBrake) {
         g.addColorStop(1.0, "rgba(0,0,0,0)");
 
         ctx.fillStyle = g;
-        ctx.fillRect(0, 0, Math.round(canvas.width), Math.round(canvas.height));
+        ctx.fillRect(0, 0, Math.round(WORLD_WIDTH), Math.round(WORLD_HEIGHT));
       }
     }
 

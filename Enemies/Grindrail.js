@@ -1,13 +1,13 @@
 import { mouse } from "../entityHost.js";
-import { setGrindrailScale, uldm } from "../main.js";
+import { setGrindrailScale, uldm, WORLD_WIDTH, WORLD_HEIGHT } from "../main.js";
 
 function generatePath(canvas) {
   const points = [];
   const MIN_DIST = 2000;
 
   while (points.length < 10) {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height;
+    const x = Math.random() * WORLD_WIDTH;
+    const y = Math.random() * WORLD_HEIGHT;
 
     let ok = true;
     for (const p of points) {

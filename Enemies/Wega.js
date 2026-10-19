@@ -1,5 +1,11 @@
 import { death, mouse } from "../entityHost.js";
-import { playSound, uldm, getCameraPos } from "../main.js";
+import {
+  playSound,
+  uldm,
+  getCameraPos,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const wega = new Image();
 const enragedWega = new Image();
@@ -51,8 +57,8 @@ export function setup(host) {
 
     if (!state.initialized) {
       playSound("./ASSET/Sound/Enemies/Wega/Weg_alert.ogg");
-      const cx = host.canvas.width / 2;
-      const cy = host.canvas.height / 2;
+      const cx = WORLD_WIDTH / 2;
+      const cy = WORLD_HEIGHT / 2;
 
       const r = Math.random() * 400;
       const a = Math.random() * Math.PI * 2;

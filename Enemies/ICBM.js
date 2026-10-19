@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { ESP, getCameraPos, playSound, uldm } from "../main.js";
+import {
+  ESP,
+  getCameraPos,
+  playSound,
+  uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+} from "../main.js";
 
 const ICBM = [];
 const marker = new Image();
@@ -71,8 +78,8 @@ export function setup(host, hardMode) {
     state.enemy = state.layers[state.layer - 1];
 
     if (!state.initialized) {
-      state.x = host.canvas.width / 2;
-      state.y = host.canvas.height / 2;
+      state.x = WORLD_WIDTH / 2;
+      state.y = WORLD_HEIGHT / 2;
       state.prevMouseX = mouse.x;
       state.prevMouseY = mouse.y;
       state.initialized = true;

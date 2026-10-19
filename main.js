@@ -145,7 +145,7 @@ export const entityCanvas2 = document.getElementById("entities-2");
 const viewport = document.getElementById("viewport");
 const ctx = canvas.getContext("2d");
 const entityCtx = entityCanvas.getContext("2d");
-const entityCtx2 = entityCanvas.getContext("2d");
+const entityCtx2 = entityCanvas2.getContext("2d");
 const counterEl = document.getElementById("counter");
 const lvlEl = document.getElementById("lvl");
 const settingsBtn = document.getElementById("settings-btn");
@@ -1017,9 +1017,6 @@ toggle("toggle-floor", (v) => {
 });
 toggle("toggle-border", (v) => {
   showBorder = v;
-  canvas.style.boxShadow = showBorder
-    ? "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)"
-    : "0 0 0px rgba(255, 0, 0, 0), 0 0 0px rgba(255, 0, 0, 0), inset 0 0 0px rgba(255, 0, 0, 0)";
 });
 toggle("toggle-epileptic", (v) => {
   epilepticMode = v;
@@ -1183,8 +1180,7 @@ document.getElementById("reset-settings").onclick = () => {
   graphicsSlider.dispatchEvent(new Event("input"));
   canvas.style.animation = "bg 60s infinite";
   document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
-  canvas.style.boxShadow =
-    "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)";
+  canvas.style.boxShadow = "none";
   if (accurateCursor) {
     canvas.style.cursor = "none";
     entityCanvas.style.cursor = "none";
@@ -1333,8 +1329,20 @@ if (showPlayers) {
 }
 
 /* ===== CONFIG ===== */
-canvas.width = 10000;
-canvas.height = 10000;
+export const WORLD_WIDTH = 10000;
+export const WORLD_HEIGHT = 10000;
+function resizeCanvas() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
+  if (entityCanvas.width !== width) entityCanvas.width = width;
+  if (entityCanvas.height !== height) entityCanvas.height = height;
+  if (entityCanvas2.width !== width) entityCanvas2.width = width;
+  if (entityCanvas2.height !== height) entityCanvas2.height = height;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 export let latestCollectedCount = 0;
 export let collectedCount = 0;
@@ -2025,17 +2033,14 @@ let REGEN_INTERVAL = 400;
 let lastRegenTime = 0;
 
 /* ===== GRID / SUPERGRID CALC ===== */
-const SUPER_W = Math.max(
-  1,
-  Math.floor(canvas.width / (TILE_SIZE * SUPER_TILE)),
-);
+const SUPER_W = Math.max(1, Math.floor(WORLD_WIDTH / (TILE_SIZE * SUPER_TILE)));
 const SUPER_H = Math.max(
   1,
-  Math.floor(canvas.height / (TILE_SIZE * SUPER_TILE)),
+  Math.floor(WORLD_HEIGHT / (TILE_SIZE * SUPER_TILE)),
 );
 
 const MAP_TILES_X = SUPER_W * SUPER_TILE;
-export const TILE = canvas.width / MAP_TILES_X;
+export const TILE = WORLD_WIDTH / MAP_TILES_X;
 let prevMouseWorld = { x: 0, y: 0 };
 
 /* radii use TILE (world units) */
@@ -2067,9 +2072,7 @@ canvas.style.animation = epilepticMode
   ? "bg-epileptic-lol 1s infinite"
   : "bg 60s infinite";
 document.getElementById("timer").style.opacity = showTimer ? "100%" : "0%";
-canvas.style.boxShadow = showBorder
-  ? "0 0 240px rgba(255, 0, 0, 1), 0 0 240px rgba(255, 0, 0, 1), inset 0 0 240px rgba(255, 0, 0, 1)"
-  : "0 0 0px rgba(255, 0, 0, 0), 0 0 0px rgba(255, 0, 0, 0), inset 0 0 0px rgba(255, 0, 0, 0)";
+canvas.style.boxShadow = "none";
 RENDER_RADIUS = blindnessMode ? 200 : RESPAWN_RADIUS * 1.3;
 if (graphicsSlider.value === "0") setGraphicsLow();
 else if (graphicsSlider.value === "1") setGraphicsMedium();
@@ -4137,14 +4140,17 @@ export function pickRandomPlaced4or5(minRadius = 0) {
 function drawGrid() {
   let cursorOnCorruptedTile = false;
 
-  // Clear only visible area (viewport)
   const visibleX = -camX;
-  const visibleY = -camY - 5;
+  const visibleY = -camY;
   const visibleW = viewport.clientWidth;
-  const visibleH = viewport.clientHeight + 10;
-  ctx.clearRect(visibleX, visibleY, visibleW, visibleH);
-  // entityCtx.clearRect(visibleX, visibleY, visibleW * 0.01, visibleH * 0.01);
-  entityCanvas.width = entityCanvas.width;
+  const visibleH = viewport.clientHeight;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(1, 0, 0, 1, camX, camY);
+  entityCtx.setTransform(1, 0, 0, 1, 0, 0);
+  entityCtx2.setTransform(1, 0, 0, 1, 0, 0);
+  entityCtx.clearRect(0, 0, entityCanvas.width, entityCanvas.height);
+  entityCtx2.clearRect(0, 0, entityCanvas2.width, entityCanvas2.height);
 
   if (showSkybox && !epilepticMode) {
     if (celestialBG) {
@@ -5257,21 +5263,57 @@ function drawGrid() {
     }
   }
 
-  // optional grid overlay (kept)
+  ctx.setTransform(1, 0, 0, 1, camX, camY);
+  if (showBorder) {
+    const borderSize = TILE * 3;
+    let gradient = ctx.createLinearGradient(0, 0, borderSize, 0);
+    gradient.addColorStop(0, "rgba(255, 0, 0, 1)");
+    gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, borderSize, WORLD_HEIGHT);
+
+    gradient = ctx.createLinearGradient(
+      WORLD_WIDTH - borderSize,
+      0,
+      WORLD_WIDTH,
+      0,
+    );
+    gradient.addColorStop(0, "rgba(255, 0, 0, 0)");
+    gradient.addColorStop(1, "rgba(255, 0, 0, 1)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(WORLD_WIDTH - borderSize, 0, borderSize, WORLD_HEIGHT);
+
+    gradient = ctx.createLinearGradient(0, 0, 0, borderSize);
+    gradient.addColorStop(0, "rgba(255, 0, 0, 1)");
+    gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, WORLD_WIDTH, borderSize);
+
+    gradient = ctx.createLinearGradient(
+      0,
+      WORLD_HEIGHT - borderSize,
+      0,
+      WORLD_HEIGHT,
+    );
+    gradient.addColorStop(0, "rgba(255, 0, 0, 0)");
+    gradient.addColorStop(1, "rgba(255, 0, 0, 1)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, WORLD_HEIGHT - borderSize, WORLD_WIDTH, borderSize);
+  }
   if (showGrids) {
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 3;
-    const stepX = canvas.width / GRID_DIVS;
-    const stepY = canvas.height / GRID_DIVS;
+    const stepX = WORLD_WIDTH / GRID_DIVS;
+    const stepY = WORLD_HEIGHT / GRID_DIVS;
     for (let i = 1; i < GRID_DIVS; i++) {
       ctx.beginPath();
       ctx.moveTo(i * stepX, 0);
-      ctx.lineTo(i * stepX, canvas.height);
+      ctx.lineTo(i * stepX, WORLD_HEIGHT);
       ctx.stroke();
 
       ctx.beginPath();
       ctx.moveTo(0, i * stepY);
-      ctx.lineTo(canvas.width, i * stepY);
+      ctx.lineTo(WORLD_WIDTH, i * stepY);
       ctx.stroke();
     }
   }
@@ -5282,8 +5324,8 @@ function getLimits() {
   return {
     maxX: 0,
     maxY: 0,
-    minX: viewport.clientWidth - canvas.offsetWidth,
-    minY: viewport.clientHeight - canvas.offsetHeight,
+    minX: viewport.clientWidth - WORLD_WIDTH,
+    minY: viewport.clientHeight - WORLD_HEIGHT,
   };
 }
 
@@ -5479,8 +5521,12 @@ function updateCamera() {
   // canvas.style.transform = `translate(${camX}px, ${camY}px)`;
   // entityCanvas.style.transform = `translate(${camX}px, ${camY}px)`;
   // entityCanvas2.style.transform = `translate(${camX}px, ${camY}px)`;
-  canvas.style.left = `${camX}px`;
-  canvas.style.top = `${camY}px`;
+  canvas.style.left = "0px";
+  canvas.style.top = "0px";
+  entityCanvas.style.left = "0px";
+  entityCanvas.style.top = "0px";
+  entityCanvas2.style.left = "0px";
+  entityCanvas2.style.top = "0px";
   // entityCanvas.style.left = `${-camX}px`;
   // entityCanvas.style.top = `${-camY}px`;
   // entityCanvas2.style.left = `${-camX}px`;
@@ -5923,11 +5969,7 @@ function loop(now) {
     return;
   }
 
-  entityCanvas.width = window.innerWidth;
-  entityCanvas.height = window.innerHeight;
-  entityCanvas2.width = window.innerWidth;
-  entityCanvas2.height = window.innerHeight;
-
+  resizeCanvas();
   updateCamera();
   updateMouseWorld(canvas, camX, camY);
   drawGrid();
@@ -6278,8 +6320,8 @@ function loop(now) {
   entityHost.update(dt);
   entityCtx.setTransform(1, 0, 0, 1, 0, 0);
   entityCtx2.setTransform(1, 0, 0, 1, 0, 0);
-  entityCtx.translate(0.5 * camX, 0.5 * camY);
-  entityCtx2.translate(0.5 * camX, 0.5 * camY);
+  entityCtx.translate(camX, camY);
+  entityCtx2.translate(camX, camY);
   // entityCtx.fillStyle = "red";
   // entityCtx.fillRect(0, 0, 100, 100);
   entityHost.draw();
@@ -6289,7 +6331,7 @@ function loop(now) {
   if (slowness) {
     ctx.save();
     ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(screenX, screenY, w, h);
     ctx.restore();
   }
   masterVolumeOpacity -= 0.033;
@@ -6682,8 +6724,8 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 // center camera
-camX = (viewport.clientWidth - canvas.offsetWidth) / 2;
-camY = (viewport.clientHeight - canvas.offsetHeight) / 2;
+camX = (viewport.clientWidth - WORLD_WIDTH) / 2;
+camY = (viewport.clientHeight - WORLD_HEIGHT) / 2;
 
 let windowClicked = false;
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);

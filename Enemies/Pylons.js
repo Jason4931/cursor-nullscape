@@ -7,6 +7,8 @@ import {
   spawnCelestialIntro,
   playSound,
   uldm,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
 } from "../main.js";
 import {
   RealityCollapseCount,
@@ -231,8 +233,8 @@ export function setup(host) {
 
       for (let i = 0; i < 4; i++) {
         while (true) {
-          const x = Math.random() * (canvas.width - margin * 2) + margin;
-          const y = Math.random() * (canvas.height - margin * 2) + margin;
+          const x = Math.random() * (WORLD_WIDTH - margin * 2) + margin;
+          const y = Math.random() * (WORLD_HEIGHT - margin * 2) + margin;
 
           let ok = true;
 

@@ -1,4 +1,5 @@
 import { death, mouse } from "../entityHost.js";
+import { WORLD_WIDTH, WORLD_HEIGHT } from "../main.js";
 
 const enemy = new Image();
 function loadAssets() {
@@ -11,8 +12,8 @@ export function setup(host) {
     opacity: 1,
     w: 4000,
     h: 1200,
-    x: Math.random() * host.canvas.width,
-    y: Math.random() * host.canvas.width,
+    x: Math.random() * WORLD_WIDTH,
+    y: Math.random() * WORLD_HEIGHT,
     timer: 0,
     angle: Math.random() * Math.PI * 2,
     targetAngle: null,
@@ -36,8 +37,8 @@ export function setup(host) {
     state.y += Math.sin(state.angle) * state.speed;
     const halfW = state.w / 2;
     const halfH = state.h / 2;
-    state.x = Math.max(halfW, Math.min(host.canvas.width - halfW, state.x));
-    state.y = Math.max(halfH, Math.min(host.canvas.height - halfH, state.y));
+    state.x = Math.max(halfW, Math.min(WORLD_WIDTH - halfW, state.x));
+    state.y = Math.max(halfH, Math.min(WORLD_HEIGHT - halfH, state.y));
 
     const dx = mouse.x - state.x;
     const dy = mouse.y - state.y;
