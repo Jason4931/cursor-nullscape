@@ -79,7 +79,7 @@ import { setup as spawnCatalystHunger } from "./Enemies/CatalystHunger.js";
 import { setup as spawnCatalystHand } from "./Enemies/CatalystHand.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
-import { setup as spawnBeacon } from "./Enemies/Beacon.js";
+import { setup as spawnBeacon } from "./Enemies/BeaconEnemy.js";
 
 document.getElementById("intro-start").innerHTML = "Click anywhere to begin";
 

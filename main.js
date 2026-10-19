@@ -128,7 +128,7 @@ import { pylonLocations, setup as spawnPylons } from "./Enemies/Pylons.js";
 import { setup as spawnTruePylons } from "./Enemies/TruePylons.js";
 import { setup as spawnGlitch } from "./Enemies/Glitch.js";
 import { setup as spawnVoid } from "./Enemies/Void.js";
-import { setup as spawnBeacon } from "./Enemies/Beacon.js";
+import { setup as spawnBeacon } from "./Enemies/BeaconEnemy.js";
 import { setup as spawnCascade } from "./Enemies/Cascade.js";
 import { setup as spawnCorrupted } from "./Enemies/Corrupted.js";
 import { setup as spawnBlackhole } from "./Enemies/Blackhole.js";

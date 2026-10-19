@@ -192,6 +192,7 @@ export function setup(host) {
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (pylonDone >= 4) return;
     if (actualCollectedCount >= 5000) return;
 
     function showText(group, index = 0) {
@@ -401,6 +402,7 @@ export function setup(host) {
 
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+    if (pylonDone >= 4) return;
     if (actualCollectedCount >= 5000) return;
 
     ctx.save();
