@@ -198,6 +198,7 @@ let sorrowActive = false;
 let skinwalkerCount = 0;
 let highestEntitySpawned = [];
 const pickedOnce = new Set();
+let differPickBias = 3;
 const spawnedUnstackables = new Set();
 export let spaceHeld = false;
 let spaceHeldScale = 1;
@@ -958,6 +959,16 @@ topLeftInput.addEventListener("keydown", function (event) {
         if (entity.src) registerEntitySpawn(entity.name, entity.src);
       }
       topLeftInput.value = "";
+    }
+    if (input === "differpick") {
+      differPickBias = 100;
+      cheatDetector = false;
+      disableProgression = false;
+      firstDisableProgression = false;
+      cheattimer = 0;
+      topLeftInput.value = "";
+      topLeftInput.style.display = "none";
+      topLeftInput.blur();
     }
     if (input === "youwillnotsurvivethis") {
       let i = 0;
@@ -1927,7 +1938,7 @@ function ENTITY_SPAWN(temp = false, exceptEntity = null) {
     } else {
       const weighted = [];
       for (const e of unlocked) {
-        const weight = pickedOnce.has(e.name) ? 1 : 3;
+        const weight = pickedOnce.has(e.name) ? 1 : differPickBias;
         for (let i = 0; i < weight; i++) weighted.push(e);
       }
       while (true) {
@@ -3171,7 +3182,7 @@ function updateCamera() {
           } else {
             const weighted = [];
             for (const e of unlocked) {
-              const weight = pickedOnce.has(e.name) ? 1 : 3;
+              const weight = pickedOnce.has(e.name) ? 1 : differPickBias;
               for (let i = 0; i < weight; i++) weighted.push(e);
             }
             while (true) {

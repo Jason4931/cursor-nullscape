@@ -265,6 +265,7 @@ export let stopAllEntity = false;
 export let onCelestial = false;
 export let onCelestialIntro = false;
 const pickedOnce = new Set();
+let differPickBias = 3;
 const spawnedUnstackables = new Set();
 const spawnedCurses = new Set();
 let jumppadSpawns = [];
@@ -1714,6 +1715,16 @@ topLeftInput.addEventListener("keydown", function (event) {
         if (entity.src) registerEntitySpawn(entity.name, entity.src);
       }
       topLeftInput.value = "";
+    }
+    if (input === "differpick") {
+      differPickBias = 100;
+      cheatDetector = false;
+      disableProgression = false;
+      firstDisableProgression = false;
+      cheattimer = 0;
+      topLeftInput.value = "";
+      topLeftInput.style.display = "none";
+      topLeftInput.blur();
     }
     if (input === "youwillnotsurvivethis") {
       let i = 0;
@@ -3168,7 +3179,7 @@ function ENTITY_SPAWN(
     } else {
       const weighted = [];
       for (const e of unlocked) {
-        const weight = pickedOnce.has(e.name) ? 1 : 3;
+        const weight = pickedOnce.has(e.name) ? 1 : differPickBias;
         for (let i = 0; i < weight; i++) weighted.push(e);
       }
       while (true) {
@@ -5693,7 +5704,7 @@ function updateCamera() {
           } else {
             const weighted = [];
             for (const e of unlocked) {
-              const weight = pickedOnce.has(e.name) ? 1 : 3;
+              const weight = pickedOnce.has(e.name) ? 1 : differPickBias;
               for (let i = 0; i < weight; i++) weighted.push(e);
             }
             while (true) {
