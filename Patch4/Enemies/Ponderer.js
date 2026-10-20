@@ -14,13 +14,13 @@ export function setup(host, hardMode) {
     x: 0,
     y: 0,
 
-    radius: 1200,
+    radius: 1400,
 
     timer: 8,
     maxTimer: 8,
 
     decayRate: 0.95,
-    recoverRate: hardMode ? 0.525 : 0.7,
+    recoverRate: hardMode ? 0.6 : 0.8,
 
     agro: false,
 
