@@ -12,8 +12,6 @@ skipLoading.addEventListener("click", (e) => {
   e.stopPropagation();
   cancelPreloadAssets();
   skipLoading.style.display = "none";
-  aboutBtn.style.display = "none";
-  setAboutSidebarOpen(false);
 });
 await preloadAssets((loaded, total) => {
   const progress = loaded / total;
@@ -22,8 +20,6 @@ await preloadAssets((loaded, total) => {
     `Loading... (${displayed}/${total})`;
   if (progress >= 0.9) {
     skipLoading.style.display = "none";
-    aboutBtn.style.display = "none";
-    setAboutSidebarOpen(false);
   }
 });
 window.addEventListener("error", (e) => {
@@ -6703,9 +6699,6 @@ if (isMobile) {
   const mobileScreen = document.getElementById("mobile-screen");
   document.getElementById("intro-screen").style.display = "none";
   mobileScreen.style.display = "flex";
-  mobileScreen.append(aboutSidebar, aboutBtn);
-  aboutBtn.style.display = "block";
-  setAboutSidebarOpen(true);
 }
 let timerInterval = null;
 let startTime = 0;
