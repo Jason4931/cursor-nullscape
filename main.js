@@ -3186,7 +3186,7 @@ function ENTITY_SPAWN(
         pick = weighted[(Math.random() * weighted.length) | 0];
         if (lastEntityPicked !== pick.name) {
           if (pick.rare) {
-            if (Math.random() < 0.25) {
+            if (Math.random() >= 0.25) {
               continue;
             }
           }
@@ -5711,7 +5711,7 @@ function updateCamera() {
               pick = weighted[(Math.random() * weighted.length) | 0];
               if (lastEntityPicked !== pick.name) {
                 if (pick.rare) {
-                  if (Math.random() < 0.25) {
+                  if (Math.random() >= 0.25) {
                     continue;
                   }
                 }
