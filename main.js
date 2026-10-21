@@ -6488,6 +6488,41 @@ function loop(now) {
       ctx.lineTo(x, y);
       ctx.closePath();
       ctx.fill();
+
+      const playerScreenX = player.drawPos.x + camX;
+      const playerScreenY = player.drawPos.y + camY;
+      if (
+        playerScreenX < 0 ||
+        playerScreenX > w ||
+        playerScreenY < 0 ||
+        playerScreenY > h
+      ) {
+        const centerX = w / 2;
+        const centerY = h / 2;
+        const dx = playerScreenX - centerX;
+        const dy = playerScreenY - centerY;
+        const margin = 8;
+        const scaleX = (centerX - margin) / Math.abs(dx);
+        const scaleY = (centerY - margin) / Math.abs(dy);
+        const scale = Math.min(scaleX, scaleY);
+        const edgeX = centerX + dx * scale;
+        const edgeY = centerY + dy * scale;
+
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.strokeStyle = player.col;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        if (scaleX <= scaleY) {
+          ctx.moveTo(edgeX, edgeY - 14);
+          ctx.lineTo(edgeX, edgeY + 14);
+        } else {
+          ctx.moveTo(edgeX - 14, edgeY);
+          ctx.lineTo(edgeX + 14, edgeY);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
     }
   }
 
