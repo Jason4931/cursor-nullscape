@@ -1251,76 +1251,99 @@ let multiPlayers = true;
 let playersToDraw = [];
 if (showPlayers) {
   multiPlayers = true;
+  let playerPollSequence = 0;
+  let appliedPlayerPollSequence = 0;
 
-  (async function playerLoop() {
-    while (multiPlayers) {
-      try {
-        let ids = [];
+  async function pollPlayers() {
+    const pollSequence = ++playerPollSequence;
+    const now = Date.now();
 
-        let value = await get("crnsc-players");
-        value = value.val;
+    void set(
+      `crnsc-p${id}`,
+      JSON.stringify({
+        pos: {
+          x: Math.round(mouse.x),
+          y: Math.round(mouse.y),
+        },
+        col,
+        upd: now,
+      }),
+    ).catch(console.error);
 
-        if (value) {
-          ids = typeof value === "string" ? JSON.parse(value) : value;
-        }
+    try {
+      let value = await get("crnsc-players");
+      value = value.val;
 
-        if (!ids.includes(id)) {
-          ids.push(id);
-        }
+      let ids = value
+        ? typeof value === "string"
+          ? JSON.parse(value)
+          : value
+        : [];
+      ids = [...new Set(ids)];
+      const hadOwnId = ids.includes(id);
 
-        const now = Date.now();
+      if (!hadOwnId) {
+        ids.push(id);
+      }
 
-        await set(
-          `crnsc-p${id}`,
-          JSON.stringify({
-            pos: {
-              x: Math.round(mouse.x),
-              y: Math.round(mouse.y),
-            },
-            col,
-            upd: now,
-          }),
-        );
-
-        const aliveIds = [];
-        const newPlayersToDraw = [];
-
-        for (const pid of ids) {
+      const players = await Promise.all(
+        ids.map(async (pid) => {
           try {
             let player = await get(`crnsc-p${pid}`);
             player = player.val;
 
-            if (!player) continue;
-
+            if (!player) return null;
             player = typeof player === "string" ? JSON.parse(player) : player;
+            if (Date.now() - player.upd > 60000) return null;
 
-            if (now - player.upd > 60000) continue;
+            return { id: pid, ...player };
+          } catch {
+            return null;
+          }
+        }),
+      );
 
-            aliveIds.push(pid);
+      if (pollSequence < appliedPlayerPollSequence || !multiPlayers) return;
+      appliedPlayerPollSequence = pollSequence;
 
-            const old = playersToDraw.find((p) => p.id === pid);
-            newPlayersToDraw.push({
-              id: pid,
-              ...player,
-              drawPos: old?.drawPos ?? {
-                x: player.pos.x,
-                y: player.pos.y,
-              },
-            });
-          } catch {}
-        }
+      const alivePlayers = players.filter(Boolean);
+      const aliveIds = new Set([
+        id,
+        ...alivePlayers.map((player) => player.id),
+      ]);
+      const previousPlayers = new Map(
+        playersToDraw.map((player) => [player.id, player]),
+      );
 
-        playersToDraw = newPlayersToDraw;
+      playersToDraw = alivePlayers.map((player) => {
+        const old = previousPlayers.get(player.id);
+        return {
+          ...player,
+          drawPos: old?.drawPos ?? {
+            x: player.pos.x,
+            y: player.pos.y,
+          },
+        };
+      });
 
-        await set("crnsc-players", JSON.stringify(aliveIds));
-      } catch (err) {
-        console.error(err);
-        playersToDraw = [];
+      const nextIds = [...aliveIds];
+      if (
+        !hadOwnId ||
+        nextIds.length !== ids.length ||
+        nextIds.some((pid) => !ids.includes(pid))
+      ) {
+        void set("crnsc-players", JSON.stringify(nextIds)).catch(console.error);
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (err) {
+      if (pollSequence >= appliedPlayerPollSequence) console.error(err);
     }
-  })();
+  }
+
+  const PLAYER_POLL_INTERVAL = 250;
+  void pollPlayers();
+  setInterval(() => {
+    if (multiPlayers) void pollPlayers();
+  }, PLAYER_POLL_INTERVAL);
 } else {
   multiPlayers = false;
 }
