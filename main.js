@@ -6469,8 +6469,8 @@ function loop(now) {
         };
       }
 
-      player.drawPos.x += (player.pos.x - player.drawPos.x) * 0.05;
-      player.drawPos.y += (player.pos.y - player.drawPos.y) * 0.05;
+      player.drawPos.x += (player.pos.x - player.drawPos.x) * 0.25;
+      player.drawPos.y += (player.pos.y - player.drawPos.y) * 0.25;
 
       ctx.fillStyle = player.col;
       ctx.beginPath();
