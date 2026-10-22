@@ -1508,6 +1508,7 @@ export function moveCamera(x, y, instant = false) {
   }
 }
 export function isCursorOnFloor(custom) {
+  if (jumppadActive) return true;
   for (const t of floorTiles) {
     if (custom) {
       if (
@@ -1538,7 +1539,7 @@ export function jumppadHit(v) {
     jumppadActive = true;
     setTimeout(() => {
       jumppadActive = false;
-    }, 100);
+    }, 200);
   }
 }
 

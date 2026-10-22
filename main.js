@@ -2510,6 +2510,7 @@ export function moveCamera(x, y, instant = false) {
   }
 }
 export function isCursorOnFloor(custom) {
+  if (jumppadActive) return true;
   for (const py of pylonLocations) {
     if (
       mouse.x >= py[0] - (27 * TILE) / 2 &&
