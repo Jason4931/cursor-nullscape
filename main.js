@@ -1253,20 +1253,32 @@ if (showPlayers) {
   multiPlayers = true;
   let playerPollSequence = 0;
   let appliedPlayerPollSequence = 0;
+  let lastPublishedPlayerPos = null;
+  let lastPlayerMovementTime = Date.now();
 
   async function pollPlayers() {
     const pollSequence = ++playerPollSequence;
     const now = Date.now();
+    const pos = {
+      x: Math.round(mouse.x),
+      y: Math.round(mouse.y),
+    };
+    if (
+      !lastPublishedPlayerPos ||
+      pos.x !== lastPublishedPlayerPos.x ||
+      pos.y !== lastPublishedPlayerPos.y
+    ) {
+      lastPlayerMovementTime = now;
+    }
+    lastPublishedPlayerPos = pos;
 
     void set(
       `crnsc-p${id}`,
       JSON.stringify({
-        pos: {
-          x: Math.round(mouse.x),
-          y: Math.round(mouse.y),
-        },
+        pos,
         col,
         upd: now,
+        lmv: lastPlayerMovementTime,
       }),
     ).catch(console.error);
 
@@ -6472,6 +6484,9 @@ function loop(now) {
       player.drawPos.x += (player.pos.x - player.drawPos.x) * 0.25;
       player.drawPos.y += (player.pos.y - player.drawPos.y) * 0.25;
 
+      const inactiveFor = player.lmv ? Math.max(0, Date.now() - player.lmv) : 0;
+      ctx.save();
+      ctx.globalAlpha = 1 - Math.min(1, inactiveFor / 60000);
       ctx.fillStyle = player.col;
       ctx.beginPath();
 
@@ -6511,7 +6526,7 @@ function loop(now) {
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.strokeStyle = player.col;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.beginPath();
         if (scaleX <= scaleY) {
           ctx.moveTo(edgeX, edgeY - 14);
@@ -6523,6 +6538,7 @@ function loop(now) {
         ctx.stroke();
         ctx.restore();
       }
+      ctx.restore();
     }
   }
 
