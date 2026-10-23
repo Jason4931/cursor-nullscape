@@ -5372,7 +5372,8 @@ window.addEventListener("click", () => {
       (player) =>
         player.id !== id &&
         Number.isFinite(player.pos?.x) &&
-        Number.isFinite(player.pos?.y),
+        Number.isFinite(player.pos?.y) &&
+        (player.pos.x >= 1 || player.pos.y >= 1),
     )
     .sort((a, b) =>
       String(a.id).localeCompare(String(b.id), undefined, { numeric: true }),
@@ -5570,7 +5571,8 @@ function updateCamera() {
         (player) =>
           player.id !== id &&
           Number.isFinite(player.pos?.x) &&
-          Number.isFinite(player.pos?.y),
+          Number.isFinite(player.pos?.y) &&
+          (player.pos.x >= 1 || player.pos.y >= 1),
       )
       .sort((a, b) =>
         String(a.id).localeCompare(String(b.id), undefined, { numeric: true }),
@@ -6568,6 +6570,27 @@ function loop(now) {
   }
 
   //players
+  const spectateTargets = playersToDraw
+    .filter(
+      (player) =>
+        player.id !== id &&
+        Number.isFinite(player.pos?.x) &&
+        Number.isFinite(player.pos?.y) &&
+        (player.pos.x >= 1 || player.pos.y >= 1),
+    )
+    .sort((a, b) =>
+      String(a.id).localeCompare(String(b.id), undefined, { numeric: true }),
+    );
+  if (spectateMode && spectateTargets.length === 0) {
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = "#fff";
+    ctx.font = "30px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("No players", w / 2, h / 2);
+    ctx.restore();
+  }
   if (showPlayers || spectateMode) {
     for (const player of playersToDraw) {
       if (player.id === id) continue;
