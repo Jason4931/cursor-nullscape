@@ -1,6 +1,3 @@
-keybind settings
-tutorial 0.5x gift multiplier
-
 v bell
 v baby
 v husk

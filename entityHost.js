@@ -21,6 +21,7 @@ import {
   stopTimer,
   usedAbility,
   stopAllEntity,
+  spectateMode,
   spaceHeld,
   shiftlockEase,
   playSound,
@@ -68,17 +69,19 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
   function update(dt) {
     for (const e of [...entities]) {
       if (
-        stopAllEntity
-          ? e.name === "Celestial" ||
-            e.name === "Catalyst" ||
-            e.name === "CelestialCutscene" ||
-            e.name === "Pylons" ||
-            e.name === "TruePylons" ||
-            e.name === "Void" ||
-            e.name === "Seamine" ||
-            e.name === "Jumppad" ||
-            e.name === "Grindrail"
-          : true
+        spectateMode
+          ? false
+          : stopAllEntity
+            ? e.name === "Celestial" ||
+              e.name === "Catalyst" ||
+              e.name === "CelestialCutscene" ||
+              e.name === "Pylons" ||
+              e.name === "TruePylons" ||
+              e.name === "Void" ||
+              e.name === "Seamine" ||
+              e.name === "Jumppad" ||
+              e.name === "Grindrail"
+            : true
       ) {
         e.update?.(dt * (ultrafastmode ? 3 : slowmode ? 0.5 : 1));
       }
@@ -98,17 +101,19 @@ export function createEntityHost(canvas, ctx, ctx2, backctx) {
     }
     for (const e of entities) {
       if (
-        stopAllEntity
-          ? e.name === "Celestial" ||
-            e.name === "Catalyst" ||
-            e.name === "CelestialCutscene" ||
-            e.name === "Pylons" ||
-            e.name === "TruePylons" ||
-            e.name === "Void" ||
-            e.name === "Seamine" ||
-            e.name === "Jumppad" ||
-            e.name === "Grindrail"
-          : true
+        spectateMode
+          ? false
+          : stopAllEntity
+            ? e.name === "Celestial" ||
+              e.name === "Catalyst" ||
+              e.name === "CelestialCutscene" ||
+              e.name === "Pylons" ||
+              e.name === "TruePylons" ||
+              e.name === "Void" ||
+              e.name === "Seamine" ||
+              e.name === "Jumppad" ||
+              e.name === "Grindrail"
+            : true
       ) {
         if (e.name === "Beacon") {
           beacon = e;

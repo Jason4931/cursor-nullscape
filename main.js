@@ -260,6 +260,7 @@ let scrollCelestial = 0;
 export let stopAllEntity = false;
 export let onCelestial = false;
 export let onCelestialIntro = false;
+export let spectateMode = false;
 const pickedOnce = new Set();
 let differPickBias = 3;
 const spawnedUnstackables = new Set();
@@ -904,6 +905,7 @@ let showSkybox = JSON.parse(localStorage.getItem("skybox")) ?? true;
 let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
 export let uldm = JSON.parse(localStorage.getItem("uldm")) ?? false;
 let showPlayers = JSON.parse(localStorage.getItem("players")) ?? false;
+let refreshPlayerPolling = () => {};
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
 let blindnessMode = JSON.parse(localStorage.getItem("blindness")) ?? false;
@@ -1008,6 +1010,7 @@ toggle("toggle-uldm", (v) => {
 });
 toggle("toggle-players", (v) => {
   showPlayers = v;
+  refreshPlayerPolling();
 });
 toggle("toggle-floor", (v) => {
   showFloor = v;
@@ -1138,6 +1141,7 @@ document.getElementById("reset-settings").onclick = () => {
   showTimer = false;
   uldm = false;
   showPlayers = false;
+  refreshPlayerPolling();
   reducedMotion = false;
   deafMode = true;
   epilepticMode = false;
@@ -1249,29 +1253,30 @@ const id = `${Math.floor(Math.random() * 1000)}`;
 const col = `rgb(${192 + Math.floor(Math.random() * 64)},${192 + Math.floor(Math.random() * 64)},${192 + Math.floor(Math.random() * 64)})`;
 let multiPlayers = true;
 let playersToDraw = [];
-if (showPlayers) {
-  multiPlayers = true;
-  let playerPollSequence = 0;
-  let appliedPlayerPollSequence = 0;
-  let lastPublishedPlayerPos = null;
-  let lastPlayerMovementTime = Date.now();
+let spectateTargetId = null;
+let spectateTargetChangedAt = 0;
+let playerPollSequence = 0;
+let appliedPlayerPollSequence = 0;
+let lastPublishedPlayerPos = null;
+let lastPlayerMovementTime = Date.now();
 
-  async function pollPlayers() {
-    const pollSequence = ++playerPollSequence;
-    const now = Date.now();
-    const pos = {
-      x: Math.round(mouse.x),
-      y: Math.round(mouse.y),
-    };
-    if (
-      !lastPublishedPlayerPos ||
-      pos.x !== lastPublishedPlayerPos.x ||
-      pos.y !== lastPublishedPlayerPos.y
-    ) {
-      lastPlayerMovementTime = now;
-    }
-    lastPublishedPlayerPos = pos;
+async function pollPlayers() {
+  const pollSequence = ++playerPollSequence;
+  const now = Date.now();
+  const pos = {
+    x: Math.round(mouse.x),
+    y: Math.round(mouse.y),
+  };
+  if (
+    !lastPublishedPlayerPos ||
+    pos.x !== lastPublishedPlayerPos.x ||
+    pos.y !== lastPublishedPlayerPos.y
+  ) {
+    lastPlayerMovementTime = now;
+  }
+  lastPublishedPlayerPos = pos;
 
+  if (!spectateMode) {
     void set(
       `crnsc-p${id}`,
       JSON.stringify({
@@ -1281,84 +1286,91 @@ if (showPlayers) {
         lmv: lastPlayerMovementTime,
       }),
     ).catch(console.error);
-
-    try {
-      let value = await get("crnsc-players");
-      value = value.val;
-
-      let ids = value
-        ? typeof value === "string"
-          ? JSON.parse(value)
-          : value
-        : [];
-      ids = [...new Set(ids)];
-      const hadOwnId = ids.includes(id);
-
-      if (!hadOwnId) {
-        ids.push(id);
-      }
-
-      const players = await Promise.all(
-        ids.map(async (pid) => {
-          try {
-            let player = await get(`crnsc-p${pid}`);
-            player = player.val;
-
-            if (!player) return null;
-            player = typeof player === "string" ? JSON.parse(player) : player;
-            if (Date.now() - player.upd > 60000) return null;
-
-            return { id: pid, ...player };
-          } catch {
-            return null;
-          }
-        }),
-      );
-
-      if (pollSequence < appliedPlayerPollSequence || !multiPlayers) return;
-      appliedPlayerPollSequence = pollSequence;
-
-      const alivePlayers = players.filter(Boolean);
-      const aliveIds = new Set([
-        id,
-        ...alivePlayers.map((player) => player.id),
-      ]);
-      const previousPlayers = new Map(
-        playersToDraw.map((player) => [player.id, player]),
-      );
-
-      playersToDraw = alivePlayers.map((player) => {
-        const old = previousPlayers.get(player.id);
-        return {
-          ...player,
-          drawPos: old?.drawPos ?? {
-            x: player.pos.x,
-            y: player.pos.y,
-          },
-        };
-      });
-
-      const nextIds = [...aliveIds];
-      if (
-        !hadOwnId ||
-        nextIds.length !== ids.length ||
-        nextIds.some((pid) => !ids.includes(pid))
-      ) {
-        void set("crnsc-players", JSON.stringify(nextIds)).catch(console.error);
-      }
-    } catch (err) {
-      if (pollSequence >= appliedPlayerPollSequence) console.error(err);
-    }
   }
 
-  const PLAYER_POLL_INTERVAL = 250;
-  void pollPlayers();
-  setInterval(() => {
-    if (multiPlayers) void pollPlayers();
-  }, PLAYER_POLL_INTERVAL);
-} else {
-  multiPlayers = false;
+  try {
+    let value = await get("crnsc-players");
+    value = value.val;
+
+    let ids = value
+      ? typeof value === "string"
+        ? JSON.parse(value)
+        : value
+      : [];
+    ids = [...new Set(ids)];
+    const hadOwnId = ids.includes(id);
+
+    if (!hadOwnId) {
+      ids.push(id);
+    }
+
+    const players = await Promise.all(
+      ids.map(async (pid) => {
+        try {
+          let player = await get(`crnsc-p${pid}`);
+          player = player.val;
+
+          if (!player) return null;
+          player = typeof player === "string" ? JSON.parse(player) : player;
+          if (Date.now() - player.upd > 60000) return null;
+
+          return { id: pid, ...player };
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    if (pollSequence < appliedPlayerPollSequence || !multiPlayers) return;
+    appliedPlayerPollSequence = pollSequence;
+
+    const alivePlayers = players.filter(Boolean);
+    const aliveIds = new Set([id, ...alivePlayers.map((player) => player.id)]);
+    const previousPlayers = new Map(
+      playersToDraw.map((player) => [player.id, player]),
+    );
+
+    playersToDraw = alivePlayers.map((player) => {
+      const old = previousPlayers.get(player.id);
+      return {
+        ...player,
+        drawPos: old?.drawPos ?? {
+          x: player.pos.x,
+          y: player.pos.y,
+        },
+      };
+    });
+
+    const nextIds = [...aliveIds];
+    if (
+      !hadOwnId ||
+      nextIds.length !== ids.length ||
+      nextIds.some((pid) => !ids.includes(pid))
+    ) {
+      void set("crnsc-players", JSON.stringify(nextIds)).catch(console.error);
+    }
+  } catch (err) {
+    if (pollSequence >= appliedPlayerPollSequence) console.error(err);
+  }
 }
+
+const PLAYER_POLL_INTERVAL = 250;
+let playerPollInterval = null;
+refreshPlayerPolling = () => {
+  const shouldPoll = showPlayers || spectateMode;
+  multiPlayers = shouldPoll;
+  if (shouldPoll && playerPollInterval === null) {
+    void pollPlayers();
+    playerPollInterval = setInterval(() => {
+      if (multiPlayers) void pollPlayers();
+    }, PLAYER_POLL_INTERVAL);
+  } else if (!shouldPoll && playerPollInterval !== null) {
+    clearInterval(playerPollInterval);
+    playerPollInterval = null;
+    playersToDraw = [];
+  }
+};
+refreshPlayerPolling();
 
 /* ===== CONFIG ===== */
 export const WORLD_WIDTH = 10000;
@@ -1757,6 +1769,13 @@ topLeftInput.addEventListener("keydown", function (event) {
       topLeftInput.style.display = "none";
       topLeftInput.blur();
     }
+    if (input === "spectate") {
+      spectateMode = !spectateMode;
+      spectateTargetId = null;
+      spectateTargetChangedAt = 0;
+      refreshPlayerPolling();
+      topLeftInput.value = "";
+    }
     if (input === "youwillnotsurvivethis") {
       let i = 0;
       let interval = setInterval(() => {
@@ -1992,6 +2011,16 @@ input.addEventListener("input", () => {
       activate: () => {
         localStorage.setItem("boyquiet", "true");
         location.reload();
+      },
+    },
+    {
+      text: "spectate",
+      activate: () => {
+        revive();
+        spectateMode = !spectateMode;
+        spectateTargetId = null;
+        spectateTargetChangedAt = 0;
+        refreshPlayerPolling();
       },
     },
   ];
@@ -2500,7 +2529,7 @@ export function getCameraPos() {
   return { x: -camX, y: -camY };
 }
 export function moveCamera(x, y, instant = false) {
-  if (disableCollect || disableKnockback) return;
+  if (disableCollect || disableKnockback || spectateMode) return;
   if (instant) {
     camX += x;
     camY += y;
@@ -3678,7 +3707,7 @@ export function activateProtection(echo = false) {
 }
 export function activatePassage(echo = false) {
   if (echo) {
-    if (!disableCollect)
+    if (!disableCollect || !spectateMode)
       actualCollectedCount += 100 + Math.floor(Math.random() * 5) * 100;
     if (actualCollectedCount > 10000) actualCollectedCount = 10000;
     collectedCount = hardMode
@@ -5335,6 +5364,30 @@ window.addEventListener("mousemove", (e) => {
   mouse._clientY = e.clientY;
 });
 
+window.addEventListener("click", () => {
+  if (!spectateMode) return;
+
+  const spectateTargets = playersToDraw
+    .filter(
+      (player) =>
+        player.id !== id &&
+        Number.isFinite(player.pos?.x) &&
+        Number.isFinite(player.pos?.y),
+    )
+    .sort((a, b) =>
+      String(a.id).localeCompare(String(b.id), undefined, { numeric: true }),
+    );
+  if (spectateTargets.length === 0) return;
+
+  const currentIndex = spectateTargets.findIndex(
+    (player) => player.id === spectateTargetId,
+  );
+  const nextIndex =
+    currentIndex < 0 ? 0 : (currentIndex + 1) % spectateTargets.length;
+  spectateTargetId = spectateTargets[nextIndex].id;
+  spectateTargetChangedAt = Date.now();
+});
+
 function updateCamera() {
   const w = viewport.clientWidth;
   const h = viewport.clientHeight;
@@ -5433,83 +5486,127 @@ function updateCamera() {
     iceEffect = false;
   }
 
-  const motionScale = reducedMotion ? 0.5 : 1;
-  const slowScale = slowness ? 0.333 : 1;
-  const settingScale = settingsPanel.style.display === "block" ? 0.01 : 1;
-  const disableCollectScale = disableCollect ? 0.01 : 1;
-  const extremeScale = hardMode ? 0.667 : 1;
-  const ultrafastScale = ultrafastmode ? 3 : 1;
-  isCursorOnFloor();
-  if (iceEffect) {
-    camVX +=
-      vx *
-      motionScale *
-      slowScale *
-      settingScale *
-      voidScale *
-      seamineScale *
-      grindrailScale *
-      wallScale *
-      pillarGazeScale *
-      disableCollectScale *
-      speedBoostScale *
-      extremeScale *
-      ultrafastScale *
-      spaceHeldScale *
-      0.1;
-    camVY +=
-      vy *
-      motionScale *
-      slowScale *
-      settingScale *
-      voidScale *
-      seamineScale *
-      grindrailScale *
-      wallScale *
-      pillarGazeScale *
-      disableCollectScale *
-      speedBoostScale *
-      extremeScale *
-      ultrafastScale *
-      spaceHeldScale *
-      0.1;
+  if (!spectateMode) {
+    const motionScale = reducedMotion ? 0.5 : 1;
+    const slowScale = slowness ? 0.333 : 1;
+    const settingScale = settingsPanel.style.display === "block" ? 0.01 : 1;
+    const disableCollectScale = disableCollect ? 0.01 : 1;
+    const extremeScale = hardMode ? 0.667 : 1;
+    const ultrafastScale = ultrafastmode ? 3 : 1;
+    isCursorOnFloor();
+    if (iceEffect) {
+      camVX +=
+        vx *
+        motionScale *
+        slowScale *
+        settingScale *
+        voidScale *
+        seamineScale *
+        grindrailScale *
+        wallScale *
+        pillarGazeScale *
+        disableCollectScale *
+        speedBoostScale *
+        extremeScale *
+        ultrafastScale *
+        spaceHeldScale *
+        0.1;
+      camVY +=
+        vy *
+        motionScale *
+        slowScale *
+        settingScale *
+        voidScale *
+        seamineScale *
+        grindrailScale *
+        wallScale *
+        pillarGazeScale *
+        disableCollectScale *
+        speedBoostScale *
+        extremeScale *
+        ultrafastScale *
+        spaceHeldScale *
+        0.1;
+    } else {
+      camX +=
+        vx *
+        motionScale *
+        slowScale *
+        settingScale *
+        voidScale *
+        seamineScale *
+        grindrailScale *
+        wallScale *
+        pillarGazeScale *
+        disableCollectScale *
+        speedBoostScale *
+        extremeScale *
+        ultrafastScale *
+        spaceHeldScale;
+      camY +=
+        vy *
+        motionScale *
+        slowScale *
+        settingScale *
+        voidScale *
+        seamineScale *
+        grindrailScale *
+        wallScale *
+        pillarGazeScale *
+        disableCollectScale *
+        speedBoostScale *
+        extremeScale *
+        ultrafastScale *
+        spaceHeldScale;
+    }
+    // camera smoothing
+    camX += camVX;
+    camY += camVY;
+    camVX *= iceEffect ? 0.96 : 0.88;
+    camVY *= iceEffect ? 0.96 : 0.88;
   } else {
-    camX +=
-      vx *
-      motionScale *
-      slowScale *
-      settingScale *
-      voidScale *
-      seamineScale *
-      grindrailScale *
-      wallScale *
-      pillarGazeScale *
-      disableCollectScale *
-      speedBoostScale *
-      extremeScale *
-      ultrafastScale *
-      spaceHeldScale;
-    camY +=
-      vy *
-      motionScale *
-      slowScale *
-      settingScale *
-      voidScale *
-      seamineScale *
-      grindrailScale *
-      wallScale *
-      pillarGazeScale *
-      disableCollectScale *
-      speedBoostScale *
-      extremeScale *
-      ultrafastScale *
-      spaceHeldScale;
+    const spectateTargets = playersToDraw
+      .filter(
+        (player) =>
+          player.id !== id &&
+          Number.isFinite(player.pos?.x) &&
+          Number.isFinite(player.pos?.y),
+      )
+      .sort((a, b) =>
+        String(a.id).localeCompare(String(b.id), undefined, { numeric: true }),
+      );
+
+    if (spectateTargets.length === 0) {
+      spectateTargetId = null;
+      spectateTargetChangedAt = 0;
+      camVX = 0;
+      camVY = 0;
+    } else {
+      const now = Date.now();
+      let target = spectateTargets.find(
+        (player) => player.id === spectateTargetId,
+      );
+      if (!target || now - spectateTargetChangedAt >= 10000) {
+        const currentIndex = spectateTargets.findIndex(
+          (player) => player.id === spectateTargetId,
+        );
+        const nextIndex =
+          currentIndex < 0 ? 0 : (currentIndex + 1) % spectateTargets.length;
+        target = spectateTargets[nextIndex];
+        spectateTargetId = target.id;
+        spectateTargetChangedAt = now;
+      }
+
+      const targetX = target.pos.x + camX;
+      const targetY = target.pos.y + camY;
+      const desiredVX = w * 0.5 - targetX;
+      const desiredVY = h * 0.5 - targetY;
+      camX += desiredVX * 0.1;
+      camY += desiredVY * 0.1;
+      camVX = 0;
+      camVY = 0;
+    }
   }
-  // camera smoothing
-  camX += camVX;
-  camY += camVY;
-  camVX *= iceEffect ? 0.96 : 0.88;
-  camVY *= iceEffect ? 0.96 : 0.88;
 
   const lim = getLimits();
   camX = Math.max(lim.minX, Math.min(lim.maxX, camX));
@@ -5594,7 +5691,7 @@ function updateCamera() {
         (g.golden ? 4 : 1) *
         (Math.floor(giftMultiplier) +
           (Math.random() < giftMultiplier % 1 ? 1 : 0));
-      if (!disableCollect && !insidePylon && !stopCollect) {
+      if (!disableCollect && !insidePylon && !stopCollect && !spectateMode) {
         actualCollectedCount += value;
         if (performance.now() - lastGiftCollectSound >= 100) {
           lastGiftCollectSound = performance.now();
@@ -6471,7 +6568,7 @@ function loop(now) {
   }
 
   //players
-  if (showPlayers) {
+  if (showPlayers || spectateMode) {
     for (const player of playersToDraw) {
       if (player.id === id) continue;
 
