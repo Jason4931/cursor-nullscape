@@ -433,7 +433,7 @@ let showBorder = JSON.parse(localStorage.getItem("border")) ?? true;
 let showFloor = JSON.parse(localStorage.getItem("floor")) ?? true;
 let showGrids = JSON.parse(localStorage.getItem("grids")) ?? false;
 let showSkybox = JSON.parse(localStorage.getItem("skybox")) ?? true;
-let showTimer = JSON.parse(localStorage.getItem("timer")) ?? false;
+let showTimer = JSON.parse(localStorage.getItem("timer")) ?? true;
 export let uldm = JSON.parse(localStorage.getItem("uldm")) ?? false;
 let reducedMotion = JSON.parse(localStorage.getItem("reduced-motion")) ?? false;
 let epilepticMode = JSON.parse(localStorage.getItem("epileptic")) ?? false;
@@ -648,7 +648,7 @@ document.getElementById("reset-settings").onclick = () => {
   showFloor = true;
   showGrids = false;
   showSkybox = true;
-  showTimer = false;
+  showTimer = true;
   uldm = false;
   reducedMotion = false;
   deafMode = true;
@@ -668,7 +668,7 @@ document.getElementById("reset-settings").onclick = () => {
   document.getElementById("toggle-floor").checked = true;
   document.getElementById("toggle-grids").checked = false;
   document.getElementById("toggle-skybox").checked = true;
-  document.getElementById("toggle-timer").checked = false;
+  document.getElementById("toggle-timer").checked = true;
   document.getElementById("toggle-uldm").checked = false;
   document.getElementById("toggle-reduced-motion").checked = false;
   document.getElementById("toggle-deaf-mode").checked = true;
