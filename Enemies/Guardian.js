@@ -410,9 +410,9 @@ export function setup(host, hardMode) {
         Math.round(p.y),
         shotgunGuardianActive[0] ? 12 : 8,
       );
-      grad.addColorStop(0, "#fcc");
+      grad.addColorStop(0, "#f48");
       grad.addColorStop(0.8, "#f00");
-      grad.addColorStop(1, "#f44");
+      grad.addColorStop(1, "#f24");
       ctx.fillStyle = grad;
       ctx.strokeStyle = `#f${Math.floor(Math.random() * 5)}${Math.floor(Math.random() * 5)}`;
       ctx.lineWidth = 2;
@@ -440,9 +440,9 @@ export function setup(host, hardMode) {
             indicatorCanvas.width,
             0,
           );
-          horizontalGrad.addColorStop(0, "rgba(255,0,0,0.5)");
-          horizontalGrad.addColorStop(0.5, "rgba(255,0,0,0.5)");
-          horizontalGrad.addColorStop(1, "rgba(255,0,0,0)");
+          horizontalGrad.addColorStop(0, "rgba(255,64,128,0.25)");
+          horizontalGrad.addColorStop(0.5, "rgba(255,64,128,0.25)");
+          horizontalGrad.addColorStop(1, "rgba(255,64,128,0)");
           indicatorCtx.fillStyle = horizontalGrad;
           indicatorCtx.beginPath();
           indicatorCtx.ellipse(
@@ -479,10 +479,10 @@ export function setup(host, hardMode) {
             const movement = (now / movementSpeed) % indicatorLength;
             ctx.save();
             const lineGrad = ctx.createLinearGradient(0, 0, indicatorLength, 0);
-            lineGrad.addColorStop(0, "rgba(0,0,0,0)");
-            lineGrad.addColorStop(0.1, "rgba(0,0,0,0.5)");
-            lineGrad.addColorStop(0.75, "rgba(0,0,0,0.5)");
-            lineGrad.addColorStop(1, "rgba(0,0,0,0)");
+            lineGrad.addColorStop(0, "rgba(255,64,128,0)");
+            lineGrad.addColorStop(0.1, "rgba(255,64,128,0.5)");
+            lineGrad.addColorStop(0.75, "rgba(255,64,128,0.5)");
+            lineGrad.addColorStop(1, "rgba(255,64,128,0)");
             ctx.strokeStyle = lineGrad;
             ctx.lineWidth = 3;
             ctx.beginPath();
