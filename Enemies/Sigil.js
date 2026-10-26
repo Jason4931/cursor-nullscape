@@ -291,7 +291,7 @@ export function setup(host) {
     const len = 20000;
     const w =
       (state.w || 100) *
-      (state.beamAlpha <= 0.5 ? 1 : 0.8 + Math.random() * 0.2);
+      (state.beamAlpha <= 0.5 ? 0.9 : 0.8 + Math.random() * 0.2);
 
     const forwardOffset = w / 4;
 
@@ -302,9 +302,9 @@ export function setup(host) {
     ctx.closePath();
 
     const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
-    grad.addColorStop(0, "rgba(255,255,0,0)");
-    grad.addColorStop(0.5, "rgba(255,255,0,1)");
-    grad.addColorStop(1, "rgba(255,255,0,0)");
+    grad.addColorStop(0, "rgba(255,255,0,0.25)");
+    grad.addColorStop(0.5, "rgba(255,255,0,0.5)");
+    grad.addColorStop(1, "rgba(255,255,0,0.25)");
 
     ctx.fillStyle = state.beamAlpha <= 0.5 ? grad : "yellow";
     ctx.fill();

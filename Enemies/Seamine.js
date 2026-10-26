@@ -25,6 +25,8 @@ export function setup(host, casualMode, hardMode) {
     respawnTimer: 0,
     blastRadius: 0,
     blastAlpha: 0,
+    touchCircleGrowthTime: 0,
+    explosionCircleFadeTime: 0,
     rotation: 0,
   };
 
@@ -42,6 +44,8 @@ export function setup(host, casualMode, hardMode) {
     state.flashing = false;
     state.flashTimer = 0;
     state.exploded = false;
+    state.touchCircleGrowthTime = 0;
+    state.explosionCircleFadeTime = 0;
   }
 
   spawnNearCursor();
@@ -56,6 +60,10 @@ export function setup(host, casualMode, hardMode) {
 
       state.blastRadius += 2400 * dt;
       state.blastAlpha -= 0.6 * dt;
+      state.explosionCircleFadeTime = Math.min(
+        state.explosionCircleFadeTime + dt,
+        0.25,
+      );
 
       if (state.respawnTimer <= 0) spawnNearCursor();
       return;
@@ -73,12 +81,17 @@ export function setup(host, casualMode, hardMode) {
     if (dist < TOUCH_RADIUS && !state.flashing) {
       state.flashing = true;
       state.flashTimer = FLASH_TIME;
+      state.touchCircleGrowthTime = 0;
       playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Arm_1.ogg");
       setSeamineScale(0.25);
     }
 
     if (state.flashing) {
       state.flashTimer -= dt;
+      state.touchCircleGrowthTime = Math.min(
+        state.touchCircleGrowthTime + dt,
+        0.25,
+      );
       state.opacity = 1;
 
       if (
@@ -90,6 +103,7 @@ export function setup(host, casualMode, hardMode) {
 
         state.blastRadius = state.size / 2;
         state.blastAlpha = 0.8;
+        state.explosionCircleFadeTime = 0;
 
         playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Explode_1.ogg");
         if (dist < EXPLODE_RADIUS) {
@@ -106,6 +120,38 @@ export function setup(host, casualMode, hardMode) {
         }
       }
     }
+  }
+
+  function drawTouchCircles(ctx) {
+    const growthProgress = Math.min(state.touchCircleGrowthTime / 0.25, 1);
+    const fadeProgress = Math.min(state.explosionCircleFadeTime / 0.25, 1);
+    const growth = 1 - (1 - growthProgress) ** 3;
+
+    ctx.save();
+    ctx.globalAlpha = (state.exploded ? 1 - fadeProgress : 1) * 0.5;
+
+    for (const circle of [
+      { radius: EXPLODE_RADIUS, color: "red" },
+      { radius: EXPLODE_RADIUS * 2, color: "orange" },
+    ]) {
+      const radius = circle.radius * growth;
+      const gradient = ctx.createRadialGradient(
+        state.x,
+        state.y,
+        radius * 0.75,
+        state.x,
+        state.y,
+        radius,
+      );
+      gradient.addColorStop(0, "transparent");
+      gradient.addColorStop(1, circle.color);
+      ctx.beginPath();
+      ctx.arc(Math.round(state.x), Math.round(state.y), radius, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 
   function draw(ctx) {
@@ -127,8 +173,12 @@ export function setup(host, casualMode, hardMode) {
         ctx.fill();
         ctx.restore();
       }
+
+      drawTouchCircles(ctx);
       return;
     }
+
+    if (state.flashing) drawTouchCircles(ctx);
 
     ctx.save();
     ctx.globalAlpha = state.opacity;

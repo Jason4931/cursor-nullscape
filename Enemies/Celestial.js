@@ -106,6 +106,7 @@ async function loadAssets() {
 let phase = 1;
 export function setup(
   host,
+  casualMode,
   hardMode,
   truePattern = false,
   silenceOnly = false,
@@ -122,7 +123,7 @@ export function setup(
       },
     },
     {
-      duration: 5.5,
+      duration: casualMode ? 7 : 5.5,
       update: updateSlash,
       draw: drawSlash,
       drawFront: drawSlashFront,
@@ -168,7 +169,7 @@ export function setup(
       enter: enterImplosion,
     },
     {
-      duration: 5.5,
+      duration: casualMode ? 7 : 5.5,
       update: updateSlash,
       draw: drawSlash,
       drawFront: drawSlashFront,
@@ -268,7 +269,7 @@ export function setup(
       enter: enterBitter,
     },
     {
-      duration: 5.5,
+      duration: casualMode ? 7 : 5.5,
       update: updateSlash,
       draw: drawSlash,
       drawFront: drawSlashFront,
@@ -674,7 +675,7 @@ export function setup(
   ];
   const specificDevOnly = [
     {
-      duration: 5.5,
+      duration: casualMode ? 7 : 5.5,
       update: updateSlash,
       draw: drawSlash,
       drawFront: drawSlashFront,
@@ -926,18 +927,8 @@ export function setup(
   }
   function spawnImplosionCircle() {
     const angle = Math.random() * Math.PI * 2;
-    const x =
-      mouse.x +
-      Math.cos(angle) *
-        ((hardMode ? 0.5 : 0.667) +
-          Math.random() * (hardMode ? 0.667 : 0.333)) *
-        800;
-    const y =
-      mouse.y +
-      Math.sin(angle) *
-        ((hardMode ? 0.5 : 0.667) +
-          Math.random() * (hardMode ? 0.667 : 0.333)) *
-        800;
+    const x = mouse.x + Math.cos(angle) * (0.667 + Math.random() * 0.667) * 800;
+    const y = mouse.y + Math.sin(angle) * (0.667 + Math.random() * 0.667) * 800;
 
     return {
       x,
@@ -968,7 +959,7 @@ export function setup(
 
       t: 0,
       r: 0,
-      targetR: (hardMode ? 200 : 150) / targetR,
+      targetR: (hardMode ? 200 : casualMode ? 125 : 150) / targetR,
       active: true,
     };
   }
@@ -1095,6 +1086,7 @@ export function setup(
     prevMx: 0,
     prevMy: 0,
     flipped: 1,
+    shaken: false,
     predDirX: Math.cos(Math.random() * Math.PI * 2),
     predDirY: Math.sin(Math.random() * Math.PI * 2),
   };
@@ -1103,6 +1095,7 @@ export function setup(
       stateSlash.beams = [];
       stateSlash.timer = 0;
       stateSlash.cycle = 0;
+      stateSlash.shaken = false;
       stateSlash.prevMx = mouse.x;
       stateSlash.prevMy = mouse.y;
       stateSlash.predDirX = Math.cos(Math.random() * Math.PI * 2);
@@ -1156,29 +1149,15 @@ export function setup(
           undefined,
           "50",
         );
-        if (!hardMode) {
-          const base =
-            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
-            ((Math.random() - 0.5) * Math.PI) / 3;
-          const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
-          const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const base =
+          Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
 
-          stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
-          stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
-          stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-        } else {
-          const base =
-            Math.atan2(stateSlash.predDirY, stateSlash.predDirX) +
-            ((Math.random() - 0.5) * Math.PI) / 3;
-          const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-          const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-          const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
-
-          stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
-          stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
-          stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
-          stateSlash.beams.push(spawnBeam(px, py, base + spread3, 1.5));
-        }
+        stateSlash.beams.push(spawnBeam(px, py, base, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateSlash.beams.push(spawnBeam(px, py, base - spread2, 1.5));
       } else if (cycle < 3) {
         if (!hardMode) {
           const base =
@@ -1218,11 +1197,21 @@ export function setup(
       }
     }
 
-    const DURATIONS = [1, 1, 1, 1.5];
+    const DURATIONS = casualMode ? [1.5, 1.5, 1.5, 1.5] : [1, 1, 1, 1.5];
+    if (
+      casualMode &&
+      cycle < 3 &&
+      !stateSlash.shaken &&
+      stateSlash.timer >= 1
+    ) {
+      stateSlash.shaken = true;
+      shakeScreen();
+    }
     if (stateSlash.timer >= DURATIONS[cycle]) {
       stateSlash.timer = 0;
       stateSlash.cycle = cycle + 1;
-      shakeScreen();
+      if (!casualMode || cycle === 3) shakeScreen();
+      stateSlash.shaken = false;
     }
 
     let needsCompact = false;
@@ -1613,8 +1602,8 @@ export function setup(
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -1683,15 +1672,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1756,7 +1745,7 @@ export function setup(
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
           ctx.strokeRect(drawX, -w / 2, len, w);
-        } else if (i < (hardMode ? 5 : 4)) {
+        } else if (i < (casualMode ? 3 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutter.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -1783,15 +1772,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -1850,7 +1839,7 @@ export function setup(
         "50",
       );
       statePizzaCutterCrumble.spokes.push(spawnPizza(statePizzaCutterCrumble));
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         statePizzaCutterCrumble.circles.push(spawnCircle(2));
       }
       statePizzaCutterCrumble.spawned = true;
@@ -1878,8 +1867,8 @@ export function setup(
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -1992,15 +1981,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -2065,7 +2054,7 @@ export function setup(
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
           ctx.strokeRect(drawX, -w / 2, len, w);
-        } else if (i < (hardMode ? 5 : 4)) {
+        } else if (i < (casualMode ? 3 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && statePizzaCutterCrumble.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -2124,15 +2113,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -2268,14 +2257,15 @@ export function setup(
 
       const side = dx * px + dy * py;
       const forward = dx * vx + dy * vy;
-      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 2 : 1);
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 1.5 : 1);
 
       sn.vx += px * side * TURN_STRENGTH * dt;
       sn.vy += py * side * TURN_STRENGTH * dt;
 
       const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const speed = 2500 * Math.max(1, Math.min(2, dist / 1000));
+      const speed =
+        2500 * Math.max(1, Math.min(2, dist / 1000)) * (hardMode ? 1.25 : 1);
 
       sn.vx = (sn.vx / newLen) * speed;
       sn.vy = (sn.vy / newLen) * speed;
@@ -2608,7 +2598,7 @@ export function setup(
   function enterCrumble() {
     enterOrbit(() => {
       stateCrumble.circles = [];
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         stateCrumble.circles.push(spawnCircle());
       }
     });
@@ -2781,7 +2771,7 @@ export function setup(
     }
 
     if (!s.spawned) {
-      const counts = hardMode ? [6, 7, 8] : [4, 5, 6];
+      const counts = hardMode ? [6, 7, 8] : casualMode ? [3, 3, 3] : [4, 5, 6];
       s.spokes.push(spawnBitter(counts[s.cycle]));
       s.spawned = true;
     }
@@ -3047,10 +3037,10 @@ export function setup(
       );
     }
 
-    const interval = 0.5 / (hardMode ? 60 : 40);
+    const interval = 0.5 / (hardMode ? 60 : casualMode ? 30 : 40);
     while (
       stateCease.rapidTimer >= interval &&
-      stateCease.beams.length < (hardMode ? 60 : 40) &&
+      stateCease.beams.length < (hardMode ? 60 : casualMode ? 30 : 40) &&
       stateCease.timer <= 1
     ) {
       stateCease.rapidTimer -= interval;
@@ -3337,7 +3327,7 @@ export function setup(
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: hardMode ? 800 : 625,
+    w: 625,
     active: false,
     particles: [],
     pTimer: 0,
@@ -3352,7 +3342,7 @@ export function setup(
     enterFixed(s.cx, s.cy, true, () => {
       s.t = 0;
       s.active = true;
-      s.w = hardMode ? 800 : 625;
+      s.w = 625;
       s.angle = 0;
       s.prevAngle = 0;
       s.ex = mouse.x;
@@ -3372,7 +3362,7 @@ export function setup(
     s.t += dt;
     s.pTimer += dt;
 
-    const follow = 1 - Math.exp(-0.8 * dt);
+    const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
 
     s.ex += (mx - s.ex) * follow;
     s.ey += (my - s.ey) * follow;
@@ -3540,7 +3530,7 @@ export function setup(
     }
 
     if (s.t >= 5 && s.t < 22) {
-      s.w = Math.random() * 50 + (hardMode ? 750 : 575);
+      s.w = Math.random() * 50 + 575;
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
@@ -4102,7 +4092,7 @@ export function setup(
           );
           s.lastStartAng *= -1;
           if (i == 0) {
-            for (let i = 0; i < 300; i++) {
+            for (let i = 0; i < (casualMode ? 200 : 300); i++) {
               stateSuperPizzaCutter.crumbles.push(
                 spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
               );
@@ -4133,8 +4123,8 @@ export function setup(
             const dx = mx - s.x;
             const dy = my - s.y;
 
-            for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-              const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
+            for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+              const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
 
               const cos = Math.cos(-angle);
               const sin = Math.sin(-angle);
@@ -4257,18 +4247,18 @@ export function setup(
 
           const isLethal = sp.t >= 4;
 
-          for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-            ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
             const w = isLethal ? 90 : 100;
             const dx = mouse.x - sp.x;
             const dy = mouse.y - sp.y;
 
             const cos = Math.cos(
-              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
             );
             const sin = Math.sin(
-              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
             );
 
             const rx = dx * cos - dy * sin;
@@ -4349,7 +4339,7 @@ export function setup(
               ctx.strokeStyle = "#ff00cc";
               ctx.lineWidth = 1;
               ctx.strokeRect(drawX, -w / 2, len, w);
-            } else if (i < (hardMode ? 5 : 4)) {
+            } else if (i < (casualMode ? 3 : 4)) {
               ctx.globalAlpha =
                 sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
                   ? sp.t * 3
@@ -4441,18 +4431,18 @@ export function setup(
 
           const isLethal = sp.t >= 4;
 
-          for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-            ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
             const w = 90;
             const dx = mouse.x - sp.x;
             const dy = mouse.y - sp.y;
 
             const cos = Math.cos(
-              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
             );
             const sin = Math.sin(
-              -(sp.angle + i * (Math.PI / (hardMode ? 5 : 4))),
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
             );
 
             const rx = dx * cos - dy * sin;
@@ -4543,7 +4533,7 @@ export function setup(
         t: 0,
         locked: false,
         angle: s.lastAng,
-        count: hardMode ? 8 : 6,
+        count: hardMode && phase == 4 ? 8 : 6,
       });
       playSound(
         `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
@@ -4578,7 +4568,7 @@ export function setup(
     }
 
     if (!s.spawned) {
-      const counts = hardMode ? [6, 7, 8] : [4, 5, 6];
+      const counts = hardMode ? [6, 7, 8] : casualMode ? [3, 3, 3] : [4, 5, 6];
       s.spokes.push(spawnBitter(counts[s.cycle], stateBitter3Stars));
       s.spawned = true;
     }
@@ -4741,22 +4731,22 @@ export function setup(
     }
   }
   function drawBitter3Stars(ctx) {
-    const camera = getCameraPos();
-    let bgAlpha = 0;
-    if (stateBitter3Stars.extraT < 1) {
-      bgAlpha = stateBitter3Stars.extraT * 0.5;
-    } else if (stateBitter3Stars.extraT < 7) {
-      bgAlpha = 0.5;
-    } else if (stateBitter3Stars.extraT < 8) {
-      bgAlpha = (8 - stateBitter3Stars.extraT) * 0.5;
-    }
-    if (bgAlpha > 0) {
-      ctx.save();
-      ctx.globalAlpha = bgAlpha;
-      ctx.fillStyle = "black";
-      ctx.fillRect(camera.x, camera.y, window.innerWidth, window.innerHeight);
-      ctx.restore();
-    }
+    // const camera = getCameraPos();
+    // let bgAlpha = 0;
+    // if (stateBitter3Stars.extraT < 1) {
+    //   bgAlpha = stateBitter3Stars.extraT * 0.5;
+    // } else if (stateBitter3Stars.extraT < 7) {
+    //   bgAlpha = 0.5;
+    // } else if (stateBitter3Stars.extraT < 8) {
+    //   bgAlpha = (8 - stateBitter3Stars.extraT) * 0.5;
+    // }
+    // if (bgAlpha > 0) {
+    //   ctx.save();
+    //   ctx.globalAlpha = bgAlpha;
+    //   ctx.fillStyle = "black";
+    //   ctx.fillRect(camera.x, camera.y, window.innerWidth, window.innerHeight);
+    //   ctx.restore();
+    // }
 
     for (const star of stateBitter3Stars.extraStars) {
       ctx.save();
@@ -5000,7 +4990,7 @@ export function setup(
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: hardMode ? 800 : 625,
+    w: 625,
     active: false,
     particles: [],
     pTimer: 0,
@@ -5018,7 +5008,7 @@ export function setup(
     enterFixed(s.cx, s.cy, true, () => {
       s.t = 0;
       s.active = true;
-      s.w = hardMode ? 800 : 625;
+      s.w = 625;
       s.angle = 0;
       s.prevAngle = 0;
       s.ex = mouse.x;
@@ -5040,7 +5030,7 @@ export function setup(
     s.t += dt;
     s.pTimer += dt;
 
-    const follow = 1 - Math.exp(-0.8 * dt);
+    const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
 
     s.ex += (mx - s.ex) * follow;
     s.ey += (my - s.ey) * follow;
@@ -5139,7 +5129,7 @@ export function setup(
 
     s.crumbleT += dt;
     if (s.t >= 6 && s.crumbleT >= 2 && s.t < 22) {
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         s.circles.push(spawnCircle(2));
       }
       s.crumbleT = 0;
@@ -5216,7 +5206,7 @@ export function setup(
     }
 
     if (s.t >= 5 && s.t < 22) {
-      s.w = Math.random() * 50 + (hardMode ? 750 : 575);
+      s.w = Math.random() * 50 + 575;
     }
     if (s.t >= 22) {
       s.w -= dt * 1000;
@@ -5596,8 +5586,8 @@ export function setup(
 
       const dir = Math.random() < 0.5 ? 1 : -1;
       stateImplosionBreaker.daggers = [];
-      for (let i = 0; i < 4; i++) {
-        const baseAngle = (i / 4) * Math.PI * 2;
+      for (let i = 0; i < (hardMode ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode ? 5 : 4)) * Math.PI * 2;
         stateImplosionBreaker.daggers.push({
           t: 0,
           baseAngle,
@@ -5746,7 +5736,7 @@ export function setup(
           d.targetCX = mx - dirX * backDist;
           d.targetCY = my - dirY * backDist;
 
-          const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
+          const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
           d.offset = (index - 1.5) * spread;
 
@@ -6073,8 +6063,8 @@ export function setup(
       stateFirstSilence.circles = [];
       const dir = Math.random() < 0.5 ? 1 : -1;
       stateFirstSilence.daggers = [];
-      for (let i = 0; i < 4; i++) {
-        const baseAngle = (i / 4) * Math.PI * 2;
+      for (let i = 0; i < (hardMode ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode ? 5 : 4)) * Math.PI * 2;
         stateFirstSilence.daggers.push({
           t: 0,
           baseAngle,
@@ -6111,7 +6101,7 @@ export function setup(
         "50",
       );
       stateFirstSilence.spokes.push(spawnPizza(stateFirstSilence));
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         stateFirstSilence.circles.push(spawnCircle(2));
       }
       stateFirstSilence.spawned = true;
@@ -6152,8 +6142,8 @@ export function setup(
         const dx = mx - s.x;
         const dy = my - s.y;
 
-        for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-          const angle = s.angle + i * (Math.PI / (hardMode ? 5 : 4));
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
 
           const cos = Math.cos(-angle);
           const sin = Math.sin(-angle);
@@ -6315,7 +6305,7 @@ export function setup(
           d.targetCX = mx - dirX * backDist;
           d.targetCY = my - dirY * backDist;
 
-          const spread = ((hardMode ? 20 : 10) * Math.PI) / 180;
+          const spread = (10 * Math.PI) / 180;
           const index = stateFirstSilence.daggers.indexOf(d);
           d.offset = (index - 1.5) * spread;
 
@@ -6428,33 +6418,17 @@ export function setup(
         undefined,
         "50",
       );
-      if (!hardMode) {
-        const base =
-          Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
-          ((Math.random() - 0.5) * Math.PI) / 3;
-        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      const base =
+        Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
 
-        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
-      } else {
-        const base =
-          Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
-          ((Math.random() - 0.5) * Math.PI) / 3;
-        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
-        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
-        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
-
-        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
-        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread4, 1.25));
-      }
+      stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
     }
 
     stateFirstSilence.timer += dt;
@@ -6512,15 +6486,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = isLethal ? 90 : 100;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -6585,7 +6559,7 @@ export function setup(
           ctx.strokeStyle = "#ff00cc";
           ctx.lineWidth = 1;
           ctx.strokeRect(drawX, -w / 2, len, w);
-        } else if (i < (hardMode ? 5 : 4)) {
+        } else if (i < (casualMode ? 3 : 4)) {
           ctx.globalAlpha =
             s.t < 0.25 && stateFirstSilence.cycle == 0 ? s.t * 3 : 0.75;
 
@@ -6747,15 +6721,15 @@ export function setup(
 
       const isLethal = s.t >= 2;
 
-      for (let i = 0; i < (hardMode ? 10 : 8); i++) {
-        ctx.rotate(Math.PI / (hardMode ? 5 : 4));
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
 
         const w = 90;
         const dx = mouse.x - s.x;
         const dy = mouse.y - s.y;
 
-        const cos = Math.cos(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
-        const sin = Math.sin(-(s.angle + i * (Math.PI / (hardMode ? 5 : 4))));
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
 
         const rx = dx * cos - dy * sin;
         const x = rx - BEAM_RADIUS;
@@ -6904,7 +6878,7 @@ export function setup(
     prevMx: 0,
     prevMy: 0,
     len: 20000,
-    w: hardMode ? 500 : 417,
+    w: 417,
     active: false,
     particles: [],
     pTimer: 0,
@@ -6933,7 +6907,7 @@ export function setup(
     enterFixed(s.cx, s.cy, true, () => {
       s.t = 0;
       s.active = true;
-      s.w = hardMode ? 500 : 417;
+      s.w = 417;
       s.angle = 0;
       s.baseAngle = Math.random() * Math.PI * 2;
       s.prevAngle = 0;
@@ -6973,7 +6947,7 @@ export function setup(
     }
     s.pTimer += dt;
 
-    const follow = 1 - Math.exp(-0.8 * dt);
+    const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
 
     s.ex += (mx - s.ex) * follow;
     s.ey += (my - s.ey) * follow;
@@ -7083,7 +7057,7 @@ export function setup(
 
     s.crumbleT += dt;
     if (s.t >= 6 && s.crumbleT >= 2 && s.t < 14) {
-      for (let i = 0; i < 300; i++) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         s.circles.push(spawnCircle(2));
       }
       s.crumbleT = 0;
@@ -7160,7 +7134,7 @@ export function setup(
     }
 
     if (s.t >= 5 && s.t < 14) {
-      s.w = Math.random() * 50 + (hardMode ? 450 : 367);
+      s.w = Math.random() * 50 + 367;
     }
     if (s.t >= 14) {
       s.w -= dt * 1000;
@@ -7251,33 +7225,17 @@ export function setup(
         undefined,
         "50",
       );
-      if (!hardMode) {
-        const base =
-          Math.atan2(s.predDirY, s.predDirX) +
-          ((Math.random() - 0.5) * Math.PI) / 3;
-        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      const base =
+        Math.atan2(s.predDirY, s.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
 
-        s.beams.push(spawnBeam(px, py, base, 1.25));
-        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
-      } else {
-        const base =
-          Math.atan2(s.predDirY, s.predDirX) +
-          ((Math.random() - 0.5) * Math.PI) / 3;
-        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
-        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
-        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
-        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
-
-        s.beams.push(spawnBeam(px, py, base, 1.25));
-        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
-        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
-      }
+      s.beams.push(spawnBeam(px, py, base, 1.25));
+      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
     }
 
     s.timer += dt;
@@ -7399,14 +7357,15 @@ export function setup(
 
       const side = dx * px + dy * py;
       const forward = dx * vx + dy * vy;
-      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 2 : 1);
+      const TURN_STRENGTH = 12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 1.5 : 1);
 
       sn.vx += px * side * TURN_STRENGTH * dt;
       sn.vy += py * side * TURN_STRENGTH * dt;
 
       const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const speed = 2500 * Math.max(1, Math.min(2, dist / 1000));
+      const speed =
+        2500 * Math.max(1, Math.min(2, dist / 1000)) * (hardMode ? 1.25 : 1);
 
       sn.vx = (sn.vx / newLen) * speed;
       sn.vy = (sn.vy / newLen) * speed;

@@ -614,7 +614,16 @@ export function setup(host, casualMode, hardMode) {
 
         if (p.phase === "charge") {
           ctx.globalAlpha = 0.5;
-          ctx.fillStyle = "#f0c";
+          const grad = ctx.createLinearGradient(
+            0,
+            -beamWidth / 2,
+            0,
+            beamWidth / 2,
+          );
+          grad.addColorStop(0, "rgba(255,0,192,1)");
+          grad.addColorStop(0.5, "rgba(255,0,192,0.5)");
+          grad.addColorStop(1, "rgba(255,0,192,1)");
+          ctx.fillStyle = grad;
         } else {
           ctx.globalAlpha = 1;
           ctx.fillStyle = "black";

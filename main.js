@@ -800,7 +800,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Celestial",
-    spawn: () => spawnCelestial(entityHost, hardMode),
+    spawn: () => spawnCelestial(entityHost, casualMode, hardMode),
     start: 1000000000,
     src: "./ASSET/Enemies/Celestial.png",
     desc: "TO MAKE THINGS EVEN.",
@@ -1643,7 +1643,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     //DELETE AFTER RELEASE
     if (input === "silencecelestial") {
-      spawnCelestial(entityHost, hardMode, false, true);
+      spawnCelestial(entityHost, casualMode, hardMode, false, true);
       topLeftInput.value = "";
     }
     if (input === "truecelestial" || input === "spawncelestialintro") {
@@ -3088,7 +3088,7 @@ export function spawnCelestialAfterIntro() {
       spawnCatalystIntro();
       registerEntitySpawn("Catalyst", "./ASSET/Enemies/CatalystIcon.png");
     }
-    spawnCelestial(entityHost, hardMode, true);
+    spawnCelestial(entityHost, casualMode, hardMode, true);
     registerEntitySpawn("Celestial", "./ASSET/Enemies/Celestial.png");
   }, 1000);
 }
