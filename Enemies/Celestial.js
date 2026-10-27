@@ -1807,6 +1807,7 @@ export function setup(
     cy: 0,
 
     circles: [],
+    explosions: [],
   };
   function enterPizzaCutterCrumble() {
     const cx = mouse.x + (Math.random() - 0.5) * 2000;
@@ -1822,12 +1823,16 @@ export function setup(
       statePizzaCutterCrumble.cx = cx;
       statePizzaCutterCrumble.cy = cy;
       statePizzaCutterCrumble.circles = [];
+      statePizzaCutterCrumble.explosions = [];
     });
   }
   function updatePizzaCutterCrumble(dt) {
     const mx = mouse.x;
     const my = mouse.y;
     statePizzaCutterCrumble.t += dt;
+    for (const e of statePizzaCutterCrumble.explosions) e.t += dt;
+    statePizzaCutterCrumble.explosions =
+      statePizzaCutterCrumble.explosions.filter((e) => e.t < 1);
 
     if (!statePizzaCutterCrumble.spawned) {
       playSound(
@@ -1955,7 +1960,18 @@ export function setup(
       } else if (c.t < 2) {
         c.r = c.targetR;
       } else {
-        c.r -= dt * 100;
+        if (!c.shake) {
+          c.shake = true;
+          statePizzaCutterCrumble.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(6 + Math.random() * 5),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
         if (c.r <= 0) {
           c.active = false;
           needsCompact = true;
@@ -2135,6 +2151,28 @@ export function setup(
         }
       }
 
+      ctx.restore();
+    }
+    for (const e of statePizzaCutterCrumble.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.5;
+        const outer = r;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
       ctx.restore();
     }
     for (const c of statePizzaCutterCrumble.circles) {
@@ -2593,11 +2631,13 @@ export function setup(
 
   const stateCrumble = {
     circles: [],
+    explosions: [],
     t: 0,
   };
   function enterCrumble() {
     enterOrbit(() => {
       stateCrumble.circles = [];
+      stateCrumble.explosions = [];
       for (let i = 0; i < (casualMode ? 200 : 300); i++) {
         stateCrumble.circles.push(spawnCircle());
       }
@@ -2609,6 +2649,8 @@ export function setup(
     const mx = mouse.x;
     const my = mouse.y;
     let needsCompact = false;
+    for (const e of stateCrumble.explosions) e.t += dt;
+    stateCrumble.explosions = stateCrumble.explosions.filter((e) => e.t < 1);
     stateCrumble.t += dt;
     for (const c of stateCrumble.circles) {
       c.t += dt;
@@ -2641,8 +2683,16 @@ export function setup(
           if (stateCrumble.circles.indexOf(c) == 0) {
             playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
           }
+          stateCrumble.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(6 + Math.random() * 5),
+          });
         }
-        c.r -= dt * 200;
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
         if (c.r <= 0) {
           c.active = false;
           needsCompact = true;
@@ -2694,6 +2744,28 @@ export function setup(
     }
   }
   function drawCrumbleFront(ctx) {
+    for (const e of stateCrumble.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.5;
+        const outer = r;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
     for (const c of stateCrumble.circles) {
       ctx.save();
 
@@ -3811,6 +3883,7 @@ export function setup(
     t: 0,
     spawned: false,
     circles: [],
+    explosions: [],
 
     cutters: [
       {
@@ -3880,6 +3953,7 @@ export function setup(
         s.cutters[i].cy = 0;
       }
       s.circles = [];
+      s.explosions = [];
     });
   }
   function updateSuperPizzaCutter(dt) {
@@ -3896,6 +3970,8 @@ export function setup(
       s.change = true;
       changeEnemy(Celestial_CutterEnd);
     }
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
 
     if (s.t <= dt) {
       playSound(
@@ -4179,8 +4255,16 @@ export function setup(
           if (!c.shake) {
             c.shake = true;
             shakeScreen();
+            stateSuperPizzaCutter.explosions.push({
+              x: c.x,
+              y: c.y,
+              r: c.targetR,
+              t: 0,
+              rot: Math.random(),
+              s: Math.floor(6 + Math.random() * 5),
+            });
           }
-          c.r -= dt * (c.targetR == 150 ? 200 : 133.333);
+          c.r = c.targetR * (1 - Math.min(c.t - 4, 1));
           if (c.r <= 0) {
             c.active = false;
             needsCompact = true;
@@ -4459,6 +4543,28 @@ export function setup(
 
           ctx.restore();
         }
+      }
+      for (const e of s.explosions) {
+        const r = e.r * (1 - Math.pow(e.t, 5));
+        const spikes = e.s;
+        ctx.save();
+        ctx.translate(e.x, e.y);
+        ctx.rotate(e.rot * Math.PI * 2);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        for (let i = 0; i < spikes; i++) {
+          const a = (i / spikes) * Math.PI * 2;
+          const inner = r * 0.5;
+          const outer = r;
+          ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+          ctx.lineTo(
+            Math.cos(a + Math.PI / spikes) * outer,
+            Math.sin(a + Math.PI / spikes) * outer,
+          );
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
       }
       for (const c of s.crumbles) {
         ctx.save();
@@ -4997,6 +5103,7 @@ export function setup(
 
     crumbleT: 0,
     circles: [],
+    explosions: [],
   };
   function enterDeathInBloomCrumble() {
     const s = stateDeathInBloomCrumble;
@@ -5017,6 +5124,7 @@ export function setup(
       s.pTimer = 0;
       s.crumbleT = 0;
       s.circles = [];
+      s.explosions = [];
     });
     setGiftMultiplier(0.5);
 
@@ -5029,6 +5137,8 @@ export function setup(
 
     s.t += dt;
     s.pTimer += dt;
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
 
     const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
 
@@ -5249,8 +5359,16 @@ export function setup(
           if (s.circles.indexOf(c) == 0) {
             playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
           }
+          s.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(6 + Math.random() * 5),
+          });
         }
-        c.r -= dt * 200;
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
         if (c.r <= 0) {
           c.active = false;
           needsCompactCrumble = true;
@@ -5543,6 +5661,28 @@ export function setup(
       ctx.restore();
     }
 
+    for (const e of s.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.5;
+        const outer = r;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
     for (const c of s.circles) {
       ctx.save();
 
@@ -6037,6 +6177,7 @@ export function setup(
     cy: 0,
 
     circles: [],
+    explosions: [],
 
     daggers: [],
 
@@ -6061,6 +6202,7 @@ export function setup(
       stateFirstSilence.cx = cx;
       stateFirstSilence.cy = cy;
       stateFirstSilence.circles = [];
+      stateFirstSilence.explosions = [];
       const dir = Math.random() < 0.5 ? 1 : -1;
       stateFirstSilence.daggers = [];
       for (let i = 0; i < (hardMode ? 5 : 4); i++) {
@@ -6090,6 +6232,10 @@ export function setup(
     const mx = mouse.x;
     const my = mouse.y;
     stateFirstSilence.t += dt;
+    for (const e of stateFirstSilence.explosions) e.t += dt;
+    stateFirstSilence.explosions = stateFirstSilence.explosions.filter(
+      (e) => e.t < 1,
+    );
 
     if (!stateFirstSilence.spawned) {
       playSound(
@@ -6230,7 +6376,18 @@ export function setup(
       } else if (c.t < 2) {
         c.r = c.targetR;
       } else {
-        c.r -= dt * 100;
+        if (!c.shake) {
+          c.shake = true;
+          stateFirstSilence.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(6 + Math.random() * 5),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
         if (c.r <= 0) {
           c.active = false;
           needsCompact = true;
@@ -6772,6 +6929,28 @@ export function setup(
 
       ctx.restore();
     }
+    for (const e of stateFirstSilence.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.5;
+        const outer = r;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
     for (const c of stateFirstSilence.circles) {
       ctx.save();
 
@@ -6885,6 +7064,7 @@ export function setup(
 
     crumbleT: 0,
     circles: [],
+    explosions: [],
 
     beams: [],
     timer: 0,
@@ -6918,6 +7098,7 @@ export function setup(
       s.pTimer = 0;
       s.crumbleT = 0;
       s.circles = [];
+      s.explosions = [];
       s.beams = [];
       s.timer = 0;
       s.prevMx = mouse.x;
@@ -6946,6 +7127,8 @@ export function setup(
       changeEnemy(Celestial_FinalSwing);
     }
     s.pTimer += dt;
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
 
     const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
 
@@ -7177,8 +7360,16 @@ export function setup(
           if (s.circles.indexOf(c) == 0) {
             playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
           }
+          s.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(6 + Math.random() * 5),
+          });
         }
-        c.r -= dt * 200;
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
         if (c.r <= 0) {
           c.active = false;
           needsCompactCrumble = true;
@@ -7974,6 +8165,28 @@ export function setup(
       ctx.restore();
     }
 
+    for (const e of s.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.5;
+        const outer = r;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
     for (const c of s.circles) {
       ctx.save();
 
@@ -8353,7 +8566,7 @@ export function setup(
 
     if (state.enemyTransition != "none") state.enemyTransitionT += dt;
     if (state.enemyTransition == "shrink") {
-      const p = state.enemyTransitionT * 4;
+      const p = state.enemyTransitionT * (casualMode ? 2 : 4);
       const eased = p * p;
 
       state.enemyScale = 1 - eased;
@@ -8370,7 +8583,7 @@ export function setup(
         state.enemyTransition = "grow";
       }
     } else if (state.enemyTransition == "grow") {
-      const p = state.enemyTransitionT * 4;
+      const p = state.enemyTransitionT * (casualMode ? 2 : 4);
       const eased = 1 - (1 - p) * (1 - p);
 
       state.enemyScale = eased;
