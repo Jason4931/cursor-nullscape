@@ -1197,7 +1197,8 @@ export function setup(
       }
     }
 
-    const DURATIONS = casualMode ? [1.5, 1.5, 1.5, 1.5] : [1, 1, 1, 1.5];
+    const DURATIONS =
+      casualMode && phase != 4 ? [1.5, 1.5, 1.5, 1.5] : [1, 1, 1, 1.5];
     if (
       casualMode &&
       cycle < 3 &&
@@ -1968,7 +1969,7 @@ export function setup(
             r: c.targetR,
             t: 0,
             rot: Math.random(),
-            s: Math.floor(6 + Math.random() * 5),
+            s: Math.floor(10 + Math.random() * 11),
           });
         }
         c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
@@ -2164,7 +2165,7 @@ export function setup(
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
         const inner = r * 0.5;
-        const outer = r;
+        const outer = r * 0.75;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -2689,7 +2690,7 @@ export function setup(
             r: c.targetR,
             t: 0,
             rot: Math.random(),
-            s: Math.floor(6 + Math.random() * 5),
+            s: Math.floor(10 + Math.random() * 11),
           });
         }
         c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
@@ -2755,7 +2756,7 @@ export function setup(
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
         const inner = r * 0.5;
-        const outer = r;
+        const outer = r * 0.75;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -4261,7 +4262,7 @@ export function setup(
               r: c.targetR,
               t: 0,
               rot: Math.random(),
-              s: Math.floor(6 + Math.random() * 5),
+              s: Math.floor(10 + Math.random() * 11),
             });
           }
           c.r = c.targetR * (1 - Math.min(c.t - 4, 1));
@@ -4555,7 +4556,7 @@ export function setup(
         for (let i = 0; i < spikes; i++) {
           const a = (i / spikes) * Math.PI * 2;
           const inner = r * 0.5;
-          const outer = r;
+          const outer = r * 0.75;
           ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
           ctx.lineTo(
             Math.cos(a + Math.PI / spikes) * outer,
@@ -4639,7 +4640,7 @@ export function setup(
         t: 0,
         locked: false,
         angle: s.lastAng,
-        count: hardMode && phase == 4 ? 8 : 6,
+        count: hardMode && phase == 4 ? 8 : casualMode ? 4 : 6,
       });
       playSound(
         `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
@@ -5053,7 +5054,13 @@ export function setup(
           ctx.fillStyle = "black";
           ctx.fillRect(drawX, -w / 2, len, w);
         } else {
-          ctx.fillStyle = "#ff00cc";
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0.5)");
+          const middleAlpha =
+            star.t < 2.083 ? 1 : Math.max(0.5, 1 - (star.t - 2.083) * 2);
+          grad.addColorStop(0.5, `rgba(255,0,192,${middleAlpha})`);
+          grad.addColorStop(1, "rgba(255,0,192,0.5)");
+          ctx.fillStyle = grad;
           ctx.fillRect(0, -w / 2, len, w);
         }
       }
@@ -5365,7 +5372,7 @@ export function setup(
             r: c.targetR,
             t: 0,
             rot: Math.random(),
-            s: Math.floor(6 + Math.random() * 5),
+            s: Math.floor(10 + Math.random() * 11),
           });
         }
         c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
@@ -5672,7 +5679,7 @@ export function setup(
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
         const inner = r * 0.5;
-        const outer = r;
+        const outer = r * 0.75;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -6384,7 +6391,7 @@ export function setup(
             r: c.targetR,
             t: 0,
             rot: Math.random(),
-            s: Math.floor(6 + Math.random() * 5),
+            s: Math.floor(10 + Math.random() * 11),
           });
         }
         c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
@@ -6940,7 +6947,7 @@ export function setup(
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
         const inner = r * 0.5;
-        const outer = r;
+        const outer = r * 0.75;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -7366,7 +7373,7 @@ export function setup(
             r: c.targetR,
             t: 0,
             rot: Math.random(),
-            s: Math.floor(6 + Math.random() * 5),
+            s: Math.floor(10 + Math.random() * 11),
           });
         }
         c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
@@ -8176,7 +8183,7 @@ export function setup(
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
         const inner = r * 0.5;
-        const outer = r;
+        const outer = r * 0.75;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
