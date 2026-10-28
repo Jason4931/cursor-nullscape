@@ -959,7 +959,7 @@ export function setup(
 
       t: 0,
       r: 0,
-      targetR: (hardMode ? 200 : casualMode ? 125 : 150) / targetR,
+      targetR: (hardMode ? 175 : casualMode ? 125 : 150) / targetR,
       active: true,
     };
   }
@@ -1032,40 +1032,159 @@ export function setup(
     const dx = mouse.x - x;
     const dy = mouse.y - y;
 
-    const points = [];
-    const segments = 7;
-    const h = 400;
-    const maxW = 60;
-    let randspike = 1;
+    const scars = [-1, 0, 1].map((offset) => {
+      const segments = 8;
+      const length = 300 + Math.random() * 100;
+      const points = [];
+      const maxWidth = 20 + Math.random() * 5;
+      const taperExponent = 0.8 + Math.random() * 0.4;
 
-    for (let i = 0; i <= segments; i++) {
-      const t = i / segments;
-      const py = -h / 2 + t * h;
+      for (let i = 0; i <= segments; i++) {
+        const t = i / segments;
+        const jag = i === 0 || i === segments ? 0 : (Math.random() - 0.5) * 28;
+        points.push({
+          x: offset * 76 + jag,
+          y: -length / 2 + t * length,
+          width: maxWidth * Math.pow(Math.sin(t * Math.PI), taperExponent),
+        });
+      }
 
-      const centerFalloff = Math.sin(t * Math.PI);
-      const w = maxW * centerFalloff;
-
-      const spike = randspike * Math.random() * 40;
-      randspike *= -1;
-
-      const curve = Math.sin(t * Math.PI * 2) * 20;
-
-      points.push({
-        y: py,
-        lx: -w + spike + curve,
-        rx: w + spike + curve,
-      });
-    }
+      return { points };
+    });
+    const glowCanvas = createFutileScarsGlow(scars);
 
     return {
       x,
       y,
       angle: Math.atan2(dy, dx),
       t: 0,
-      points,
+      scars,
+      glowCanvas,
       scale: 0,
       indicatorT: 0,
     };
+  }
+  function drawFutileScarShapes(ctx, scars) {
+    for (const scar of scars) {
+      const left = [];
+      const right = [];
+      for (const point of scar.points) {
+        left.push([point.x - point.width / 2, point.y]);
+        right.push([point.x + point.width / 2, point.y]);
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(left[0][0], left[0][1]);
+      for (let i = 1; i < left.length; i++) ctx.lineTo(left[i][0], left[i][1]);
+      for (let i = right.length - 1; i >= 0; i--) {
+        ctx.lineTo(right[i][0], right[i][1]);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  function createFutileScarsGlow(scars) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 500;
+    canvas.height = 600;
+    const ctx = canvas.getContext("2d");
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.fillStyle = "black";
+    drawFutileScarShapes(ctx, scars);
+
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.width = canvas.width;
+    glowCanvas.height = canvas.height;
+    const glowCtx = glowCanvas.getContext("2d");
+    for (let blur = 40; blur >= 4; blur -= 4) {
+      glowCtx.filter = `blur(${blur}px)`;
+      glowCtx.drawImage(canvas, 0, 0);
+    }
+    glowCtx.filter = "none";
+    glowCtx.globalCompositeOperation = "source-in";
+    glowCtx.fillStyle = "#ff00cc";
+    glowCtx.fillRect(0, 0, glowCanvas.width, glowCanvas.height);
+    glowCtx.globalCompositeOperation = "source-over";
+    return glowCanvas;
+  }
+  function drawRiftScars(ctx, rift, glow = false) {
+    if (glow) {
+      ctx.drawImage(
+        rift.glowCanvas,
+        -rift.glowCanvas.width / 2,
+        -rift.glowCanvas.height / 2,
+      );
+      return;
+    }
+
+    ctx.fillStyle = "black";
+    drawFutileScarShapes(ctx, rift.scars);
+  }
+  let bloodPoolCanvases;
+  function getBloodPoolCanvases() {
+    if (bloodPoolCanvases) return bloodPoolCanvases;
+
+    const shapeCanvas = document.createElement("canvas");
+    shapeCanvas.width = 600;
+    shapeCanvas.height = 500;
+    const shapeCtx = shapeCanvas.getContext("2d");
+    shapeCtx.translate(shapeCanvas.width / 2, shapeCanvas.height / 2);
+    shapeCtx.beginPath();
+    shapeCtx.moveTo(-190, -105);
+    shapeCtx.bezierCurveTo(-170, -165, -100, -190, -35, -170);
+    shapeCtx.bezierCurveTo(20, -205, 100, -175, 125, -125);
+    shapeCtx.bezierCurveTo(205, -145, 245, -70, 205, -5);
+    shapeCtx.bezierCurveTo(275, 45, 245, 135, 170, 145);
+    shapeCtx.bezierCurveTo(130, 200, 65, 195, 25, 165);
+    shapeCtx.bezierCurveTo(-20, 215, -95, 195, -115, 150);
+    shapeCtx.bezierCurveTo(-190, 175, -235, 115, -205, 55);
+    shapeCtx.bezierCurveTo(-250, 0, -235, -75, -190, -105);
+    shapeCtx.closePath();
+    shapeCtx.fillStyle = "black";
+    shapeCtx.fill();
+
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.width = shapeCanvas.width;
+    glowCanvas.height = shapeCanvas.height;
+    const glowCtx = glowCanvas.getContext("2d");
+    for (let blur = 40; blur >= 4; blur -= 4) {
+      glowCtx.filter = `blur(${blur}px)`;
+      glowCtx.drawImage(shapeCanvas, 0, 0);
+    }
+    glowCtx.filter = "none";
+    glowCtx.globalCompositeOperation = "source-in";
+    glowCtx.fillStyle = "#ff00cc";
+    glowCtx.fillRect(0, 0, glowCanvas.width, glowCanvas.height);
+    glowCtx.globalCompositeOperation = "source-over";
+
+    bloodPoolCanvases = { shapeCanvas, glowCanvas };
+    return bloodPoolCanvases;
+  }
+  function createBloodPoolState() {
+    return { x: 0, y: 0, elapsed: 0, alpha: 0, active: false };
+  }
+  function startBloodPool(pool, rift) {
+    pool.x = rift.x;
+    pool.y = rift.y;
+    pool.elapsed = 0;
+    pool.alpha = 1;
+    pool.active = true;
+  }
+  function updateBloodPool(pool, dt) {
+    if (!pool.active) return;
+    pool.elapsed = Math.min(3, pool.elapsed + dt);
+    const progress = pool.elapsed / 3;
+    pool.alpha = 1 - Math.pow(progress, 5);
+  }
+  function drawBloodPool(ctx, pool) {
+    if (!pool.active || pool.alpha <= 0) return;
+    const { shapeCanvas, glowCanvas } = getBloodPoolCanvases();
+    ctx.save();
+    ctx.globalAlpha = pool.alpha;
+    ctx.translate(pool.x, pool.y);
+    ctx.drawImage(glowCanvas, -glowCanvas.width / 2, -glowCanvas.height / 2);
+    ctx.drawImage(shapeCanvas, -shapeCanvas.width / 2, -shapeCanvas.height / 2);
+    ctx.restore();
   }
   function spawnSnake(rift) {
     const speed = 2500;
@@ -2211,6 +2330,7 @@ export function setup(
     rift: null,
     snake: null,
     trail: [],
+    bloodPool: createBloodPoolState(),
   };
   function enterFutile() {
     enterFixed(-1000, -1000, true, () => {
@@ -2220,6 +2340,7 @@ export function setup(
       s.snake = null;
       s.rift = spawnFutileRift();
       s.trail = [];
+      s.bloodPool = createBloodPoolState();
     });
 
     if (truePattern == false) showText("FUTILE.");
@@ -2231,6 +2352,7 @@ export function setup(
 
     s.t += dt;
     s.rift.t += dt;
+    updateBloodPool(s.bloodPool, dt);
 
     const r = s.rift;
     if (r.t <= dt) {
@@ -2280,6 +2402,7 @@ export function setup(
 
     if (s.rift.t >= 1 && s.rift.t < 3 && !s.snake) {
       s.snake = spawnSnake(s.rift);
+      startBloodPool(s.bloodPool, s.rift);
     }
 
     const sn = s.snake;
@@ -2353,9 +2476,9 @@ export function setup(
   function drawFutile(ctx) {
     const s = stateFutile;
 
-    if (s.rift) {
-      const pts = s.rift.points;
+    drawBloodPool(ctx, s.bloodPool);
 
+    if (s.rift) {
       ctx.save();
       ctx.translate(s.rift.x, s.rift.y);
       ctx.rotate(s.rift.angle);
@@ -2370,24 +2493,7 @@ export function setup(
       ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      drawRiftScars(ctx, s.rift, true);
 
       ctx.restore();
     }
@@ -2500,30 +2606,12 @@ export function setup(
     const s = stateFutile;
 
     if (s.rift) {
-      const pts = s.rift.points;
-
       ctx.save();
       ctx.translate(s.rift.x, s.rift.y);
       ctx.rotate(s.rift.angle);
       ctx.scale(s.rift.scale, s.rift.scale);
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
+      drawRiftScars(ctx, s.rift);
 
       ctx.restore();
     }
@@ -2573,8 +2661,6 @@ export function setup(
       const ex = cx + Math.cos(ang) * scale;
       const ey = cy + Math.sin(ang) * scale;
 
-      const pts = r.points;
-
       ctx.save();
       ctx.translate(ex, ey);
       ctx.rotate(ang);
@@ -2591,27 +2677,8 @@ export function setup(
       ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      drawRiftScars(ctx, r, true);
+      drawRiftScars(ctx, r);
 
       ctx.restore();
 
@@ -3110,10 +3177,10 @@ export function setup(
       );
     }
 
-    const interval = 0.5 / (hardMode ? 60 : casualMode ? 30 : 40);
+    const interval = 0.5 / (hardMode ? 50 : casualMode ? 30 : 40);
     while (
       stateCease.rapidTimer >= interval &&
-      stateCease.beams.length < (hardMode ? 60 : casualMode ? 30 : 40) &&
+      stateCease.beams.length < (hardMode ? 50 : casualMode ? 30 : 40) &&
       stateCease.timer <= 1
     ) {
       stateCease.rapidTimer -= interval;
@@ -3135,7 +3202,7 @@ export function setup(
       stateCease.positions.push({ x, y });
 
       stateCease.beams.push(
-        spawnBeam(x, y, Math.random() * Math.PI * 2, 2 - stateCease.timer),
+        spawnBeam(x, y, Math.random() * Math.PI * 2, 1.8 - stateCease.timer),
       );
     }
 
@@ -4604,6 +4671,12 @@ export function setup(
     cx: 0,
     cy: 0,
 
+    circle: {
+      t: 0,
+      active: false,
+      x: 0,
+      y: 0,
+    },
     extraStars: [],
     extraT: 0,
     extraSpawned: 0,
@@ -4619,6 +4692,12 @@ export function setup(
       stateBitter3Stars.spawned = false;
       stateBitter3Stars.cx = cx;
       stateBitter3Stars.cy = cy;
+      stateBitter3Stars.circle = {
+        t: 0,
+        active: true,
+        x: mouse.x,
+        y: mouse.y,
+      };
       stateBitter3Stars.extraStars = [];
       stateBitter3Stars.extraT = 0;
       stateBitter3Stars.extraSpawned = 0;
@@ -4633,6 +4712,26 @@ export function setup(
     s.t += dt;
     s.extraT += dt;
 
+    if (s.circle.active) {
+      const c = s.circle;
+      c.t += dt;
+      if (c.t < 8) {
+        c.r = 75 * c.t;
+      } else {
+        c.r -= dt * 800;
+        if (c.r <= 0) {
+          c.active = false;
+        }
+      }
+      if (c.t >= 8) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
     if (s.extraSpawned < 3 && s.extraT >= s.extraSpawned * 2.333) {
       s.extraStars.push({
         x: mouse.x,
@@ -4855,6 +4954,48 @@ export function setup(
     //   ctx.restore();
     // }
 
+    if (stateBitter3Stars.circle.active) {
+      const c = stateBitter3Stars.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 8 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 8) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (Number.isFinite(c.r)) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
     for (const star of stateBitter3Stars.extraStars) {
       ctx.save();
 
@@ -5017,6 +5158,24 @@ export function setup(
     }
   }
   function drawBitter3StarsFront(ctx) {
+    if (stateBitter3Stars.circle.active) {
+      const c = stateBitter3Stars.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 8 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 8) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
     for (const star of stateBitter3Stars.extraStars) {
       ctx.save();
 
@@ -5733,8 +5892,8 @@ export function setup(
 
       const dir = Math.random() < 0.5 ? 1 : -1;
       stateImplosionBreaker.daggers = [];
-      for (let i = 0; i < (hardMode ? 5 : 4); i++) {
-        const baseAngle = (i / (hardMode ? 5 : 4)) * Math.PI * 2;
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
         stateImplosionBreaker.daggers.push({
           t: 0,
           baseAngle,
@@ -6212,8 +6371,8 @@ export function setup(
       stateFirstSilence.explosions = [];
       const dir = Math.random() < 0.5 ? 1 : -1;
       stateFirstSilence.daggers = [];
-      for (let i = 0; i < (hardMode ? 5 : 4); i++) {
-        const baseAngle = (i / (hardMode ? 5 : 4)) * Math.PI * 2;
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
         stateFirstSilence.daggers.push({
           t: 0,
           baseAngle,
@@ -7083,6 +7242,7 @@ export function setup(
     rift: null,
     snake: null,
     trail: [],
+    bloodPool: createBloodPoolState(),
   };
   function enterSecondSilence() {
     const s = stateSecondSilence;
@@ -7115,6 +7275,7 @@ export function setup(
       s.snake = null;
       s.rift = spawnFutileRift();
       s.trail = [];
+      s.bloodPool = createBloodPoolState();
       s.change = false;
       s.predDirX = Math.cos(Math.random() * Math.PI * 2);
       s.predDirY = Math.sin(Math.random() * Math.PI * 2);
@@ -7489,6 +7650,7 @@ export function setup(
     if (s.t >= 5) {
       s.futileT += dt;
       s.rift.t += dt;
+      updateBloodPool(s.bloodPool, dt);
     }
 
     const r = s.rift;
@@ -7539,6 +7701,7 @@ export function setup(
 
     if (s.rift.t >= 1 && s.rift.t < 3 && !s.snake) {
       s.snake = spawnSnake(s.rift);
+      startBloodPool(s.bloodPool, s.rift);
     }
 
     const sn = s.snake;
@@ -7614,6 +7777,8 @@ export function setup(
   }
   function drawSecondSilence(ctx) {
     const s = stateSecondSilence;
+
+    drawBloodPool(ctx, s.bloodPool);
 
     if (s.active) {
       if (!uldm) {
@@ -7753,8 +7918,6 @@ export function setup(
     }
 
     if (s.rift) {
-      const pts = s.rift.points;
-
       ctx.save();
       ctx.translate(s.rift.x, s.rift.y);
       ctx.rotate(s.rift.angle);
@@ -7769,24 +7932,7 @@ export function setup(
       ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      drawRiftScars(ctx, s.rift, true);
 
       ctx.restore();
     }
@@ -8094,30 +8240,12 @@ export function setup(
     }
 
     if (s.rift) {
-      const pts = s.rift.points;
-
       ctx.save();
       ctx.translate(s.rift.x, s.rift.y);
       ctx.rotate(s.rift.angle);
       ctx.scale(s.rift.scale, s.rift.scale);
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
+      drawRiftScars(ctx, s.rift);
 
       ctx.restore();
     }
@@ -8244,8 +8372,6 @@ export function setup(
       const ex = cx + Math.cos(ang) * scale;
       const ey = cy + Math.sin(ang) * scale;
 
-      const pts = r.points;
-
       ctx.save();
       ctx.translate(ex, ey);
       ctx.rotate(ang);
@@ -8262,27 +8388,8 @@ export function setup(
       ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.beginPath();
-
-      for (let i = 0; i < pts.length; i++) {
-        const p = pts[i];
-        if (i === 0) ctx.moveTo(p.lx, p.y);
-        else ctx.lineTo(p.lx, p.y);
-      }
-
-      for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        ctx.lineTo(p.rx, p.y);
-      }
-
-      ctx.closePath();
-
-      ctx.fillStyle = "black";
-      ctx.fill();
-
-      ctx.strokeStyle = "#ff00cc";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      drawRiftScars(ctx, r, true);
+      drawRiftScars(ctx, r);
 
       ctx.restore();
 
