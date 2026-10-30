@@ -131,8 +131,8 @@ export function setup(host, casualMode, hardMode) {
     ctx.globalAlpha = (state.exploded ? 1 - fadeProgress : 1) * 0.5;
 
     for (const circle of [
-      { radius: EXPLODE_RADIUS, color: "red" },
-      { radius: EXPLODE_RADIUS * 2, color: "orange" },
+      { radius: EXPLODE_RADIUS, color: "255,0,0" },
+      { radius: EXPLODE_RADIUS * 2, color: "255,128,0" },
     ]) {
       const radius = circle.radius * growth;
       const gradient = ctx.createRadialGradient(
@@ -143,8 +143,8 @@ export function setup(host, casualMode, hardMode) {
         state.y,
         radius,
       );
-      gradient.addColorStop(0, "transparent");
-      gradient.addColorStop(1, circle.color);
+      gradient.addColorStop(0, `rgba(${circle.color}, 0)`);
+      gradient.addColorStop(1, `rgba(${circle.color}, 1)`);
       ctx.beginPath();
       ctx.arc(Math.round(state.x), Math.round(state.y), radius, 0, Math.PI * 2);
       ctx.fillStyle = gradient;

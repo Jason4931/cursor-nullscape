@@ -1,6 +1,7 @@
-import { death, mouse } from "../entityHost.js";
+import { mouse } from "../entityHost.js";
 import {
   fleshPositions,
+  fleshContactPositions,
   playSound,
   isCursorOnFloor,
   ESP,
@@ -104,6 +105,14 @@ export function setup(host, hardMode) {
     const mx = mouse.x - state.x;
     const my = mouse.y - state.y;
     const dist = Math.hypot(mx, my);
+    if (dist <= state.size) {
+      fleshContactPositions.add({
+        x: state.x,
+        y: state.y,
+        radius: state.size,
+        until: now + 100,
+      });
+    }
 
     const aggroRadius = 1000;
 
@@ -134,11 +143,6 @@ export function setup(host, hardMode) {
     let dy = 0;
 
     if (state.mode === "target") {
-      if (dist <= state.size * 0.5) {
-        death("Flesh");
-        return;
-      }
-
       if (dist > 0.001) {
         dx = mx / dist;
         dy = my / dist;
@@ -230,7 +234,26 @@ export function setup(host, hardMode) {
       Math.round(state.size),
       Math.round(state.size),
     );
-
+    const gradient = ctx.createRadialGradient(
+      state.x,
+      state.y,
+      state.size * 0.75,
+      state.x,
+      state.y,
+      state.size,
+    );
+    gradient.addColorStop(0, `rgba(255,0,0,0)`);
+    gradient.addColorStop(1, `rgba(255,0,0,0.5)`);
+    ctx.beginPath();
+    ctx.arc(
+      Math.round(state.x),
+      Math.round(state.y),
+      state.size,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = gradient;
+    ctx.fill();
     if (state.pelletActive) {
       const jitterX = (Math.random() - 0.5) * 6;
       const jitterY = (Math.random() - 0.5) * 6;

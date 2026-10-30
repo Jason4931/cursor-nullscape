@@ -20,6 +20,8 @@ v void implosion
 v oblivion
 v razorbloom
 v malfunction
+
+x voidbound icbm
 rare
 v ponderer
 v nil (considered separate from new nil)
@@ -69,4 +71,4 @@ v celestial outro
 v altars
 
 v catalyst
-v celestial
+v celestial (no extreme yet)

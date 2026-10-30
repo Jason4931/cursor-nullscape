@@ -2800,7 +2800,7 @@ function drawGrid() {
     slowness = true;
   }
   slownessTime++;
-  if (slownessTime >= 90 && slowness) {
+  if (slownessTime >= 150 && slowness) {
     slowness = false;
     slownessCooldown = true;
     setTimeout(() => {

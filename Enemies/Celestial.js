@@ -674,13 +674,13 @@ export function setup(
     },
   ];
   const specificDevOnly = [
-    {
-      duration: casualMode ? 7 : 5.5,
-      update: updateSlash,
-      draw: drawSlash,
-      drawFront: drawSlashFront,
-      enter: enterSlash,
-    },
+    // {
+    //   duration: casualMode ? 7 : 5.5,
+    //   update: updateSlash,
+    //   draw: drawSlash,
+    //   drawFront: drawSlashFront,
+    //   enter: enterSlash,
+    // },
     {
       duration: 3,
       update: updateImplosion,
@@ -688,97 +688,97 @@ export function setup(
       drawFront: drawImplosionFront,
       enter: enterImplosion,
     },
-    {
-      duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      drawFront: drawPizzaCutterFront,
-      enter: enterPizzaCutter,
-    },
-    {
-      duration: 13,
-      update: updateFutile,
-      draw: drawFutile,
-      drawFront: drawFutileFront,
-      enter: enterFutile,
-    },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      drawFront: drawCrumbleFront,
-      enter: enterCrumble,
-    },
-    {
-      duration: 9,
-      update: updateBitter,
-      draw: drawBitter,
-      drawFront: drawBitterFront,
-      enter: enterBitter,
-    },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      drawFront: drawCeaseFront,
-      enter: enterCease,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumble,
-      draw: drawPizzaCutterCrumble,
-      drawFront: drawPizzaCutterCrumbleFront,
-      enter: enterPizzaCutterCrumble,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom,
-      draw: drawDeathInBloom,
-      drawFront: drawDeathInBloomFront,
-      enter: enterDeathInBloom,
-    },
-    {
-      duration: 8,
-      update: updateSuperPizzaCutter,
-      draw: drawSuperPizzaCutter,
-      drawFront: drawSuperPizzaCutterFront,
-      enter: enterSuperPizzaCutter,
-    },
-    {
-      duration: 9,
-      update: updateFirstSilence,
-      draw: drawFirstSilence,
-      drawFront: drawFirstSilenceFront,
-      enter: enterFirstSilence,
-    },
-    {
-      duration: 9,
-      update: updateBitter3Stars,
-      draw: drawBitter3Stars,
-      drawFront: drawBitter3StarsFront,
-      enter: enterBitter3Stars,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloomCrumble,
-      draw: drawDeathInBloomCrumble,
-      drawFront: drawDeathInBloomCrumbleFront,
-      enter: enterDeathInBloomCrumble,
-    },
-    {
-      duration: 3.5,
-      update: updateImplosionBreaker,
-      draw: drawImplosionBreaker,
-      drawFront: drawImplosionBreakerFront,
-      enter: enterImplosionBreaker,
-    },
-    {
-      duration: 18,
-      update: updateSecondSilence,
-      draw: drawSecondSilence,
-      drawFront: drawSecondSilenceFront,
-      enter: enterSecondSilence,
-    },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   drawFront: drawPizzaCutterFront,
+    //   enter: enterPizzaCutter,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   drawFront: drawFutileFront,
+    //   enter: enterFutile,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   drawFront: drawCrumbleFront,
+    //   enter: enterCrumble,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   drawFront: drawBitterFront,
+    //   enter: enterBitter,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   drawFront: drawCeaseFront,
+    //   enter: enterCease,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumble,
+    //   draw: drawPizzaCutterCrumble,
+    //   drawFront: drawPizzaCutterCrumbleFront,
+    //   enter: enterPizzaCutterCrumble,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom,
+    //   draw: drawDeathInBloom,
+    //   drawFront: drawDeathInBloomFront,
+    //   enter: enterDeathInBloom,
+    // },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter,
+    //   draw: drawSuperPizzaCutter,
+    //   drawFront: drawSuperPizzaCutterFront,
+    //   enter: enterSuperPizzaCutter,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilence,
+    //   draw: drawFirstSilence,
+    //   drawFront: drawFirstSilenceFront,
+    //   enter: enterFirstSilence,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitter3Stars,
+    //   draw: drawBitter3Stars,
+    //   drawFront: drawBitter3StarsFront,
+    //   enter: enterBitter3Stars,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumble,
+    //   draw: drawDeathInBloomCrumble,
+    //   drawFront: drawDeathInBloomCrumbleFront,
+    //   enter: enterDeathInBloomCrumble,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateImplosionBreaker,
+    //   draw: drawImplosionBreaker,
+    //   drawFront: drawImplosionBreakerFront,
+    //   enter: enterImplosionBreaker,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilence,
+    //   draw: drawSecondSilence,
+    //   drawFront: drawSecondSilenceFront,
+    //   enter: enterSecondSilence,
+    // },
   ];
   const celestialDevOnly = true;
   const floatingText = {
@@ -939,7 +939,156 @@ export function setup(
       active: true,
       phase: 0,
       opacity: 0,
+      rotation: 0,
+      ringAngle: Math.random() * Math.PI * 2,
+      burstT: 0,
+      burstLines: null,
     };
+  }
+  function drawImplosionStar(ctx, radius) {
+    ctx.beginPath();
+    for (let i = 0; i < 4; i++) {
+      const angle = -Math.PI / 2 + (i * Math.PI) / 2;
+      const nextAngle = angle + Math.PI / 2;
+      const controlAngle = angle + Math.PI / 4;
+      if (i === 0)
+        ctx.moveTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+      ctx.quadraticCurveTo(
+        Math.cos(controlAngle) * radius * 0.01,
+        Math.sin(controlAngle) * radius * 0.01,
+        Math.cos(nextAngle) * radius,
+        Math.sin(nextAngle) * radius,
+      );
+    }
+    ctx.closePath();
+  }
+  let implosionStarGlowCanvas;
+  function getImplosionStarGlowCanvas() {
+    if (implosionStarGlowCanvas) return implosionStarGlowCanvas;
+
+    const size = 800;
+    const starCanvas = document.createElement("canvas");
+    starCanvas.width = size;
+    starCanvas.height = size;
+    const starCtx = starCanvas.getContext("2d");
+    starCtx.translate(size / 2, size / 2);
+    drawImplosionStar(starCtx, 300);
+    starCtx.fillStyle = "black";
+    starCtx.fill();
+
+    implosionStarGlowCanvas = document.createElement("canvas");
+    implosionStarGlowCanvas.width = size;
+    implosionStarGlowCanvas.height = size;
+    const glowCtx = implosionStarGlowCanvas.getContext("2d");
+    for (let blur = 40; blur >= 4; blur -= 4) {
+      glowCtx.filter = `blur(${blur}px)`;
+      glowCtx.drawImage(starCanvas, 0, 0);
+    }
+    glowCtx.filter = "none";
+    glowCtx.globalCompositeOperation = "source-in";
+    glowCtx.fillStyle = "#ff00cc";
+    glowCtx.fillRect(0, 0, size, size);
+    glowCtx.globalCompositeOperation = "source-over";
+
+    return implosionStarGlowCanvas;
+  }
+  function drawImplosionStarGlow(ctx, radius) {
+    if (radius <= 0) return;
+    const canvas = getImplosionStarGlowCanvas();
+    ctx.save();
+    ctx.scale(radius / 300, radius / 300);
+    ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+    ctx.restore();
+  }
+  function drawImplosionCircleBack(ctx, c) {
+    ctx.save();
+    ctx.globalAlpha *= c.opacity;
+    ctx.translate(c.x, c.y);
+    if (c.phase < 2) {
+      const starRadius = c.targetR * Math.min(c.t / 1.5, 1);
+      if (starRadius > 0) {
+        ctx.save();
+        ctx.rotate(c.rotation);
+        drawImplosionStarGlow(ctx, starRadius);
+        ctx.restore();
+      }
+      const p = Math.min(c.t / 0.25, 1);
+      const radius = c.targetR * (1 - (1 - p) * (1 - p));
+      if (radius > 0) {
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+        gradient.addColorStop(0, "rgba(255,0,192,0)");
+        gradient.addColorStop(0.75, "rgba(255,0,192,0)");
+        gradient.addColorStop(1, "rgba(255,0,192,0.5)");
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (c.burstT < 0.25) {
+      ctx.globalAlpha = 1 - c.burstT / 0.25;
+      ctx.fillStyle = "#ff00cc";
+      ctx.beginPath();
+      ctx.arc(
+        0,
+        0,
+        c.targetR + c.targetR * 0.5 * (c.burstT / 0.25),
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+  function drawImplosionCircleFront(ctx, c) {
+    ctx.save();
+    ctx.globalAlpha *= c.opacity;
+    ctx.translate(c.x, c.y);
+    if (c.phase < 2) {
+      const radius = c.targetR * Math.min(c.t / 1.5, 1) * 0.9;
+      if (radius > 0) {
+        ctx.rotate(c.rotation);
+        const starRadius = radius * (0.5 + Math.random() * 0.5);
+        drawImplosionStar(ctx, starRadius);
+        ctx.fillStyle = "black";
+        ctx.fill();
+      }
+    } else {
+      if (c.burstT < 0.5) {
+        const growth = Math.min(c.burstT / 0.5, 1);
+        ctx.save();
+        if (c.burstT > 0.25) {
+          ctx.globalAlpha = 1 - (c.burstT - 0.25) / 0.25;
+        }
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 3;
+        ctx.rotate(c.ringAngle);
+        for (let i = 0; i < 2; i++) {
+          ctx.beginPath();
+          ctx.ellipse(
+            0,
+            0,
+            c.targetR * 1.5 * growth,
+            c.targetR * 0.42 * growth,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.stroke();
+          ctx.rotate(Math.PI / 2);
+        }
+        ctx.restore();
+      }
+      const starProgress = Math.max(0, 1 - c.burstT / 0.25);
+      if (starProgress > 0) {
+        ctx.save();
+        ctx.rotate(c.rotation);
+        drawImplosionStar(ctx, c.targetR * starProgress);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+    ctx.restore();
   }
   function spawnCircle(targetR = 1, maxdist = 1000) {
     const angle = Math.random() * Math.PI * 2;
@@ -1502,6 +1651,7 @@ export function setup(
     let needsCompact = false;
     for (const c of s.circles) {
       c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
       if (c.phase <= 1) {
         const dx = mx - c.x;
         const dy = my - c.y;
@@ -1528,7 +1678,11 @@ export function setup(
             4,
           );
         }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
         c.phase = 2;
+        c.burstT += dt;
         c.r -= dt * 600;
         if (c.r <= 0) {
           c.active = false;
@@ -1550,113 +1704,10 @@ export function setup(
     if (needsCompact) compact(s.circles);
   }
   function drawImplosion(ctx) {
-    const s = stateImplosion;
-
-    for (const c of s.circles) {
-      ctx.save();
-      ctx.globalAlpha = c.opacity;
-      ctx.translate(c.x, c.y);
-
-      if (c.phase < 2) {
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        const glow = 200;
-        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,1)");
-        grad.addColorStop(1, "rgba(255,0,192,0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = "transparent";
-      } else {
-        const spikes = 6;
-
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-
-        ctx.rotate(c.r);
-        const glow = 200;
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,1)");
-        grad.addColorStop(1, "rgba(255,0,192,0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        for (let i = 0; i < spikes; i++) {
-          const a = (i / spikes) * Math.PI * 2;
-          const r1 = c.r * 0.5;
-          const r2 = c.r * 1.5;
-
-          const x1 = Math.cos(a) * r1;
-          const y1 = Math.sin(a) * r1;
-
-          const x2 = Math.cos(a + Math.PI / spikes) * r2;
-          const y2 = Math.sin(a + Math.PI / spikes) * r2;
-
-          if (i === 0) ctx.moveTo(x1, y1);
-          else ctx.lineTo(x1, y1);
-
-          ctx.lineTo(x2, y2);
-        }
-        ctx.closePath();
-
-        ctx.stroke();
-
-        ctx.strokeStyle = "transparent";
-      }
-
-      ctx.restore();
-    }
+    for (const c of stateImplosion.circles) drawImplosionCircleBack(ctx, c);
   }
   function drawImplosionFront(ctx) {
-    const s = stateImplosion;
-
-    for (const c of s.circles) {
-      ctx.save();
-      ctx.globalAlpha = c.opacity;
-      ctx.translate(c.x, c.y);
-
-      if (c.phase < 2) {
-        ctx.fillStyle = "black";
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        const spikes = 6;
-
-        ctx.fillStyle = "black";
-
-        ctx.rotate(c.r);
-        ctx.beginPath();
-        for (let i = 0; i < spikes; i++) {
-          const a = (i / spikes) * Math.PI * 2;
-          const r1 = c.r * 0.5;
-          const r2 = c.r * 1.5;
-
-          const x1 = Math.cos(a) * r1;
-          const y1 = Math.sin(a) * r1;
-
-          const x2 = Math.cos(a + Math.PI / spikes) * r2;
-          const y2 = Math.sin(a + Math.PI / spikes) * r2;
-
-          if (i === 0) ctx.moveTo(x1, y1);
-          else ctx.lineTo(x1, y1);
-
-          ctx.lineTo(x2, y2);
-        }
-        ctx.closePath();
-
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
+    for (const c of stateImplosion.circles) drawImplosionCircleFront(ctx, c);
   }
 
   const statePizzaCutter = {
@@ -2283,8 +2334,8 @@ export function setup(
       ctx.beginPath();
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
-        const inner = r * 0.5;
-        const outer = r * 0.75;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -2822,8 +2873,8 @@ export function setup(
       ctx.beginPath();
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
-        const inner = r * 0.5;
-        const outer = r * 0.75;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -4622,8 +4673,8 @@ export function setup(
         ctx.beginPath();
         for (let i = 0; i < spikes; i++) {
           const a = (i / spikes) * Math.PI * 2;
-          const inner = r * 0.5;
-          const outer = r * 0.75;
+          const inner = r * 0.667;
+          const outer = r * 0.833;
           ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
           ctx.lineTo(
             Math.cos(a + Math.PI / spikes) * outer,
@@ -5837,8 +5888,8 @@ export function setup(
       ctx.beginPath();
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
-        const inner = r * 0.5;
-        const outer = r * 0.75;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -5937,6 +5988,7 @@ export function setup(
     let needsCompact = false;
     for (const c of s.circles) {
       c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
       if (c.phase <= 1) {
         const dx = mx - c.x;
         const dy = my - c.y;
@@ -5963,7 +6015,11 @@ export function setup(
             4,
           );
         }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
         c.phase = 2;
+        c.burstT += dt;
         c.r -= dt * 600;
         if (c.r <= 0) {
           c.active = false;
@@ -6115,68 +6171,7 @@ export function setup(
   }
   function drawImplosionBreaker(ctx) {
     const s = stateImplosionBreaker;
-
-    for (const c of s.circles) {
-      ctx.save();
-      ctx.globalAlpha = c.opacity;
-      ctx.translate(c.x, c.y);
-
-      if (c.phase < 2) {
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        const glow = 200;
-        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,1)");
-        grad.addColorStop(1, "rgba(255,0,192,0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = "transparent";
-      } else {
-        const spikes = 6;
-
-        ctx.strokeStyle = "#ff00cc";
-        ctx.lineWidth = 1;
-
-        ctx.rotate(c.r);
-        const glow = 200;
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r + glow);
-        grad.addColorStop(0, "rgba(255,0,192,1)");
-        grad.addColorStop(1, "rgba(255,0,192,0)");
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        for (let i = 0; i < spikes; i++) {
-          const a = (i / spikes) * Math.PI * 2;
-          const r1 = c.r * 0.5;
-          const r2 = c.r * 1.5;
-
-          const x1 = Math.cos(a) * r1;
-          const y1 = Math.sin(a) * r1;
-
-          const x2 = Math.cos(a + Math.PI / spikes) * r2;
-          const y2 = Math.sin(a + Math.PI / spikes) * r2;
-
-          if (i === 0) ctx.moveTo(x1, y1);
-          else ctx.lineTo(x1, y1);
-
-          ctx.lineTo(x2, y2);
-        }
-        ctx.closePath();
-
-        ctx.stroke();
-
-        ctx.strokeStyle = "transparent";
-      }
-
-      ctx.restore();
-    }
+    for (const c of s.circles) drawImplosionCircleBack(ctx, c);
     for (const d of stateImplosionBreaker.daggers) {
       const cx = d.cx ?? mouse.x;
       const cy = d.cy ?? mouse.y;
@@ -6221,48 +6216,8 @@ export function setup(
     }
   }
   function drawImplosionBreakerFront(ctx) {
-    const s = stateImplosionBreaker;
-
-    for (const c of s.circles) {
-      ctx.save();
-      ctx.globalAlpha = c.opacity;
-      ctx.translate(c.x, c.y);
-
-      if (c.phase < 2) {
-        ctx.fillStyle = "black";
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        const spikes = 6;
-
-        ctx.fillStyle = "black";
-
-        ctx.rotate(c.r);
-        ctx.beginPath();
-        for (let i = 0; i < spikes; i++) {
-          const a = (i / spikes) * Math.PI * 2;
-          const r1 = c.r * 0.5;
-          const r2 = c.r * 1.5;
-
-          const x1 = Math.cos(a) * r1;
-          const y1 = Math.sin(a) * r1;
-
-          const x2 = Math.cos(a + Math.PI / spikes) * r2;
-          const y2 = Math.sin(a + Math.PI / spikes) * r2;
-
-          if (i === 0) ctx.moveTo(x1, y1);
-          else ctx.lineTo(x1, y1);
-
-          ctx.lineTo(x2, y2);
-        }
-        ctx.closePath();
-
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
+    for (const c of stateImplosionBreaker.circles)
+      drawImplosionCircleFront(ctx, c);
     for (const d of stateImplosionBreaker.daggers) {
       const spinDuration = 1.5;
       const moveDuration = 0.5;
@@ -7105,8 +7060,8 @@ export function setup(
       ctx.beginPath();
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
-        const inner = r * 0.5;
-        const outer = r * 0.75;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,
@@ -8310,8 +8265,8 @@ export function setup(
       ctx.beginPath();
       for (let i = 0; i < spikes; i++) {
         const a = (i / spikes) * Math.PI * 2;
-        const inner = r * 0.5;
-        const outer = r * 0.75;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
         ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
         ctx.lineTo(
           Math.cos(a + Math.PI / spikes) * outer,

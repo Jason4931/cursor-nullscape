@@ -313,6 +313,7 @@ export function setDeathOpacity(v) {
 }
 export const pondererPositions = new Set();
 export const fleshPositions = new Set();
+export const fleshContactPositions = new Set();
 export const cleanseZones = [];
 const ENTITY_POOL = [
   {
@@ -1441,7 +1442,7 @@ window.addEventListener("keydown", (e) => {
     shiftlockEase = 0;
   }
   keysPressed[e.key.toLowerCase()] = true;
-  if (abilityCooldown == 0 && !slowness) {
+  if (abilityCooldown == 0 && !heavyCorrupt) {
     if (e.key.toLowerCase() === "e") {
       abilityCooldown = 60;
       ability = true;
@@ -2088,6 +2089,9 @@ let camY = 0;
 let camVX = 0;
 let camVY = 0;
 export let slowness = false;
+export let heavyCorrupt = false;
+let heavyCorruptContact = false;
+let cursorOnCorruptedTile = false;
 let slownessCooldown = false;
 let slownessTime = 0;
 
@@ -2524,6 +2528,51 @@ export function drawESP(ctx) {
 /* ===== HELPERS ===== */
 export function setSlowness(v) {
   slowness = v;
+  if (!v) {
+    heavyCorrupt = false;
+    slownessTime = 0;
+  }
+}
+function updateCorruptionState() {
+  heavyCorruptContact = false;
+  for (const f of [...fleshContactPositions]) {
+    if (f.until <= performance.now()) {
+      fleshContactPositions.delete(f);
+      continue;
+    }
+    const dx = mouse.x - f.x;
+    const dy = mouse.y - f.y;
+    if (dx * dx + dy * dy <= f.radius * f.radius) {
+      heavyCorruptContact = true;
+      break;
+    }
+  }
+  if (heavyCorruptContact) {
+    if (!slowness || !heavyCorrupt) {
+      playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_Apply.ogg");
+    }
+    slowness = true;
+    heavyCorrupt = true;
+    slownessCooldown = false;
+    slownessTime = 0;
+    return;
+  }
+  if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
+    slowness = true;
+    slownessTime = 0;
+    playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_Apply.ogg");
+  }
+  if (!slowness) return;
+  slownessTime++;
+  if (slownessTime < 150) return;
+  slowness = false;
+  heavyCorrupt = false;
+  slownessTime = 0;
+  playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_End.ogg");
+  slownessCooldown = true;
+  setTimeout(() => {
+    slownessCooldown = false;
+  }, 2000);
 }
 export function getCameraPos() {
   return { x: -camX, y: -camY };
@@ -3537,7 +3586,11 @@ export function activateChance(mode = "normal", outcome = null) {
     case 2:
       // Flesh BEGONE
       fleshPositions.clear();
+      fleshContactPositions.clear();
       slowness = false;
+      heavyCorrupt = false;
+      slownessTime = 0;
+      slownessCooldown = false;
       if (fleshSpawns.length != 0) {
         const removeCount = mode == "high" ? 2 : 1;
         const indices = [...Array(fleshSpawns.length).keys()];
@@ -4168,7 +4221,7 @@ export function pickRandomPlaced4or5(minRadius = 0) {
 
 /* ===== DRAW ===== */
 function drawGrid() {
-  let cursorOnCorruptedTile = false;
+  cursorOnCorruptedTile = false;
 
   const visibleX = -camX;
   const visibleY = -camY;
@@ -4573,7 +4626,6 @@ function drawGrid() {
         }
       }
 
-      // cursor inside this tile and certain distance from flesh?
       if (corrupted) {
         const insideTile =
           mouse.x >= t.x &&
@@ -4581,26 +4633,7 @@ function drawGrid() {
           mouse.y >= t.y &&
           mouse.y <= t.y + TILE;
 
-        if (insideTile) {
-          let nearFlesh = false;
-
-          for (const f of fleshPositions) {
-            if (!f.fromFlesh) continue;
-
-            const dx = mouse.x - f.x;
-            const dy = mouse.y - f.y;
-            const radius = 1000;
-
-            if (dx * dx + dy * dy <= radius * radius) {
-              nearFlesh = true;
-              break;
-            }
-          }
-
-          if (nearFlesh || Math.random() < 0.1) {
-            cursorOnCorruptedTile = true;
-          }
-        }
+        if (insideTile) cursorOnCorruptedTile = true;
       }
 
       if (t.collapsing[1]) {
@@ -5231,21 +5264,6 @@ function drawGrid() {
       }
     }
   }
-  if (cursorOnCorruptedTile && !slowness && !slownessCooldown) {
-    slownessTime = 0;
-    slowness = true;
-    playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_Apply.ogg");
-  }
-  slownessTime++;
-  if (slownessTime >= 90 && slowness) {
-    slowness = false;
-    playSound("./ASSET/Sound/Enemies/Flesh/Flesh_Effect_End.ogg");
-    slownessCooldown = true;
-    setTimeout(() => {
-      slownessCooldown = false;
-    }, 2000);
-  }
-
   // gifts (center inside the tile)
   if (gift.complete) {
     for (const g of giftPositions) {
@@ -6419,6 +6437,20 @@ function loop(now) {
   }
 
   entityHost.update(dt);
+  heavyCorruptContact = false;
+  for (const f of [...fleshContactPositions]) {
+    if (f.until <= now) {
+      fleshContactPositions.delete(f);
+      continue;
+    }
+    const dx = mouse.x - f.x;
+    const dy = mouse.y - f.y;
+    if (dx * dx + dy * dy <= f.radius * f.radius) {
+      heavyCorruptContact = true;
+      break;
+    }
+  }
+  updateCorruptionState();
   entityCtx.setTransform(1, 0, 0, 1, 0, 0);
   entityCtx2.setTransform(1, 0, 0, 1, 0, 0);
   entityCtx.translate(camX, camY);
@@ -6431,7 +6463,7 @@ function loop(now) {
   // slowness
   if (slowness) {
     ctx.save();
-    ctx.fillStyle = `rgba(255, 0, 0, ${slowness ? 0.18 : 0.09})`;
+    ctx.fillStyle = `rgba(255, 0, 0, ${heavyCorrupt ? 0.18 : 0.09})`;
     ctx.fillRect(screenX, screenY, w, h);
     ctx.restore();
   }

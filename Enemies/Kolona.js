@@ -1,5 +1,12 @@
 import { death, mouse } from "../entityHost.js";
-import { ability, getCameraPos, playSound, slowness, uldm } from "../main.js";
+import {
+  ability,
+  getCameraPos,
+  playSound,
+  slowness,
+  heavyCorrupt,
+  uldm,
+} from "../main.js";
 import { operatorActive } from "./Operator.js";
 
 const KolonaFont = new FontFace(
@@ -132,12 +139,12 @@ export function setup(host, casualMode) {
     if (state.Textlayer > state.Textlayers.length) state.Textlayer = 1;
     state.Textdraw = state.Textlayers[state.Textlayer - 1];
 
-    if (!slowness) state.timer -= dt;
-    if (slowness && state.tickingsound) {
+    if (!heavyCorrupt) state.timer -= dt;
+    if (heavyCorrupt && state.tickingsound) {
       state.tickingsound();
       state.tickingsound = null;
     }
-    if (!slowness && state.phase === "counting" && !state.tickingsound) {
+    if (!heavyCorrupt && state.phase === "counting" && !state.tickingsound) {
       state.tickingsound = playSound(
         "./ASSET/Sound/Enemies/Kolona/Kolona_Counting.ogg",
         undefined,
@@ -259,7 +266,7 @@ export function setup(host, casualMode) {
       }
     }
 
-    if (slowness && !uldm) {
+    if (heavyCorrupt && !uldm) {
       ctx.save();
       ctx.translate(Math.round(state.x), Math.round(state.y));
       if (state.Flesheddraw) {
