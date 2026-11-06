@@ -264,7 +264,7 @@ export function setup(host, casualMode, hardMode) {
         const SWORD_COUNT =
           1 +
           (casualMode ? 0 : 1) +
-          (bladeBombardmentActive[0] ? 2 : 0) +
+          (bladeBombardmentActive[0] ? 1 : 0) +
           (balletOfBladesActive[0] ? 1 : 0);
         const availableDirections = balletOfBladesActive[0]
           ? [...BALLETDIRECTIONS]
@@ -281,10 +281,12 @@ export function setup(host, casualMode, hardMode) {
 
         state.phase = "attack";
         state.swordHard = false;
+        state.swordHardBombard = false;
         state.swordBallet1 = false;
         state.swordBallet2 = false;
         state.swordBallet3 = false;
         state.swordHardBallet = false;
+        state.swordHardBombardBallet = false;
         state.timer = 0;
       }
       return;
@@ -298,7 +300,7 @@ export function setup(host, casualMode, hardMode) {
         ) {
           state.swordBallet1 = true;
           const SWORD_COUNT =
-            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 2 : 0);
+            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
           const availableDirections = [...BALLETDIRECTIONS];
           for (
             let i = 0;
@@ -315,7 +317,7 @@ export function setup(host, casualMode, hardMode) {
         ) {
           state.swordBallet2 = true;
           const SWORD_COUNT =
-            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 2 : 0);
+            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
           const availableDirections = [...BALLETDIRECTIONS];
           for (
             let i = 0;
@@ -332,7 +334,7 @@ export function setup(host, casualMode, hardMode) {
         ) {
           state.swordBallet3 = true;
           const SWORD_COUNT =
-            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 2 : 0);
+            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
           const availableDirections = [...BALLETDIRECTIONS];
           for (
             let i = 0;
@@ -350,7 +352,26 @@ export function setup(host, casualMode, hardMode) {
         ) {
           state.swordHardBallet = true;
           const SWORD_COUNT =
-            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 2 : 0);
+            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
+          const availableDirections = [...BALLETDIRECTIONS];
+          for (
+            let i = 0;
+            i < Math.min(SWORD_COUNT, availableDirections.length);
+            i++
+          ) {
+            const index = (Math.random() * availableDirections.length) | 0;
+            const dir = availableDirections.splice(index, 1)[0];
+            spawnSword(dir, !bladeBombardmentActive[0]);
+          }
+        } else if (
+          hardMode &&
+          bladeBombardmentActive[0] &&
+          state.timer >= 2.5 * 2 &&
+          !state.swordHardBombardBallet
+        ) {
+          state.swordHardBombardBallet = true;
+          const SWORD_COUNT =
+            2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
           const availableDirections = [...BALLETDIRECTIONS];
           for (
             let i = 0;
@@ -373,8 +394,29 @@ export function setup(host, casualMode, hardMode) {
         state.swordHard = true;
         const SWORD_COUNT =
           2 +
-          (bladeBombardmentActive[0] ? 2 : 0) +
+          (bladeBombardmentActive[0] ? 1 : 0) +
           (balletOfBladesActive[0] ? 1 : 0);
+        const availableDirections = [...DIRECTIONS];
+        for (
+          let i = 0;
+          i < Math.min(SWORD_COUNT, availableDirections.length);
+          i++
+        ) {
+          const index = (Math.random() * availableDirections.length) | 0;
+          const dir = availableDirections.splice(index, 1)[0];
+          spawnSword(dir);
+        }
+      }
+
+      if (
+        hardMode &&
+        bladeBombardmentActive[0] &&
+        !balletOfBladesActive[0] &&
+        state.timer >= 3.5 * 1.333 &&
+        !state.swordHardBombard
+      ) {
+        state.swordHardBombard = true;
+        const SWORD_COUNT = 2 + (bladeBombardmentActive[0] ? 1 : 0);
         const availableDirections = [...DIRECTIONS];
         for (
           let i = 0;
@@ -399,7 +441,13 @@ export function setup(host, casualMode, hardMode) {
               : 1.25
             : 0)) *
           (bladeBombardmentActive[0] ? 1.333 : 1) +
-          1
+          1 +
+          (hardMode && balletOfBladesActive[0] && bladeBombardmentActive[0]
+            ? 1
+            : 0) +
+          (hardMode && !balletOfBladesActive[0] && bladeBombardmentActive[0]
+            ? 1.75 * 1.333
+            : 0)
       ) {
         state.phase = "ending";
         state.timer = 0;

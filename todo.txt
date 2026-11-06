@@ -18,10 +18,12 @@ v scrapmaw
 v random
 v void implosion
 v oblivion
-v razorbloom
+v razorbloom (need revamp)
 v malfunction
 
 x voidbound icbm
+x red mart
+x ouroboros
 rare
 v ponderer
 v nil (considered separate from new nil)
