@@ -282,6 +282,8 @@ export function setup(host, casualMode, hardMode) {
         state.phase = "attack";
         state.swordHard = false;
         state.swordHardBombard = false;
+        state.swordNonHardBombard = false;
+        state.swordNonHardBombardBallet = false;
         state.swordBallet1 = false;
         state.swordBallet2 = false;
         state.swordBallet3 = false;
@@ -343,7 +345,7 @@ export function setup(host, casualMode, hardMode) {
           ) {
             const index = (Math.random() * availableDirections.length) | 0;
             const dir = availableDirections.splice(index, 1)[0];
-            spawnSword(dir, !hardMode);
+            spawnSword(dir, !hardMode && !bladeBombardmentActive[0]);
           }
         } else if (
           hardMode &&
@@ -409,6 +411,49 @@ export function setup(host, casualMode, hardMode) {
       }
 
       if (
+        !hardMode &&
+        bladeBombardmentActive[0] &&
+        balletOfBladesActive[0] &&
+        state.timer >= 2 * 2 &&
+        !state.swordNonHardBombardBallet
+      ) {
+        state.swordNonHardBombardBallet = true;
+        const SWORD_COUNT =
+          2 + (casualMode ? 0 : 1) + (bladeBombardmentActive[0] ? 1 : 0);
+        const availableDirections = [...BALLETDIRECTIONS];
+        for (
+          let i = 0;
+          i < Math.min(SWORD_COUNT, availableDirections.length);
+          i++
+        ) {
+          const index = (Math.random() * availableDirections.length) | 0;
+          const dir = availableDirections.splice(index, 1)[0];
+          spawnSword(dir, true);
+        }
+      }
+
+      if (
+        !hardMode &&
+        bladeBombardmentActive[0] &&
+        !balletOfBladesActive[0] &&
+        state.timer >= 1.75 * 1.333 &&
+        !state.swordNonHardBombard
+      ) {
+        state.swordNonHardBombard = true;
+        const SWORD_COUNT = 2 + (casualMode ? 0 : 1);
+        const availableDirections = [...DIRECTIONS];
+        for (
+          let i = 0;
+          i < Math.min(SWORD_COUNT, availableDirections.length);
+          i++
+        ) {
+          const index = (Math.random() * availableDirections.length) | 0;
+          const dir = availableDirections.splice(index, 1)[0];
+          spawnSword(dir);
+        }
+      }
+
+      if (
         hardMode &&
         bladeBombardmentActive[0] &&
         !balletOfBladesActive[0] &&
@@ -446,6 +491,12 @@ export function setup(host, casualMode, hardMode) {
             ? 1
             : 0) +
           (hardMode && !balletOfBladesActive[0] && bladeBombardmentActive[0]
+            ? 1.75 * 1.333
+            : 0) +
+          (!hardMode && balletOfBladesActive[0] && bladeBombardmentActive[0]
+            ? 1
+            : 0) +
+          (!hardMode && !balletOfBladesActive[0] && bladeBombardmentActive[0]
             ? 1.75 * 1.333
             : 0)
       ) {
