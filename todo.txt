@@ -22,7 +22,7 @@ v razorbloom (need revamp)
 v malfunction
 
 x voidbound icbm
-x red mart
+v red mart
 x ouroboros
 rare
 v ponderer

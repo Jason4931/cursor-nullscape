@@ -153,6 +153,14 @@ export function setup(host, hardMode, stack = 1, position = null) {
           ? RedMartSlideAnimation
           : Martred_idle;
         state.layer = state.layers.length;
+        explodeMart.x = state.x;
+        explodeMart.y = state.y;
+        explodeMart.radius = state.size * 2;
+        setTimeout(() => {
+          explodeMart.x = -1000;
+          explodeMart.y = -1000;
+          explodeMart.radius = 0;
+        }, 100);
         if (
           Math.hypot(mouse.x - state.explosionX, mouse.y - state.explosionY) <=
           state.explosionSize
@@ -264,7 +272,11 @@ export function setup(host, hardMode, stack = 1, position = null) {
         state.hatActive = false;
         state.layers = Martred_explode;
         stopAmbience();
-        playSound(`./ASSET/Sound/Enemies/RedMart/Red_Mart_Explosion.wav`, 1.1);
+        playSound(
+          `./ASSET/Sound/Enemies/RedMart/Red_Mart_Explosion.wav`,
+          undefined,
+          { start: 0.1, end: 1 },
+        );
         state.layer = 1;
       }
       if (state.explode || state.cooldownTimer > 0) {

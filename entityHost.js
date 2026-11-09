@@ -184,6 +184,7 @@ const DEATH_MESSAGES = {
     "Mart killed you in cold blood.",
     "You were killed by Mart.",
   ],
+  RedMart: ["You blew up."],
   Baby: [
     "You got cornered and killed by Baby.",
     "You killed Baby. Wait, no, Baby killed you.",
