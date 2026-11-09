@@ -240,7 +240,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
     const dist = Math.hypot(dx, dy);
 
     if (dist <= state.size * 0.5) {
-      if (martSlideActive[0]) {
+      if (martSlideActive[0] && !state.explode && !state.explosionTriggered) {
         moveCamera(-state.vx * dt, -state.vy * dt);
       }
       if (
