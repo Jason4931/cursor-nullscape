@@ -8671,6 +8671,31 @@ export function setup(
       state.currentPattern.update(dt);
   }
 
+  function drawCursorAttackStar(ctx, attackTime, attackDuration) {
+    const fadeIn = Math.min(attackTime / 0.5, 1);
+    const fadeOut = Math.min((attackDuration - attackTime) / 0.5, 1);
+    const alpha = Math.max(0, Math.min(fadeIn, fadeOut));
+    if (alpha <= 0) return;
+
+    ctx.save();
+    ctx.translate(mouse.x, mouse.y);
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.filter = "blur(8px)";
+    ctx.fillStyle = "#ff00cc";
+    ctx.beginPath();
+    ctx.moveTo(0, -32);
+    ctx.lineTo(7, -7);
+    ctx.lineTo(32, 0);
+    ctx.lineTo(7, 7);
+    ctx.lineTo(0, 32);
+    ctx.lineTo(-7, 7);
+    ctx.lineTo(-32, 0);
+    ctx.lineTo(-7, -7);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
   function draw(ctx) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
     if (despawnCelestial) return;
@@ -8716,8 +8741,22 @@ export function setup(
       }
     }
 
-    if (state.enemyTransition == "none" && !state.scream)
+    if (state.enemyTransition == "none" && !state.scream) {
       state.currentPattern.drawFront(ctx);
+      const attackUpdate = state.currentPattern.update;
+      if (
+        attackUpdate === updateFutile ||
+        attackUpdate === updateDeathInBloom ||
+        attackUpdate === updateDeathInBloomCrumble ||
+        attackUpdate === updateSecondSilence
+      ) {
+        drawCursorAttackStar(
+          ctx,
+          state.patternTime,
+          state.currentPattern.duration,
+        );
+      }
+    }
 
     if (state.scream) {
       const t = state.screamT;

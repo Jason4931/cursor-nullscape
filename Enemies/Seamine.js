@@ -6,6 +6,7 @@ import {
   setSeamineScale,
   uldm,
 } from "../main.js";
+import { explodeMart } from "./Mart.js";
 
 const enemy = new Image();
 function loadAssets() {
@@ -104,6 +105,15 @@ export function setup(host, casualMode, hardMode) {
         state.blastRadius = state.size / 2;
         state.blastAlpha = 0.8;
         state.explosionCircleFadeTime = 0;
+
+        explodeMart.x = state.x;
+        explodeMart.y = state.y;
+        explodeMart.radius = EXPLODE_RADIUS * 2;
+        setTimeout(() => {
+          explodeMart.x = -1000;
+          explodeMart.y = -1000;
+          explodeMart.radius = 0;
+        }, 100);
 
         playSound("./ASSET/Sound/Enemies/Seamine/Seamine_-_Explode_1.ogg");
         if (dist < EXPLODE_RADIUS) {

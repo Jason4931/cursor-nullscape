@@ -63,6 +63,7 @@ import {
   martSlideActive,
   setup as spawnMart,
 } from "./Enemies/Mart.js";
+import { setup as spawnRedMart } from "./Enemies/RedMart.js";
 import { rebirthActive, setup as spawnBaby } from "./Enemies/Baby.js";
 import { nuclearBombActive, setup as spawnICBM } from "./Enemies/ICBM.js";
 import { legionActive, setup as spawnHusk } from "./Enemies/Husk.js";
@@ -290,6 +291,14 @@ export function MartStack(act, v) {
     martStack = v;
   }
 }
+let redMartStack = [];
+export function RedMartStack(act, v) {
+  if (act == "get") {
+    return redMartStack;
+  } else if (act == "set") {
+    redMartStack = v;
+  }
+}
 export function setOblivionActive(v) {
   OblivionActive = v;
 }
@@ -329,6 +338,15 @@ const ENTITY_POOL = [
     start: 0,
     src: "./ASSET/Enemies/Mart.png",
     desc: "I am Mart. The waterimp!",
+  },
+  {
+    name: "RedMart",
+    spawn: () => spawnRedMart(entityHost, hardMode, 1),
+    start: 100,
+    unstackable: true,
+    rare: true,
+    src: "./ASSET/Enemies/RedMart.png",
+    desc: "I am Red Mart. The Red Waterimp!",
   },
   {
     name: "Baby",
@@ -374,6 +392,7 @@ const ENTITY_POOL = [
     spawn: () => spawnNIL(entityHost, deafMode),
     start: 500,
     src: "./ASSET/Enemies/NILIcon.png",
+    unstackable: true,
     rare: true,
     desc: "<0>",
   },
@@ -6566,8 +6585,8 @@ function loop(now) {
 
   //mart merge
   if (!martSlideActive[0]) {
-    const toRemove = new Set();
-    const toSpawn = [];
+    let toRemove = new Set();
+    let toSpawn = [];
 
     for (let i = 0; i < martStack.length; i++) {
       for (let j = i + 1; j < martStack.length; j++) {
@@ -6598,6 +6617,40 @@ function loop(now) {
     toSpawn.forEach(([stack, pos]) => {
       playSound(`./ASSET/Sound/Enemies/Mart/Mart_Merge.ogg`);
       spawnMart(entityHost, hardMode, stack, pos);
+    });
+
+    toRemove = new Set();
+    toSpawn = [];
+
+    for (let i = 0; i < redMartStack.length; i++) {
+      for (let j = i + 1; j < redMartStack.length; j++) {
+        const a = redMartStack[i];
+        const b = redMartStack[j];
+
+        if (toRemove.has(a) || toRemove.has(b)) continue;
+
+        const dx = a.state.x - b.state.x;
+        const dy = a.state.y - b.state.y;
+        const dist = Math.hypot(dx, dy);
+
+        const maxStack = Math.max(a.state._stack, b.state._stack);
+        const mergeDist = (0.6 + Math.sqrt(maxStack) * 0.4) * 75;
+        const newStack = (a.state._stack || 1) + (b.state._stack || 1);
+        if (dist <= mergeDist && newStack <= 10) {
+          toRemove.add(a);
+          toRemove.add(b);
+
+          toSpawn.push([newStack, { x: a.state.x, y: a.state.y }]);
+        }
+      }
+    }
+    toRemove.forEach((e) => {
+      e.unregister();
+      redMartStack = redMartStack.filter((e) => !toRemove.has(e));
+    });
+    toSpawn.forEach(([stack, pos]) => {
+      playSound(`./ASSET/Sound/Enemies/Mart/Mart_Merge.ogg`);
+      spawnRedMart(entityHost, hardMode, stack, pos);
     });
   }
 

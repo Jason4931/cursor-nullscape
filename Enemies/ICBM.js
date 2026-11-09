@@ -7,6 +7,7 @@ import {
   WORLD_WIDTH,
   WORLD_HEIGHT,
 } from "../main.js";
+import { explodeMart } from "./Mart.js";
 
 const ICBM = [];
 const marker = new Image();
@@ -162,6 +163,16 @@ export function setup(host, hardMode) {
         const dx = mouse.x - state.lockPosX;
         const dy = mouse.y - state.lockPosY;
         const dist = Math.hypot(dx, dy);
+        explodeMart.x = state.lockPosX;
+        explodeMart.y = state.lockPosY;
+        explodeMart.radius = nuclearBombActive[0]
+          ? state.nuclearRadius
+          : state.circleRadius;
+        setTimeout(() => {
+          explodeMart.x = -1000;
+          explodeMart.y = -1000;
+          explodeMart.radius = 0;
+        }, 100);
         if (
           dist <=
           (nuclearBombActive[0] ? state.nuclearRadius : state.circleRadius)

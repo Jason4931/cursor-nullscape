@@ -6,12 +6,16 @@ import {
   ESP,
   WORLD_WIDTH,
   WORLD_HEIGHT,
+  moveCamera,
 } from "../main.js";
 
-const Probably_Improper_Speeded_Mart = [];
+const Mart_animatedNEW = [];
+const Mart_damaged = [];
+const Mart_damagedidle = [];
+const Mart_merge = [];
 const MartSlideAnimation = [];
 async function loadAssets() {
-  if (Probably_Improper_Speeded_Mart.length) return;
+  if (Mart_merge.length) return;
   const loadBatch = async (target, folder, count) => {
     const promises = [];
     for (let i = 1; i <= count; i++) {
@@ -27,14 +31,14 @@ async function loadAssets() {
     }
     await Promise.all(promises);
   };
-  await loadBatch(
-    Probably_Improper_Speeded_Mart,
-    "Probably_Improper_Speeded_Mart",
-    24,
-  );
+  await loadBatch(Mart_merge, "Mart_merge", 55);
+  loadBatch(Mart_damaged, "Mart_damaged", 25);
+  loadBatch(Mart_damagedidle, "Mart_damagedidle", 80);
+  loadBatch(Mart_animatedNEW, "Mart_animatedNEW", 80);
   loadBatch(MartSlideAnimation, "MartSlideAnimation", 24);
 }
 
+export let explodeMart = { x: -1000, y: -1000, radius: 0 };
 export let fasterMart = [0];
 export let martSlideActive = [false];
 export function setup(host, hardMode, stack = 1, position = null) {
@@ -42,9 +46,10 @@ export function setup(host, hardMode, stack = 1, position = null) {
   const state = {
     _speedMultiplier: 1 + fasterMart[0],
     opacity: 1,
-    layers: Probably_Improper_Speeded_Mart,
+    layers: Mart_merge,
     enemy: null,
     layer: 0,
+    layerChange: [false, false, false],
 
     x: 0,
     y: 0,
@@ -117,6 +122,39 @@ export function setup(host, hardMode, stack = 1, position = null) {
     state.layer++;
     if (state.layer > state.layers.length) state.layer = 1;
     state.enemy = state.layers[state.layer - 1];
+    if (
+      !state.layerChange[0] &&
+      state.layers == Mart_merge &&
+      state.layer == state.layers.length &&
+      !martSlideActive[0]
+    ) {
+      state.layers = Mart_animatedNEW;
+      state.layer = state.layers.length;
+      state.layerChange[0] = true;
+    }
+    if (
+      !state.layerChange[1] &&
+      !martSlideActive[0] &&
+      explodeMart.radius > 0 &&
+      Math.hypot(state.x - explodeMart.x, state.y - explodeMart.y) <=
+        explodeMart.radius
+    ) {
+      state.layers = Mart_damaged;
+      state.layer = 1;
+      state.layerChange[1] = true;
+      state.layerChange[2] = false;
+    }
+    if (
+      !state.layerChange[2] &&
+      state.layers == Mart_damaged &&
+      state.layer == state.layers.length &&
+      !martSlideActive[0]
+    ) {
+      state.layers = Mart_damagedidle;
+      state.layer = state.layers.length;
+      state.layerChange[2] = true;
+      state.layerChange[1] = false;
+    }
 
     if (stack >= 6) {
       state.ovalRotation += dt * 2;
@@ -150,14 +188,15 @@ export function setup(host, hardMode, stack = 1, position = null) {
 
     const dist = Math.hypot(dx, dy);
 
-    if (
-      dist <= state.size * 0.5 &&
-      (martSlideActive[0] ? Math.random() < 0.5 : true)
-    ) {
-      death("Mart", "#43aeff");
-      if (!state.deathSound) {
-        playSound(`./ASSET/Sound/Enemies/Mart/MartKill.mp3`);
-        state.deathSound = true;
+    if (dist <= state.size * 0.5) {
+      if (!martSlideActive[0]) {
+        death("Mart", "#43aeff");
+        if (!state.deathSound) {
+          playSound(`./ASSET/Sound/Enemies/Mart/MartKill.mp3`);
+          state.deathSound = true;
+        }
+      } else {
+        moveCamera(-state.vx * dt, -state.vy * dt);
       }
       return;
     } else {
