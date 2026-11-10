@@ -128,6 +128,7 @@ export function setup(
       draw: drawSlash,
       drawFront: drawSlashFront,
       enter: enterSlash,
+      hard: false,
     },
     {
       duration: 3,
@@ -135,6 +136,15 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
     {
       duration: 9,
@@ -142,6 +152,15 @@ export function setup(
       draw: drawPizzaCutter,
       drawFront: drawPizzaCutterFront,
       enter: enterPizzaCutter,
+      hard: false,
+    },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+      hard: true,
     },
   ];
   const patternFutile = [
@@ -160,13 +179,23 @@ export function setup(
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
     },
     {
       duration: casualMode ? 7 : 5.5,
@@ -174,6 +203,15 @@ export function setup(
       draw: drawSlash,
       drawFront: drawSlashFront,
       enter: enterSlash,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
   ];
   const patternFutilePhase3 = [
@@ -192,7 +230,34 @@ export function setup(
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3StarsBreakerBeams,
+    //   draw: drawFutile3StarsBreakerBeams,
+    //   drawFront: drawFutile3StarsBreakerBeamsFront,
+    //   enter: enterFutile3StarsBreakerBeams,
+    //   hard: true,
+    // },
+  ];
+  const patternSecondFutilePhase3 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("FUTILE.");
+      },
+    },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    // },
   ];
   const patternCrumble = [
     {
@@ -217,6 +282,15 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
     {
       duration: 9,
@@ -224,7 +298,49 @@ export function setup(
       draw: drawPizzaCutter,
       drawFront: drawPizzaCutterFront,
       enter: enterPizzaCutter,
+      hard: false,
     },
+    {
+      duration: 9,
+      update: updatePizzaCutterCrumble,
+      draw: drawPizzaCutterCrumble,
+      drawFront: drawPizzaCutterCrumbleFront,
+      enter: enterPizzaCutterCrumble,
+      hard: true,
+    },
+    {
+      duration: 3,
+      update: updateCrumbleImplosion,
+      draw: drawCrumbleImplosion,
+      drawFront: drawCrumbleImplosionFront,
+      enter: enterCrumbleImplosion,
+      hard: true,
+    },
+  ];
+  const patternCrumblePhase2 = [
+    {
+      duration: 0,
+      update: () => {},
+      draw: () => {},
+      drawFront: () => {},
+      enter: () => {
+        showText("CRUMBLE.");
+      },
+    },
+    // {
+    //   duration: 3,
+    //   update: updateCrumbleBreaker,
+    //   draw: drawCrumbleBreaker,
+    //   drawFront: drawCrumbleBreakerFront,
+    //   enter: enterCrumbleBreaker,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumbleBeams,
+    //   draw: drawPizzaCutterCrumbleBeams,
+    //   drawFront: drawPizzaCutterCrumbleBeamsFront,
+    //   enter: enterPizzaCutterCrumbleBeams,
+    // },
   ];
   const patternBitter = [
     {
@@ -249,6 +365,15 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 3.5,
+      update: updateImplosionBreaker,
+      draw: drawImplosionBreaker,
+      drawFront: drawImplosionBreakerFront,
+      enter: enterImplosionBreaker,
+      hard: true,
     },
   ];
   const patternBitterPhase3 = [
@@ -267,13 +392,23 @@ export function setup(
       draw: drawBitter,
       drawFront: drawBitterFront,
       enter: enterBitter,
+      hard: false,
     },
+    // {
+    //   duration: 9,
+    //   update: updateBitterBeams,
+    //   draw: drawBitterBeams,
+    //   drawFront: drawBitterBeamsFront,
+    //   enter: enterBitterBeams,
+    //   hard: true,
+    // },
     {
       duration: casualMode ? 7 : 5.5,
       update: updateSlash,
       draw: drawSlash,
       drawFront: drawSlashFront,
       enter: enterSlash,
+      hard: false,
     },
     {
       duration: 3,
@@ -281,6 +416,15 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
   ];
   const patternCease = [
@@ -300,6 +444,14 @@ export function setup(
       drawFront: drawCeaseFront,
       enter: enterCease,
     },
+    // {
+    //   duration: 2,
+    //   update: updateBeams,
+    //   draw: drawBeams,
+    //   drawFront: drawBeamsFront,
+    //   enter: enterBeams,
+    //   hard: true,
+    // },
   ];
   const patternCeasePhase3 = [
     {
@@ -331,7 +483,16 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateImplosionBreaker3Stars,
+    //   draw: drawImplosionBreaker3Stars,
+    //   drawFront: drawImplosionBreaker3StarsFront,
+    //   enter: enterImplosionBreaker3Stars,
+    //   hard: true,
+    // }
   ];
   const patternSecondCeasePhase3 = [
     {
@@ -381,6 +542,15 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
   ];
   const patternDeathInBloom = [
@@ -399,19 +569,37 @@ export function setup(
       draw: drawDeathInBloom,
       drawFront: drawDeathInBloomFront,
       enter: enterDeathInBloom,
+      hard: false,
     },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom3Stars,
+    //   draw: drawDeathInBloom3Stars,
+    //   drawFront: drawDeathInBloom3StarsFront,
+    //   enter: enterDeathInBloom3Stars,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+      hard: true,
     },
   ];
   const loopPatternPhase1 = [...patternFall, ...patternCrumble];
   const loopPatternPhase2 = [
     ...patternFutile,
-    ...patternCrumble,
+    ...(hardMode ? patternCrumblePhase2 : patternCrumble),
     ...patternBitter,
     ...patternCease,
   ];
@@ -420,7 +608,7 @@ export function setup(
     ...patternFutilePhase3,
     ...patternCeasePhase3,
     ...patternBitterPhase3,
-    ...patternFutilePhase3,
+    ...(hardMode ? patternSecondFutilePhase3 : patternFutilePhase3),
     ...patternSecondCeasePhase3,
     ...patternBoom,
   ];
@@ -440,13 +628,23 @@ export function setup(
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateImplosion,
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
     },
     {
       duration: 8,
@@ -454,7 +652,16 @@ export function setup(
       draw: drawSuperPizzaCutter,
       drawFront: drawSuperPizzaCutterFront,
       enter: enterSuperPizzaCutter,
+      hard: false,
     },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
+    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
+    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateCease,
@@ -468,6 +675,7 @@ export function setup(
       draw: drawBitter,
       drawFront: drawBitterFront,
       enter: enterBitter,
+      hard: false,
     },
     {
       duration: 0,
@@ -491,6 +699,7 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
     },
     {
       duration: 13,
@@ -498,21 +707,56 @@ export function setup(
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutileRandCutter,
+    //   draw: drawFutileRandCutter,
+    //   drawFront: drawFutileRandCutterFront,
+    //   enter: enterFutileRandCutter,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateCease,
       draw: drawCease,
       drawFront: drawCeaseFront,
       enter: enterCease,
+      hard: false,
     },
+    // {
+    //   duration: 3,
+    //   update: updateCeaseBreaker,
+    //   draw: drawCeaseBreaker,
+    //   drawFront: drawCeaseBreakerFront,
+    //   enter: enterCeaseBreaker,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashBeams,
+    //   draw: drawSlashBeams,
+    //   drawFront: drawSlashBeamsFront,
+    //   enter: enterSlashBeams,
+    //   hard: true,
+    // },
     {
       duration: 8,
       update: updateSuperPizzaCutter,
       draw: drawSuperPizzaCutter,
       drawFront: drawSuperPizzaCutterFront,
       enter: enterSuperPizzaCutter,
+      hard: false,
     },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
+    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
+    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    //   hard: true,
+    // },
     {
       duration: 0,
       update: () => {},
@@ -528,14 +772,32 @@ export function setup(
       draw: drawBitter3Stars,
       drawFront: drawBitter3StarsFront,
       enter: enterBitter3Stars,
+      hard: false,
     },
+    // {
+    //   duration: 9,
+    //   update: updateBitterImplosionBreakerBeams,
+    //   draw: drawBitterImplosionBreakerBeams,
+    //   drawFront: drawBitterImplosionBreakerBeamsFront,
+    //   enter: enterBitterImplosionBreakerBeams,
+    //   hard: true,
+    // },
     {
       duration: 13,
       update: updateFutile,
       draw: drawFutile,
       drawFront: drawFutileFront,
       enter: enterFutile,
+      hard: false,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateCease,
@@ -558,7 +820,16 @@ export function setup(
       draw: drawDeathInBloomCrumble,
       drawFront: drawDeathInBloomCrumbleFront,
       enter: enterDeathInBloomCrumble,
+      hard: false,
     },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumbleBreakerBeams,
+    //   draw: drawDeathInBloomCrumbleBreakerBeams,
+    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+    //   enter: enterDeathInBloomCrumbleBreakerBeams,
+    //   hard: true,
+    // }
     {
       duration: 13,
       update: updateFutile,
@@ -602,6 +873,7 @@ export function setup(
       draw: drawBitter,
       drawFront: drawBitterFront,
       enter: enterBitter,
+      hard: false,
     },
     {
       duration: 0,
@@ -618,6 +890,7 @@ export function setup(
       draw: drawImplosionBreaker,
       drawFront: drawImplosionBreakerFront,
       enter: enterImplosionBreaker,
+      hard: false,
     },
     {
       duration: 18,
@@ -626,6 +899,14 @@ export function setup(
       drawFront: drawSecondSilenceFront,
       enter: enterSecondSilence,
     },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateCease,
@@ -639,6 +920,15 @@ export function setup(
       draw: drawBitter,
       drawFront: drawBitterFront,
       enter: enterBitter,
+      hard: false,
+    },
+    {
+      duration: 9,
+      update: updateBitter3Stars,
+      draw: drawBitter3Stars,
+      drawFront: drawBitter3StarsFront,
+      enter: enterBitter3Stars,
+      hard: true,
     },
     {
       duration: 0,
@@ -646,7 +936,7 @@ export function setup(
       draw: () => {},
       drawFront: () => {},
       enter: () => {
-        showText("DEATH IN BLOOM.");
+        showText(hardMode ? "DEATH." : "DEATH IN BLOOM.");
       },
     },
     {
@@ -655,7 +945,16 @@ export function setup(
       draw: drawDeathInBloomCrumble,
       drawFront: drawDeathInBloomCrumbleFront,
       enter: enterDeathInBloomCrumble,
+      hard: false,
     },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumbleBreakerBeams,
+    //   draw: drawDeathInBloomCrumbleBreakerBeams,
+    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+    //   enter: enterDeathInBloomCrumbleBreakerBeams,
+    //   hard: true,
+    // }
   ];
   const silenceOnlyPattern = [
     {
@@ -779,6 +1078,130 @@ export function setup(
       drawFront: drawSecondSilenceFront,
       enter: enterSecondSilence,
     },
+    {
+      duration: 5.5,
+      update: updateSlashImplosion,
+      draw: drawSlashImplosion,
+      drawFront: drawSlashImplosionFront,
+      enter: enterSlashImplosion,
+    },
+    {
+      duration: 3,
+      update: updateCrumbleImplosion,
+      draw: drawCrumbleImplosion,
+      drawFront: drawCrumbleImplosionFront,
+      enter: enterCrumbleImplosion,
+    },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumbleBreaker,
+    //   draw: drawCrumbleBreaker,
+    //   drawFront: drawCrumbleBreakerFront,
+    //   enter: enterCrumbleBreaker,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumbleBeams,
+    //   draw: drawPizzaCutterCrumbleBeams,
+    //   drawFront: drawPizzaCutterCrumbleBeamsFront,
+    //   enter: enterPizzaCutterCrumbleBeams,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitterBeams,
+    //   draw: drawBitterBeams,
+    //   drawFront: drawBitterBeamsFront,
+    //   enter: enterBitterBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3StarsBreakerBeams,
+    //   draw: drawFutile3StarsBreakerBeams,
+    //   drawFront: drawFutile3StarsBreakerBeamsFront,
+    //   enter: enterFutile3StarsBreakerBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 2,
+    //   update: updateBeams,
+    //   draw: drawBeams,
+    //   drawFront: drawBeamsFront,
+    //   enter: enterBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateImplosionBreaker3Stars,
+    //   draw: drawImplosionBreaker3Stars,
+    //   drawFront: drawImplosionBreaker3StarsFront,
+    //   enter: enterImplosionBreaker3Stars,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom3Stars,
+    //   draw: drawDeathInBloom3Stars,
+    //   drawFront: drawDeathInBloom3StarsFront,
+    //   enter: enterDeathInBloom3Stars,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
+    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
+    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutileRandCutter,
+    //   draw: drawFutileRandCutter,
+    //   drawFront: drawFutileRandCutterFront,
+    //   enter: enterFutileRandCutter,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCeaseBreaker,
+    //   draw: drawCeaseBreaker,
+    //   drawFront: drawCeaseBreakerFront,
+    //   enter: enterCeaseBreaker,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashBeams,
+    //   draw: drawSlashBeams,
+    //   drawFront: drawSlashBeamsFront,
+    //   enter: enterSlashBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitterImplosionBreakerBeams,
+    //   draw: drawBitterImplosionBreakerBeams,
+    //   drawFront: drawBitterImplosionBreakerBeamsFront,
+    //   enter: enterBitterImplosionBreakerBeams,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumbleBreakerBeams,
+    //   draw: drawDeathInBloomCrumbleBreakerBeams,
+    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+    //   enter: enterDeathInBloomCrumbleBreakerBeams,
+    //   hard: true,
+    // },
   ];
   const celestialDevOnly = true;
   const floatingText = {
@@ -1108,7 +1531,7 @@ export function setup(
 
       t: 0,
       r: 0,
-      targetR: (hardMode ? 175 : casualMode ? 125 : 150) / targetR,
+      targetR: (casualMode ? 125 : 150) / targetR,
       active: true,
     };
   }
@@ -1708,6 +2131,373 @@ export function setup(
   }
   function drawImplosionFront(ctx) {
     for (const c of stateImplosion.circles) drawImplosionCircleFront(ctx, c);
+  }
+
+  const stateSlashImplosion = {
+    beams: [],
+    timer: 0,
+    cycle: 0,
+    prevMx: 0,
+    prevMy: 0,
+    flipped: 1,
+    shaken: false,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+
+    circles: [],
+    spawnTimer: 0,
+    spawned: 0,
+  };
+  function enterSlashImplosion() {
+    enterOrbit(() => {
+      stateSlashImplosion.beams = [];
+      stateSlashImplosion.timer = 0;
+      stateSlashImplosion.cycle = 0;
+      stateSlashImplosion.shaken = false;
+      stateSlashImplosion.prevMx = mouse.x;
+      stateSlashImplosion.prevMy = mouse.y;
+      stateSlashImplosion.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      stateSlashImplosion.predDirY = Math.sin(Math.random() * Math.PI * 2);
+
+      stateSlashImplosion.circles = [];
+      stateSlashImplosion.spawnTimer = 0;
+      stateSlashImplosion.spawned = 0;
+    });
+  }
+  function updateSlashImplosion(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+
+    const mvx = mx - stateSlashImplosion.prevMx;
+    const mvy = my - stateSlashImplosion.prevMy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      stateSlashImplosion.predDirX +=
+        (tx - stateSlashImplosion.predDirX) * Math.min(1, dt * turnSpeed);
+      stateSlashImplosion.predDirY +=
+        (ty - stateSlashImplosion.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d =
+        Math.hypot(
+          stateSlashImplosion.predDirX,
+          stateSlashImplosion.predDirY,
+        ) || 1;
+
+      stateSlashImplosion.predDirX /= d;
+      stateSlashImplosion.predDirY /= d;
+    }
+
+    stateSlashImplosion.prevMx = mx;
+    stateSlashImplosion.prevMy = my;
+
+    const predictionDistance = 100;
+    const px = mx + stateSlashImplosion.predDirX * predictionDistance;
+    const py = my + stateSlashImplosion.predDirY * predictionDistance;
+
+    const cycle = stateSlashImplosion.cycle;
+
+    if (stateSlashImplosion.timer === 0) {
+      stateSlashImplosion.change = false;
+      if (cycle === 3) {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
+          0.75,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+        const base =
+          Math.atan2(
+            stateSlashImplosion.predDirY,
+            stateSlashImplosion.predDirX,
+          ) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+
+        stateSlashImplosion.beams.push(spawnBeam(px, py, base, 1.5));
+        stateSlashImplosion.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateSlashImplosion.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+      } else if (cycle < 3) {
+        if (!hardMode) {
+          const base =
+            Math.atan2(
+              stateSlashImplosion.predDirY,
+              stateSlashImplosion.predDirX,
+            ) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
+          stateSlashImplosion.beams.push(spawnBeam(px, py, base, 1));
+        } else {
+          const base =
+            Math.atan2(
+              stateSlashImplosion.predDirY,
+              stateSlashImplosion.predDirX,
+            ) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
+          const spread = Math.PI / 12 + (Math.PI / 1.2) * Math.random();
+
+          stateSlashImplosion.beams.push(spawnBeam(px, py, base));
+          stateSlashImplosion.beams.push(spawnBeam(px, py, base + spread));
+        }
+      }
+    }
+
+    stateSlashImplosion.timer += dt;
+    if (
+      stateSlashImplosion.timer >= (cycle < 3 ? 0.25 : 0.75) &&
+      !stateSlashImplosion.change
+    ) {
+      stateSlashImplosion.change = true;
+      if (cycle === 3) {
+        changeEnemy(Celestial_FinalSwing);
+      } else if (cycle < 3) {
+        stateSlashImplosion.flipped *= -1;
+        changeEnemy(
+          stateSlashImplosion.flipped < 0
+            ? Celestial_Swing
+            : Celestial_SwingFlipped,
+        );
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Variation_${Math.random() < 0.5 ? "1" : "2"}.ogg`,
+          0.75,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+    }
+
+    const DURATIONS =
+      casualMode && phase != 4 ? [1.5, 1.5, 1.5, 1.5] : [1, 1, 1, 1.5];
+    if (
+      casualMode &&
+      cycle < 3 &&
+      !stateSlashImplosion.shaken &&
+      stateSlashImplosion.timer >= 1
+    ) {
+      stateSlashImplosion.shaken = true;
+      shakeScreen();
+    }
+    if (stateSlashImplosion.timer >= DURATIONS[cycle]) {
+      stateSlashImplosion.timer = 0;
+      stateSlashImplosion.cycle = cycle + 1;
+      if (!casualMode || cycle === 3) shakeScreen();
+      stateSlashImplosion.shaken = false;
+    }
+
+    let needsCompact = false;
+    for (const b of stateSlashImplosion.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompact = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompact) compact(stateSlashImplosion.beams);
+
+    const s = stateSlashImplosion;
+
+    s.spawnTimer += dt;
+
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawned < 15) {
+      s.spawnTimer -= interval;
+      s.spawned++;
+      s.circles.push(spawnImplosionCircle());
+    }
+
+    let needsCompactImp = false;
+    for (const c of s.circles) {
+      c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
+      c.opacity += dt * 4;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            4,
+          );
+        }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
+        c.phase = 2;
+        c.burstT += dt;
+        c.r -= dt * 600;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactImp = true;
+        }
+      }
+
+      if (c.phase === 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactImp) compact(s.circles);
+  }
+  function drawSlashImplosion(ctx) {
+    for (const c of stateSlashImplosion.circles)
+      drawImplosionCircleBack(ctx, c);
+    for (const b of stateSlashImplosion.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+  function drawSlashImplosionFront(ctx) {
+    for (const c of stateSlashImplosion.circles)
+      drawImplosionCircleFront(ctx, c);
+    for (const b of stateSlashImplosion.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
   }
 
   const statePizzaCutter = {
@@ -2886,6 +3676,249 @@ export function setup(
       ctx.restore();
     }
     for (const c of stateCrumble.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  const stateCrumbleImplosion = {
+    circles: [],
+    explosions: [],
+    t: 0,
+
+    circlesImp: [],
+    spawnTimer: 0,
+    spawned: 0,
+  };
+  function enterCrumbleImplosion() {
+    enterOrbit(() => {
+      stateCrumbleImplosion.circles = [];
+      stateCrumbleImplosion.explosions = [];
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+        stateCrumbleImplosion.circles.push(spawnCircle());
+      }
+
+      stateCrumbleImplosion.circlesImp = [];
+      stateCrumbleImplosion.spawnTimer = 0;
+      stateCrumbleImplosion.spawned = 0;
+    });
+  }
+  function updateCrumbleImplosion(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    let needsCompact = false;
+    for (const e of stateCrumbleImplosion.explosions) e.t += dt;
+    stateCrumbleImplosion.explosions = stateCrumbleImplosion.explosions.filter(
+      (e) => e.t < 1,
+    );
+    stateCrumbleImplosion.t += dt;
+    for (const c of stateCrumbleImplosion.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          if (stateCrumbleImplosion.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
+          stateCrumbleImplosion.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(10 + Math.random() * 11),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
+      }
+
+      if (c.t >= 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompact) compact(stateCrumbleImplosion.circles);
+
+    const s = stateCrumbleImplosion;
+
+    s.spawnTimer += dt;
+
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawned < 15) {
+      s.spawnTimer -= interval;
+      s.spawned++;
+      s.circlesImp.push(spawnImplosionCircle());
+    }
+
+    let needsCompactImp = false;
+    for (const c of s.circlesImp) {
+      c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
+      c.opacity += dt * 4;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            4,
+          );
+        }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
+        c.phase = 2;
+        c.burstT += dt;
+        c.r -= dt * 600;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactImp = true;
+        }
+      }
+
+      if (c.phase === 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactImp) compact(s.circlesImp);
+  }
+  function drawCrumbleImplosion(ctx) {
+    for (const c of stateCrumbleImplosion.circlesImp)
+      drawImplosionCircleBack(ctx, c);
+    for (const c of stateCrumbleImplosion.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+  }
+  function drawCrumbleImplosionFront(ctx) {
+    for (const c of stateCrumbleImplosion.circlesImp)
+      drawImplosionCircleFront(ctx, c);
+    for (const e of stateCrumbleImplosion.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    for (const c of stateCrumbleImplosion.circles) {
       ctx.save();
 
       ctx.translate(c.x, c.y);
@@ -8488,15 +9521,20 @@ export function setup(
       }
     }
     if (state.patternTime >= state.currentPattern.duration && !state.scream) {
-      state.patternIndex++;
+      while (true) {
+        state.patternIndex++;
+        if (state.patternIndex >= state.loopPattern.length) {
+          state.patternIndex = 0;
+        }
 
-      if (state.patternIndex >= state.loopPattern.length) {
-        state.patternIndex = 0;
+        const hard = state.loopPattern[state.patternIndex].hard ?? null;
+        if (hard == null || (hardMode && hard) || (!hardMode && !hard)) {
+          state.currentPattern = state.loopPattern[state.patternIndex];
+          state.patternTime = 0;
+          state.currentPattern.enter?.();
+          break;
+        }
       }
-
-      state.currentPattern = state.loopPattern[state.patternIndex];
-      state.patternTime = 0;
-      state.currentPattern.enter?.();
     }
 
     state.layer++;
@@ -8635,7 +9673,7 @@ export function setup(
 
     if (state.enemyTransition != "none") state.enemyTransitionT += dt;
     if (state.enemyTransition == "shrink") {
-      const p = state.enemyTransitionT * (casualMode ? 2 : 4);
+      const p = state.enemyTransitionT * (hardMode ? 8 : casualMode ? 2 : 4);
       const eased = p * p;
 
       state.enemyScale = 1 - eased;
@@ -8652,7 +9690,7 @@ export function setup(
         state.enemyTransition = "grow";
       }
     } else if (state.enemyTransition == "grow") {
-      const p = state.enemyTransitionT * (casualMode ? 2 : 4);
+      const p = state.enemyTransitionT * (hardMode ? 8 : casualMode ? 2 : 4);
       const eased = 1 - (1 - p) * (1 - p);
 
       state.enemyScale = eased;
