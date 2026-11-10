@@ -180,7 +180,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
         state.hatY = state.y + verticalOffset;
         if (state.hatTime >= 2) state.hatActive = false;
       }
-      if (state.explodeElapsed >= 12) {
+      if (state.explodeElapsed >= (hardMode ? 4 : 12)) {
         state.explode = false;
         state.explosionTriggered = false;
         state.hatActive = false;
@@ -259,10 +259,9 @@ export function setup(host, hardMode, stack = 1, position = null) {
         state.explode = true;
         state.explosionTriggered = false;
         state.explodeElapsed = 0;
-        state.cooldownTimer = 0;
         state.ringTime = 0;
         state.ringActive = true;
-        state.cooldownTimer = 12;
+        state.cooldownTimer = hardMode ? 4 : 12;
         state.ringX = state.x;
         state.ringY = state.y;
         state.ringRadius = state.size * 2;
@@ -371,30 +370,6 @@ export function setup(host, hardMode, stack = 1, position = null) {
     ctx.save();
     ctx.globalAlpha = state.opacity;
 
-    if (state._stack >= 6 && !state.explosionTriggered) {
-      ctx.save();
-
-      ctx.translate(Math.round(state.x), Math.round(state.y));
-      ctx.rotate(state.ovalRotation);
-
-      const w = state.size * 0.8;
-      const h = state.size;
-
-      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(w, h) / 2);
-
-      grad.addColorStop(0, "rgba(67,174,255,0)");
-      grad.addColorStop(0.5, "rgba(67,174,255,0)");
-      grad.addColorStop(1, "rgba(67,174,255,0.75)");
-
-      ctx.beginPath();
-      ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2);
-
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      ctx.restore();
-    }
-
     if (state.ringActive) {
       const grow = Math.max(0, Math.min(state.ringTime / 0.5, 1));
       const easedGrow = 1 - (1 - grow) ** 3;
@@ -412,7 +387,15 @@ export function setup(host, hardMode, stack = 1, position = null) {
       );
       grad.addColorStop(0, `rgba(255,0,0,${state.explosionTriggered ? 1 : 0})`);
       grad.addColorStop(
-        0.75,
+        0.7,
+        `rgba(255,0,0,${state.explosionTriggered ? 1 : 0})`,
+      );
+      grad.addColorStop(
+        0.8,
+        `rgba(255,0,0,${state.explosionTriggered ? 1 : 0.5})`,
+      );
+      grad.addColorStop(
+        0.9,
         `rgba(255,0,0,${state.explosionTriggered ? 1 : 0})`,
       );
       grad.addColorStop(1, `rgba(255,0,0,1)`);
@@ -445,7 +428,7 @@ export function setup(host, hardMode, stack = 1, position = null) {
       ctx.save();
       ctx.translate(state.hatX, state.hatY);
       ctx.rotate(state.hatRotation);
-      ctx.globalAlpha *= hatAlpha;
+      ctx.globalAlpha = hardMode ? 1 : hatAlpha;
       ctx.drawImage(Marthat, -hatSize / 2, -hatSize / 2, hatSize, hatSize);
       ctx.restore();
     }
