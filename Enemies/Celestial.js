@@ -776,7 +776,7 @@ export function setup(
       },
     },
     {
-      duration: 9,
+      duration: hardMode ? 12 : 9,
       update: updateBitter3Stars,
       draw: drawBitter3Stars,
       drawFront: drawBitter3StarsFront,
@@ -941,7 +941,7 @@ export function setup(
       hard: false,
     },
     {
-      duration: 9,
+      duration: hardMode ? 12 : 9,
       update: updateBitter3Stars,
       draw: drawBitter3Stars,
       drawFront: drawBitter3StarsFront,
@@ -1009,209 +1009,209 @@ export function setup(
     // },
   ];
   const specificDevOnly = [
+    // {
+    //   duration: casualMode ? 7 : 5.5,
+    //   update: updateSlash,
+    //   draw: drawSlash,
+    //   drawFront: drawSlashFront,
+    //   enter: enterSlash,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateImplosion,
+    //   draw: drawImplosion,
+    //   drawFront: drawImplosionFront,
+    //   enter: enterImplosion,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   drawFront: drawPizzaCutterFront,
+    //   enter: enterPizzaCutter,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   drawFront: drawFutileFront,
+    //   enter: enterFutile,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   drawFront: drawCrumbleFront,
+    //   enter: enterCrumble,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   drawFront: drawBitterFront,
+    //   enter: enterBitter,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   drawFront: drawCeaseFront,
+    //   enter: enterCease,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumble,
+    //   draw: drawPizzaCutterCrumble,
+    //   drawFront: drawPizzaCutterCrumbleFront,
+    //   enter: enterPizzaCutterCrumble,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom,
+    //   draw: drawDeathInBloom,
+    //   drawFront: drawDeathInBloomFront,
+    //   enter: enterDeathInBloom,
+    // },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter,
+    //   draw: drawSuperPizzaCutter,
+    //   drawFront: drawSuperPizzaCutterFront,
+    //   enter: enterSuperPizzaCutter,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilence,
+    //   draw: drawFirstSilence,
+    //   drawFront: drawFirstSilenceFront,
+    //   enter: enterFirstSilence,
+    // },
     {
-      duration: casualMode ? 7 : 5.5,
-      update: updateSlash,
-      draw: drawSlash,
-      drawFront: drawSlashFront,
-      enter: enterSlash,
-    },
-    {
-      duration: 3,
-      update: updateImplosion,
-      draw: drawImplosion,
-      drawFront: drawImplosionFront,
-      enter: enterImplosion,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      drawFront: drawPizzaCutterFront,
-      enter: enterPizzaCutter,
-    },
-    {
-      duration: 13,
-      update: updateFutile,
-      draw: drawFutile,
-      drawFront: drawFutileFront,
-      enter: enterFutile,
-    },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      drawFront: drawCrumbleFront,
-      enter: enterCrumble,
-    },
-    {
-      duration: 9,
-      update: updateBitter,
-      draw: drawBitter,
-      drawFront: drawBitterFront,
-      enter: enterBitter,
-    },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      drawFront: drawCeaseFront,
-      enter: enterCease,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumble,
-      draw: drawPizzaCutterCrumble,
-      drawFront: drawPizzaCutterCrumbleFront,
-      enter: enterPizzaCutterCrumble,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom,
-      draw: drawDeathInBloom,
-      drawFront: drawDeathInBloomFront,
-      enter: enterDeathInBloom,
-    },
-    {
-      duration: 8,
-      update: updateSuperPizzaCutter,
-      draw: drawSuperPizzaCutter,
-      drawFront: drawSuperPizzaCutterFront,
-      enter: enterSuperPizzaCutter,
-    },
-    {
-      duration: 9,
-      update: updateFirstSilence,
-      draw: drawFirstSilence,
-      drawFront: drawFirstSilenceFront,
-      enter: enterFirstSilence,
-    },
-    {
-      duration: 9,
+      duration: hardMode ? 12 : 9,
       update: updateBitter3Stars,
       draw: drawBitter3Stars,
       drawFront: drawBitter3StarsFront,
       enter: enterBitter3Stars,
     },
-    {
-      duration: 23,
-      update: updateDeathInBloomCrumble,
-      draw: drawDeathInBloomCrumble,
-      drawFront: drawDeathInBloomCrumbleFront,
-      enter: enterDeathInBloomCrumble,
-    },
-    {
-      duration: 3.5,
-      update: updateImplosionBreaker,
-      draw: drawImplosionBreaker,
-      drawFront: drawImplosionBreakerFront,
-      enter: enterImplosionBreaker,
-    },
-    {
-      duration: 18,
-      update: updateSecondSilence,
-      draw: drawSecondSilence,
-      drawFront: drawSecondSilenceFront,
-      enter: enterSecondSilence,
-    },
-    {
-      duration: 5.5,
-      update: updateSlashImplosion,
-      draw: drawSlashImplosion,
-      drawFront: drawSlashImplosionFront,
-      enter: enterSlashImplosion,
-    },
-    {
-      duration: 3,
-      update: updateCrumbleImplosion,
-      draw: drawCrumbleImplosion,
-      drawFront: drawCrumbleImplosionFront,
-      enter: enterCrumbleImplosion,
-    },
-    {
-      duration: 13,
-      update: updateFutile3Stars,
-      draw: drawFutile3Stars,
-      drawFront: drawFutile3StarsFront,
-      enter: enterFutile3Stars,
-    },
-    {
-      duration: 3.5,
-      update: updateCrumbleBreaker,
-      draw: drawCrumbleBreaker,
-      drawFront: drawCrumbleBreakerFront,
-      enter: enterCrumbleBreaker,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumbleBeams,
-      draw: drawPizzaCutterCrumbleBeams,
-      drawFront: drawPizzaCutterCrumbleBeamsFront,
-      enter: enterPizzaCutterCrumbleBeams,
-    },
-    {
-      duration: 2,
-      update: updateBeams,
-      draw: drawBeams,
-      drawFront: drawBeamsFront,
-      enter: enterBeams,
-    },
-    {
-      duration: 9,
-      update: updateBitterBeams,
-      draw: drawBitterBeams,
-      drawFront: drawBitterBeamsFront,
-      enter: enterBitterBeams,
-    },
-    {
-      duration: 13,
-      update: updateFutile3StarsBreakerBeams,
-      draw: drawFutile3StarsBreakerBeams,
-      drawFront: drawFutile3StarsBreakerBeamsFront,
-      enter: enterFutile3StarsBreakerBeams,
-    },
-    {
-      duration: 12,
-      update: updateImplosionBreaker3Stars,
-      draw: drawImplosionBreaker3Stars,
-      drawFront: drawImplosionBreaker3StarsFront,
-      enter: enterImplosionBreaker3Stars,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom3Stars,
-      draw: drawDeathInBloom3Stars,
-      drawFront: drawDeathInBloom3StarsFront,
-      enter: enterDeathInBloom3Stars,
-    },
-    {
-      duration: 12,
-      update: updateSuperPizzaCutter3StarsBreakerBeams,
-      draw: drawSuperPizzaCutter3StarsBreakerBeams,
-      drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
-      enter: enterSuperPizzaCutter3StarsBreakerBeams,
-    },
-    {
-      duration: 13,
-      update: updateFutileRandCutter,
-      draw: drawFutileRandCutter,
-      drawFront: drawFutileRandCutterFront,
-      enter: enterFutileRandCutter,
-    },
-    {
-      duration: 3.5,
-      update: updateCeaseBreaker,
-      draw: drawCeaseBreaker,
-      drawFront: drawCeaseBreakerFront,
-      enter: enterCeaseBreaker,
-    },
-    {
-      duration: 5.5,
-      update: updateSlashBeams,
-      draw: drawSlashBeams,
-      drawFront: drawSlashBeamsFront,
-      enter: enterSlashBeams,
-    },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumble,
+    //   draw: drawDeathInBloomCrumble,
+    //   drawFront: drawDeathInBloomCrumbleFront,
+    //   enter: enterDeathInBloomCrumble,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateImplosionBreaker,
+    //   draw: drawImplosionBreaker,
+    //   drawFront: drawImplosionBreakerFront,
+    //   enter: enterImplosionBreaker,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilence,
+    //   draw: drawSecondSilence,
+    //   drawFront: drawSecondSilenceFront,
+    //   enter: enterSecondSilence,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashImplosion,
+    //   draw: drawSlashImplosion,
+    //   drawFront: drawSlashImplosionFront,
+    //   enter: enterSlashImplosion,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumbleImplosion,
+    //   draw: drawCrumbleImplosion,
+    //   drawFront: drawCrumbleImplosionFront,
+    //   enter: enterCrumbleImplosion,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateCrumbleBreaker,
+    //   draw: drawCrumbleBreaker,
+    //   drawFront: drawCrumbleBreakerFront,
+    //   enter: enterCrumbleBreaker,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumbleBeams,
+    //   draw: drawPizzaCutterCrumbleBeams,
+    //   drawFront: drawPizzaCutterCrumbleBeamsFront,
+    //   enter: enterPizzaCutterCrumbleBeams,
+    // },
+    // {
+    //   duration: 2,
+    //   update: updateBeams,
+    //   draw: drawBeams,
+    //   drawFront: drawBeamsFront,
+    //   enter: enterBeams,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitterBeams,
+    //   draw: drawBitterBeams,
+    //   drawFront: drawBitterBeamsFront,
+    //   enter: enterBitterBeams,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3StarsBreakerBeams,
+    //   draw: drawFutile3StarsBreakerBeams,
+    //   drawFront: drawFutile3StarsBreakerBeamsFront,
+    //   enter: enterFutile3StarsBreakerBeams,
+    // },
+    // {
+    //   duration: 12,
+    //   update: updateImplosionBreaker3Stars,
+    //   draw: drawImplosionBreaker3Stars,
+    //   drawFront: drawImplosionBreaker3StarsFront,
+    //   enter: enterImplosionBreaker3Stars,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom3Stars,
+    //   draw: drawDeathInBloom3Stars,
+    //   drawFront: drawDeathInBloom3StarsFront,
+    //   enter: enterDeathInBloom3Stars,
+    // },
+    // {
+    //   duration: 12,
+    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
+    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
+    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutileRandCutter,
+    //   draw: drawFutileRandCutter,
+    //   drawFront: drawFutileRandCutterFront,
+    //   enter: enterFutileRandCutter,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateCeaseBreaker,
+    //   draw: drawCeaseBreaker,
+    //   drawFront: drawCeaseBreakerFront,
+    //   enter: enterCeaseBreaker,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashBeams,
+    //   draw: drawSlashBeams,
+    //   drawFront: drawSlashBeamsFront,
+    //   enter: enterSlashBeams,
+    // },
     // {
     //   duration: 9,
     //   update: updateBitterImplosionBreakerBeams,
@@ -4767,6 +4767,7 @@ export function setup(
       }
 
       if (s.extraT >= 11) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
@@ -5482,6 +5483,7 @@ export function setup(
       }
 
       if (s.extraT >= 11) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
@@ -10295,6 +10297,7 @@ export function setup(
       }
 
       if (s.extraT >= 11) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
@@ -12007,6 +12010,7 @@ export function setup(
       }
 
       if (s.extraT >= 11) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
@@ -13020,15 +13024,15 @@ export function setup(
     if (s.circle.active) {
       const c = s.circle;
       c.t += dt;
-      if (c.t < 8) {
-        c.r = (600 / 8) * c.t;
+      if (c.t < (hardMode ? 11 : 8)) {
+        c.r = (600 / (hardMode ? 11 : 8)) * c.t;
       } else {
         c.r -= dt * 800;
         if (c.r <= 0) {
           c.active = false;
         }
       }
-      if (c.t >= 8) {
+      if (c.t >= (hardMode ? 11 : 8)) {
         const dx = mx - c.x;
         const dy = my - c.y;
         const distSq = dx * dx + dy * dy;
@@ -13036,26 +13040,6 @@ export function setup(
           checkDeath("Celestial");
         }
       }
-    }
-    if (s.extraSpawned < 3 && s.extraT >= s.extraSpawned * 2.333) {
-      s.extraStars.push({
-        x: mouse.x,
-        y: mouse.y,
-        t: 0,
-        locked: false,
-        angle: s.lastAng,
-        count: hardMode && phase == 4 ? 8 : casualMode ? 4 : 6,
-      });
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
-        0.9,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
-      s.lastAng += Math.random() * 0.2 + 0.2;
-      s.extraSpawned++;
     }
 
     const dx = mx - s.cx;
@@ -13152,6 +13136,39 @@ export function setup(
     }
     s.spokes = s.spokes.filter((b) => b.active);
 
+    if (s.extraSpawned < 3 && s.extraT >= s.extraSpawned * 2.333) {
+      s.extraStars.push({
+        x: mouse.x,
+        y: mouse.y,
+        t: 0,
+        locked: false,
+        angle: s.lastAng,
+        count: hardMode && phase == 4 ? 8 : casualMode ? 4 : 6,
+      });
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      s.lastAng += Math.random() * 0.2 + 0.2;
+      s.extraSpawned++;
+    } else if (
+      s.extraSpawned == 3 &&
+      s.extraT >= (hardMode ? 11 : 8) - 0.5 &&
+      s.extraT <= (hardMode ? 11 : 8) - 0.5 + dt
+    ) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
     for (const star of s.extraStars) {
       star.t += dt;
 
@@ -13175,7 +13192,8 @@ export function setup(
         }
       }
 
-      if (s.extraT >= 8) {
+      if (s.extraT >= (hardMode ? 11 : 8)) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
@@ -13211,21 +13229,12 @@ export function setup(
         undefined,
         "50",
       );
-    } else if (s.t >= 1.5 && s.t <= 1.5 + dt && s.cycle == 3) {
-      playSound(
-        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Impact.ogg`,
-        0.9,
-        undefined,
-        undefined,
-        undefined,
-        "50",
-      );
     }
     if (s.t >= 2) {
       s.t = 0;
       s.cycle++;
-      shakeScreen();
       if (s.cycle <= 3) {
+        shakeScreen();
         playSound(
           `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Shoot.ogg`,
           0.9,
@@ -13263,10 +13272,14 @@ export function setup(
       ctx.translate(c.x, c.y);
 
       const alpha =
-        c.t < 7 ? 0.5 : c.t < 8 ? Math.max(0, (2 / 3) * (7.75 - c.t)) : 1;
+        c.t < 7
+          ? 0.5
+          : c.t < (hardMode ? 11 : 8)
+            ? Math.max(0, (2 / 3) * (7.75 - c.t))
+            : 1;
       ctx.globalAlpha = alpha;
 
-      if (c.t < 8) {
+      if (c.t < (hardMode ? 11 : 8)) {
         const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
         grad.addColorStop(0, "black");
         grad.addColorStop(1, "#ff00cc");
@@ -13316,7 +13329,8 @@ export function setup(
       const alpha =
         isLethal && star.fireT >= 0.75
           ? Math.max(0, (1 - star.fireT) / 0.25)
-          : stateBitter3Stars.extraT >= 7 && stateBitter3Stars.extraT <= 8
+          : stateBitter3Stars.extraT >= 7 &&
+              stateBitter3Stars.extraT <= (hardMode ? 11 : 8)
             ? Math.max(0, (7.75 - stateBitter3Stars.extraT) / 0.75)
             : stateBitter3Stars.extraT <= 0.25
               ? stateBitter3Stars.extraT * 4
@@ -13467,10 +13481,10 @@ export function setup(
       ctx.save();
       ctx.translate(c.x, c.y);
 
-      const alpha = c.t < 8 ? 0.5 : 1;
+      const alpha = c.t < (hardMode ? 11 : 8) ? 0.5 : 1;
       ctx.globalAlpha = alpha;
 
-      if (c.t >= 8) {
+      if (c.t >= (hardMode ? 11 : 8)) {
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -13496,7 +13510,8 @@ export function setup(
       const alpha =
         isLethal && star.fireT >= 0.75
           ? Math.max(0, (1 - star.fireT) / 0.25)
-          : stateBitter3Stars.extraT >= 7 && stateBitter3Stars.extraT <= 8
+          : stateBitter3Stars.extraT >= 7 &&
+              stateBitter3Stars.extraT <= (hardMode ? 11 : 8)
             ? Math.max(0, (7.75 - stateBitter3Stars.extraT) / 0.75)
             : stateBitter3Stars.extraT <= 0.25
               ? stateBitter3Stars.extraT * 4
@@ -14882,6 +14897,7 @@ export function setup(
       }
 
       if (s.extraT >= 11) {
+        if (!star.fireT) shakeScreen();
         star.fireT = (star.fireT || 0) + dt;
       }
 
