@@ -654,14 +654,14 @@ export function setup(
       enter: enterSuperPizzaCutter,
       hard: false,
     },
-    // {
-    //   duration: 8,
-    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
-    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
-    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
-    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
-    //   hard: true,
-    // },
+    {
+      duration: 12,
+      update: updateSuperPizzaCutter3StarsBreakerBeams,
+      draw: drawSuperPizzaCutter3StarsBreakerBeams,
+      drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+      enter: enterSuperPizzaCutter3StarsBreakerBeams,
+      hard: true,
+    },
     {
       duration: 3,
       update: updateCease,
@@ -692,7 +692,16 @@ export function setup(
       draw: drawFirstSilence,
       drawFront: drawFirstSilenceFront,
       enter: enterFirstSilence,
+      hard: false,
     },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilenceHard,
+    //   draw: drawFirstSilenceHard,
+    //   drawFront: drawFirstSilenceHardFront,
+    //   enter: enterFirstSilenceHard,
+    //   hard: true,
+    // },
     {
       duration: 3,
       update: updateImplosion,
@@ -709,14 +718,14 @@ export function setup(
       enter: enterFutile,
       hard: false,
     },
-    // {
-    //   duration: 13,
-    //   update: updateFutileRandCutter,
-    //   draw: drawFutileRandCutter,
-    //   drawFront: drawFutileRandCutterFront,
-    //   enter: enterFutileRandCutter,
-    //   hard: true,
-    // },
+    {
+      duration: 13,
+      update: updateFutileRandCutter,
+      draw: drawFutileRandCutter,
+      drawFront: drawFutileRandCutterFront,
+      enter: enterFutileRandCutter,
+      hard: true,
+    },
     {
       duration: 3,
       update: updateCease,
@@ -725,22 +734,22 @@ export function setup(
       enter: enterCease,
       hard: false,
     },
-    // {
-    //   duration: 3,
-    //   update: updateCeaseBreaker,
-    //   draw: drawCeaseBreaker,
-    //   drawFront: drawCeaseBreakerFront,
-    //   enter: enterCeaseBreaker,
-    //   hard: true,
-    // },
-    // {
-    //   duration: 5.5,
-    //   update: updateSlashBeams,
-    //   draw: drawSlashBeams,
-    //   drawFront: drawSlashBeamsFront,
-    //   enter: enterSlashBeams,
-    //   hard: true,
-    // },
+    {
+      duration: 3.5,
+      update: updateCeaseBreaker,
+      draw: drawCeaseBreaker,
+      drawFront: drawCeaseBreakerFront,
+      enter: enterCeaseBreaker,
+      hard: true,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashBeams,
+      draw: drawSlashBeams,
+      drawFront: drawSlashBeamsFront,
+      enter: enterSlashBeams,
+      hard: true,
+    },
     {
       duration: 8,
       update: updateSuperPizzaCutter,
@@ -749,14 +758,14 @@ export function setup(
       enter: enterSuperPizzaCutter,
       hard: false,
     },
-    // {
-    //   duration: 8,
-    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
-    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
-    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
-    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
-    //   hard: true,
-    // },
+    {
+      duration: 12,
+      update: updateSuperPizzaCutter3StarsBreakerBeams,
+      draw: drawSuperPizzaCutter3StarsBreakerBeams,
+      drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+      enter: enterSuperPizzaCutter3StarsBreakerBeams,
+      hard: true,
+    },
     {
       duration: 0,
       update: () => {},
@@ -898,7 +907,16 @@ export function setup(
       draw: drawSecondSilence,
       drawFront: drawSecondSilenceFront,
       enter: enterSecondSilence,
+      hard: false,
     },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilenceHard,
+    //   draw: drawSecondSilenceHard,
+    //   drawFront: drawSecondSilenceHardFront,
+    //   enter: enterSecondSilenceHard,
+    //   hard: true,
+    // },
     {
       duration: 13,
       update: updateFutile3Stars,
@@ -963,6 +981,7 @@ export function setup(
       draw: drawFirstSilence,
       drawFront: drawFirstSilenceFront,
       enter: enterFirstSilence,
+      hard: false,
     },
     {
       duration: 18,
@@ -970,7 +989,24 @@ export function setup(
       draw: drawSecondSilence,
       drawFront: drawSecondSilenceFront,
       enter: enterSecondSilence,
+      hard: false,
     },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilenceHard,
+    //   draw: drawFirstSilenceHard,
+    //   drawFront: drawFirstSilenceHardFront,
+    //   enter: enterFirstSilenceHard,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilenceHard,
+    //   draw: drawSecondSilenceHard,
+    //   drawFront: drawSecondSilenceHardFront,
+    //   enter: enterSecondSilenceHard,
+    //   hard: true,
+    // },
   ];
   const specificDevOnly = [
     {
@@ -1148,34 +1184,34 @@ export function setup(
       drawFront: drawDeathInBloom3StarsFront,
       enter: enterDeathInBloom3Stars,
     },
-    // {
-    //   duration: 8,
-    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
-    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
-    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
-    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
-    // },
-    // {
-    //   duration: 13,
-    //   update: updateFutileRandCutter,
-    //   draw: drawFutileRandCutter,
-    //   drawFront: drawFutileRandCutterFront,
-    //   enter: enterFutileRandCutter,
-    // },
-    // {
-    //   duration: 3,
-    //   update: updateCeaseBreaker,
-    //   draw: drawCeaseBreaker,
-    //   drawFront: drawCeaseBreakerFront,
-    //   enter: enterCeaseBreaker,
-    // },
-    // {
-    //   duration: 5.5,
-    //   update: updateSlashBeams,
-    //   draw: drawSlashBeams,
-    //   drawFront: drawSlashBeamsFront,
-    //   enter: enterSlashBeams,
-    // },
+    {
+      duration: 12,
+      update: updateSuperPizzaCutter3StarsBreakerBeams,
+      draw: drawSuperPizzaCutter3StarsBreakerBeams,
+      drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+      enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    },
+    {
+      duration: 13,
+      update: updateFutileRandCutter,
+      draw: drawFutileRandCutter,
+      drawFront: drawFutileRandCutterFront,
+      enter: enterFutileRandCutter,
+    },
+    {
+      duration: 3.5,
+      update: updateCeaseBreaker,
+      draw: drawCeaseBreaker,
+      drawFront: drawCeaseBreakerFront,
+      enter: enterCeaseBreaker,
+    },
+    {
+      duration: 5.5,
+      update: updateSlashBeams,
+      draw: drawSlashBeams,
+      drawFront: drawSlashBeamsFront,
+      enter: enterSlashBeams,
+    },
     // {
     //   duration: 9,
     //   update: updateBitterImplosionBreakerBeams,
@@ -1189,6 +1225,22 @@ export function setup(
     //   draw: drawDeathInBloomCrumbleBreakerBeams,
     //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
     //   enter: enterDeathInBloomCrumbleBreakerBeams,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilenceHard,
+    //   draw: drawFirstSilenceHard,
+    //   drawFront: drawFirstSilenceHardFront,
+    //   enter: enterFirstSilenceHard,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilenceHard,
+    //   draw: drawSecondSilenceHard,
+    //   drawFront: drawSecondSilenceHardFront,
+    //   enter: enterSecondSilenceHard,
+    //   hard: true,
     // },
   ];
   const celestialDevOnly = true;
@@ -2003,6 +2055,324 @@ export function setup(
   }
   function drawSlashFront(ctx) {
     for (const b of stateSlash.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+
+  const stateSlashBeams = {
+    beams: [],
+    timer: 0,
+    cycle: 0,
+    prevMx: 0,
+    prevMy: 0,
+    flipped: 1,
+    shaken: false,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+    beamSpawn: false,
+  };
+  function enterSlashBeams() {
+    enterOrbit(() => {
+      stateSlashBeams.beams = [];
+      stateSlashBeams.timer = 0;
+      stateSlashBeams.cycle = 0;
+      stateSlashBeams.shaken = false;
+      stateSlashBeams.prevMx = mouse.x;
+      stateSlashBeams.prevMy = mouse.y;
+      stateSlashBeams.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      stateSlashBeams.predDirY = Math.sin(Math.random() * Math.PI * 2);
+      stateSlashBeams.beamSpawn = false;
+    });
+  }
+  function updateSlashBeams(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+
+    const mvx = mx - stateSlashBeams.prevMx;
+    const mvy = my - stateSlashBeams.prevMy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      stateSlashBeams.predDirX +=
+        (tx - stateSlashBeams.predDirX) * Math.min(1, dt * turnSpeed);
+      stateSlashBeams.predDirY +=
+        (ty - stateSlashBeams.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d =
+        Math.hypot(stateSlashBeams.predDirX, stateSlashBeams.predDirY) || 1;
+
+      stateSlashBeams.predDirX /= d;
+      stateSlashBeams.predDirY /= d;
+    }
+
+    stateSlashBeams.prevMx = mx;
+    stateSlashBeams.prevMy = my;
+
+    const predictionDistance = 100;
+    const px = mx + stateSlashBeams.predDirX * predictionDistance;
+    const py = my + stateSlashBeams.predDirY * predictionDistance;
+
+    const cycle = stateSlashBeams.cycle;
+
+    if (stateSlashBeams.timer === 0) {
+      stateSlashBeams.change = false;
+      if (cycle === 3) {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Final.ogg`,
+          0.75,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+        const base =
+          Math.atan2(stateSlashBeams.predDirY, stateSlashBeams.predDirX) +
+          ((Math.random() - 0.5) * Math.PI) / 3;
+        const spread = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 2.667) * Math.random();
+
+        stateSlashBeams.beams.push(spawnBeam(px, py, base, 1.5));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base + spread, 1.5));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base - spread2, 1.5));
+      } else if (cycle < 3) {
+        if (!hardMode) {
+          const base =
+            Math.atan2(stateSlashBeams.predDirY, stateSlashBeams.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
+          stateSlashBeams.beams.push(spawnBeam(px, py, base, 1));
+        } else {
+          const base =
+            Math.atan2(stateSlashBeams.predDirY, stateSlashBeams.predDirX) +
+            ((Math.random() - 0.5) * Math.PI) / 3;
+          const spread = Math.PI / 12 + (Math.PI / 1.2) * Math.random();
+
+          stateSlashBeams.beams.push(spawnBeam(px, py, base));
+          stateSlashBeams.beams.push(spawnBeam(px, py, base + spread));
+        }
+      }
+    }
+    if (
+      stateSlashBeams.timer >= 0.75 &&
+      cycle == 1 &&
+      !stateSlashBeams.beamSpawn
+    ) {
+      stateSlashBeams.beamSpawn = true;
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(stateSlashBeams.predDirY, stateSlashBeams.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        stateSlashBeams.beams.push(spawnBeam(px, py, base, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        stateSlashBeams.beams.push(spawnBeam(px, py, base, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateSlashBeams.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
+    }
+
+    stateSlashBeams.timer += dt;
+    if (
+      stateSlashBeams.timer >= (cycle < 3 ? 0.25 : 0.75) &&
+      !stateSlashBeams.change
+    ) {
+      stateSlashBeams.change = true;
+      if (cycle === 2 || cycle === 3) {
+        changeEnemy(Celestial_FinalSwing);
+      } else if (cycle < 2) {
+        stateSlashBeams.flipped *= -1;
+        changeEnemy(
+          stateSlashBeams.flipped < 0
+            ? Celestial_Swing
+            : Celestial_SwingFlipped,
+        );
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Slash/Fall_Variation_${Math.random() < 0.5 ? "1" : "2"}.ogg`,
+          0.75,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+    }
+
+    const DURATIONS =
+      casualMode && phase != 4 ? [1.5, 1.5, 1.5, 1.5] : [1, 1, 1, 1.5];
+    if (
+      casualMode &&
+      cycle < 3 &&
+      !stateSlashBeams.shaken &&
+      stateSlashBeams.timer >= 1
+    ) {
+      stateSlashBeams.shaken = true;
+      shakeScreen();
+    }
+    if (stateSlashBeams.timer >= DURATIONS[cycle]) {
+      stateSlashBeams.timer = 0;
+      stateSlashBeams.cycle = cycle + 1;
+      if (!casualMode || cycle === 3) shakeScreen();
+      stateSlashBeams.shaken = false;
+    }
+
+    let needsCompact = false;
+    for (const b of stateSlashBeams.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompact = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompact) compact(stateSlashBeams.beams);
+  }
+  function drawSlashBeams(ctx) {
+    for (const b of stateSlashBeams.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+  function drawSlashBeamsFront(ctx) {
+    for (const b of stateSlashBeams.beams) {
       ctx.save();
 
       ctx.translate(b.x, b.y);
@@ -3397,14 +3767,27 @@ export function setup(
       const base =
         Math.atan2(s.predDirY, s.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
     s.timer += dt;
     let needsCompactSlash = false;
@@ -5160,14 +5543,27 @@ export function setup(
       const base =
         Math.atan2(s.predDirY, s.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
     s.timer += dt;
     let needsCompactSlash = false;
@@ -5972,6 +6368,623 @@ export function setup(
 
       ctx.scale(0.1, 0.1);
       ctx.drawImage(bladeCanvas, -1100, -1100);
+      ctx.restore();
+    }
+  }
+
+  const stateFutileRandCutter = {
+    t: 0,
+    cycle: 0,
+
+    rift: null,
+    snake: null,
+    trail: [],
+    bloodPool: createBloodPoolState(),
+
+    spokes: [],
+    randt: 0,
+    randcycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+  };
+  function enterFutileRandCutter() {
+    enterFixed(-1000, -1000, true, () => {
+      const s = stateFutileRandCutter;
+      s.t = 0;
+      s.cycle = 0;
+      s.snake = null;
+      s.rift = spawnFutileRift();
+      s.trail = [];
+      s.bloodPool = createBloodPoolState();
+
+      s.spokes = [];
+      s.randt = 0;
+      s.randcycle = 0;
+      s.spawned = false;
+      s.cx = mouse.x + (Math.random() - 0.5) * 2000;
+      s.cy = mouse.y + (Math.random() - 0.5) * 2000;
+    });
+  }
+  function updateFutileRandCutter(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    const s = stateFutileRandCutter;
+
+    s.t += dt;
+    s.rift.t += dt;
+    updateBloodPool(s.bloodPool, dt);
+
+    const r = s.rift;
+    if (r.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Start.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Crack.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (r.t >= 1 && r.t <= 1 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Variation_${Math.floor(1 + Math.random() * 3)}.ogg`,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Futile/Futile_Fire.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+    if (r.t < 0.25) {
+      const p = r.t / 0.25;
+      r.scale = 1 - (1 - p) * (1 - p);
+    } else if (r.t < 1) {
+      r.scale = 1;
+    } else {
+      const p = (r.t - 1) * 2;
+      r.scale = Math.max(0, 1 - p * p);
+    }
+
+    if (s.rift.t >= 1 && s.rift.t < 3 && !s.snake) {
+      s.snake = spawnSnake(s.rift);
+      startBloodPool(s.bloodPool, s.rift);
+    }
+
+    const sn = s.snake;
+    if (sn) {
+      const dx = mx - sn.x;
+      const dy = my - sn.y;
+
+      const vLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
+      const vx = sn.vx / vLen;
+      const vy = sn.vy / vLen;
+
+      const px = -vy;
+      const py = vx;
+
+      const side = dx * px + dy * py;
+      const forward = dx * vx + dy * vy;
+      const TURN_STRENGTH =
+        12 * (forward < 0 ? 0.5 : 1) * (hardMode ? 1.25 : 1);
+
+      sn.vx += px * side * TURN_STRENGTH * dt;
+      sn.vy += py * side * TURN_STRENGTH * dt;
+
+      const newLen = Math.sqrt(sn.vx * sn.vx + sn.vy * sn.vy) || 1;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const speed = 2500 * Math.max(1, Math.min(2, dist / 1000));
+
+      sn.vx = (sn.vx / newLen) * speed;
+      sn.vy = (sn.vy / newLen) * speed;
+
+      sn.x += sn.vx * dt;
+      sn.y += sn.vy * dt;
+
+      const off = 100;
+      if (s.rift.t < 3) {
+        s.trail.push({
+          x: sn.x + (Math.random() - 0.5) * off,
+          y: sn.y + (Math.random() - 0.5) * off,
+          r: 200,
+          a: Math.random() * Math.PI * 2,
+        });
+        shakeScreen();
+      }
+
+      if (s.rift.t >= 3) {
+        sn.vx *= 0.85;
+        sn.vy *= 0.85;
+      }
+    }
+
+    for (const p of s.trail) {
+      const dx = p.x - mx;
+      const dy = p.y - my;
+      if (dx * dx + dy * dy < p.r * p.r && p.r > 100) {
+        checkDeath("Celestial");
+      }
+      p.r -=
+        dt * Math.max(50, p.r) * 1.25 * (s.t >= 12 ? (s.t - 11) * 1.25 : 1);
+    }
+    s.trail = s.trail.filter((p) => p.r > 0);
+
+    if (s.rift.t >= 3) {
+      s.cycle++;
+
+      if (s.cycle < 4) {
+        s.rift = spawnFutileRift();
+      }
+
+      s.snake = null;
+    }
+
+    s.randt += dt;
+
+    if (!s.spawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      s.cx = mouse.x + (Math.random() - 0.5) * 2000;
+      s.cy = mouse.y + (Math.random() - 0.5) * 2000;
+      s.spokes.push(spawnPizza(s));
+      s.spawned = true;
+    }
+
+    for (const sp of s.spokes) {
+      sp.t += dt;
+
+      const p = Math.min(sp.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - sp.y, mx - sp.x);
+        let angleDiff = cursorAngle - sp.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.1;
+        sp.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
+      const eased = 1 - (1 - p) * (1 - p);
+      sp.angle = sp.startAngle + (sp.targetAngle - sp.startAngle) * eased;
+
+      if (sp.t >= 2 && sp.t < 2.5) {
+        const len = 20000;
+        const w = 90;
+
+        const dx = mx - sp.x;
+        const dy = my - sp.y;
+
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = sp.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+          const cos = Math.cos(-angle);
+          const sin = Math.sin(-angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const halfLen = len;
+          const halfW = w / 2;
+
+          if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+            checkDeath("Celestial");
+            break;
+          }
+        }
+      }
+      if (sp.t >= 2.5) {
+        sp.offset += dt * 10000;
+      }
+      if (sp.t > 3) {
+        sp.active = false;
+      }
+    }
+
+    if (s.randt >= 2 && s.randcycle < 4) {
+      s.randt = 0;
+      s.randcycle++;
+      shakeScreen();
+      if (s.randcycle < 4) {
+        s.spawned = false;
+        s.change = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+    }
+  }
+  function drawFutileRandCutter(ctx) {
+    const s = stateFutileRandCutter;
+
+    drawBloodPool(ctx, s.bloodPool);
+
+    if (s.rift) {
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      const glowSize = 300;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      drawRiftScars(ctx, s.rift, true);
+
+      ctx.restore();
+    }
+
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, p.r, 0, 0, p.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(1, "rgba(255,0,192,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "#ff00cc";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.rotate(p.a);
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0 && !uldm) {
+        const grad = ctx.createLinearGradient(
+          -len / 2 - glowSize,
+          0,
+          -len / 2,
+          0,
+        );
+        grad.addColorStop(0, "rgba(255,0,192,0)");
+        grad.addColorStop(1, `rgba(255,0,192,1)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(-len / 2 - glowSize, -w / 2, glowSize, w);
+
+        const grad2 = ctx.createLinearGradient(
+          len / 2,
+          0,
+          len / 2 + glowSize,
+          0,
+        );
+        grad2.addColorStop(0, `rgba(255,0,192,1)`);
+        grad2.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad2;
+        ctx.fillRect(len / 2, -w / 2, glowSize, w);
+
+        const topGrad = ctx.createLinearGradient(
+          0,
+          -w / 2 - glowSize,
+          0,
+          -w / 2,
+        );
+        topGrad.addColorStop(0, "rgba(255,0,192,0)");
+        topGrad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(-len / 2 - 1, -w / 2 - glowSize, len + 2, glowSize);
+
+        const bottomGrad = ctx.createLinearGradient(
+          0,
+          w / 2,
+          0,
+          w / 2 + glowSize,
+        );
+        bottomGrad.addColorStop(0, "#ff00cc");
+        bottomGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = bottomGrad;
+        ctx.fillRect(-len / 2 - 1, w / 2, len + 2, glowSize);
+
+        const points = [
+          [-len / 2, -w / 2, -1.0083, -0.9983],
+          [len / 2, -w / 2, 0.0083, -0.9983],
+          [-len / 2, w / 2, -1.0083, -0.0017],
+          [len / 2, w / 2, 0.0083, -0.0017],
+        ];
+        for (const [x, y, ox, oy] of points) {
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+
+          grad.addColorStop(0, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(
+            x + ox * glowSize,
+            y + oy * glowSize,
+            glowSize,
+            glowSize,
+          );
+        }
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+
+    for (const sp of s.spokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? Math.min(0, (3 - sp.t) * 4) : 1;
+
+          const drawX = Math.max(x, sp.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
+        } else if (i < (casualMode ? 3 : 4)) {
+          ctx.globalAlpha = sp.t < 0.25 && s.randcycle == 0 ? sp.t * 3 : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.45, "#ff00cc");
+          grad.addColorStop(0.55, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+  }
+  function drawFutileRandCutterFront(ctx) {
+    const s = stateFutileRandCutter;
+
+    if (s.rift) {
+      ctx.save();
+      ctx.translate(s.rift.x, s.rift.y);
+      ctx.rotate(s.rift.angle);
+      ctx.scale(s.rift.scale, s.rift.scale);
+
+      drawRiftScars(ctx, s.rift);
+
+      ctx.restore();
+    }
+
+    for (const p of s.trail) {
+      ctx.save();
+
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      const len = Math.max(0, Math.min(30, p.r * 0.6 - 30));
+      const w = 1000;
+
+      if (len > 0 && !uldm) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(-len / 2, -w / 2, len, w);
+      }
+
+      ctx.restore();
+    }
+
+    const r = stateFutileRandCutter.rift;
+    if (s.rift && s.rift.t <= 2 && r) {
+      const cam = getCameraPos();
+
+      const cx = cam.x + window.innerWidth / 2;
+      const cy = cam.y + window.innerHeight / 2;
+
+      const dx = r.x - cx;
+      const dy = r.y - cy;
+      const ang = Math.atan2(dy, dx);
+
+      const halfW = window.innerWidth / 2 - 60;
+      const halfH = window.innerHeight / 2 - 60;
+
+      const scale =
+        Math.min(
+          halfW / (Math.abs(Math.cos(ang)) || 0.0001),
+          halfH / (Math.abs(Math.sin(ang)) || 0.0001),
+        ) * 0.7;
+
+      const ex = cx + Math.cos(ang) * scale;
+      const ey = cy + Math.sin(ang) * scale;
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.scale(s.rift.scale * 0.5, s.rift.scale * 0.5);
+
+      const glowSize = 300;
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowSize);
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(0.5, "rgba(255,0,192,0.75)");
+      glow.addColorStop(1, "rgba(255,0,192,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      drawRiftScars(ctx, r, true);
+      drawRiftScars(ctx, r);
+
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(ex, ey);
+      ctx.rotate(ang);
+
+      ctx.fillStyle = "#ff00cc";
+      ctx.font = `${s.rift.scale * 100}px monospace`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      ctx.fillText("➤", s.rift.scale * 100, 0);
+
+      ctx.restore();
+    }
+
+    for (const sp of s.spokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = 90;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? (3 - sp.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+        }
+      }
+
       ctx.restore();
     }
   }
@@ -7276,14 +8289,27 @@ export function setup(
       const base =
         Math.atan2(s.predDirY, s.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
     s.timer += dt;
     let needsCompactSlash = false;
@@ -7866,6 +8892,596 @@ export function setup(
 
       ctx.fillRect(x, -b.width / 2, len, b.width);
 
+      ctx.restore();
+    }
+  }
+
+  const stateCeaseBreaker = {
+    beams: [],
+    timer: 0,
+    rapidTimer: 0,
+    circle: {
+      t: 0,
+      active: false,
+      x: 0,
+      y: 0,
+    },
+    positions: [],
+
+    daggers: [],
+  };
+  function enterCeaseBreaker() {
+    enterOrbit(() => {
+      stateCeaseBreaker.beams = [];
+      stateCeaseBreaker.timer = 0;
+      stateCeaseBreaker.rapidTimer = 0;
+      stateCeaseBreaker.circle = {
+        t: 0,
+        active: true,
+        x: mouse.x,
+        y: mouse.y,
+      };
+      stateCeaseBreaker.positions = [];
+      stateCeaseBreaker.change = false;
+
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      stateCeaseBreaker.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        stateCeaseBreaker.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+    });
+  }
+  function updateCeaseBreaker(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    stateCeaseBreaker.timer += dt;
+    stateCeaseBreaker.rapidTimer += dt;
+
+    if (stateCeaseBreaker.timer <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
+    const interval = 0.5 / (hardMode ? 50 : casualMode ? 30 : 40);
+    while (
+      stateCeaseBreaker.rapidTimer >= interval &&
+      stateCeaseBreaker.beams.length < (hardMode ? 50 : casualMode ? 30 : 40) &&
+      stateCeaseBreaker.timer <= 1
+    ) {
+      stateCeaseBreaker.rapidTimer -= interval;
+
+      let x, y;
+      const minDist = 500;
+
+      do {
+        x = mx + (Math.random() - 0.5) * 5000;
+        y = my + (Math.random() - 0.5) * 5000;
+      } while (
+        stateCeaseBreaker.positions.some((p) => {
+          const dx = x - p.x;
+          const dy = y - p.y;
+          return dx * dx + dy * dy < minDist * minDist;
+        })
+      );
+
+      stateCeaseBreaker.positions.push({ x, y });
+
+      stateCeaseBreaker.beams.push(
+        spawnBeam(
+          x,
+          y,
+          Math.random() * Math.PI * 2,
+          1.8 - stateCeaseBreaker.timer,
+        ),
+      );
+    }
+
+    if (stateCeaseBreaker.circle.active) {
+      const c = stateCeaseBreaker.circle;
+
+      c.t += dt;
+      if (c.t >= 1.25 && !c.change) {
+        c.change = true;
+        changeEnemy(Celestial_FinalSwing);
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = 600 * eased;
+      } else if (c.t < 2) {
+        c.r = 600;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+        c.r -= dt * 800;
+        if (c.r <= 0) {
+          c.active = false;
+        }
+      }
+
+      if (c.t >= 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+
+    let needsCompact = false;
+    for (const b of stateCeaseBreaker.beams) {
+      let a = b.angle;
+      if (b.t < b.armTime) {
+        const dxToMouse = mx - b.x;
+        const dyToMouse = my - b.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        b.x += dxToMouse * followAmount;
+        b.y += dyToMouse * followAmount;
+      }
+
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      b.renderAngle = a;
+      b.cos = Math.cos(-a);
+      b.sin = Math.sin(-a);
+
+      b.t += dt;
+
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (b.t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        b.width -= dt * 200;
+        if (b.width <= 0) {
+          b.active = false;
+          needsCompact = true;
+        }
+      }
+
+      const dx = mouse.x - b.x;
+      const dy = mouse.y - b.y;
+
+      b.rx = dx * b.cos - dy * b.sin;
+      b.ry = dx * b.sin + dy * b.cos;
+
+      const rx = b.rx;
+      const ry = b.ry;
+
+      const halfLen = 2000;
+      const halfW = b.width / 2;
+
+      if (
+        b.active &&
+        b.t >= b.armTime &&
+        Math.abs(rx) < halfLen &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+    }
+    if (needsCompact) compact(stateCeaseBreaker.beams);
+
+    for (const d of stateCeaseBreaker.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (stateCeaseBreaker.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = stateCeaseBreaker.lastDirX ?? 0;
+          const dirY = stateCeaseBreaker.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = stateCeaseBreaker.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+  }
+  function drawCeaseBreaker(ctx) {
+    for (const b of stateCeaseBreaker.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.renderAngle);
+
+      const alpha = b.t < b.armTime ? 0.5 : 1;
+
+      ctx.globalAlpha = alpha;
+      if (b.t < b.armTime) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+      ctx.lineWidth = 1;
+
+      const dx = mouse.x - b.x;
+      const dy = mouse.y - b.y;
+
+      const x = b.rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (b.t >= b.armTime) {
+        const glow = 100;
+        const drawX = x;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(drawX, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(drawX, b.width / 2, len, glow);
+      }
+      ctx.strokeRect(x, -b.width / 2, len, b.width);
+
+      ctx.strokeStyle = "transparent";
+
+      ctx.restore();
+    }
+    if (stateCeaseBreaker.circle.active) {
+      const c = stateCeaseBreaker.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (Number.isFinite(c.r)) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+
+    for (const d of stateCeaseBreaker.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+  }
+  function drawCeaseBreakerFront(ctx) {
+    if (stateCeaseBreaker.circle.active) {
+      const c = stateCeaseBreaker.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+    for (const b of stateCeaseBreaker.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.renderAngle);
+
+      const alpha = b.t < b.armTime ? 0.5 : 1;
+
+      ctx.globalAlpha = alpha;
+      if (b.t < b.armTime) {
+        ctx.fillStyle = "#ff00cc";
+      } else {
+        ctx.fillStyle = "black";
+      }
+
+      const dx = mouse.x - b.x;
+      const dy = mouse.y - b.y;
+
+      const x = b.rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width / 2, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const d of stateCeaseBreaker.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
       ctx.restore();
     }
   }
@@ -9848,6 +11464,1507 @@ export function setup(
 
         ctx.restore();
       }
+    }
+  }
+
+  const stateSuperPizzaCutter3StarsBreakerBeams = {
+    blades: [],
+    t: 0,
+    spawned: false,
+    circles: [],
+    explosions: [],
+
+    cutters: [
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+    ],
+    lastStartAng: Math.random() < 0.5 ? 1 : -1,
+
+    crumbles: [],
+
+    circle: {
+      t: 0,
+      active: false,
+      x: 0,
+      y: 0,
+    },
+    extraStars: [],
+    extraT: 0,
+    extraSpawned: 0,
+    lastAng: Math.random() * Math.PI * 2,
+
+    daggers: [],
+
+    prevMx: 0,
+    prevMy: 0,
+    beams: [],
+    timer: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+  };
+  function enterSuperPizzaCutter3StarsBreakerBeams() {
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    enterFixed(cx, cy, true, () => {
+      const s = stateSuperPizzaCutter3StarsBreakerBeams;
+      s.t = 0;
+      s.spawned = false;
+      s.blades = [];
+      s.startChange = false;
+      s.change = false;
+      s.cx = cx;
+      s.cy = cy;
+      const baseAngles = [
+        Math.PI / 2,
+        Math.PI / 2 + (Math.PI * 2) / 3,
+        Math.PI / 2 + (Math.PI * 4) / 3,
+      ];
+      const offsetAng = Math.random() * Math.PI * 2;
+      for (let i = 0; i < 3; i++) {
+        s.blades.push({
+          x: cx,
+          y: cy,
+          cx,
+          cy,
+          dirX: Math.cos(baseAngles[i] + offsetAng),
+          dirY: Math.sin(baseAngles[i] + offsetAng),
+          baseAngle: baseAngles[i] + offsetAng,
+          angle: 0,
+          scale: 0,
+          startDelay: i * 0.1,
+          rotDur: 0.75 - i * 0.1,
+          upOffset: -1000,
+        });
+        s.cutters[i].spokes = [];
+        s.cutters[i].t = 0;
+        s.cutters[i].cycle = 0;
+        s.cutters[i].spawned = false;
+        s.cutters[i].cx = 0;
+        s.cutters[i].cy = 0;
+      }
+      s.circles = [];
+      s.explosions = [];
+
+      s.circle = {
+        t: 0,
+        active: true,
+        x: mouse.x,
+        y: mouse.y,
+      };
+      s.extraStars = [];
+      s.extraT = 0;
+      s.extraSpawned = 0;
+
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      s.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        s.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+
+      s.beams = [];
+      s.timer = 0;
+      s.prevMx = mouse.x;
+      s.prevMy = mouse.y;
+      s.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      s.predDirY = Math.sin(Math.random() * Math.PI * 2);
+    });
+  }
+  function updateSuperPizzaCutter3StarsBreakerBeams(dt) {
+    const s = stateSuperPizzaCutter3StarsBreakerBeams;
+
+    s.t += dt;
+    if (s.t >= 3 && !s.startChange) {
+      s.startChange = true;
+      changeEnemy(Celestial_CutterStart, false, () => {
+        changeEnemy(Celestial_CutterLoop, true);
+      });
+    }
+    if (s.t >= 6.75 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
+
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_2.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_3.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 2 && s.t <= 2 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Swordprep.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 3 && s.t <= 3 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 7 && s.t <= 7 + dt) {
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
+    const p = Math.min(1, s.t / 2);
+    const eased = 1 - (1 - p) * (1 - p);
+    const maxDist = 700;
+
+    for (const [i, b] of s.blades.entries()) {
+      b.scale = eased;
+      b.dist = eased * maxDist;
+
+      let baseX = b.cx + b.dirX * b.dist;
+      let baseY = b.cy + b.dirY * b.dist;
+
+      let finalAngle = b.baseAngle;
+      let offsetY = 0;
+
+      if (s.t >= 2) {
+        const t2 = s.t - 2;
+
+        const localT = t2 - b.startDelay;
+
+        if (localT > 0) {
+          const p = Math.min(1, localT / b.rotDur);
+          const easedRot = 1 - (1 - p) * (1 - p);
+
+          const target = Math.PI / 2;
+          finalAngle = b.baseAngle + (target - b.baseAngle) * easedRot;
+
+          offsetY = b.upOffset * easedRot;
+        }
+
+        if (t2 >= 0.75) {
+          const p = Math.min(1, (t2 - 0.75) / 0.25);
+          const easedDown = p * p;
+
+          offsetY = b.upOffset * (1 - easedDown);
+        }
+      }
+
+      b.angle = finalAngle;
+
+      const tipX = 1000;
+      const tipY = 0;
+
+      const cos = Math.cos(finalAngle);
+      const sin = Math.sin(finalAngle);
+
+      const worldTipX = tipX * cos - tipY * sin;
+      const worldTipY = tipX * sin + tipY * cos;
+
+      const finalTipX = baseX;
+      const finalTipY = baseY + offsetY;
+
+      let blend = 0;
+
+      if (s.t >= 2) {
+        blend = Math.min(1, s.t - 2);
+      }
+
+      const tipXPos = finalTipX - worldTipX;
+      const tipYPos = finalTipY - worldTipY;
+
+      b.x = baseX * (1 - blend) + tipXPos * blend;
+      b.y = baseY * (1 - blend) + tipYPos * blend;
+
+      if (s.t >= 3) {
+        const t3 = s.t - 3;
+        const p = Math.min(1, t3 * 3);
+        const eased = p * p;
+
+        b.scale = 1 - eased;
+
+        const tipX = 1000;
+        const tipY = 0;
+
+        const cos = Math.cos(b.angle);
+        const sin = Math.sin(b.angle);
+
+        const worldTipX = tipX * cos - tipY * sin;
+        const worldTipY = tipX * sin + tipY * cos;
+
+        const tipPosX = b.x + worldTipX;
+        const tipPosY = b.y + worldTipY;
+
+        b.x = tipPosX - worldTipX * b.scale;
+        b.y = tipPosY - worldTipY * b.scale;
+
+        if (!b.spawnedCircle) {
+          const dx = mouse.x - tipPosX;
+          const dy = mouse.y - tipPosY;
+
+          if (dx * dx + dy * dy <= 300 * 300) {
+            checkDeath("Celestial");
+          }
+
+          s.circles.push({
+            x: tipPosX,
+            y: tipPosY,
+            r: 300,
+            t: 0,
+          });
+          shakeScreen();
+
+          s.cutters[i].cx = tipPosX;
+          s.cutters[i].cy = tipPosY;
+
+          b.spawnedCircle = true;
+        }
+      }
+    }
+
+    for (const c of s.circles) {
+      c.t += dt;
+      const p = Math.min(1, c.t / 1);
+      const eased = p * p;
+      c.r = 300 * (1 - eased);
+    }
+    s.circles = s.circles.filter((c) => c.r > 0);
+
+    if (s.t >= 3) {
+      const mx = mouse.x;
+      const my = mouse.y;
+      for (let i = 0; i < 3; i++) {
+        stateSuperPizzaCutter3StarsBreakerBeams.cutters[i].t += dt;
+
+        if (!stateSuperPizzaCutter3StarsBreakerBeams.cutters[i].spawned) {
+          stateSuperPizzaCutter3StarsBreakerBeams.cutters[i].spokes.push(
+            spawnPizza(
+              stateSuperPizzaCutter3StarsBreakerBeams.cutters[i],
+              s.lastStartAng * Math.PI * 4,
+            ),
+          );
+          s.lastStartAng *= -1;
+          if (i == 0) {
+            for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+              stateSuperPizzaCutter3StarsBreakerBeams.crumbles.push(
+                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
+              );
+            }
+          }
+          stateSuperPizzaCutter3StarsBreakerBeams.cutters[i].spawned = true;
+        }
+
+        for (const s of stateSuperPizzaCutter3StarsBreakerBeams.cutters[i]
+          .spokes) {
+          s.t += dt;
+
+          const p = Math.min(s.t / 4, 1);
+          if (p < 1) {
+            const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+            let angleDiff = cursorAngle - s.targetAngle;
+            if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            const turnSpeed = 0.1;
+            s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+          }
+          const eased = 1 - (1 - p) * (1 - p);
+          s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+          if (s.t >= 4 && s.t < 4.5) {
+            const len = 20000;
+            const w = 90;
+
+            const dx = mx - s.x;
+            const dy = my - s.y;
+
+            for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+              const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+              const cos = Math.cos(-angle);
+              const sin = Math.sin(-angle);
+
+              const rx = dx * cos - dy * sin;
+              const ry = dx * sin + dy * cos;
+
+              const halfLen = len;
+              const halfW = w / 2;
+
+              if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+                checkDeath("Celestial");
+                break;
+              }
+            }
+          }
+          if (s.t >= 4.5) {
+            s.offset += dt * 10000;
+          }
+          if (s.t > 5) {
+            s.active = false;
+          }
+        }
+      }
+
+      let needsCompact = false;
+      for (const c of stateSuperPizzaCutter3StarsBreakerBeams.crumbles) {
+        c.t += dt;
+
+        if (c.t < 4) {
+          const dx = mx - c.tx;
+          const dy = my - c.ty;
+          const followSpeed = 0.1;
+          const followAmount = Math.min(1, dt * followSpeed);
+          c.tx += dx * followAmount;
+          c.ty += dy * followAmount;
+          const p = c.t / 4;
+
+          const eased = 1 - (1 - p) * (1 - p);
+
+          c.x = c.sx + (c.tx - c.sx) * eased;
+          c.y = c.sy + (c.ty - c.sy) * eased;
+        }
+
+        if (c.t < 0.5) {
+          const p = c.t / 0.5;
+          const eased = 1 - (1 - p) * (1 - p);
+          c.r = c.targetR * eased;
+        } else if (c.t < 4) {
+          c.r = c.targetR;
+        } else {
+          if (!c.shake) {
+            c.shake = true;
+            shakeScreen();
+            stateSuperPizzaCutter3StarsBreakerBeams.explosions.push({
+              x: c.x,
+              y: c.y,
+              r: c.targetR,
+              t: 0,
+              rot: Math.random(),
+              s: Math.floor(10 + Math.random() * 11),
+            });
+          }
+          c.r = c.targetR * (1 - Math.min(c.t - 4, 1));
+          if (c.r <= 0) {
+            c.active = false;
+            needsCompact = true;
+          }
+        }
+
+        if (c.t >= 4 && c.r >= 0) {
+          const dx = mx - c.x;
+          const dy = my - c.y;
+          if (dx * dx + dy * dy <= c.r * c.r) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+      if (needsCompact)
+        compact(stateSuperPizzaCutter3StarsBreakerBeams.crumbles);
+    }
+
+    const mx = mouse.x;
+    const my = mouse.y;
+    s.extraT += dt;
+
+    if (s.circle.active) {
+      const c = s.circle;
+      c.t += dt;
+      if (c.t < 11) {
+        c.r = (600 / 11) * c.t;
+      } else {
+        c.r -= dt * 800;
+        if (c.r <= 0) {
+          c.active = false;
+        }
+      }
+      if (c.t >= 11) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (s.extraSpawned < 3 && s.extraT >= s.extraSpawned * 2.333) {
+      s.extraStars.push({
+        x: mouse.x,
+        y: mouse.y,
+        t: 0,
+        locked: false,
+        angle: s.lastAng,
+        count: hardMode && phase == 4 ? 8 : casualMode ? 4 : 6,
+      });
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Fire.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      s.lastAng += Math.random() * 0.2 + 0.2;
+      s.extraSpawned++;
+    } else if (
+      s.extraSpawned == 3 &&
+      s.extraT >= 10.5 &&
+      s.extraT <= 10.5 + dt
+    ) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/3Stars/Memory_Slash_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+    for (const star of s.extraStars) {
+      star.t += dt;
+
+      if (!star.locked) {
+        star.x = mouse.x;
+        star.y = mouse.y;
+
+        const duration = 2.333;
+        const p = Math.min(star.t / duration, 1);
+        const ease = 1 - (1 - p) * (1 - p);
+        if (star.startAngle === undefined) {
+          star.startAngle = star.angle;
+          star.targetAngle =
+            star.startAngle + Math.PI * 2 * (Math.random() < 0.5 ? 1 : -1);
+        }
+        star.angle =
+          star.startAngle + (star.targetAngle - star.startAngle) * ease;
+
+        if (star.t >= 2.333) {
+          star.locked = true;
+        }
+      }
+
+      if (s.extraT >= 11) {
+        star.fireT = (star.fireT || 0) + dt;
+      }
+
+      if (star.fireT && star.fireT <= 0.5) {
+        const dx = mouse.x - star.x;
+        const dy = mouse.y - star.y;
+
+        for (let i = 0; i < star.count; i++) {
+          const ang = star.angle + (i * Math.PI * 2) / star.count;
+
+          const cos = Math.cos(-ang);
+          const sin = Math.sin(-ang);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 20000;
+          const w = 25;
+
+          if (rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+            checkDeath("Celestial");
+            break;
+          }
+        }
+      }
+    }
+
+    for (const d of s.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (s.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = s.lastDirX ?? 0;
+          const dirY = s.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = s.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
+    const moveLen = Math.hypot(mvx, mvy);
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      s.predDirX += (tx - s.predDirX) * Math.min(1, dt * turnSpeed);
+      s.predDirY += (ty - s.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(s.predDirX, s.predDirY) || 1;
+
+      s.predDirX /= d;
+      s.predDirY /= d;
+    }
+    const predictionDistance = 100;
+    const px = mx + s.predDirX * predictionDistance;
+    const py = my + s.predDirY * predictionDistance;
+    if (s.timer >= 3.75 && s.timer <= 4.75 && s.beams.length == 0) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(s.predDirY, s.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
+    }
+    s.timer += dt;
+    let needsCompactSlash = false;
+    for (const b of s.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        if (!b.shake) {
+          b.shake = true;
+          shakeScreen();
+        }
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(s.beams);
+  }
+  function drawSuperPizzaCutter3StarsBreakerBeams(ctx) {
+    const s = stateSuperPizzaCutter3StarsBreakerBeams;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(1, "rgba(255,0,192,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "#ff00cc";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+            const w = isLethal ? 90 : 100;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? Math.min(0, (5 - sp.t) * 4) : 1;
+
+              const drawX = Math.max(x, sp.offset);
+              const glow = 100;
+
+              const gradTop = ctx.createLinearGradient(
+                0,
+                -w / 2 - glow,
+                0,
+                -w / 2,
+              );
+              gradTop.addColorStop(0, "rgba(255,0,192,0)");
+              gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+              ctx.fillStyle = gradTop;
+              ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+              const gradBot = ctx.createLinearGradient(
+                0,
+                w / 2,
+                0,
+                w / 2 + glow,
+              );
+              gradBot.addColorStop(0, "rgba(255,0,192,1)");
+              gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = gradBot;
+              ctx.fillRect(drawX, w / 2, len, glow);
+
+              const leftGrad = ctx.createLinearGradient(
+                drawX - glow,
+                0,
+                drawX,
+                0,
+              );
+              leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+              leftGrad.addColorStop(1, "#ff00cc");
+
+              ctx.fillStyle = leftGrad;
+              ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+              const rightGrad = ctx.createLinearGradient(
+                drawX + len,
+                0,
+                drawX + len + glow,
+                0,
+              );
+              rightGrad.addColorStop(0, "#ff00cc");
+              rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = rightGrad;
+              ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+              const points = [
+                [drawX, -w / 2, -0.9983, -1.0083],
+                [drawX + len, -w / 2, -0.0017, -1.0083],
+                [drawX, w / 2, -0.9983, 0.0083],
+                [drawX + len, w / 2, -0.0017, 0.0083],
+              ];
+
+              for (const [px, py, ox, oy] of points) {
+                const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+                grad.addColorStop(0, "#ff00cc");
+                grad.addColorStop(1, "rgba(255,0,192,0)");
+
+                ctx.fillStyle = grad;
+                ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+              }
+
+              ctx.strokeStyle = "#ff00cc";
+              ctx.lineWidth = 1;
+              ctx.strokeRect(drawX, -w / 2, len, w);
+            } else if (i < (casualMode ? 3 : 4)) {
+              ctx.globalAlpha =
+                sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
+                  ? sp.t * 3
+                  : 0.75;
+
+              const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+              grad.addColorStop(0, "rgba(255,0,192,0)");
+              grad.addColorStop(0.45, "#ff00cc");
+              grad.addColorStop(0.55, "#ff00cc");
+              grad.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = grad;
+              ctx.fillRect(x, -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t >= 4 && c.r >= 0) {
+          const glow = 100;
+
+          const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+          grad.addColorStop(0, "rgba(255,0,192,1)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
+        }
+
+        ctx.restore();
+      }
+    }
+
+    if (s.circle.active) {
+      const c = s.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha =
+        c.t < 7 ? 0.5 : c.t < 11 ? Math.max(0, (2 / 3) * (7.75 - c.t)) : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 11) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (Number.isFinite(c.r)) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+    for (const star of s.extraStars) {
+      ctx.save();
+
+      ctx.translate(star.x, star.y);
+      ctx.rotate(star.angle);
+
+      const isLethal = star.fireT !== undefined;
+
+      const offset = isLethal
+        ? star.fireT >= 0.5
+          ? (star.fireT - 0.5) * 10000
+          : 0
+        : 0;
+
+      const alpha =
+        isLethal && star.fireT >= 0.75
+          ? Math.max(0, (1 - star.fireT) / 0.25)
+          : s.extraT >= 7 && s.extraT <= 11
+            ? Math.max(0, (7.75 - s.extraT) / 0.75)
+            : s.extraT <= 0.25
+              ? s.extraT * 4
+              : 1;
+
+      ctx.globalAlpha = alpha;
+
+      for (let i = 0; i < star.count; i++) {
+        ctx.rotate((Math.PI * 2) / star.count);
+
+        const len = 20000;
+        const w = 25;
+
+        const drawX = offset;
+
+        if (isLethal) {
+          const glow = 100;
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          const gradTop = ctx.createLinearGradient(
+            drawX,
+            -w / 2 - glow,
+            drawX,
+            -w / 2,
+          );
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(
+            drawX,
+            w / 2,
+            drawX,
+            w / 2 + glow,
+          );
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          ctx.beginPath();
+          ctx.rect(drawX, -w / 2, len, w);
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const d of s.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+  function drawSuperPizzaCutter3StarsBreakerBeamsFront(ctx) {
+    const s = stateSuperPizzaCutter3StarsBreakerBeams;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+            const w = 90;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
+              ctx.beginPath();
+              ctx.fillStyle = "black";
+              ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const e of s.explosions) {
+        const r = e.r * (1 - Math.pow(e.t, 5));
+        const spikes = e.s;
+        ctx.save();
+        ctx.translate(e.x, e.y);
+        ctx.rotate(e.rot * Math.PI * 2);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        for (let i = 0; i < spikes; i++) {
+          const a = (i / spikes) * Math.PI * 2;
+          const inner = r * 0.667;
+          const outer = r * 0.833;
+          ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+          ctx.lineTo(
+            Math.cos(a + Math.PI / spikes) * outer,
+            Math.sin(a + Math.PI / spikes) * outer,
+          );
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t < 4) {
+          const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+          grad.addColorStop(0, "black");
+          grad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (c.r >= 0) {
+          ctx.fillStyle = "black";
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    if (s.circle.active) {
+      const c = s.circle;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 11 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 11) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+    for (const star of s.extraStars) {
+      ctx.save();
+
+      ctx.translate(star.x, star.y);
+      ctx.rotate(star.angle);
+
+      const isLethal = star.fireT !== undefined;
+
+      const offset = isLethal
+        ? star.fireT >= 0.5
+          ? (star.fireT - 0.5) * 10000
+          : 0
+        : 0;
+
+      const alpha =
+        isLethal && star.fireT >= 0.75
+          ? Math.max(0, (1 - star.fireT) / 0.25)
+          : s.extraT >= 7 && s.extraT <= 11
+            ? Math.max(0, (7.75 - s.extraT) / 0.75)
+            : s.extraT <= 0.25
+              ? s.extraT * 4
+              : 1;
+
+      ctx.globalAlpha = alpha;
+
+      for (let i = 0; i < star.count; i++) {
+        ctx.rotate((Math.PI * 2) / star.count);
+
+        const len = 20000;
+        const w = 25;
+
+        const drawX = offset;
+
+        if (isLethal) {
+          ctx.fillStyle = "black";
+          ctx.fillRect(drawX, -w / 2, len, w);
+        } else {
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0.5)");
+          const middleAlpha =
+            star.t < 2.083 ? 1 : Math.max(0.5, 1 - (star.t - 2.083) * 2);
+          grad.addColorStop(0.5, `rgba(255,0,192,${middleAlpha})`);
+          grad.addColorStop(1, "rgba(255,0,192,0.5)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const d of s.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
     }
   }
 
@@ -12507,14 +15624,27 @@ export function setup(
       const base =
         Math.atan2(stateFirstSilence.predDirY, stateFirstSilence.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        stateFirstSilence.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        stateFirstSilence.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
 
     stateFirstSilence.timer += dt;
@@ -13350,14 +16480,27 @@ export function setup(
       const base =
         Math.atan2(s.predDirY, s.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
 
     s.timer += dt;
@@ -14232,14 +17375,27 @@ export function setup(
       const base =
         Math.atan2(s.predDirY, s.predDirX) +
         ((Math.random() - 0.5) * Math.PI) / 3;
-      const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
-      const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
 
-      s.beams.push(spawnBeam(px, py, base, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread, 1.25));
-      s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
-      s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
     }
     s.timer += dt;
     let needsCompactSlash = false;
