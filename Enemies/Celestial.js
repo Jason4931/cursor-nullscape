@@ -5695,7 +5695,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -7558,7 +7558,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = stateCrumbleBreaker.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -9014,7 +9014,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -9999,7 +9999,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = stateCeaseBreaker.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -12937,7 +12937,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -15443,7 +15443,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -16328,7 +16328,8 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          yeah;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -16710,7 +16711,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -17487,7 +17488,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = stateFirstSilence.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -18391,7 +18392,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = stateFirstSilenceHard.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
@@ -21174,7 +21175,7 @@ export function setup(
 
           const spread = (10 * Math.PI) / 180;
           const index = s.daggers.indexOf(d);
-          d.offset = (index - 1.5) * spread;
+          d.offset = (index - (hardMode && phase == 4 ? 2 : 1.5)) * spread;
 
           d.startCX = d.worldX;
           d.startCY = d.worldY;
