@@ -694,14 +694,14 @@ export function setup(
       enter: enterFirstSilence,
       hard: false,
     },
-    // {
-    //   duration: 9,
-    //   update: updateFirstSilenceHard,
-    //   draw: drawFirstSilenceHard,
-    //   drawFront: drawFirstSilenceHardFront,
-    //   enter: enterFirstSilenceHard,
-    //   hard: true,
-    // },
+    {
+      duration: 9,
+      update: updateFirstSilenceHard,
+      draw: drawFirstSilenceHard,
+      drawFront: drawFirstSilenceHardFront,
+      enter: enterFirstSilenceHard,
+      hard: true,
+    },
     {
       duration: 3,
       update: updateImplosion,
@@ -783,14 +783,14 @@ export function setup(
       enter: enterBitter3Stars,
       hard: false,
     },
-    // {
-    //   duration: 9,
-    //   update: updateBitterImplosionBreakerBeams,
-    //   draw: drawBitterImplosionBreakerBeams,
-    //   drawFront: drawBitterImplosionBreakerBeamsFront,
-    //   enter: enterBitterImplosionBreakerBeams,
-    //   hard: true,
-    // },
+    {
+      duration: 9,
+      update: updateBitterImplosionBreakerBeams,
+      draw: drawBitterImplosionBreakerBeams,
+      drawFront: drawBitterImplosionBreakerBeamsFront,
+      enter: enterBitterImplosionBreakerBeams,
+      hard: true,
+    },
     {
       duration: 13,
       update: updateFutile,
@@ -831,14 +831,14 @@ export function setup(
       enter: enterDeathInBloomCrumble,
       hard: false,
     },
-    // {
-    //   duration: 23,
-    //   update: updateDeathInBloomCrumbleBreakerBeams,
-    //   draw: drawDeathInBloomCrumbleBreakerBeams,
-    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
-    //   enter: enterDeathInBloomCrumbleBreakerBeams,
-    //   hard: true,
-    // }
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumbleBreakerBeams,
+      draw: drawDeathInBloomCrumbleBreakerBeams,
+      drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+      enter: enterDeathInBloomCrumbleBreakerBeams,
+      hard: true,
+    },
     {
       duration: 13,
       update: updateFutile,
@@ -909,14 +909,14 @@ export function setup(
       enter: enterSecondSilence,
       hard: false,
     },
-    // {
-    //   duration: 18,
-    //   update: updateSecondSilenceHard,
-    //   draw: drawSecondSilenceHard,
-    //   drawFront: drawSecondSilenceHardFront,
-    //   enter: enterSecondSilenceHard,
-    //   hard: true,
-    // },
+    {
+      duration: 15,
+      update: updateSecondSilenceHard,
+      draw: drawSecondSilenceHard,
+      drawFront: drawSecondSilenceHardFront,
+      enter: enterSecondSilenceHard,
+      hard: true,
+    },
     {
       duration: 13,
       update: updateFutile3Stars,
@@ -965,14 +965,14 @@ export function setup(
       enter: enterDeathInBloomCrumble,
       hard: false,
     },
-    // {
-    //   duration: 23,
-    //   update: updateDeathInBloomCrumbleBreakerBeams,
-    //   draw: drawDeathInBloomCrumbleBreakerBeams,
-    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
-    //   enter: enterDeathInBloomCrumbleBreakerBeams,
-    //   hard: true,
-    // }
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumbleBreakerBeams,
+      draw: drawDeathInBloomCrumbleBreakerBeams,
+      drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+      enter: enterDeathInBloomCrumbleBreakerBeams,
+      hard: true,
+    },
   ];
   const silenceOnlyPattern = [
     {
@@ -991,22 +991,22 @@ export function setup(
       enter: enterSecondSilence,
       hard: false,
     },
-    // {
-    //   duration: 9,
-    //   update: updateFirstSilenceHard,
-    //   draw: drawFirstSilenceHard,
-    //   drawFront: drawFirstSilenceHardFront,
-    //   enter: enterFirstSilenceHard,
-    //   hard: true,
-    // },
-    // {
-    //   duration: 18,
-    //   update: updateSecondSilenceHard,
-    //   draw: drawSecondSilenceHard,
-    //   drawFront: drawSecondSilenceHardFront,
-    //   enter: enterSecondSilenceHard,
-    //   hard: true,
-    // },
+    {
+      duration: 9,
+      update: updateFirstSilenceHard,
+      draw: drawFirstSilenceHard,
+      drawFront: drawFirstSilenceHardFront,
+      enter: enterFirstSilenceHard,
+      hard: true,
+    },
+    {
+      duration: 15,
+      update: updateSecondSilenceHard,
+      draw: drawSecondSilenceHard,
+      drawFront: drawSecondSilenceHardFront,
+      enter: enterSecondSilenceHard,
+      hard: true,
+    },
   ];
   const specificDevOnly = [
     {
@@ -1212,36 +1212,36 @@ export function setup(
       drawFront: drawSlashBeamsFront,
       enter: enterSlashBeams,
     },
-    // {
-    //   duration: 9,
-    //   update: updateBitterImplosionBreakerBeams,
-    //   draw: drawBitterImplosionBreakerBeams,
-    //   drawFront: drawBitterImplosionBreakerBeamsFront,
-    //   enter: enterBitterImplosionBreakerBeams,
-    // },
-    // {
-    //   duration: 23,
-    //   update: updateDeathInBloomCrumbleBreakerBeams,
-    //   draw: drawDeathInBloomCrumbleBreakerBeams,
-    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
-    //   enter: enterDeathInBloomCrumbleBreakerBeams,
-    // },
-    // {
-    //   duration: 9,
-    //   update: updateFirstSilenceHard,
-    //   draw: drawFirstSilenceHard,
-    //   drawFront: drawFirstSilenceHardFront,
-    //   enter: enterFirstSilenceHard,
-    //   hard: true,
-    // },
-    // {
-    //   duration: 18,
-    //   update: updateSecondSilenceHard,
-    //   draw: drawSecondSilenceHard,
-    //   drawFront: drawSecondSilenceHardFront,
-    //   enter: enterSecondSilenceHard,
-    //   hard: true,
-    // },
+    {
+      duration: 9,
+      update: updateBitterImplosionBreakerBeams,
+      draw: drawBitterImplosionBreakerBeams,
+      drawFront: drawBitterImplosionBreakerBeamsFront,
+      enter: enterBitterImplosionBreakerBeams,
+    },
+    {
+      duration: 23,
+      update: updateDeathInBloomCrumbleBreakerBeams,
+      draw: drawDeathInBloomCrumbleBreakerBeams,
+      drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+      enter: enterDeathInBloomCrumbleBreakerBeams,
+    },
+    {
+      duration: 9,
+      update: updateFirstSilenceHard,
+      draw: drawFirstSilenceHard,
+      drawFront: drawFirstSilenceHardFront,
+      enter: enterFirstSilenceHard,
+      hard: true,
+    },
+    {
+      duration: 15,
+      update: updateSecondSilenceHard,
+      draw: drawSecondSilenceHard,
+      drawFront: drawSecondSilenceHardFront,
+      enter: enterSecondSilenceHard,
+      hard: true,
+    },
   ];
   const celestialDevOnly = true;
   const floatingText = {
@@ -1580,6 +1580,7 @@ export function setup(
   function spawnPizza(
     state = statePizzaCutter,
     startAngle = (Math.random() < 0.5 ? Math.PI : -Math.PI) * 2,
+    center = ["cx", "cy"],
   ) {
     const dir =
       lastPizzaDir >= 0
@@ -1596,8 +1597,8 @@ export function setup(
     lastPizzaAngle = base;
 
     return {
-      x: state.cx,
-      y: state.cy,
+      x: state[center[0]],
+      y: state[center[1]],
       t: 0,
       dir,
       startAngle: base + startAngle,
@@ -3297,7 +3298,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2 && c.r >= 0) {
+      if (c.t >= 2 && c.t <= 2.25 && c.r >= 0) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -3722,7 +3723,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2 && c.r >= 0) {
+      if (c.t >= 2 && c.t <= 2.25 && c.r >= 0) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -7061,7 +7062,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.t <= 2.25) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -7234,7 +7235,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.t <= 2.25) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -7487,7 +7488,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.t <= 2.25) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -8123,6 +8124,7 @@ export function setup(
       stateBitterBeams.prevMy = mouse.y;
       stateBitterBeams.predDirX = Math.cos(Math.random() * Math.PI * 2);
       stateBitterBeams.predDirY = Math.sin(Math.random() * Math.PI * 2);
+      stateBitterBeams.change = false;
     });
   }
   function updateBitterBeams(dt) {
@@ -8567,6 +8569,843 @@ export function setup(
 
       ctx.fillRect(x, -b.width * 0.5, len, b.width);
 
+      ctx.restore();
+    }
+  }
+
+  const stateBitterImplosionBreakerBeams = {
+    spokes: [],
+    t: 0,
+    cycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+
+    prevMx: 0,
+    prevMy: 0,
+    beams: [],
+    timer: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+
+    circles: [],
+    spawnTimer: 0,
+    spawnedImp: 0,
+
+    daggers: [],
+  };
+  function enterBitterImplosionBreakerBeams() {
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    enterFixed(cx, cy, true, () => {
+      stateBitterImplosionBreakerBeams.spokes = [];
+      stateBitterImplosionBreakerBeams.t = 0;
+      stateBitterImplosionBreakerBeams.cycle = 0;
+      stateBitterImplosionBreakerBeams.spawned = false;
+      stateBitterImplosionBreakerBeams.cx = cx;
+      stateBitterImplosionBreakerBeams.cy = cy;
+
+      stateBitterImplosionBreakerBeams.beams = [];
+      stateBitterImplosionBreakerBeams.timer = 0;
+      stateBitterImplosionBreakerBeams.prevMx = mouse.x;
+      stateBitterImplosionBreakerBeams.prevMy = mouse.y;
+      stateBitterImplosionBreakerBeams.predDirX = Math.cos(
+        Math.random() * Math.PI * 2,
+      );
+      stateBitterImplosionBreakerBeams.predDirY = Math.sin(
+        Math.random() * Math.PI * 2,
+      );
+      stateBitterImplosionBreakerBeams.change = false;
+
+      stateBitterImplosionBreakerBeams.circles = [];
+      stateBitterImplosionBreakerBeams.spawnTimer = 0;
+      stateBitterImplosionBreakerBeams.spawnedImp = 0;
+
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      stateBitterImplosionBreakerBeams.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        stateBitterImplosionBreakerBeams.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+    });
+  }
+  function updateBitterImplosionBreakerBeams(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    const s = stateBitterImplosionBreakerBeams;
+    s.t += dt;
+
+    const dx = mx - s.cx;
+    const dy = my - s.cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const maxDist = 1800;
+    if (dist > maxDist) {
+      const nx = dx / dist;
+      const ny = dy / dist;
+
+      s.cx = mx - nx * maxDist;
+      s.cy = my - ny * maxDist;
+
+      enterFixed(s.cx, s.cy, false);
+      for (const b of s.spokes) {
+        if (b.t <= 2) {
+          b.x = s.cx;
+          b.y = s.cy;
+        }
+      }
+    }
+
+    if (!s.spawned) {
+      const counts = hardMode ? [6, 7, 8] : casualMode ? [3, 3, 3] : [4, 5, 6];
+      s.spokes.push(
+        spawnBitter(counts[s.cycle], stateBitterImplosionBreakerBeams),
+      );
+      s.spawned = true;
+    }
+
+    for (const b of s.spokes) {
+      b.t += dt;
+
+      const p = Math.min(b.t / 2, 1);
+      let angle = b.baseAngle;
+      angle += (b.t - 2) * Math.PI * b.dirAngle;
+      b.angle = angle;
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+      if (b.t >= 2 && !b.shot) {
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+
+        b.dirX = dx / len;
+        b.dirY = dy / len;
+
+        b.shot = true;
+      }
+      if (b.t >= 2) {
+        const speed = 1500;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (!b.turnLocked && dist <= 1100) {
+          b.turnLocked = true;
+        }
+        const turnSpeed = b.turnLocked ? 0 : 10;
+
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        const targetX = dx / len;
+        const targetY = dy / len;
+
+        b.dirX += (targetX - b.dirX) * turnSpeed * dt;
+        b.dirY += (targetY - b.dirY) * turnSpeed * dt;
+
+        const dirLen = Math.sqrt(b.dirX * b.dirX + b.dirY * b.dirY) || 1;
+
+        b.dirX /= dirLen;
+        b.dirY /= dirLen;
+
+        b.x += b.dirX * speed * dt;
+        b.y += b.dirY * speed * dt;
+      }
+
+      if (b.t >= 2 && b.t <= 5) {
+        for (let i = 0; i < b.count; i++) {
+          const ang = b.angle + (i * Math.PI * 2) / b.count;
+
+          const cos = Math.cos(-ang);
+          const sin = Math.sin(-ang);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const front = dx * b.dirX + dy * b.dirY;
+
+          const len = 1000;
+          const w = 25;
+
+          if (front > 0 && rx > 0 && rx < len && Math.abs(ry) < w / 2) {
+            checkDeath("Celestial");
+            break;
+          }
+        }
+      }
+
+      if (b.t > 5) b.active = false;
+    }
+
+    s.spokes = s.spokes.filter((b) => b.active);
+
+    if (s.t >= 0.5 && s.t <= 0.5 + dt && s.cycle <= 2) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+    if (s.t >= 2) {
+      s.t = 0;
+      s.cycle++;
+      if (s.cycle <= 3) {
+        shakeScreen();
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/Bitter/Bitter_Shoot.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+      s.spawned = false;
+    }
+
+    if (s.timer >= 6 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_FinalSwing);
+    }
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
+    const moveLen = Math.hypot(mvx, mvy);
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      s.predDirX += (tx - s.predDirX) * Math.min(1, dt * turnSpeed);
+      s.predDirY += (ty - s.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(s.predDirX, s.predDirY) || 1;
+
+      s.predDirX /= d;
+      s.predDirY /= d;
+    }
+    const predictionDistance = 100;
+    const px = mx + s.predDirX * predictionDistance;
+    const py = my + s.predDirY * predictionDistance;
+    if (s.timer >= 5.5 && s.timer <= 6.5 && s.beams.length == 0) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(s.predDirY, s.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
+    }
+    s.timer += dt;
+    let needsCompactSlash = false;
+    for (const b of s.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        if (!b.shake) {
+          b.shake = true;
+          shakeScreen();
+        }
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(s.beams);
+
+    if (!s.prevMouse) {
+      s.prevMouse = { x: mx, y: my };
+    }
+    const vx = mx - s.prevMouse.x;
+    const vy = my - s.prevMouse.y;
+    s.prevMouse.x = mx;
+    s.prevMouse.y = my;
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      s.lastDirX = vx / len;
+      s.lastDirY = vy / len;
+    }
+
+    s.spawnTimer += dt;
+
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawnedImp < 15) {
+      s.spawnTimer -= interval;
+      s.spawnedImp++;
+      s.circles.push(spawnImplosionCircle());
+    }
+
+    let needsCompact = false;
+    for (const c of s.circles) {
+      c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
+      c.opacity += dt * 4;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            4,
+          );
+        }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
+        c.phase = 2;
+        c.burstT += dt;
+        c.r -= dt * 600;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
+      }
+
+      if (c.phase === 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompact) compact(s.circles);
+
+    for (const d of s.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (s.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = s.lastDirX ?? 0;
+          const dirY = s.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = s.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+  }
+  function drawBitterImplosionBreakerBeams(ctx) {
+    for (const b of stateBitterImplosionBreakerBeams.spokes) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+
+      const isLethal = b.t >= 2;
+
+      for (let i = 0; i < b.count; i++) {
+        ctx.rotate((Math.PI * 2) / b.count);
+
+        const len = Math.min(1000, b.t * 1000);
+        const w = isLethal ? 25 : 50;
+
+        if (isLethal) {
+          ctx.globalAlpha = b.t >= 4.75 ? (5 - b.t) * 4 : 1;
+          const drawX = 0;
+
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          const leftGrad = ctx.createLinearGradient(-glow, 0, 0, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(-glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(len, 0, len + glow, 0);
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [0, -w / 2, -0.9983, -1.0083],
+            [len, -w / 2, -0.0017, -1.0083],
+            [0, w / 2, -0.9983, 0.0083],
+            [len, w / 2, -0.0017, 0.0083],
+          ];
+          for (const [x, y, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(x + ox * glow, y + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          ctx.rect(drawX, -w / 2, len, w);
+          ctx.stroke();
+        } else {
+          ctx.globalAlpha =
+            stateBitterImplosionBreakerBeams.t < 0.25 &&
+            stateBitterImplosionBreakerBeams.cycle == 0
+              ? stateBitterImplosionBreakerBeams.t * 3
+              : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.45, "#ff00cc");
+          grad.addColorStop(0.55, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of stateBitterImplosionBreakerBeams.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const c of stateBitterImplosionBreakerBeams.circles)
+      drawImplosionCircleBack(ctx, c);
+    for (const d of stateBitterImplosionBreakerBeams.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+  }
+  function drawBitterImplosionBreakerBeamsFront(ctx) {
+    for (const b of stateBitterImplosionBreakerBeams.spokes) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+
+      const isLethal = b.t >= 2;
+
+      for (let i = 0; i < b.count; i++) {
+        ctx.rotate((Math.PI * 2) / b.count);
+
+        const len = 1000;
+        const w = isLethal ? 25 : 50;
+
+        if (isLethal) {
+          ctx.globalAlpha = b.t >= 4.75 ? (5 - b.t) * 4 : 1;
+          const drawX = 0;
+
+          ctx.fillStyle = "black";
+          ctx.fillRect(drawX, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of stateBitterImplosionBreakerBeams.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const c of stateBitterImplosionBreakerBeams.circles)
+      drawImplosionCircleFront(ctx, c);
+    for (const d of stateBitterImplosionBreakerBeams.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
       ctx.restore();
     }
   }
@@ -11146,7 +11985,7 @@ export function setup(
           }
         }
 
-        if (c.t >= 4 && c.r >= 0) {
+        if (c.t >= 4 && c.t <= 4.25 && c.r >= 0) {
           const dx = mx - c.x;
           const dy = my - c.y;
           if (dx * dx + dy * dy <= c.r * c.r) {
@@ -11917,7 +12756,7 @@ export function setup(
           }
         }
 
-        if (c.t >= 4 && c.r >= 0) {
+        if (c.t >= 4 && c.t <= 4.25 && c.r >= 0) {
           const dx = mx - c.x;
           const dy = my - c.y;
           if (dx * dx + dy * dy <= c.r * c.r) {
@@ -13859,7 +14698,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.t <= 2.25) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -14190,6 +15029,1128 @@ export function setup(
         ctx.arc(0, 0, c.r, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      ctx.restore();
+    }
+  }
+
+  const stateDeathInBloomCrumbleBreakerBeams = {
+    t: 0,
+    cx: 0,
+    cy: 0,
+    ex: 0,
+    ey: 0,
+    prevMx: 0,
+    prevMy: 0,
+    len: 20000,
+    w: 625,
+    active: false,
+    particles: [],
+    pTimer: 0,
+
+    crumbleT: 0,
+    circles: [],
+    explosions: [],
+
+    daggers: [],
+
+    beams: [],
+    timer: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+  };
+  function enterDeathInBloomCrumbleBreakerBeams() {
+    const s = stateDeathInBloomCrumbleBreakerBeams;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
+    const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
+    s.cx = mouse.x + Math.cos(ang) * 2000;
+    s.cy = mouse.y + Math.sin(ang) * 2000;
+    enterFixed(s.cx, s.cy, true, () => {
+      s.t = 0;
+      s.active = true;
+      s.w = 625;
+      s.angle = 0;
+      s.prevAngle = 0;
+      s.ex = mouse.x;
+      s.ey = mouse.y;
+      s.particles = [];
+      s.pTimer = 0;
+      s.crumbleT = 0;
+      s.circles = [];
+      s.explosions = [];
+
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      s.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        s.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+
+      s.beams = [];
+      s.timer = 0;
+      s.prevMx = mouse.x;
+      s.prevMy = mouse.y;
+      s.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      s.predDirY = Math.sin(Math.random() * Math.PI * 2);
+      s.change = false;
+    });
+    setGiftMultiplier(0.5);
+  }
+  function updateDeathInBloomCrumbleBreakerBeams(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    const s = stateDeathInBloomCrumbleBreakerBeams;
+
+    s.t += dt;
+    s.pTimer += dt;
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
+
+    const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
+
+    s.ex += (mx - s.ex) * follow;
+    s.ey += (my - s.ey) * follow;
+
+    const dx = s.ex - s.cx;
+    const dy = s.ey - s.cy;
+
+    s.angle += Math.atan2(dy, dx) - s.angle;
+    const angleDelta = s.angle - s.prevAngle;
+    s.prevAngle = s.angle;
+
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
+    const bx = Math.cos(s.angle);
+    const by = Math.sin(s.angle);
+    const dir = mvx * bx + mvy * by;
+
+    if (s.t < 22 && s.pTimer >= 0.02) {
+      setGiftMultiplier(0.5);
+      s.pTimer = 0;
+
+      const spawnCount = 200;
+
+      const nx = Math.cos(s.angle + Math.PI / 2);
+      const ny = Math.sin(s.angle + Math.PI / 2);
+
+      for (let i = 0; i < spawnCount; i++) {
+        const angle = s.angle;
+        const len = s.len;
+
+        const t = Math.random();
+        const along = t * len + 125;
+
+        const forward = dir >= 0 ? 1 : -1;
+        const edgeSide = Math.random() < 0.5 ? -1 : 1;
+        const trailingOffset = (s.w / 2) * forward * edgeSide;
+        const leadingOffset = (s.w / 1.5) * forward * edgeSide;
+        const isLeading = Math.random() < 0.35;
+        const spread = isLeading ? leadingOffset : trailingOffset;
+
+        const px = s.cx + bx * along + nx * spread;
+        const py = s.cy + by * along + ny * spread;
+
+        if (s.t >= 5) {
+          s.particles.push({
+            x: px,
+            y: py,
+            vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            r: Math.random() * 40,
+            t: 0,
+            life: 0.25 + Math.random() * 0.25,
+            active: true,
+          });
+        }
+
+        if (s.t < 5 && Math.random() < 0.05) {
+          const innerSpread = (Math.random() - 0.5) * s.w * 0.8;
+
+          const px2 = s.cx + bx * along + nx * innerSpread;
+          const py2 = s.cy + by * along + ny * innerSpread;
+
+          const speed = 200 * (0.5 + Math.random() * 0.5);
+          s.particles.push({
+            x: px2,
+            y: py2,
+            vx: bx * speed,
+            vy: by * speed,
+            r: Math.random() * 40 + 40,
+            t: 0,
+            life: 0.5 + Math.random() * 0.5,
+            active: true,
+            ellipse: true,
+          });
+        }
+      }
+    }
+
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
+    if (s.t >= 5) {
+      if (s.t <= 22) shakeScreen();
+      const mmx = mx - s.cx;
+      const mmy = my - s.cy;
+
+      const rx = mmx * cos - mmy * sin;
+      const ry = mmx * sin + mmy * cos;
+
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
+        checkDeath("Celestial");
+      }
+    }
+
+    s.crumbleT += dt;
+    if (s.t >= 6 && s.crumbleT >= 2 && s.t < 22) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+        s.circles.push(spawnCircle(2));
+      }
+      s.crumbleT = 0;
+    }
+
+    let needsCompact = false;
+    for (const p of s.particles) {
+      p.t += dt;
+
+      if (p.ellipse) {
+        const c = Math.cos(angleDelta);
+        const sA = Math.sin(angleDelta);
+
+        const rx = p.x - s.cx;
+        const ry = p.y - s.cy;
+
+        p.x = s.cx + rx * c - ry * sA;
+        p.y = s.cy + rx * sA + ry * c;
+
+        const rvx = p.vx;
+        const rvy = p.vy;
+
+        p.vx = rvx * c - rvy * sA;
+        p.vy = rvx * sA + rvy * c;
+
+        const accel = 200 * dt;
+        p.vx += Math.cos(s.angle) * accel;
+        p.vy += Math.sin(s.angle) * accel;
+      }
+
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.r += dt * 5;
+
+      if (p.t > p.life) {
+        p.active = false;
+        needsCompact = true;
+      }
+
+      const dx = p.x - s.cx;
+      const dy = p.y - s.cy;
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfLen = s.len;
+      const halfW = s.w / 2 + 100;
+
+      if (Math.abs(rx) > halfLen || Math.abs(ry) > halfW) {
+        p.active = false;
+        needsCompact = true;
+      }
+    }
+    if (needsCompact) compact(s.particles);
+
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Charge.ogg`,
+        1.1,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 5 && s.t <= 5 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Death_in_Bloom_Firing.ogg`,
+        0.706,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
+    if (s.t >= 5 && s.t < 22) {
+      s.w = Math.random() * 50 + 575;
+    }
+    if (s.t >= 22) {
+      s.w -= dt * 1000;
+      if (s.w <= 0 && s.active) {
+        s.w = 0;
+        setGiftMultiplier(1);
+        s.active = false;
+      }
+    }
+
+    let needsCompactCrumble = false;
+    for (const c of s.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          if (s.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
+          s.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(10 + Math.random() * 11),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactCrumble = true;
+        }
+      }
+
+      if (c.t >= 2 && c.t <= 2.25) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactCrumble) compact(s.circles);
+
+    if (
+      (s.t >= 5 && s.t <= 5 + dt) ||
+      (s.t >= 10 && s.t <= 10 + dt) ||
+      (s.t >= 15 && s.t <= 15 + dt)
+    ) {
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      s.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        s.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+    }
+
+    for (const d of s.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (s.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = s.lastDirX ?? 0;
+          const dirY = s.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = s.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+
+    if (
+      (s.timer >= 4.5 && s.timer <= 4.5 + dt) ||
+      (s.timer >= 9.5 && s.timer <= 9.5 + dt) ||
+      (s.timer >= 14.5 && s.timer <= 14.5 + dt) ||
+      (s.timer >= 19.5 && s.timer <= 19.5 + dt)
+    ) {
+      changeEnemy(Celestial_FinalSwing);
+    }
+    const moveLen = Math.hypot(mvx, mvy);
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      s.predDirX += (tx - s.predDirX) * Math.min(1, dt * turnSpeed);
+      s.predDirY += (ty - s.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(s.predDirX, s.predDirY) || 1;
+
+      s.predDirX /= d;
+      s.predDirY /= d;
+    }
+    const predictionDistance = 100;
+    const px = mx + s.predDirX * predictionDistance;
+    const py = my + s.predDirY * predictionDistance;
+    if (
+      ((s.timer >= 4 && s.timer <= 5) ||
+        (s.timer >= 9 && s.timer <= 10) ||
+        (s.timer >= 14 && s.timer <= 15) ||
+        (s.timer >= 19 && s.timer <= 20)) &&
+      s.beams.length == 0
+    ) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(s.predDirY, s.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
+    }
+    s.timer += dt;
+    let needsCompactSlash = false;
+    for (const b of s.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        if (!b.shake) {
+          b.shake = true;
+          shakeScreen();
+        }
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(s.beams);
+  }
+  function drawDeathInBloomCrumbleBreakerBeams(ctx) {
+    const s = stateDeathInBloomCrumbleBreakerBeams;
+
+    if (s.active) {
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
+
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          if (!p.ellipse) {
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      ctx.save();
+
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+      const randLineWidth = 0;
+
+      const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "#ff00cc");
+        grad.addColorStop(0.5, "#ff00cc");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "#ff00cc";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "#ff00cc";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,192,0)");
+      grad.addColorStop(1, "#ff00cc");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "#ff00cc");
+      grad2.addColorStop(1, "rgba(255,0,192,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+
+    for (const d of s.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+  }
+  function drawDeathInBloomCrumbleBreakerBeamsFront(ctx) {
+    const s = stateDeathInBloomCrumbleBreakerBeams;
+
+    if (s.active) {
+      ctx.save();
+
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "black";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#ff00cc";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "#ff00cc";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "#ff00cc";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+
+      ctx.restore();
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
+
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+          ctx.fillStyle = "black";
+
+          if (s.t < 5 && p.ellipse) {
+            ctx.save();
+            ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+            const angle = s.angle;
+            const long = p.r * 0.5;
+            const short = p.r * 0.1;
+
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const e of s.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    for (const d of s.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
 
       ctx.restore();
     }
@@ -15456,7 +17417,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2 && c.r >= 0) {
+      if (c.t >= 2 && c.t <= 2.25 && c.r >= 0) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -16123,6 +18084,1165 @@ export function setup(
     }
   }
 
+  const stateFirstSilenceHard = {
+    spokes: [],
+    t: 0,
+    cycle: 0,
+    spawned: false,
+    cx: 0,
+    cy: 0,
+
+    circles: [],
+    explosions: [],
+
+    daggers: [],
+
+    beams: [],
+    timer: 0,
+    prevMx: 0,
+    prevMy: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+
+    randspokes: [],
+    randt: 0,
+    randcycle: 0,
+    randspawned: false,
+    randcx: 0,
+    randcy: 0,
+  };
+  function enterFirstSilenceHard() {
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    changeEnemy(Celestial_CutterStart, false, () => {
+      changeEnemy(Celestial_CutterLoop, true);
+    });
+    enterFixed(cx, cy, true, () => {
+      stateFirstSilenceHard.spokes = [];
+      stateFirstSilenceHard.t = 0;
+      stateFirstSilenceHard.cycle = 0;
+      stateFirstSilenceHard.spawned = false;
+      stateFirstSilenceHard.cx = cx;
+      stateFirstSilenceHard.cy = cy;
+      stateFirstSilenceHard.circles = [];
+      stateFirstSilenceHard.explosions = [];
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      stateFirstSilenceHard.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        stateFirstSilenceHard.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+      stateFirstSilenceHard.beams = [];
+      stateFirstSilenceHard.timer = 0;
+      stateFirstSilenceHard.prevMx = mouse.x;
+      stateFirstSilenceHard.prevMy = mouse.y;
+      stateFirstSilenceHard.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      stateFirstSilenceHard.predDirY = Math.sin(Math.random() * Math.PI * 2);
+      stateFirstSilenceHard.randspokes = [];
+      stateFirstSilenceHard.randt = 0;
+      stateFirstSilenceHard.randcycle = 0;
+      stateFirstSilenceHard.randspawned = false;
+      stateFirstSilenceHard.randcx = mouse.x + (Math.random() - 0.5) * 2000;
+      stateFirstSilenceHard.randcy = mouse.y + (Math.random() - 0.5) * 2000;
+    });
+  }
+  function updateFirstSilenceHard(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    stateFirstSilenceHard.t += dt;
+    for (const e of stateFirstSilenceHard.explosions) e.t += dt;
+    stateFirstSilenceHard.explosions = stateFirstSilenceHard.explosions.filter(
+      (e) => e.t < 1,
+    );
+
+    if (!stateFirstSilenceHard.spawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      stateFirstSilenceHard.spokes.push(spawnPizza(stateFirstSilenceHard));
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+        stateFirstSilenceHard.circles.push(spawnCircle(2));
+      }
+      stateFirstSilenceHard.spawned = true;
+    }
+
+    if (!stateFirstSilenceHard.prevMouse) {
+      stateFirstSilenceHard.prevMouse = { x: mx, y: my };
+    }
+    const vx = mx - stateFirstSilenceHard.prevMouse.x;
+    const vy = my - stateFirstSilenceHard.prevMouse.y;
+    stateFirstSilenceHard.prevMouse.x = mx;
+    stateFirstSilenceHard.prevMouse.y = my;
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      stateFirstSilenceHard.lastDirX = vx / len;
+      stateFirstSilenceHard.lastDirY = vy / len;
+    }
+
+    for (const s of stateFirstSilenceHard.spokes) {
+      s.t += dt;
+
+      const p = Math.min(s.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+        let angleDiff = cursorAngle - s.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.1;
+        s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
+      const eased = 1 - (1 - p) * (1 - p);
+      s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+      if (s.t >= 2 && s.t < 2.5) {
+        const len = 20000;
+        const w = 90;
+
+        const dx = mx - s.x;
+        const dy = my - s.y;
+
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+          const cos = Math.cos(-angle);
+          const sin = Math.sin(-angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const halfLen = len;
+          const halfW = w / 2;
+
+          if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+            checkDeath("Celestial");
+            break;
+          }
+        }
+      }
+      if (s.t >= 2.5) {
+        s.offset += dt * 10000;
+      }
+      if (s.t > 3) {
+        s.active = false;
+      }
+    }
+
+    if (
+      stateFirstSilenceHard.t >= 1.75 &&
+      stateFirstSilenceHard.cycle == 3 &&
+      !stateFirstSilenceHard.change
+    ) {
+      stateFirstSilenceHard.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
+    if (stateFirstSilenceHard.t >= 2) {
+      stateFirstSilenceHard.t = 0;
+      stateFirstSilenceHard.cycle++;
+      shakeScreen(stateFirstSilenceHard.cycle % 2 == 0 ? 2 : 3);
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+      if (stateFirstSilenceHard.cycle < 4) {
+        stateFirstSilenceHard.spawned = false;
+        stateFirstSilenceHard.change = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+    }
+
+    let needsCompact = false;
+    for (const c of stateFirstSilenceHard.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          stateFirstSilenceHard.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(10 + Math.random() * 11),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompact = true;
+        }
+      }
+
+      if (c.t >= 2 && c.t <= 2.25 && c.r >= 0) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompact) compact(stateFirstSilenceHard.circles);
+
+    for (const d of stateFirstSilenceHard.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (stateFirstSilenceHard.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = stateFirstSilenceHard.lastDirX ?? 0;
+          const dirY = stateFirstSilenceHard.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = stateFirstSilenceHard.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+
+    const mvx = mx - stateFirstSilenceHard.prevMx;
+    const mvy = my - stateFirstSilenceHard.prevMy;
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      stateFirstSilenceHard.predDirX +=
+        (tx - stateFirstSilenceHard.predDirX) * Math.min(1, dt * turnSpeed);
+      stateFirstSilenceHard.predDirY +=
+        (ty - stateFirstSilenceHard.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d =
+        Math.hypot(
+          stateFirstSilenceHard.predDirX,
+          stateFirstSilenceHard.predDirY,
+        ) || 1;
+
+      stateFirstSilenceHard.predDirX /= d;
+      stateFirstSilenceHard.predDirY /= d;
+    }
+
+    stateFirstSilenceHard.prevMx = mx;
+    stateFirstSilenceHard.prevMy = my;
+
+    const predictionDistance = 100;
+    const px = mx + stateFirstSilenceHard.predDirX * predictionDistance;
+    const py = my + stateFirstSilenceHard.predDirY * predictionDistance;
+
+    if (
+      stateFirstSilenceHard.timer >= 4.75 &&
+      stateFirstSilenceHard.timer <= 5.75 &&
+      stateFirstSilenceHard.beams.length == 0
+    ) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(
+          stateFirstSilenceHard.predDirY,
+          stateFirstSilenceHard.predDirX,
+        ) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        stateFirstSilenceHard.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base + spread, 1.25),
+        );
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base - spread2, 1.25),
+        );
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base + spread3, 1.25),
+        );
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base - spread4, 1.25),
+        );
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        stateFirstSilenceHard.beams.push(spawnBeam(px, py, base, 1.25));
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base + spread, 1.25),
+        );
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base - spread2, 1.25),
+        );
+        stateFirstSilenceHard.beams.push(
+          spawnBeam(px, py, base + spread3, 1.25),
+        );
+      }
+    }
+
+    stateFirstSilenceHard.timer += dt;
+
+    let needsCompactSlash = false;
+    for (const b of stateFirstSilenceHard.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(stateFirstSilenceHard.beams);
+
+    const s = stateFirstSilenceHard;
+    s.randt += dt * (s.randcycle == 0 ? 4 / 3 : 1);
+
+    if (!s.randspawned) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      s.randcx = mouse.x + (Math.random() - 0.5) * 2000;
+      s.randcy = mouse.y + (Math.random() - 0.5) * 2000;
+      s.randspokes.push(spawnPizza(s, undefined, ["randcx", "randcy"]));
+      s.randspawned = true;
+    }
+
+    for (const sp of s.randspokes) {
+      sp.t += dt * (s.randcycle == 0 ? 4 / 3 : 1);
+
+      const p = Math.min(sp.t / 2, 1);
+      if (p < 1) {
+        const cursorAngle = Math.atan2(my - sp.y, mx - sp.x);
+        let angleDiff = cursorAngle - sp.targetAngle;
+        if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        const turnSpeed = 0.1;
+        sp.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+      }
+      const eased = 1 - (1 - p) * (1 - p);
+      sp.angle = sp.startAngle + (sp.targetAngle - sp.startAngle) * eased;
+
+      if (sp.t >= 2 && sp.t < 2.5) {
+        const len = 20000;
+        const w = 90;
+
+        const dx = mx - sp.x;
+        const dy = my - sp.y;
+
+        for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+          const angle = sp.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+          const cos = Math.cos(-angle);
+          const sin = Math.sin(-angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const halfLen = len;
+          const halfW = w / 2;
+
+          if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+            checkDeath("Celestial");
+            break;
+          }
+        }
+      }
+      if (sp.t >= 2.5) {
+        sp.offset += dt * 10000;
+      }
+      if (sp.t > 3) {
+        sp.active = false;
+      }
+    }
+
+    if (s.randt >= 2 && s.randcycle < 4) {
+      s.randt = 0;
+      s.randcycle++;
+      shakeScreen();
+      if (s.randcycle < 4) {
+        s.randspawned = false;
+        s.randchange = false;
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      } else {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+      }
+    }
+  }
+  function drawFirstSilenceHard(ctx) {
+    for (const s of stateFirstSilenceHard.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? Math.min(0, (3 - s.t) * 4) : 1;
+
+          const drawX = Math.max(x, s.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
+        } else if (i < (casualMode ? 3 : 4)) {
+          ctx.globalAlpha =
+            s.t < 0.25 && stateFirstSilenceHard.cycle == 0 ? s.t * 3 : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.45, "#ff00cc");
+          grad.addColorStop(0.55, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const c of stateFirstSilenceHard.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+    for (const d of stateFirstSilenceHard.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+    for (const b of stateFirstSilenceHard.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const sp of stateFirstSilenceHard.randspokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? Math.min(0, (3 - sp.t) * 4) : 1;
+
+          const drawX = Math.max(x, sp.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
+        } else if (i < (casualMode ? 3 : 4)) {
+          ctx.globalAlpha =
+            sp.t < 0.25 && stateFirstSilenceHard.randcycle == 0
+              ? sp.t * 3
+              : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.45, "#ff00cc");
+          grad.addColorStop(0.55, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+  }
+  function drawFirstSilenceHardFront(ctx) {
+    for (const s of stateFirstSilenceHard.spokes) {
+      ctx.save();
+
+      ctx.translate(s.x, s.y);
+      ctx.rotate(s.angle);
+
+      const isLethal = s.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = 90;
+        const dx = mouse.x - s.x;
+        const dy = mouse.y - s.y;
+
+        const cos = Math.cos(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+        const sin = Math.sin(-(s.angle + i * (Math.PI / (casualMode ? 3 : 4))));
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = s.t >= 2.75 ? (3 - s.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, s.offset), -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+    for (const b of stateFirstSilenceHard.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+    for (const e of stateFirstSilenceHard.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    for (const c of stateFirstSilenceHard.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+    for (const d of stateFirstSilenceHard.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+      ctx.restore();
+    }
+
+    for (const sp of stateFirstSilenceHard.randspokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = 90;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? (3 - sp.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+  }
+
   const stateSecondSilence = {
     t: 0,
     cx: 0,
@@ -16453,7 +19573,7 @@ export function setup(
         }
       }
 
-      if (c.t >= 2) {
+      if (c.t >= 2 && c.t <= 2.25) {
         const dx = mx - c.x;
         const dy = my - c.y;
         if (dx * dx + dy * dy <= c.r * c.r) {
@@ -17330,6 +20450,1469 @@ export function setup(
     }
   }
 
+  const stateSecondSilenceHard = {
+    t: 0,
+    cx: 0,
+    cy: 0,
+    ex: 0,
+    ey: 0,
+    prevMx: 0,
+    prevMy: 0,
+    len: 20000,
+    w: 417,
+    active: false,
+    particles: [],
+    pTimer: 0,
+
+    crumbleT: 0,
+    circles: [],
+    explosions: [],
+
+    beams: [],
+    timer: 0,
+    predDirX: Math.cos(Math.random() * Math.PI * 2),
+    predDirY: Math.sin(Math.random() * Math.PI * 2),
+
+    spokes: [],
+    tCut: 0,
+    cycle: 0,
+    spawned: false,
+    cxCut: 0,
+    cyCut: 0,
+
+    circlesImp: [],
+    spawnTimer: 0,
+    spawnedImp: 0,
+
+    daggers: [],
+  };
+  function enterSecondSilenceHard() {
+    const s = stateSecondSilenceHard;
+    const cx = WORLD_WIDTH / 2;
+    const cy = WORLD_HEIGHT / 2;
+    const ang = Math.atan2(cy - mouse.y, cx - mouse.x);
+    s.cx = mouse.x + Math.cos(ang) * 1000;
+    s.cy = mouse.y + Math.sin(ang) * 1000;
+    enterFixed(s.cx, s.cy, true, () => {
+      s.t = 0;
+      s.active = true;
+      s.w = 417;
+      s.angle = 0;
+      s.baseAngle = Math.random() * Math.PI * 2;
+      s.prevAngle = 0;
+      s.dir = Math.random() < 0.5;
+      s.ex = mouse.x;
+      s.ey = mouse.y;
+      s.particles = [];
+      s.pTimer = 0;
+      s.crumbleT = 0;
+      s.circles = [];
+      s.explosions = [];
+      s.beams = [];
+      s.timer = 0;
+      s.prevMx = mouse.x;
+      s.prevMy = mouse.y;
+      s.change = false;
+      s.predDirX = Math.cos(Math.random() * Math.PI * 2);
+      s.predDirY = Math.sin(Math.random() * Math.PI * 2);
+
+      s.spokes = [];
+      s.tCut = 0;
+      s.cycle = 0;
+      s.spawned = false;
+      s.changeCut = false;
+      s.cxCut = 0;
+      s.cyCut = 0;
+
+      s.circlesImp = [];
+      s.spawnTimer = 0;
+      s.spawnedImp = 0;
+
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      s.daggers = [];
+      for (let i = 0; i < (hardMode && phase == 4 ? 5 : 4); i++) {
+        const baseAngle = (i / (hardMode && phase == 4 ? 5 : 4)) * Math.PI * 2;
+        s.daggers.push({
+          t: 0,
+          baseAngle,
+          startAngle: baseAngle,
+          targetAngle: baseAngle + Math.PI * 2 * dir,
+
+          delay: 0,
+          slashT: 0,
+          slashing: false,
+        });
+      }
+    });
+    setGiftMultiplier(0.5);
+  }
+  function updateSecondSilenceHard(dt) {
+    const mx = mouse.x;
+    const my = mouse.y;
+    const s = stateSecondSilenceHard;
+
+    s.t += dt;
+    if (s.t >= 4 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_FinalSwing);
+    }
+    s.pTimer += dt;
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
+
+    const follow = 1 - Math.exp(-(hardMode ? 1 : 0.8) * dt);
+
+    s.ex += (mx - s.ex) * follow;
+    s.ey += (my - s.ey) * follow;
+
+    const dirSign = s.dir ? 1 : -1;
+    if (s.t < 5) {
+      const rotSpeed = (Math.PI * 2) / 5;
+      s.angle = s.baseAngle + rotSpeed * s.t * dirSign;
+    } else {
+      const rotSpeed1 = (Math.PI * 2) / 5;
+      const rotSpeed2 = (Math.PI * 2) / 9;
+
+      const angleAt5 = s.baseAngle + rotSpeed1 * 5 * dirSign;
+      const t2 = s.t - 5;
+
+      s.angle = angleAt5 + rotSpeed2 * t2 * dirSign;
+    }
+    const angleDelta = s.angle - s.prevAngle;
+    s.prevAngle = s.angle;
+
+    const mvx = mx - s.prevMx;
+    const mvy = my - s.prevMy;
+    s.prevMx = mx;
+    s.prevMy = my;
+    const bx = Math.cos(s.angle);
+    const by = Math.sin(s.angle);
+    const dir = mvx * bx + mvy * by;
+
+    if (s.t < 14 && s.pTimer >= 0.02) {
+      setGiftMultiplier(0.5);
+      s.pTimer = 0;
+
+      const spawnCount = 200;
+
+      const nx = Math.cos(s.angle + Math.PI / 2);
+      const ny = Math.sin(s.angle + Math.PI / 2);
+
+      for (let i = 0; i < spawnCount; i++) {
+        const angle = s.angle;
+        const len = s.len;
+
+        const t = Math.random();
+        const along = t * len + 125;
+
+        const forward = dir >= 0 ? 1 : -1;
+        const edgeSide = Math.random() < 0.5 ? -1 : 1;
+        const trailingOffset = (s.w / 2) * forward * edgeSide;
+        const leadingOffset = (s.w / 1.5) * forward * edgeSide;
+        const isLeading = Math.random() < 0.35;
+        const spread = isLeading ? leadingOffset : trailingOffset;
+
+        const px = s.cx + bx * along + nx * spread;
+        const py = s.cy + by * along + ny * spread;
+
+        if (s.t >= 5) {
+          s.particles.push({
+            x: px,
+            y: py,
+            vx: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            vy: (Math.random() - 0.5) * (s.t > 5 ? 1000 : 100),
+            r: Math.random() * 40,
+            t: 0,
+            life: 0.25 + Math.random() * 0.25,
+            active: true,
+          });
+        }
+
+        if (s.t < 5 && Math.random() < 0.05) {
+          const innerSpread = (Math.random() - 0.5) * s.w * 0.8;
+
+          const px2 = s.cx + bx * along + nx * innerSpread;
+          const py2 = s.cy + by * along + ny * innerSpread;
+
+          const speed = 200 * (0.5 + Math.random() * 0.5);
+          s.particles.push({
+            x: px2,
+            y: py2,
+            vx: bx * speed,
+            vy: by * speed,
+            r: Math.random() * 40 + 40,
+            t: 0,
+            life: 0.5 + Math.random() * 0.5,
+            active: true,
+            ellipse: true,
+          });
+        }
+      }
+    }
+
+    const cos = Math.cos(-s.angle);
+    const sin = Math.sin(-s.angle);
+
+    if (s.t >= 5) {
+      if (s.t <= 14) shakeScreen();
+      if (s.t <= 5 + dt) {
+        enterFixed(-1000, -1000, false);
+      }
+      if (s.t >= 6 && s.t <= 6 + dt) {
+        const cx = mouse.x + (Math.random() - 0.5) * 2000;
+        const cy = mouse.y + (Math.random() - 0.5) * 2000;
+        s.cxCut = cx;
+        s.cyCut = cy;
+        changeEnemy(Celestial_CutterStart, false, () => {
+          changeEnemy(Celestial_CutterLoop, true);
+        });
+        enterFixed(cx, cy, false);
+      }
+
+      const mmx = mx - s.cx;
+      const mmy = my - s.cy;
+
+      const rx = mmx * cos - mmy * sin;
+      const ry = mmx * sin + mmy * cos;
+
+      if (rx > 0 && rx < s.len && Math.abs(ry) < s.w / 2 && s.active) {
+        checkDeath("Celestial");
+      }
+    }
+
+    s.crumbleT += dt;
+    if (s.t >= 6 && s.crumbleT >= 2 && s.t < 14) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+        s.circles.push(spawnCircle(2));
+      }
+      s.crumbleT = 0;
+    }
+    if (s.t >= 7 && s.crumbleT >= 1 && s.crumbleT <= 1 + dt && s.t < 13) {
+      for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+        s.circles.push(spawnCircle(2));
+      }
+    }
+
+    let needsCompact = false;
+    for (const p of s.particles) {
+      p.t += dt;
+
+      if (p.ellipse) {
+        const c = Math.cos(angleDelta);
+        const sA = Math.sin(angleDelta);
+
+        const rx = p.x - s.cx;
+        const ry = p.y - s.cy;
+
+        p.x = s.cx + rx * c - ry * sA;
+        p.y = s.cy + rx * sA + ry * c;
+
+        const rvx = p.vx;
+        const rvy = p.vy;
+
+        p.vx = rvx * c - rvy * sA;
+        p.vy = rvx * sA + rvy * c;
+
+        const accel = 200 * dt;
+        p.vx += Math.cos(s.angle) * accel;
+        p.vy += Math.sin(s.angle) * accel;
+      }
+
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.r += dt * 5;
+
+      if (p.t > p.life) {
+        p.active = false;
+        needsCompact = true;
+      }
+
+      const dx = p.x - s.cx;
+      const dy = p.y - s.cy;
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfLen = s.len;
+      const halfW = s.w / 2 + 100;
+
+      if (Math.abs(rx) > halfLen || Math.abs(ry) > halfW) {
+        p.active = false;
+        needsCompact = true;
+      }
+    }
+    if (needsCompact) compact(s.particles);
+
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Silence_Charge.ogg`,
+        1.25,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 5 && s.t <= 5 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/DeathInBloom/Silence_Firing.ogg`,
+        0.667,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
+    if (s.t >= 5 && s.t < 14) {
+      s.w = Math.random() * 50 + 367;
+    }
+    if (s.t >= 14) {
+      s.w -= dt * 1000;
+      if (s.w <= 0 && s.active) {
+        s.w = 0;
+        setGiftMultiplier(1);
+        s.active = false;
+      }
+    }
+
+    let needsCompactCrumble = false;
+    for (const c of s.circles) {
+      c.t += dt;
+
+      if (c.t < 2) {
+        const dx = mx - c.tx;
+        const dy = my - c.ty;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.tx += dx * followAmount;
+        c.ty += dy * followAmount;
+        const p = c.t / 2;
+
+        const eased = 1 - (1 - p) * (1 - p);
+
+        c.x = c.sx + (c.tx - c.sx) * eased;
+        c.y = c.sy + (c.ty - c.sy) * eased;
+      }
+
+      if (c.t < 0.5) {
+        const p = c.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        c.r = c.targetR * eased;
+      } else if (c.t < 2) {
+        c.r = c.targetR;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          if (s.circles.indexOf(c) == 0) {
+            playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+          }
+          s.explosions.push({
+            x: c.x,
+            y: c.y,
+            r: c.targetR,
+            t: 0,
+            rot: Math.random(),
+            s: Math.floor(10 + Math.random() * 11),
+          });
+        }
+        c.r = c.targetR * (1 - Math.min(c.t - 2, 1));
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactCrumble = true;
+        }
+      }
+
+      if (c.t >= 2 && c.t <= 2.25) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        if (dx * dx + dy * dy <= c.r * c.r) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactCrumble) compact(s.circles);
+
+    const moveLen = Math.hypot(mvx, mvy);
+
+    if (moveLen > 0.001) {
+      const tx = mvx / moveLen;
+      const ty = mvy / moveLen;
+
+      const turnSpeed = 4;
+
+      s.predDirX += (tx - s.predDirX) * Math.min(1, dt * turnSpeed);
+      s.predDirY += (ty - s.predDirY) * Math.min(1, dt * turnSpeed);
+
+      const d = Math.hypot(s.predDirX, s.predDirY) || 1;
+
+      s.predDirX /= d;
+      s.predDirY /= d;
+    }
+
+    const predictionDistance = 100;
+    const px = mx + s.predDirX * predictionDistance;
+    const py = my + s.predDirY * predictionDistance;
+
+    if (s.timer >= 3.5 && s.timer <= 4.5 && s.beams.length == 0) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/Slash/Silence_Slash.ogg`,
+        0.8,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      const base =
+        Math.atan2(s.predDirY, s.predDirX) +
+        ((Math.random() - 0.5) * Math.PI) / 3;
+      if (hardMode && phase == 4) {
+        const spread = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 6.857) * Math.random();
+        const spread3 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+        const spread4 = Math.PI / 3.2 + (Math.PI / 6.857) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread4, 1.25));
+      } else {
+        const spread = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread2 = Math.PI / 12 + (Math.PI / 4.5) * Math.random();
+        const spread3 = Math.PI / 2.571 + (Math.PI / 4.5) * Math.random();
+
+        s.beams.push(spawnBeam(px, py, base, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread, 1.25));
+        s.beams.push(spawnBeam(px, py, base - spread2, 1.25));
+        s.beams.push(spawnBeam(px, py, base + spread3, 1.25));
+      }
+    }
+
+    s.timer += dt;
+
+    let needsCompactSlash = false;
+    for (const b of s.beams) {
+      let t = (b.t += dt);
+
+      if (t < 0.5) {
+        const p = t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        b.width = b.targetWidth * eased;
+      } else if (t < b.armTime) {
+        b.width = b.targetWidth;
+      } else {
+        if (!b.shake) {
+          b.shake = true;
+          shakeScreen();
+        }
+        const w = b.width - dt * 200;
+        b.width = w;
+        if (w <= 0) {
+          b.active = false;
+          needsCompactSlash = true;
+        }
+      }
+
+      const dx = mx - b.x;
+      const dy = my - b.y;
+
+      const angle = b.angle;
+      const cos = Math.cos(-angle);
+      const sin = Math.sin(-angle);
+
+      const rx = dx * cos - dy * sin;
+      const ry = dx * sin + dy * cos;
+
+      const halfW = b.width * 0.5;
+
+      if (
+        b.active &&
+        t >= b.armTime &&
+        Math.abs(rx) < 20000 &&
+        Math.abs(ry) < halfW
+      ) {
+        checkDeath("Celestial");
+      }
+
+      b._rx = rx;
+    }
+    if (needsCompactSlash) compact(s.beams);
+
+    if (s.t >= 6) {
+      const mx = mouse.x;
+      const my = mouse.y;
+      s.tCut += dt;
+
+      if (!s.spawned) {
+        playSound(
+          `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+          0.9,
+          undefined,
+          undefined,
+          undefined,
+          "50",
+        );
+        s.spokes.push(spawnPizza(s, undefined, ["cxCut", "cyCut"]));
+        s.spawned = true;
+      }
+
+      for (const sp of s.spokes) {
+        sp.t += dt;
+
+        const p = Math.min(sp.t / 2, 1);
+        if (p < 1) {
+          const cursorAngle = Math.atan2(my - sp.y, mx - sp.x);
+          let angleDiff = cursorAngle - sp.targetAngle;
+          if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+          if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+          const turnSpeed = 0.1;
+          sp.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+        }
+        const eased = 1 - (1 - p) * (1 - p);
+        sp.angle = sp.startAngle + (sp.targetAngle - sp.startAngle) * eased;
+
+        if (sp.t >= 2 && sp.t < 2.5) {
+          const len = 20000;
+          const w = 90;
+
+          const dx = mx - sp.x;
+          const dy = my - sp.y;
+
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            const angle = sp.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+            const cos = Math.cos(-angle);
+            const sin = Math.sin(-angle);
+
+            const rx = dx * cos - dy * sin;
+            const ry = dx * sin + dy * cos;
+
+            const halfLen = len;
+            const halfW = w / 2;
+
+            if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+              checkDeath("Celestial");
+              break;
+            }
+          }
+        }
+        if (sp.t >= 2.5) {
+          sp.offset += dt * 10000;
+        }
+        if (sp.t > 3) {
+          sp.active = false;
+        }
+      }
+
+      if (s.tCut >= 1.75 && s.cycle == 3 && !s.changeCut) {
+        s.changeCut = true;
+        changeEnemy(Celestial_CutterEnd);
+      }
+      if (s.tCut >= 2) {
+        s.tCut = 0;
+        s.cycle++;
+        shakeScreen();
+        if (s.cycle < 4) {
+          s.spawned = false;
+          s.changeCut = false;
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Impact.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+    }
+
+    if (!s.prevMouse) {
+      s.prevMouse = { x: mx, y: my };
+    }
+    const vx = mx - s.prevMouse.x;
+    const vy = my - s.prevMouse.y;
+    s.prevMouse.x = mx;
+    s.prevMouse.y = my;
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      s.lastDirX = vx / len;
+      s.lastDirY = vy / len;
+    }
+
+    s.spawnTimer += dt;
+
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawnedImp < 15) {
+      s.spawnTimer -= interval;
+      s.spawnedImp++;
+      s.circlesImp.push(spawnImplosionCircle());
+    }
+
+    let needsCompactImp = false;
+    for (const c of s.circlesImp) {
+      c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
+      c.opacity += dt * 4;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            4,
+          );
+        }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
+        c.phase = 2;
+        c.burstT += dt;
+        c.r -= dt * 600;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactImp = true;
+        }
+      }
+
+      if (c.phase === 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactImp) compact(s.circlesImp);
+
+    for (const d of s.daggers) {
+      d.t += dt;
+
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      if (s.daggers.indexOf(d) === 0) {
+        if (d.t >= 0.5 && d.t <= 0.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Spawn.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 1.5 && d.t <= 1.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Aim.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        } else if (d.t >= 2.5 && d.t <= 2.5 + dt) {
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Breaker/Silence_Daggers_Fire.ogg`,
+            0.9,
+            undefined,
+            undefined,
+            undefined,
+            "50",
+          );
+        }
+      }
+
+      if (d.t <= spinDuration) {
+        const p = d.t / spinDuration;
+        d.angle = d.startAngle + (d.targetAngle - d.startAngle) * p;
+
+        d.cx = mx;
+        d.cy = my;
+        d.radius = 200;
+
+        d.worldX = d.cx + Math.cos(d.angle) * d.radius;
+        d.worldY = d.cy + Math.sin(d.angle) * d.radius;
+      } else {
+        if (!d.transitionInit) {
+          d.transitionInit = true;
+
+          const dirX = s.lastDirX ?? 0;
+          const dirY = s.lastDirY ?? -1;
+
+          const backDist = 150;
+          d.targetCX = mx - dirX * backDist;
+          d.targetCY = my - dirY * backDist;
+
+          const spread = (10 * Math.PI) / 180;
+          const index = s.daggers.indexOf(d);
+          d.offset = (index - 1.5) * spread;
+
+          d.startCX = d.worldX;
+          d.startCY = d.worldY;
+          d.startAngle = d.angle;
+        }
+
+        const p = Math.min((d.t - spinDuration) / moveDuration, 1);
+
+        const ease = 1 - (1 - p) * (1 - p);
+
+        d.cx = d.startCX + (d.targetCX - d.startCX) * ease;
+        d.cy = d.startCY + (d.targetCY - d.startCY) * ease;
+
+        if (d.t < 2.5) {
+          d.angle = Math.atan2(my - d.cy, mx - d.cx) + d.offset;
+        }
+
+        d.radius = 0;
+
+        const slashStart = 2.5 + d.delay;
+
+        if (d.t >= slashStart && !d.slashing) {
+          d.slashing = true;
+          d.slashT = 0;
+          d.slashInit = false;
+        }
+
+        if (d.slashing) {
+          d.slashT += dt;
+
+          const slashDuration = 1;
+          const p = Math.min(d.slashT / slashDuration, 1);
+
+          const slashDist = 1000;
+
+          if (!d.slashInit) {
+            d.slashInit = true;
+            shakeScreen();
+
+            d.slashStartX = d.cx;
+            d.slashStartY = d.cy;
+
+            d.slashAngle = d.angle;
+          }
+
+          d.cx = d.slashStartX + Math.cos(d.slashAngle) * slashDist * p;
+
+          d.cy = d.slashStartY + Math.sin(d.slashAngle) * slashDist * p;
+
+          const dx = mx - d.cx;
+          const dy = my - d.cy;
+
+          const cos = Math.cos(-d.angle);
+          const sin = Math.sin(-d.angle);
+
+          const rx = dx * cos - dy * sin;
+          const ry = dx * sin + dy * cos;
+
+          const len = 140;
+          const w = 60;
+
+          if (rx > -40 && rx < len && Math.abs(ry) < w / 2 && d.slashT < 1) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+    }
+  }
+  function drawSecondSilenceHard(ctx) {
+    const s = stateSecondSilenceHard;
+
+    if (s.active) {
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
+
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          if (!p.ellipse) {
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      ctx.save();
+
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+      const randLineWidth = 0;
+
+      const isLethal = s.t >= 5;
+
+      ctx.save();
+      if (isLethal) {
+        const alpha = s.t < 0.25 ? s.t * 4 : 1;
+
+        const glowLen = 1500;
+        const glowWidth = s.w * 1.1;
+
+        ctx.scale(1, glowWidth / glowLen);
+
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, glowLen);
+        grad.addColorStop(0, "#ff00cc");
+        grad.addColorStop(0.5, "#ff00cc");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.globalAlpha = (Math.random() * 0.25 + 0.75) * alpha;
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, glowLen, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(-randLineWidth / 2, -s.w / 2 - randLineWidth / 2);
+      ctx.lineTo(-randLineWidth / 2, s.w / 2 + randLineWidth / 2);
+      ctx.lineTo(-forwardOffset - randLineWidth / 2, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "#ff00cc";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "#ff00cc";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.rect(Math.max(x, 0), -s.w / 2, len, s.w);
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha =
+        (isLethal ? Math.random() * 0.25 + 0.5 : 0.05) *
+        (s.t < 0.25 ? s.t * 4 : 1);
+
+      let grad = ctx.createLinearGradient(
+        0,
+        -edgeOffset - glowSize,
+        0,
+        -edgeOffset,
+      );
+      grad.addColorStop(0, "rgba(255,0,192,0)");
+      grad.addColorStop(1, "#ff00cc");
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(Math.max(x, 0), -edgeOffset - glowSize, len, glowSize);
+
+      let grad2 = ctx.createLinearGradient(
+        0,
+        edgeOffset,
+        0,
+        edgeOffset + glowSize,
+      );
+      grad2.addColorStop(0, "#ff00cc");
+      grad2.addColorStop(1, "rgba(255,0,192,0)");
+
+      ctx.fillStyle = grad2;
+      ctx.fillRect(Math.max(x, 0), edgeOffset, len, glowSize);
+
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t >= 2 && c.r >= 0) {
+        const glow = 100;
+
+        const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+        grad.addColorStop(0, "rgba(255,0,192,1)");
+        grad.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#ff00cc";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "transparent";
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+
+      if (!armed) {
+        ctx.strokeStyle = "transparent";
+      } else {
+        ctx.strokeStyle = "#ff00cc";
+      }
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      if (armed && b.width > 1) {
+        const glow = 100;
+
+        const gradTop = ctx.createLinearGradient(
+          0,
+          -b.width / 2 - glow,
+          0,
+          -b.width / 2,
+        );
+        gradTop.addColorStop(0, "rgba(255,0,192,0)");
+        gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+        ctx.fillStyle = gradTop;
+        ctx.fillRect(x, -b.width / 2 - glow, len, glow);
+
+        const gradBot = ctx.createLinearGradient(
+          0,
+          b.width / 2,
+          0,
+          b.width / 2 + glow,
+        );
+        gradBot.addColorStop(0, "rgba(255,0,192,1)");
+        gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+        ctx.fillStyle = gradBot;
+        ctx.fillRect(x, b.width / 2, len, glow);
+      }
+
+      ctx.strokeRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const sp of s.spokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = isLethal ? 90 : 100;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? Math.min(0, (3 - sp.t) * 4) : 1;
+
+          const drawX = Math.max(x, sp.offset);
+          const glow = 100;
+
+          const gradTop = ctx.createLinearGradient(0, -w / 2 - glow, 0, -w / 2);
+          gradTop.addColorStop(0, "rgba(255,0,192,0)");
+          gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+          ctx.fillStyle = gradTop;
+          ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+          const gradBot = ctx.createLinearGradient(0, w / 2, 0, w / 2 + glow);
+          gradBot.addColorStop(0, "rgba(255,0,192,1)");
+          gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = gradBot;
+          ctx.fillRect(drawX, w / 2, len, glow);
+
+          const leftGrad = ctx.createLinearGradient(drawX - glow, 0, drawX, 0);
+          leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+          leftGrad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = leftGrad;
+          ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+          const rightGrad = ctx.createLinearGradient(
+            drawX + len,
+            0,
+            drawX + len + glow,
+            0,
+          );
+          rightGrad.addColorStop(0, "#ff00cc");
+          rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = rightGrad;
+          ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+          const points = [
+            [drawX, -w / 2, -0.9983, -1.0083],
+            [drawX + len, -w / 2, -0.0017, -1.0083],
+            [drawX, w / 2, -0.9983, 0.0083],
+            [drawX + len, w / 2, -0.0017, 0.0083],
+          ];
+
+          for (const [px, py, ox, oy] of points) {
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+            grad.addColorStop(0, "#ff00cc");
+            grad.addColorStop(1, "rgba(255,0,192,0)");
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+          }
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(drawX, -w / 2, len, w);
+        } else if (i < (casualMode ? 3 : 4)) {
+          ctx.globalAlpha = sp.t < 0.25 && s.cycle == 0 ? sp.t * 3 : 0.75;
+
+          const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+          grad.addColorStop(0, "rgba(255,0,192,0)");
+          grad.addColorStop(0.45, "#ff00cc");
+          grad.addColorStop(0.55, "#ff00cc");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const c of s.circlesImp) drawImplosionCircleBack(ctx, c);
+    for (const d of s.daggers) {
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+  }
+  function drawSecondSilenceHardFront(ctx) {
+    const s = stateSecondSilenceHard;
+
+    if (s.active) {
+      ctx.save();
+
+      const forwardOffset = 125;
+      const ox = s.cx + Math.cos(s.angle) * forwardOffset;
+      const oy = s.cy + Math.sin(s.angle) * forwardOffset;
+      ctx.translate(ox, oy);
+      ctx.rotate(s.angle);
+
+      const dx = mouse.x - s.cx;
+      const dy = mouse.y - s.cy;
+
+      const cos = Math.cos(-s.angle);
+      const sin = Math.sin(-s.angle);
+
+      const rx = dx * cos - dy * sin;
+      const x = rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      const isLethal = s.t >= 5;
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(0.25, -s.w / 2);
+      ctx.lineTo(0.25, s.w / 2);
+      ctx.lineTo(-forwardOffset, 0);
+      ctx.closePath();
+
+      if (isLethal) {
+        ctx.fillStyle = "black";
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#ff00cc";
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      if (!isLethal) {
+        ctx.globalAlpha = 0.25 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "#ff00cc";
+      } else {
+        ctx.globalAlpha = 1 * (s.t < 0.25 ? s.t * 4 : 1);
+        ctx.fillStyle = "black";
+      }
+
+      const edgeOffset = s.w / 2;
+      const glowSize = 400;
+
+      ctx.save();
+      ctx.globalAlpha = (isLethal ? 0.25 : 0) * (s.t < 0.25 ? s.t * 4 : 1);
+      ctx.fillStyle = "#ff00cc";
+      const w = s.w * (Math.random() + 1);
+      ctx.fillRect(Math.max(x, 0), -w / 2, len, w);
+      ctx.restore();
+      ctx.fillRect(Math.max(x, 0), -s.w / 2, len, s.w);
+
+      ctx.restore();
+      if (!uldm) {
+        for (const p of s.particles) {
+          ctx.save();
+
+          ctx.globalAlpha = (s.t > 5 ? 1 : 0.2) * (s.t < 0.25 ? s.t * 4 : 1);
+          ctx.fillStyle = "black";
+
+          if (s.t < 5 && p.ellipse) {
+            ctx.save();
+            ctx.globalAlpha = 0.5 * (s.t < 0.25 ? s.t * 4 : 1);
+            const angle = s.angle;
+            const long = p.r * 0.5;
+            const short = p.r * 0.1;
+
+            ctx.beginPath();
+            ctx.ellipse(p.x, p.y, long, short, angle, 0, Math.PI * 2);
+
+            ctx.strokeStyle = "#ff00cc";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = "black";
+            ctx.fill();
+            ctx.restore();
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const b of s.beams) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+
+      let a = b.angle;
+      if (b.t < 0.5) {
+        const p = b.t / 0.5;
+        const eased = 1 - (1 - p) * (1 - p);
+        a = b.startAngle + (b.angle - b.startAngle) * eased;
+      }
+
+      ctx.rotate(a);
+
+      const armed = b.t >= b.armTime;
+      const alpha = armed ? 1 : 0.5;
+
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = armed ? "black" : "#ff00cc";
+
+      const x = b._rx - BEAM_RADIUS;
+      const len = BEAM_RADIUS * 2;
+
+      ctx.fillRect(x, -b.width * 0.5, len, b.width);
+
+      ctx.restore();
+    }
+
+    for (const e of s.explosions) {
+      const r = e.r * (1 - Math.pow(e.t, 5));
+      const spikes = e.s;
+      ctx.save();
+      ctx.translate(e.x, e.y);
+      ctx.rotate(e.rot * Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      for (let i = 0; i < spikes; i++) {
+        const a = (i / spikes) * Math.PI * 2;
+        const inner = r * 0.667;
+        const outer = r * 0.833;
+        ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+        ctx.lineTo(
+          Math.cos(a + Math.PI / spikes) * outer,
+          Math.sin(a + Math.PI / spikes) * outer,
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const alpha = c.t < 2 ? 0.5 : 1;
+      ctx.globalAlpha = alpha;
+
+      if (c.t < 2) {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+        grad.addColorStop(0, "black");
+        grad.addColorStop(1, "#ff00cc");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.r >= 0) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    for (const sp of s.spokes) {
+      ctx.save();
+
+      ctx.translate(sp.x, sp.y);
+      ctx.rotate(sp.angle);
+
+      const isLethal = sp.t >= 2;
+
+      for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+        ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+        const w = 90;
+        const dx = mouse.x - sp.x;
+        const dy = mouse.y - sp.y;
+
+        const cos = Math.cos(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+        const sin = Math.sin(
+          -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+        );
+
+        const rx = dx * cos - dy * sin;
+        const x = rx - BEAM_RADIUS;
+        const len = BEAM_RADIUS * 2;
+
+        if (isLethal) {
+          ctx.globalAlpha = sp.t >= 2.75 ? (3 - sp.t) * 4 : 1;
+          ctx.beginPath();
+          ctx.fillStyle = "black";
+          ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    for (const c of s.circlesImp) drawImplosionCircleFront(ctx, c);
+    for (const d of s.daggers) {
+      const spinDuration = 1.5;
+      const moveDuration = 0.5;
+
+      const indicatorAlpha =
+        d.t >= spinDuration ? (d.t - spinDuration) / moveDuration : 0;
+
+      const cx = d.cx ?? mouse.x;
+      const cy = d.cy ?? mouse.y;
+
+      let x, y;
+
+      const tipOffset = 100;
+      if (d.slashing) {
+        x = cx - Math.cos(d.angle) * tipOffset;
+        y = cy - Math.sin(d.angle) * tipOffset;
+      } else {
+        const radius = d.radius ?? 200;
+
+        const baseX = cx + Math.cos(d.angle) * radius;
+        const baseY = cy + Math.sin(d.angle) * radius;
+
+        x = baseX - Math.cos(d.angle) * tipOffset;
+        y = baseY - Math.sin(d.angle) * tipOffset;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(d.angle);
+
+      let alpha = 1;
+      if (d.t < 0.25) {
+        alpha = d.t / 0.25;
+      }
+      if (d.slashing) {
+        const slashDuration = 1;
+        const p = Math.min((d.t - 2.5) / slashDuration, 1);
+        if (p > 0.75) {
+          const fadeOut = (1 - p) / 0.25;
+          alpha = Math.min(alpha, fadeOut);
+        }
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+
+      if (indicatorAlpha > 0) {
+        ctx.save();
+
+        ctx.globalAlpha = indicatorAlpha;
+
+        const len = 20000;
+        const w = 1;
+        const glow = 100;
+
+        const drawX = 0;
+
+        ctx.strokeStyle = "#ff00cccc";
+        ctx.lineWidth = 8;
+
+        ctx.beginPath();
+        ctx.rect(drawX, -w / 2, len, w);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.scale(0.1, 0.1);
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+      ctx.restore();
+    }
+  }
+
   const stateBeams = {
     prevMx: 0,
     prevMy: 0,
@@ -17347,6 +21930,7 @@ export function setup(
       s.prevMy = mouse.y;
       s.predDirX = Math.cos(Math.random() * Math.PI * 2);
       s.predDirY = Math.sin(Math.random() * Math.PI * 2);
+      s.change = false;
     });
   }
   function updateBeams(dt) {
@@ -17943,8 +22527,13 @@ export function setup(
       const attackUpdate = state.currentPattern.update;
       if (
         attackUpdate === updateFutile ||
+        attackUpdate === updateFutile3Stars ||
+        attackUpdate === updateFutile3StarsBreakerBeams ||
+        attackUpdate === updateFutileRandCutter ||
         attackUpdate === updateDeathInBloom ||
+        attackUpdate === updateDeathInBloom3Stars ||
         attackUpdate === updateDeathInBloomCrumble ||
+        attackUpdate === updateDeathInBloomCrumbleBreakerBeams ||
         attackUpdate === updateSecondSilence
       ) {
         drawCursorAttackStar(
