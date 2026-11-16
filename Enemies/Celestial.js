@@ -1249,7 +1249,6 @@ export function setup(
       draw: drawFirstSilenceHard,
       drawFront: drawFirstSilenceHardFront,
       enter: enterFirstSilenceHard,
-      hard: true,
     },
     {
       duration: 15,
@@ -1257,7 +1256,6 @@ export function setup(
       draw: drawSecondSilenceHard,
       drawFront: drawSecondSilenceHardFront,
       enter: enterSecondSilenceHard,
-      hard: true,
     },
   ];
   const celestialDevOnly = true;
