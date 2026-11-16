@@ -861,6 +861,7 @@ export function setup(
       draw: drawImplosion,
       drawFront: drawImplosionFront,
       enter: enterImplosion,
+      hard: false,
     },
     {
       duration: 8,
@@ -868,6 +869,15 @@ export function setup(
       draw: drawSuperPizzaCutter,
       drawFront: drawSuperPizzaCutterFront,
       enter: enterSuperPizzaCutter,
+      hard: false,
+    },
+    {
+      duration: 8,
+      update: updateSuperPizzaCutterImplosion,
+      draw: drawSuperPizzaCutterImplosion,
+      drawFront: drawSuperPizzaCutterImplosionFront,
+      enter: enterSuperPizzaCutterImplosion,
+      hard: true,
     },
     {
       duration: 3,
@@ -1009,239 +1019,246 @@ export function setup(
     },
   ];
   const specificDevOnly = [
-    {
-      duration: casualMode ? 7 : 5.5,
-      update: updateSlash,
-      draw: drawSlash,
-      drawFront: drawSlashFront,
-      enter: enterSlash,
-    },
-    {
-      duration: 3,
-      update: updateImplosion,
-      draw: drawImplosion,
-      drawFront: drawImplosionFront,
-      enter: enterImplosion,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutter,
-      draw: drawPizzaCutter,
-      drawFront: drawPizzaCutterFront,
-      enter: enterPizzaCutter,
-    },
-    {
-      duration: 13,
-      update: updateFutile,
-      draw: drawFutile,
-      drawFront: drawFutileFront,
-      enter: enterFutile,
-    },
-    {
-      duration: 3,
-      update: updateCrumble,
-      draw: drawCrumble,
-      drawFront: drawCrumbleFront,
-      enter: enterCrumble,
-    },
-    {
-      duration: 9,
-      update: updateBitter,
-      draw: drawBitter,
-      drawFront: drawBitterFront,
-      enter: enterBitter,
-    },
-    {
-      duration: 3,
-      update: updateCease,
-      draw: drawCease,
-      drawFront: drawCeaseFront,
-      enter: enterCease,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumble,
-      draw: drawPizzaCutterCrumble,
-      drawFront: drawPizzaCutterCrumbleFront,
-      enter: enterPizzaCutterCrumble,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom,
-      draw: drawDeathInBloom,
-      drawFront: drawDeathInBloomFront,
-      enter: enterDeathInBloom,
-    },
+    // {
+    //   duration: casualMode ? 7 : 5.5,
+    //   update: updateSlash,
+    //   draw: drawSlash,
+    //   drawFront: drawSlashFront,
+    //   enter: enterSlash,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateImplosion,
+    //   draw: drawImplosion,
+    //   drawFront: drawImplosionFront,
+    //   enter: enterImplosion,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutter,
+    //   draw: drawPizzaCutter,
+    //   drawFront: drawPizzaCutterFront,
+    //   enter: enterPizzaCutter,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile,
+    //   draw: drawFutile,
+    //   drawFront: drawFutileFront,
+    //   enter: enterFutile,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumble,
+    //   draw: drawCrumble,
+    //   drawFront: drawCrumbleFront,
+    //   enter: enterCrumble,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitter,
+    //   draw: drawBitter,
+    //   drawFront: drawBitterFront,
+    //   enter: enterBitter,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCease,
+    //   draw: drawCease,
+    //   drawFront: drawCeaseFront,
+    //   enter: enterCease,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumble,
+    //   draw: drawPizzaCutterCrumble,
+    //   drawFront: drawPizzaCutterCrumbleFront,
+    //   enter: enterPizzaCutterCrumble,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom,
+    //   draw: drawDeathInBloom,
+    //   drawFront: drawDeathInBloomFront,
+    //   enter: enterDeathInBloom,
+    // },
+    // {
+    //   duration: 8,
+    //   update: updateSuperPizzaCutter,
+    //   draw: drawSuperPizzaCutter,
+    //   drawFront: drawSuperPizzaCutterFront,
+    //   enter: enterSuperPizzaCutter,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilence,
+    //   draw: drawFirstSilence,
+    //   drawFront: drawFirstSilenceFront,
+    //   enter: enterFirstSilence,
+    // },
+    // {
+    //   duration: hardMode ? 12 : 9,
+    //   update: updateBitter3Stars,
+    //   draw: drawBitter3Stars,
+    //   drawFront: drawBitter3StarsFront,
+    //   enter: enterBitter3Stars,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumble,
+    //   draw: drawDeathInBloomCrumble,
+    //   drawFront: drawDeathInBloomCrumbleFront,
+    //   enter: enterDeathInBloomCrumble,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateImplosionBreaker,
+    //   draw: drawImplosionBreaker,
+    //   drawFront: drawImplosionBreakerFront,
+    //   enter: enterImplosionBreaker,
+    // },
+    // {
+    //   duration: 18,
+    //   update: updateSecondSilence,
+    //   draw: drawSecondSilence,
+    //   drawFront: drawSecondSilenceFront,
+    //   enter: enterSecondSilence,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashImplosion,
+    //   draw: drawSlashImplosion,
+    //   drawFront: drawSlashImplosionFront,
+    //   enter: enterSlashImplosion,
+    // },
+    // {
+    //   duration: 3,
+    //   update: updateCrumbleImplosion,
+    //   draw: drawCrumbleImplosion,
+    //   drawFront: drawCrumbleImplosionFront,
+    //   enter: enterCrumbleImplosion,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3Stars,
+    //   draw: drawFutile3Stars,
+    //   drawFront: drawFutile3StarsFront,
+    //   enter: enterFutile3Stars,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateCrumbleBreaker,
+    //   draw: drawCrumbleBreaker,
+    //   drawFront: drawCrumbleBreakerFront,
+    //   enter: enterCrumbleBreaker,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updatePizzaCutterCrumbleBeams,
+    //   draw: drawPizzaCutterCrumbleBeams,
+    //   drawFront: drawPizzaCutterCrumbleBeamsFront,
+    //   enter: enterPizzaCutterCrumbleBeams,
+    // },
+    // {
+    //   duration: 2,
+    //   update: updateBeams,
+    //   draw: drawBeams,
+    //   drawFront: drawBeamsFront,
+    //   enter: enterBeams,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitterBeams,
+    //   draw: drawBitterBeams,
+    //   drawFront: drawBitterBeamsFront,
+    //   enter: enterBitterBeams,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutile3StarsBreakerBeams,
+    //   draw: drawFutile3StarsBreakerBeams,
+    //   drawFront: drawFutile3StarsBreakerBeamsFront,
+    //   enter: enterFutile3StarsBreakerBeams,
+    // },
+    // {
+    //   duration: 12,
+    //   update: updateImplosionBreaker3Stars,
+    //   draw: drawImplosionBreaker3Stars,
+    //   drawFront: drawImplosionBreaker3StarsFront,
+    //   enter: enterImplosionBreaker3Stars,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloom3Stars,
+    //   draw: drawDeathInBloom3Stars,
+    //   drawFront: drawDeathInBloom3StarsFront,
+    //   enter: enterDeathInBloom3Stars,
+    // },
+    // {
+    //   duration: 12,
+    //   update: updateSuperPizzaCutter3StarsBreakerBeams,
+    //   draw: drawSuperPizzaCutter3StarsBreakerBeams,
+    //   drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
+    //   enter: enterSuperPizzaCutter3StarsBreakerBeams,
+    // },
+    // {
+    //   duration: 13,
+    //   update: updateFutileRandCutter,
+    //   draw: drawFutileRandCutter,
+    //   drawFront: drawFutileRandCutterFront,
+    //   enter: enterFutileRandCutter,
+    // },
+    // {
+    //   duration: 3.5,
+    //   update: updateCeaseBreaker,
+    //   draw: drawCeaseBreaker,
+    //   drawFront: drawCeaseBreakerFront,
+    //   enter: enterCeaseBreaker,
+    // },
+    // {
+    //   duration: 5.5,
+    //   update: updateSlashBeams,
+    //   draw: drawSlashBeams,
+    //   drawFront: drawSlashBeamsFront,
+    //   enter: enterSlashBeams,
+    // },
+    // {
+    //   duration: 9,
+    //   update: updateBitterImplosionBreakerBeams,
+    //   draw: drawBitterImplosionBreakerBeams,
+    //   drawFront: drawBitterImplosionBreakerBeamsFront,
+    //   enter: enterBitterImplosionBreakerBeams,
+    // },
+    // {
+    //   duration: 23,
+    //   update: updateDeathInBloomCrumbleBreakerBeams,
+    //   draw: drawDeathInBloomCrumbleBreakerBeams,
+    //   drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
+    //   enter: enterDeathInBloomCrumbleBreakerBeams,
+    // },
     {
       duration: 8,
-      update: updateSuperPizzaCutter,
-      draw: drawSuperPizzaCutter,
-      drawFront: drawSuperPizzaCutterFront,
-      enter: enterSuperPizzaCutter,
+      update: updateSuperPizzaCutterImplosion,
+      draw: drawSuperPizzaCutterImplosion,
+      drawFront: drawSuperPizzaCutterImplosionFront,
+      enter: enterSuperPizzaCutterImplosion,
     },
-    {
-      duration: 9,
-      update: updateFirstSilence,
-      draw: drawFirstSilence,
-      drawFront: drawFirstSilenceFront,
-      enter: enterFirstSilence,
-    },
-    {
-      duration: hardMode ? 12 : 9,
-      update: updateBitter3Stars,
-      draw: drawBitter3Stars,
-      drawFront: drawBitter3StarsFront,
-      enter: enterBitter3Stars,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloomCrumble,
-      draw: drawDeathInBloomCrumble,
-      drawFront: drawDeathInBloomCrumbleFront,
-      enter: enterDeathInBloomCrumble,
-    },
-    {
-      duration: 3.5,
-      update: updateImplosionBreaker,
-      draw: drawImplosionBreaker,
-      drawFront: drawImplosionBreakerFront,
-      enter: enterImplosionBreaker,
-    },
-    {
-      duration: 18,
-      update: updateSecondSilence,
-      draw: drawSecondSilence,
-      drawFront: drawSecondSilenceFront,
-      enter: enterSecondSilence,
-    },
-    {
-      duration: 5.5,
-      update: updateSlashImplosion,
-      draw: drawSlashImplosion,
-      drawFront: drawSlashImplosionFront,
-      enter: enterSlashImplosion,
-    },
-    {
-      duration: 3,
-      update: updateCrumbleImplosion,
-      draw: drawCrumbleImplosion,
-      drawFront: drawCrumbleImplosionFront,
-      enter: enterCrumbleImplosion,
-    },
-    {
-      duration: 13,
-      update: updateFutile3Stars,
-      draw: drawFutile3Stars,
-      drawFront: drawFutile3StarsFront,
-      enter: enterFutile3Stars,
-    },
-    {
-      duration: 3.5,
-      update: updateCrumbleBreaker,
-      draw: drawCrumbleBreaker,
-      drawFront: drawCrumbleBreakerFront,
-      enter: enterCrumbleBreaker,
-    },
-    {
-      duration: 9,
-      update: updatePizzaCutterCrumbleBeams,
-      draw: drawPizzaCutterCrumbleBeams,
-      drawFront: drawPizzaCutterCrumbleBeamsFront,
-      enter: enterPizzaCutterCrumbleBeams,
-    },
-    {
-      duration: 2,
-      update: updateBeams,
-      draw: drawBeams,
-      drawFront: drawBeamsFront,
-      enter: enterBeams,
-    },
-    {
-      duration: 9,
-      update: updateBitterBeams,
-      draw: drawBitterBeams,
-      drawFront: drawBitterBeamsFront,
-      enter: enterBitterBeams,
-    },
-    {
-      duration: 13,
-      update: updateFutile3StarsBreakerBeams,
-      draw: drawFutile3StarsBreakerBeams,
-      drawFront: drawFutile3StarsBreakerBeamsFront,
-      enter: enterFutile3StarsBreakerBeams,
-    },
-    {
-      duration: 12,
-      update: updateImplosionBreaker3Stars,
-      draw: drawImplosionBreaker3Stars,
-      drawFront: drawImplosionBreaker3StarsFront,
-      enter: enterImplosionBreaker3Stars,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloom3Stars,
-      draw: drawDeathInBloom3Stars,
-      drawFront: drawDeathInBloom3StarsFront,
-      enter: enterDeathInBloom3Stars,
-    },
-    {
-      duration: 12,
-      update: updateSuperPizzaCutter3StarsBreakerBeams,
-      draw: drawSuperPizzaCutter3StarsBreakerBeams,
-      drawFront: drawSuperPizzaCutter3StarsBreakerBeamsFront,
-      enter: enterSuperPizzaCutter3StarsBreakerBeams,
-    },
-    {
-      duration: 13,
-      update: updateFutileRandCutter,
-      draw: drawFutileRandCutter,
-      drawFront: drawFutileRandCutterFront,
-      enter: enterFutileRandCutter,
-    },
-    {
-      duration: 3.5,
-      update: updateCeaseBreaker,
-      draw: drawCeaseBreaker,
-      drawFront: drawCeaseBreakerFront,
-      enter: enterCeaseBreaker,
-    },
-    {
-      duration: 5.5,
-      update: updateSlashBeams,
-      draw: drawSlashBeams,
-      drawFront: drawSlashBeamsFront,
-      enter: enterSlashBeams,
-    },
-    {
-      duration: 9,
-      update: updateBitterImplosionBreakerBeams,
-      draw: drawBitterImplosionBreakerBeams,
-      drawFront: drawBitterImplosionBreakerBeamsFront,
-      enter: enterBitterImplosionBreakerBeams,
-    },
-    {
-      duration: 23,
-      update: updateDeathInBloomCrumbleBreakerBeams,
-      draw: drawDeathInBloomCrumbleBreakerBeams,
-      drawFront: drawDeathInBloomCrumbleBreakerBeamsFront,
-      enter: enterDeathInBloomCrumbleBreakerBeams,
-    },
-    {
-      duration: 9,
-      update: updateFirstSilenceHard,
-      draw: drawFirstSilenceHard,
-      drawFront: drawFirstSilenceHardFront,
-      enter: enterFirstSilenceHard,
-      hard: true,
-    },
-    {
-      duration: 15,
-      update: updateSecondSilenceHard,
-      draw: drawSecondSilenceHard,
-      drawFront: drawSecondSilenceHardFront,
-      enter: enterSecondSilenceHard,
-      hard: true,
-    },
+    // {
+    //   duration: 9,
+    //   update: updateFirstSilenceHard,
+    //   draw: drawFirstSilenceHard,
+    //   drawFront: drawFirstSilenceHardFront,
+    //   enter: enterFirstSilenceHard,
+    //   hard: true,
+    // },
+    // {
+    //   duration: 15,
+    //   update: updateSecondSilenceHard,
+    //   draw: drawSecondSilenceHard,
+    //   drawFront: drawSecondSilenceHardFront,
+    //   enter: enterSecondSilenceHard,
+    //   hard: true,
+    // },
   ];
   const celestialDevOnly = true;
   const floatingText = {
@@ -12307,6 +12324,814 @@ export function setup(
         ctx.restore();
       }
     }
+  }
+
+  const stateSuperPizzaCutterImplosion = {
+    blades: [],
+    t: 0,
+    spawned: false,
+    circles: [],
+    explosions: [],
+
+    cutters: [
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+      {
+        spokes: [],
+        t: 0,
+        spawned: false,
+        cx: 0,
+        cy: 0,
+      },
+    ],
+    lastStartAng: Math.random() < 0.5 ? 1 : -1,
+
+    crumbles: [],
+
+    circlesImp: [],
+    spawnTimer: 0,
+    spawnedImp: 0,
+  };
+  function enterSuperPizzaCutterImplosion() {
+    const cx = mouse.x + (Math.random() - 0.5) * 2000;
+    const cy = mouse.y + (Math.random() - 0.5) * 2000;
+    enterFixed(cx, cy, true, () => {
+      const s = stateSuperPizzaCutterImplosion;
+      s.t = 0;
+      s.spawned = false;
+      s.blades = [];
+      s.startChange = false;
+      s.change = false;
+      s.cx = cx;
+      s.cy = cy;
+      const baseAngles = [
+        Math.PI / 2,
+        Math.PI / 2 + (Math.PI * 2) / 3,
+        Math.PI / 2 + (Math.PI * 4) / 3,
+      ];
+      const offsetAng = Math.random() * Math.PI * 2;
+      for (let i = 0; i < 3; i++) {
+        s.blades.push({
+          x: cx,
+          y: cy,
+          cx,
+          cy,
+          dirX: Math.cos(baseAngles[i] + offsetAng),
+          dirY: Math.sin(baseAngles[i] + offsetAng),
+          baseAngle: baseAngles[i] + offsetAng,
+          angle: 0,
+          scale: 0,
+          startDelay: i * 0.1,
+          rotDur: 0.75 - i * 0.1,
+          upOffset: -1000,
+        });
+        s.cutters[i].spokes = [];
+        s.cutters[i].t = 0;
+        s.cutters[i].cycle = 0;
+        s.cutters[i].spawned = false;
+        s.cutters[i].cx = 0;
+        s.cutters[i].cy = 0;
+      }
+      s.circles = [];
+      s.explosions = [];
+
+      s.circlesImp = [];
+      s.spawnTimer = 0;
+      s.spawnedImp = 0;
+    });
+  }
+  function updateSuperPizzaCutterImplosion(dt) {
+    const s = stateSuperPizzaCutterImplosion;
+    const mx = mouse.x;
+    const my = mouse.y;
+
+    s.t += dt;
+    if (s.t >= 3 && !s.startChange) {
+      s.startChange = true;
+      changeEnemy(Celestial_CutterStart, false, () => {
+        changeEnemy(Celestial_CutterLoop, true);
+      });
+    }
+    if (s.t >= 6.75 && !s.change) {
+      s.change = true;
+      changeEnemy(Celestial_CutterEnd);
+    }
+    for (const e of s.explosions) e.t += dt;
+    s.explosions = s.explosions.filter((e) => e.t < 1);
+
+    if (s.t <= dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_2.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Summons_Variant_3.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 2 && s.t <= 2 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Swordprep.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 3 && s.t <= 3 + dt) {
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/SuperPizzaCutter/Sword_Impact.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Charge.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    } else if (s.t >= 7 && s.t <= 7 + dt) {
+      playSound(`./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`);
+      playSound(
+        `./ASSET/Sound/Enemies/Celestial/PizzaCutter/Cutter_Final.ogg`,
+        0.9,
+        undefined,
+        undefined,
+        undefined,
+        "50",
+      );
+    }
+
+    const p = Math.min(1, s.t / 2);
+    const eased = 1 - (1 - p) * (1 - p);
+    const maxDist = 700;
+
+    for (const [i, b] of s.blades.entries()) {
+      b.scale = eased;
+      b.dist = eased * maxDist;
+
+      let baseX = b.cx + b.dirX * b.dist;
+      let baseY = b.cy + b.dirY * b.dist;
+
+      let finalAngle = b.baseAngle;
+      let offsetY = 0;
+
+      if (s.t >= 2) {
+        const t2 = s.t - 2;
+
+        const localT = t2 - b.startDelay;
+
+        if (localT > 0) {
+          const p = Math.min(1, localT / b.rotDur);
+          const easedRot = 1 - (1 - p) * (1 - p);
+
+          const target = Math.PI / 2;
+          finalAngle = b.baseAngle + (target - b.baseAngle) * easedRot;
+
+          offsetY = b.upOffset * easedRot;
+        }
+
+        if (t2 >= 0.75) {
+          const p = Math.min(1, (t2 - 0.75) / 0.25);
+          const easedDown = p * p;
+
+          offsetY = b.upOffset * (1 - easedDown);
+        }
+      }
+
+      b.angle = finalAngle;
+
+      const tipX = 1000;
+      const tipY = 0;
+
+      const cos = Math.cos(finalAngle);
+      const sin = Math.sin(finalAngle);
+
+      const worldTipX = tipX * cos - tipY * sin;
+      const worldTipY = tipX * sin + tipY * cos;
+
+      const finalTipX = baseX;
+      const finalTipY = baseY + offsetY;
+
+      let blend = 0;
+
+      if (s.t >= 2) {
+        blend = Math.min(1, s.t - 2);
+      }
+
+      const tipXPos = finalTipX - worldTipX;
+      const tipYPos = finalTipY - worldTipY;
+
+      b.x = baseX * (1 - blend) + tipXPos * blend;
+      b.y = baseY * (1 - blend) + tipYPos * blend;
+
+      if (s.t >= 3) {
+        const t3 = s.t - 3;
+        const p = Math.min(1, t3 * 3);
+        const eased = p * p;
+
+        b.scale = 1 - eased;
+
+        const tipX = 1000;
+        const tipY = 0;
+
+        const cos = Math.cos(b.angle);
+        const sin = Math.sin(b.angle);
+
+        const worldTipX = tipX * cos - tipY * sin;
+        const worldTipY = tipX * sin + tipY * cos;
+
+        const tipPosX = b.x + worldTipX;
+        const tipPosY = b.y + worldTipY;
+
+        b.x = tipPosX - worldTipX * b.scale;
+        b.y = tipPosY - worldTipY * b.scale;
+
+        if (!b.spawnedCircle) {
+          const dx = mouse.x - tipPosX;
+          const dy = mouse.y - tipPosY;
+
+          if (dx * dx + dy * dy <= 300 * 300) {
+            checkDeath("Celestial");
+          }
+
+          s.circles.push({
+            x: tipPosX,
+            y: tipPosY,
+            r: 300,
+            t: 0,
+          });
+          shakeScreen();
+
+          s.cutters[i].cx = tipPosX;
+          s.cutters[i].cy = tipPosY;
+
+          b.spawnedCircle = true;
+        }
+      }
+    }
+
+    for (const c of s.circles) {
+      c.t += dt;
+      const p = Math.min(1, c.t / 1);
+      const eased = p * p;
+      c.r = 300 * (1 - eased);
+    }
+    s.circles = s.circles.filter((c) => c.r > 0);
+
+    if (s.t >= 3) {
+      const mx = mouse.x;
+      const my = mouse.y;
+      for (let i = 0; i < 3; i++) {
+        stateSuperPizzaCutterImplosion.cutters[i].t += dt;
+
+        if (!stateSuperPizzaCutterImplosion.cutters[i].spawned) {
+          stateSuperPizzaCutterImplosion.cutters[i].spokes.push(
+            spawnPizza(
+              stateSuperPizzaCutterImplosion.cutters[i],
+              s.lastStartAng * Math.PI * 4,
+            ),
+          );
+          s.lastStartAng *= -1;
+          if (i == 0) {
+            for (let i = 0; i < (casualMode ? 200 : 300); i++) {
+              stateSuperPizzaCutterImplosion.crumbles.push(
+                spawnCircle(Math.random() < 0.5 ? 1.5 : 1, 2000),
+              );
+            }
+          }
+          stateSuperPizzaCutterImplosion.cutters[i].spawned = true;
+        }
+
+        for (const s of stateSuperPizzaCutterImplosion.cutters[i].spokes) {
+          s.t += dt;
+
+          const p = Math.min(s.t / 4, 1);
+          if (p < 1) {
+            const cursorAngle = Math.atan2(my - s.y, mx - s.x);
+            let angleDiff = cursorAngle - s.targetAngle;
+            if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            const turnSpeed = 0.1;
+            s.targetAngle += angleDiff * Math.min(1, dt * turnSpeed);
+          }
+          const eased = 1 - (1 - p) * (1 - p);
+          s.angle = s.startAngle + (s.targetAngle - s.startAngle) * eased;
+
+          if (s.t >= 4 && s.t < 4.5) {
+            const len = 20000;
+            const w = 90;
+
+            const dx = mx - s.x;
+            const dy = my - s.y;
+
+            for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+              const angle = s.angle + i * (Math.PI / (casualMode ? 3 : 4));
+
+              const cos = Math.cos(-angle);
+              const sin = Math.sin(-angle);
+
+              const rx = dx * cos - dy * sin;
+              const ry = dx * sin + dy * cos;
+
+              const halfLen = len;
+              const halfW = w / 2;
+
+              if (Math.abs(rx) < halfLen && Math.abs(ry) < halfW) {
+                checkDeath("Celestial");
+                break;
+              }
+            }
+          }
+          if (s.t >= 4.5) {
+            s.offset += dt * 10000;
+          }
+          if (s.t > 5) {
+            s.active = false;
+          }
+        }
+      }
+
+      let needsCompact = false;
+      for (const c of stateSuperPizzaCutterImplosion.crumbles) {
+        c.t += dt;
+
+        if (c.t < 4) {
+          const dx = mx - c.tx;
+          const dy = my - c.ty;
+          const followSpeed = 0.1;
+          const followAmount = Math.min(1, dt * followSpeed);
+          c.tx += dx * followAmount;
+          c.ty += dy * followAmount;
+          const p = c.t / 4;
+
+          const eased = 1 - (1 - p) * (1 - p);
+
+          c.x = c.sx + (c.tx - c.sx) * eased;
+          c.y = c.sy + (c.ty - c.sy) * eased;
+        }
+
+        if (c.t < 0.5) {
+          const p = c.t / 0.5;
+          const eased = 1 - (1 - p) * (1 - p);
+          c.r = c.targetR * eased;
+        } else if (c.t < 4) {
+          c.r = c.targetR;
+        } else {
+          if (!c.shake) {
+            c.shake = true;
+            shakeScreen();
+            stateSuperPizzaCutterImplosion.explosions.push({
+              x: c.x,
+              y: c.y,
+              r: c.targetR,
+              t: 0,
+              rot: Math.random(),
+              s: Math.floor(10 + Math.random() * 11),
+            });
+          }
+          c.r = c.targetR * (1 - Math.min(c.t - 4, 1));
+          if (c.r <= 0) {
+            c.active = false;
+            needsCompact = true;
+          }
+        }
+
+        if (c.t >= 4 && c.t <= 4.25 && c.r >= 0) {
+          const dx = mx - c.x;
+          const dy = my - c.y;
+          if (dx * dx + dy * dy <= c.r * c.r) {
+            checkDeath("Celestial");
+          }
+        }
+      }
+      if (needsCompact) compact(stateSuperPizzaCutterImplosion.crumbles);
+    }
+
+    if (!s.prevMouse) {
+      s.prevMouse = { x: mx, y: my };
+    }
+    const vx = mx - s.prevMouse.x;
+    const vy = my - s.prevMouse.y;
+    s.prevMouse.x = mx;
+    s.prevMouse.y = my;
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      s.lastDirX = vx / len;
+      s.lastDirY = vy / len;
+    }
+
+    s.spawnTimer += dt;
+
+    const interval = 1 / 15;
+    while (s.spawnTimer >= interval && s.spawnedImp < 15) {
+      s.spawnTimer -= interval;
+      s.spawnedImp++;
+      s.circlesImp.push(spawnImplosionCircle());
+    }
+
+    let needsCompactImp = false;
+    for (const c of s.circlesImp) {
+      c.t += dt;
+      c.rotation += dt * (c.phase === 2 ? 24 : (Math.PI * 2) / 1.5);
+      if (c.phase <= 1) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+        const followSpeed = 0.1;
+        const followAmount = Math.min(1, dt * followSpeed);
+        c.x += dx * followAmount;
+        c.y += dy * followAmount;
+      }
+      c.opacity += dt * 4;
+
+      if (c.t < 0.25) {
+        c.r = 5;
+      } else if (c.t < 1.5) {
+        const p = (c.t - 0.25) / 1.25;
+        const eased = p * p * (3 - 2 * p);
+        c.r = c.targetR * eased;
+        c.phase = 1;
+      } else {
+        if (!c.shake) {
+          c.shake = true;
+          shakeScreen();
+          playSound(
+            `./ASSET/Sound/Enemies/Celestial/Cease/Cease_Impact.ogg`,
+            4,
+          );
+        }
+        if (c.phase < 2) {
+          c.burstT = 0;
+        }
+        c.phase = 2;
+        c.burstT += dt;
+        c.r -= dt * 600;
+        if (c.r <= 0) {
+          c.active = false;
+          needsCompactImp = true;
+        }
+      }
+
+      if (c.phase === 2) {
+        const dx = mx - c.x;
+        const dy = my - c.y;
+
+        const hitR = c.r * 1.1;
+
+        if (dx * dx + dy * dy <= hitR * hitR) {
+          checkDeath("Celestial");
+        }
+      }
+    }
+    if (needsCompactImp) compact(s.circlesImp);
+  }
+  function drawSuperPizzaCutterImplosion(ctx) {
+    const s = stateSuperPizzaCutterImplosion;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeGlowCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      const glowSize = 100;
+      const glow = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glowSize);
+      glow.addColorStop(0, "rgba(255,0,192,1)");
+      glow.addColorStop(1, "rgba(255,0,192,0)");
+
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r + glowSize, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.strokeStyle = "#ff00cc";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+            const w = isLethal ? 90 : 100;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? Math.min(0, (5 - sp.t) * 4) : 1;
+
+              const drawX = Math.max(x, sp.offset);
+              const glow = 100;
+
+              const gradTop = ctx.createLinearGradient(
+                0,
+                -w / 2 - glow,
+                0,
+                -w / 2,
+              );
+              gradTop.addColorStop(0, "rgba(255,0,192,0)");
+              gradTop.addColorStop(1, "rgba(255,0,192,1)");
+
+              ctx.fillStyle = gradTop;
+              ctx.fillRect(drawX, -w / 2 - glow, len, glow);
+
+              const gradBot = ctx.createLinearGradient(
+                0,
+                w / 2,
+                0,
+                w / 2 + glow,
+              );
+              gradBot.addColorStop(0, "rgba(255,0,192,1)");
+              gradBot.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = gradBot;
+              ctx.fillRect(drawX, w / 2, len, glow);
+
+              const leftGrad = ctx.createLinearGradient(
+                drawX - glow,
+                0,
+                drawX,
+                0,
+              );
+              leftGrad.addColorStop(0, "rgba(255,0,192,0)");
+              leftGrad.addColorStop(1, "#ff00cc");
+
+              ctx.fillStyle = leftGrad;
+              ctx.fillRect(drawX - glow, -w / 2 - 1, glow, w + 2);
+
+              const rightGrad = ctx.createLinearGradient(
+                drawX + len,
+                0,
+                drawX + len + glow,
+                0,
+              );
+              rightGrad.addColorStop(0, "#ff00cc");
+              rightGrad.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = rightGrad;
+              ctx.fillRect(drawX + len, -w / 2 - 1, glow, w + 2);
+
+              const points = [
+                [drawX, -w / 2, -0.9983, -1.0083],
+                [drawX + len, -w / 2, -0.0017, -1.0083],
+                [drawX, w / 2, -0.9983, 0.0083],
+                [drawX + len, w / 2, -0.0017, 0.0083],
+              ];
+
+              for (const [px, py, ox, oy] of points) {
+                const grad = ctx.createRadialGradient(px, py, 0, px, py, glow);
+
+                grad.addColorStop(0, "#ff00cc");
+                grad.addColorStop(1, "rgba(255,0,192,0)");
+
+                ctx.fillStyle = grad;
+                ctx.fillRect(px + ox * glow, py + oy * glow, glow, glow);
+              }
+
+              ctx.strokeStyle = "#ff00cc";
+              ctx.lineWidth = 1;
+              ctx.strokeRect(drawX, -w / 2, len, w);
+            } else if (i < (casualMode ? 3 : 4)) {
+              ctx.globalAlpha =
+                sp.t < 0.25 && statePizzaCutterCrumble.cycle == 0
+                  ? sp.t * 3
+                  : 0.75;
+
+              const grad = ctx.createLinearGradient(0, -w / 2, 0, w / 2);
+              grad.addColorStop(0, "rgba(255,0,192,0)");
+              grad.addColorStop(0.45, "#ff00cc");
+              grad.addColorStop(0.55, "#ff00cc");
+              grad.addColorStop(1, "rgba(255,0,192,0)");
+
+              ctx.fillStyle = grad;
+              ctx.fillRect(x, -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t >= 4 && c.r >= 0) {
+          const glow = 100;
+
+          const grad = ctx.createRadialGradient(0, 0, c.r, 0, 0, c.r + glow);
+          grad.addColorStop(0, "rgba(255,0,192,1)");
+          grad.addColorStop(1, "rgba(255,0,192,0)");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r + glow, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "#ff00cc";
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = "transparent";
+        }
+
+        ctx.restore();
+      }
+    }
+
+    for (const c of s.circlesImp) drawImplosionCircleBack(ctx, c);
+  }
+  function drawSuperPizzaCutterImplosionFront(ctx) {
+    const s = stateSuperPizzaCutterImplosion;
+
+    for (const b of s.blades) {
+      ctx.save();
+
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.angle);
+      ctx.scale(b.scale, b.scale);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(bladeCanvas, -1100, -1100);
+
+      ctx.restore();
+    }
+    for (const c of s.circles) {
+      ctx.save();
+
+      ctx.translate(c.x, c.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    if (s.t > 3) {
+      for (let i = 0; i < 3; i++) {
+        for (const sp of s.cutters[i].spokes) {
+          ctx.save();
+
+          ctx.translate(sp.x, sp.y);
+          ctx.rotate(sp.angle);
+
+          const isLethal = sp.t >= 4;
+
+          for (let i = 0; i < (casualMode ? 6 : 8); i++) {
+            ctx.rotate(Math.PI / (casualMode ? 3 : 4));
+
+            const w = 90;
+            const dx = mouse.x - sp.x;
+            const dy = mouse.y - sp.y;
+
+            const cos = Math.cos(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+            const sin = Math.sin(
+              -(sp.angle + i * (Math.PI / (casualMode ? 3 : 4))),
+            );
+
+            const rx = dx * cos - dy * sin;
+            const x = rx - BEAM_RADIUS;
+            const len = BEAM_RADIUS * 2;
+
+            if (isLethal) {
+              ctx.globalAlpha = sp.t >= 4.75 ? (5 - sp.t) * 4 : 1;
+              ctx.beginPath();
+              ctx.fillStyle = "black";
+              ctx.fillRect(Math.max(x, sp.offset), -w / 2, len, w);
+            }
+          }
+
+          ctx.restore();
+        }
+      }
+      for (const e of s.explosions) {
+        const r = e.r * (1 - Math.pow(e.t, 5));
+        const spikes = e.s;
+        ctx.save();
+        ctx.translate(e.x, e.y);
+        ctx.rotate(e.rot * Math.PI * 2);
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        for (let i = 0; i < spikes; i++) {
+          const a = (i / spikes) * Math.PI * 2;
+          const inner = r * 0.667;
+          const outer = r * 0.833;
+          ctx.lineTo(Math.cos(a) * inner, Math.sin(a) * inner);
+          ctx.lineTo(
+            Math.cos(a + Math.PI / spikes) * outer,
+            Math.sin(a + Math.PI / spikes) * outer,
+          );
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      for (const c of s.crumbles) {
+        ctx.save();
+
+        ctx.translate(c.x, c.y);
+
+        const alpha = c.t < 4 ? 0.5 : 1;
+        ctx.globalAlpha = alpha;
+
+        if (c.t < 4) {
+          const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, c.r);
+          grad.addColorStop(0, "black");
+          grad.addColorStop(1, "#ff00cc");
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (c.r >= 0) {
+          ctx.fillStyle = "black";
+          ctx.beginPath();
+          ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    for (const c of s.circlesImp) drawImplosionCircleFront(ctx, c);
   }
 
   const stateSuperPizzaCutter3StarsBreakerBeams = {
