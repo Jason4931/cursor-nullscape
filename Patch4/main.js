@@ -2382,7 +2382,9 @@ function placeSuper(sx, sy, pattern) {
       }
 
       const isTripmineEnabled =
-        !disableTripmine && !casualMode && collectedCount > 500;
+        !disableTripmine &&
+        !casualMode &&
+        actualCollectedCount > (hardMode ? 300 : 500);
 
       if (
         pattern[y][x] === 2 ||
@@ -2406,15 +2408,11 @@ function placeSuper(sx, sy, pattern) {
             r <
             (tripmineHell
               ? Math.min(
-                  hardMode
-                    ? 0.000125 * (collectedCount - 500)
-                    : 0.00025 * (collectedCount - 500),
+                  0.00025 * (actualCollectedCount - (hardMode ? 300 : 500)),
                   0.5, // 0-50%
                 )
               : Math.min(
-                  hardMode
-                    ? 0.00005 * (collectedCount - 500)
-                    : 0.0001 * (collectedCount - 500),
+                  0.00005 * (actualCollectedCount - (hardMode ? 300 : 500)),
                   0.05, // 0-5%
                 ))
           )
@@ -3054,7 +3052,8 @@ function updateCamera() {
       if (!withinRadius) {
         g.tripmineEnteredAt = null;
       } else {
-        if (g.tripmineEnteredAt == null) g.tripmineEnteredAt = performance.now();
+        if (g.tripmineEnteredAt == null)
+          g.tripmineEnteredAt = performance.now();
         if (performance.now() - g.tripmineEnteredAt < 100) continue;
       }
     }
