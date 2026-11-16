@@ -34,7 +34,6 @@ import {
   mouse,
   death,
   toggleToggleDeath,
-  toggleTripmineLeniency,
   toggleImmortality,
   shieldActive,
   activateShield,
@@ -2966,9 +2965,6 @@ function updateCamera() {
     edgeMultiplier = drunkCamera ? 1.5 : 1;
   }
   dynamicHitRadius = HIT_RADIUS * lagFactor * (1 + edgeFactor * edgeMultiplier);
-  toggleTripmineLeniency(
-    Math.max(0, Math.min(1, edgeFactor * edgeMultiplier)) * 0.5,
-  );
 
   const motionScale = reducedMotion ? 0.5 : 1;
   const slowScale = slowness ? 0.333 : 1;
@@ -3051,9 +3047,19 @@ function updateCamera() {
     const dx = g.x + TILE / 2 - mouse.x;
     const dy = g.y + TILE / 2 - mouse.y;
 
-    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.25 : dynamicHitRadius;
+    const radius = g.type === "tripmine" ? GIFT_SIZE * 0.5 : dynamicHitRadius;
+    const withinRadius = dx * dx + dy * dy < radius * radius;
 
-    if (dx * dx + dy * dy < radius * radius) {
+    if (g.type === "tripmine") {
+      if (!withinRadius) {
+        g.tripmineEnteredAt = null;
+      } else {
+        if (g.tripmineEnteredAt == null) g.tripmineEnteredAt = performance.now();
+        if (performance.now() - g.tripmineEnteredAt < 100) continue;
+      }
+    }
+
+    if (withinRadius) {
       giftPositions.splice(i, 1);
 
       if (g.type === "tripmine") {

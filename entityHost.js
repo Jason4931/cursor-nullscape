@@ -476,7 +476,6 @@ let immortality = false;
 let springerImmortality = false;
 let bellLeniency = false;
 let tripmineLeniency = false;
-let tripmineCustomLeniency = 0;
 export let shieldLostMsg = [null, 0];
 export let shieldActive = [false, false, false, false, false];
 export let shieldBroken = [false, false, false, false, false];
@@ -518,8 +517,7 @@ export function toggleBellLeniency(state) {
   bellLeniency = state;
 }
 export function toggleTripmineLeniency(state) {
-  if (typeof state === "number") tripmineCustomLeniency = state;
-  else if (typeof state === "boolean") tripmineLeniency = state;
+  tripmineLeniency = state;
 }
 let lastdeathName = null;
 let lastdeathTime = null;
@@ -553,9 +551,6 @@ export function death(name = "Unknown", color = "#f70000") {
   }
   if (name === "Tripmine") {
     if (tripmineLeniency && Math.random() < 0.667) return;
-    if (tripmineCustomLeniency && Math.random() < tripmineCustomLeniency)
-      return;
-    if (Math.random() < 0.1) return;
   }
   if (name == "Void" || name == "VoidImplosions" || name == "Visage") {
     if (shieldActive[0]) {
