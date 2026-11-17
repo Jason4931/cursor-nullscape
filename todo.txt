@@ -11,16 +11,15 @@ v telefragger
 v kolona
 v voidbound baby
 v cadence
-v sigil
+v sigil (revamp indicator)
 v voidbreaker
 v voidbound guardian
 v scrapmaw
 v random
 v void implosion
-v oblivion
-v razorbloom (need revamp)
+v oblivion (revamp bg + indicator)
+v razorbloom
 v malfunction
-
 x voidbound icbm
 v red mart
 x ouroboros
@@ -58,7 +57,7 @@ v Fast springer
 v cascade
 v corrupted
 v black hole
-x frame
+x frame (need sprite)
 
 v hazard
 v seamine
@@ -73,4 +72,4 @@ v celestial outro
 v altars
 
 v catalyst
-v celestial (no extreme yet)
+v celestial

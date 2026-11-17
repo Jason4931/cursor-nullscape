@@ -467,7 +467,7 @@ const ENTITY_POOL = [
   },
   {
     name: "Oblivion",
-    spawn: () => spawnOblivion(entityHost, showFloor),
+    spawn: () => spawnOblivion(entityHost, showFloor, casualMode, hardMode),
     start: 2000,
     src: "./ASSET/Curses/Oblivion.png",
     unstackable: true,
@@ -5702,7 +5702,7 @@ function updateCamera() {
       } else {
         if (g.tripmineEnteredAt == null)
           g.tripmineEnteredAt = performance.now();
-        if (performance.now() - g.tripmineEnteredAt < 100) continue;
+        if (performance.now() - g.tripmineEnteredAt < 50) continue;
       }
     }
 

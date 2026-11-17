@@ -3054,7 +3054,7 @@ function updateCamera() {
       } else {
         if (g.tripmineEnteredAt == null)
           g.tripmineEnteredAt = performance.now();
-        if (performance.now() - g.tripmineEnteredAt < 100) continue;
+        if (performance.now() - g.tripmineEnteredAt < 50) continue;
       }
     }
 

@@ -14,12 +14,12 @@ function loadAssets() {
     "./ASSET/Curses/Oblivion_Convergence_Particles.png";
 }
 
-export function setup(host, showFloor) {
+export function setup(host, showFloor, casualMode, hardMode) {
   loadAssets();
   const state = {
     time: 0,
     phase: 3,
-    duration: 29 + Math.random(),
+    duration: 60 + Math.random() * 60,
     opacity: 1,
     init: true,
     offFloorTime: 0,
@@ -52,13 +52,13 @@ export function setup(host, showFloor) {
         const t = Math.min(state.offFloorTime / 2, 1);
         state.sound = playSound(
           "./ASSET/Sound/Enemies/Oblivion/Oblivion_Active_In-Game.ogg",
-          (showFloor ? 1 : 0.667) * 1.25,
+          (showFloor ? 1 : 0.667) * 1.25 * (casualMode ? 0.667 : hardMode ? 1 : 0.8),
           { start: t, end: 1 },
         );
       }
       if (!isCursorOnFloor()) {
         state.offFloorTime += (showFloor ? 1 : 0.667) * dt;
-        if (state.offFloorTime >= 2 && !state.death) {
+        if (state.offFloorTime >= (casualMode ? 3 : hardMode ? 2 : 2.5) && !state.death) {
           state.death = true;
           death("Oblivion");
           state.time = 100;
@@ -103,7 +103,7 @@ export function setup(host, showFloor) {
         setOblivionActive(0);
         state.phase = 2;
         state.time = 0;
-        state.duration = 29 + Math.random();
+        state.duration = 60 + Math.random() * 60;
       }
     } else if (state.phase === 2) {
       state.opacity = 0;

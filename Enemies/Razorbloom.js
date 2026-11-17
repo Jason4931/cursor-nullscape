@@ -129,6 +129,14 @@ export function setup(host, hardMode) {
 
       if (state.timer >= WARNING_TIME && !state.death) {
         state.death = true;
+        playSound(
+          "./ASSET/Sound/Enemies/Razorbloom/Razorbloom_ripping_head_off.ogg",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          true,
+        );
         death("Razorbloom");
       }
       return;

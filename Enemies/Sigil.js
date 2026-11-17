@@ -372,7 +372,11 @@ export function setup(host) {
       }
       ctx.restore();
 
-      if (state.phase === "indicator") {
+      if (
+        state.phase === "indicator" ||
+        state.phase === "fire" ||
+        state.phase === "shrink"
+      ) {
         const glow = ctx.createRadialGradient(
           mouse.x,
           mouse.y,
@@ -386,7 +390,8 @@ export function setup(host) {
         glow.addColorStop(1, "rgba(255,255,0,0)");
 
         ctx.save();
-        ctx.globalAlpha = state.beamAlpha;
+        ctx.globalAlpha =
+          state.beamAlpha * (state.phase === "shrink" ? state.w / 100 : 1);
         ctx.fillStyle = glow;
 
         ctx.beginPath();
