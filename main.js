@@ -91,7 +91,10 @@ import { setup as spawnRealityCollapse } from "./Enemies/RealityCollapse.js";
 import { setup as spawnGrindrail } from "./Enemies/Grindrail.js";
 import { lostEmbersActive, setup as spawnKolona } from "./Enemies/Kolona.js";
 import { setup as spawnVoidImplosions } from "./Enemies/VoidImplosions.js";
-import { setup as spawnOblivion } from "./Enemies/Oblivion.js";
+import {
+  setup as spawnOblivion,
+  Oblivion_Rift_Animation,
+} from "./Enemies/Oblivion.js";
 import { setup as spawnRazorbloom } from "./Enemies/Razorbloom.js";
 import { setup as spawnPonderer } from "./Enemies/Ponderer.js";
 import {
@@ -254,6 +257,8 @@ let lastCursorInfectAt = 0;
 let huskCount = 0;
 let highestEntitySpawned = [];
 let OblivionActive = 0;
+let OblivionDissapear = false;
+let riftFrame = 0;
 let scrollOblivion = 0;
 let celestialBG = false;
 let scrollCelestial = 0;
@@ -298,8 +303,9 @@ export function RedMartStack(act, v) {
     redMartStack = v;
   }
 }
-export function setOblivionActive(v) {
+export function setOblivionActive(v, dissapear = false) {
   OblivionActive = v;
+  OblivionDissapear = dissapear;
 }
 export function setVoidScale(v) {
   voidScale = v;
@@ -4350,6 +4356,31 @@ function drawGrid() {
       window.innerHeight,
     );
     ctx.restore();
+    if (Oblivion_Rift_Animation.length && !uldm) {
+      riftFrame = (riftFrame + 1) % Oblivion_Rift_Animation.length;
+      const rift = Oblivion_Rift_Animation[riftFrame];
+      if (rift && rift.complete && rift.naturalWidth) {
+        let exit = 0;
+        if (OblivionDissapear) {
+          exit = Math.min(1, Math.max(0, (1 - OblivionActive) * 2));
+        }
+        const eased = exit * exit;
+        const appearT = 1 - Math.sqrt(Math.max(0, 1 - OblivionActive));
+        const growT = OblivionDissapear ? 1 : Math.min(1, appearT / 0.1);
+        const grow = 1 - (1 - growT) * (1 - growT);
+        const scale = (window.innerHeight / 512) * grow * (1 - eased);
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.translate(
+          -camX + window.innerWidth / 2,
+          -camY + window.innerHeight / 2,
+        );
+        ctx.rotate(eased * Math.PI);
+        ctx.scale(scale, scale);
+        ctx.drawImage(rift, -256, -256, 512, 512);
+        ctx.restore();
+      }
+    }
   }
 
   // Floors (existing culling is fine, but ensure RENDER_RADIUS isn't too large)

@@ -11,13 +11,13 @@ v telefragger
 v kolona
 v voidbound baby
 v cadence
-v sigil (revamp indicator)
+v sigil
 v voidbreaker
 v voidbound guardian
 v scrapmaw
 v random
 v void implosion
-v oblivion (revamp bg + indicator)
+v oblivion
 v razorbloom
 v malfunction
 x voidbound icbm
