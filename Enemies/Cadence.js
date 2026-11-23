@@ -38,6 +38,7 @@ async function loadAssets() {
   harp.src = "./ASSET/Misc/Harp.png";
 }
 
+export const instrumentToSpawn = [0];
 export function setup(host, hardMode, deafMode) {
   loadAssets();
 
@@ -195,8 +196,9 @@ export function setup(host, hardMode, deafMode) {
     }
 
     if (state.mode === "idle") {
-      if (state.timer >= state.nextDelay) {
+      if (state.timer >= state.nextDelay || instrumentToSpawn[0] > 0) {
         if (state.instruments.length < (hardMode ? 2 : 3)) {
+          instrumentToSpawn[0] = Math.max(0, instrumentToSpawn[0] - 1);
           spawnInstrument();
           rollDelay();
         } else {

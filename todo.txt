@@ -69,7 +69,19 @@ v pylons
 v reality collapse
 v celestial intro
 v celestial outro
-v altars
 
 v catalyst
 v celestial
+
+v altarChance [gamble]
+v altarChaos [1 chaos enemy, +1 yield]
+x AltarEcho [echo altars]
+x AltarPassage [15 passage tiles]
+v AltarProtection [1 shield, -1000 gift]
+v AltarPurgatory [5 temp enemy, +2 yield]
+v AltarPurification [exchange 1 enemy, -{enemystart} gift]
+x AltarDuality [grants hope, useable once]
+x AltarCurses [1 temp enemy, +0.5 yield]
+x AltarWishes [wish altars]
+x AltarReroll [next spawned is basic enemy]
+x AltarPerfection [3 temp enemy, +1000 gift]

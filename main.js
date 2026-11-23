@@ -102,7 +102,7 @@ import {
   bladeBombardmentActive,
   setup as spawnVoidbreaker,
 } from "./Enemies/Voidbreaker.js";
-import { setup as spawnCadence } from "./Enemies/Cadence.js";
+import { instrumentToSpawn, setup as spawnCadence } from "./Enemies/Cadence.js";
 import { setup as spawnEvilCadence } from "./Enemies/EvilCadence.js";
 import { setup as spawnWega } from "./Enemies/Wega.js";
 import { setup as spawnTerminusGaze } from "./Enemies/TerminusGaze.js";
@@ -1824,7 +1824,11 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     for (const altar of altars) {
       if (input === altar.name) {
-        altar.activate();
+        for (let i = 0; i < spawnCount; i++) {
+          setTimeout(() => {
+            altar.activate();
+          }, i * 100);
+        }
         topLeftInput.value = "";
         break;
       }
@@ -3575,13 +3579,13 @@ export function activateChance(mode = "normal", outcome = null) {
   let resultDet;
   if (!outcome) outcome = Math.random() < 0.5 ? "positive" : "negative";
   if (outcome == "positive") {
-    if (mode == "tweak") {
+    if (mode == "tweak" || casualMode) {
       chance = 1 + Math.floor(Math.random() * 3);
     } else {
       chance = 0 + Math.floor(Math.random() * 4);
     }
   } else if (outcome == "negative") {
-    chance = 4 + Math.floor(Math.random() * 8);
+    chance = 4 + Math.floor(Math.random() * 9);
   }
   switch (chance) {
     case 0:
@@ -3643,23 +3647,6 @@ export function activateChance(mode = "normal", outcome = null) {
       activateShield();
       break;
     case 4:
-      // Payment 1000 Gift
-      actualCollectedCount -= mode == "high" ? 2000 : 1000;
-      collectedCount = hardMode
-        ? actualCollectedCount
-        : Math.floor(actualCollectedCount / 2);
-      if (
-        latestCollectedCount >= (hardMode ? 10000 : 5000) &&
-        latestCollectedCount <= (hardMode ? 12500 : 6250)
-      ) {
-        counterEl.textContent = `Gift(s) Collected: ${-12500 + Math.floor(Math.random() * 25000)}`;
-        lvlEl.textContent = `lvl 100`;
-      } else {
-        counterEl.textContent = `Gift(s) Collected: ${actualCollectedCount}`;
-        lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
-      }
-      break;
-    case 5:
       // Martpocalypse
       for (let i = 0; i < 6; i++) {
         const unregister = spawnMart(
@@ -3672,16 +3659,16 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 6:
+    case 5:
       // 2 Random Enemies
       for (let i = 0; i < (mode == "high" ? 4 : 2); i++) ENTITY_SPAWN(true);
       break;
-    case 7:
+    case 6:
       // Mart and Springer
       fasterMart[0]++;
       fasterSpringer[0]++;
       break;
-    case 8:
+    case 7:
       // It's Here
       for (let i = 0; i < (mode == "high" ? 3 : 1); i++) {
         const unregister = spawnSpringer(entityHost, hardMode, 3);
@@ -3690,7 +3677,7 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 9:
+    case 8:
       // 40-60% Less Jump Pads
       const percentJ = mode == "high" ? 1 : 0.4 + Math.random() * 0.2;
       resultDet = `${Math.round(percentJ * 100)}`;
@@ -3720,7 +3707,7 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 10:
+    case 9:
       // 40-60% More Seamines
       const percentS = (mode == "high" ? 1 : 0.4) + Math.random() * 0.2;
       resultDet = `${Math.round(percentS * 100)}`;
@@ -3731,7 +3718,7 @@ export function activateChance(mode = "normal", outcome = null) {
         }, 60000);
       }
       break;
-    case 11:
+    case 10:
       // Oops, all Flesh!
       fleshPositions.add({
         x: 0,
@@ -3745,6 +3732,15 @@ export function activateChance(mode = "normal", outcome = null) {
           unregister();
         }, 60000);
       }
+      break;
+    case 11:
+      // -0.25x Gift Multiplier
+      let minus = mode == "high" ? 0.5 : 0.25;
+      giftMultiplier -= minus;
+      break;
+    case 12:
+      // Oh The Symphony (1 instrument)
+      instrumentToSpawn[0] = mode == "high" ? 2 : 1;
       break;
   }
   return [chance, resultDet];
