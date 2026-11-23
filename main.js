@@ -267,6 +267,34 @@ let highestEntitySpawned = [];
 let OblivionActive = 0;
 let OblivionDissapear = false;
 let riftFrame = 0;
+const RIFT_GLOW_SIZE = 768;
+let riftGlowCanvas = null;
+function getRiftGlowCanvas() {
+  if (riftGlowCanvas) return riftGlowCanvas;
+  const source = Oblivion_Rift_Animation[0];
+  if (!source || !source.complete || !source.naturalWidth) return null;
+  const glow = document.createElement("canvas");
+  glow.width = RIFT_GLOW_SIZE;
+  glow.height = RIFT_GLOW_SIZE;
+  const gctx = glow.getContext("2d");
+  const offset = (RIFT_GLOW_SIZE - 512) / 2;
+  for (
+    let i = 40;
+    i >= 4;
+    i -= 4
+  ) {
+    gctx.filter = `blur(${i}px)`;
+    gctx.globalAlpha = 1;
+    gctx.drawImage(source, offset, offset, 512, 512);
+  }
+  gctx.filter = "none";
+  gctx.globalCompositeOperation = "source-in";
+  gctx.fillStyle = "#f0f";
+  gctx.fillRect(0, 0, RIFT_GLOW_SIZE, RIFT_GLOW_SIZE);
+  gctx.globalCompositeOperation = "source-over";
+  riftGlowCanvas = glow;
+  return riftGlowCanvas;
+}
 let scrollOblivion = 0;
 let celestialBG = false;
 let scrollCelestial = 0;
@@ -4388,9 +4416,9 @@ function drawGrid() {
         }
         const eased = exit * exit;
         const appearT = 1 - Math.sqrt(Math.max(0, 1 - OblivionActive));
-        const growT = OblivionDissapear ? 1 : Math.min(1, appearT / 0.1);
+        const growT = OblivionDissapear ? 1 : Math.min(1, appearT / 0.05);
         const grow = 1 - (1 - growT) * (1 - growT);
-        const scale = (window.innerHeight / 512) * grow * (1 - eased);
+        const scale = ((window.innerHeight * 1.25) / 512) * grow * (1 - eased);
         ctx.save();
         ctx.globalAlpha = 1;
         ctx.translate(
@@ -4399,6 +4427,13 @@ function drawGrid() {
         );
         ctx.rotate(eased * Math.PI);
         ctx.scale(scale, scale);
+        const glow = getRiftGlowCanvas();
+        if (glow) {
+          ctx.save();
+          ctx.globalAlpha = 0.5;
+          ctx.drawImage(glow, -RIFT_GLOW_SIZE / 2, -RIFT_GLOW_SIZE / 2, RIFT_GLOW_SIZE, RIFT_GLOW_SIZE);
+          ctx.restore();
+        }
         ctx.drawImage(rift, -256, -256, 512, 512);
         ctx.restore();
       }

@@ -59,21 +59,27 @@ export function setup(host, showFloor, casualMode, hardMode) {
     meter: null,
     meterLayer: 0,
     miscParticleLayers: Oblivion_misc_particle,
-    miscParticle: null,
-    miscParticleLayer: 0,
-    miscParticleX: 0,
-    miscParticleY: 0,
-    miscParticleRot: 0,
+    miscParticles: [],
+    miscTick: 0,
 
     particleOffsetY: 0,
   };
-  function randomizeMiscParticlePosition() {
+  function randomizeMiscParticlePosition(particle) {
     const cam = getCameraPos();
-    state.miscParticleX = cam.x + Math.random() * window.innerWidth - 128;
-    state.miscParticleY = cam.y + Math.random() * window.innerHeight - 128;
-    state.miscParticleRot = Math.PI * 2 * Math.random();
+    particle.x = cam.x + Math.random() * window.innerWidth - 128;
+    particle.y = cam.y + Math.random() * window.innerHeight - 128;
+    particle.rot = Math.PI * 2 * Math.random();
   }
-  randomizeMiscParticlePosition();
+  for (let i = 0; i < 5; i++) {
+    const particle = {
+      img: null,
+      x: 0,
+      y: 0,
+      rot: 0,
+    };
+    randomizeMiscParticlePosition(particle);
+    state.miscParticles.push(particle);
+  }
   function update(dt) {
     if (state.phase === 0) {
       const speed = 1000 + state.offFloorTime * 1000;
@@ -81,12 +87,16 @@ export function setup(host, showFloor, casualMode, hardMode) {
     } else {
       state.particleOffsetY = 0;
     }
-    state.miscParticleLayer++;
-    if (state.miscParticleLayer > state.miscParticleLayers.length) {
-      state.miscParticleLayer = 1;
-      randomizeMiscParticlePosition();
+    state.miscTick++;
+    if (state.miscParticleLayers.length) {
+      for (let i = 0; i < state.miscParticles.length; i++) {
+        const particle = state.miscParticles[i];
+        const frame =
+          (state.miscTick + i * 3) % state.miscParticleLayers.length;
+        if (frame === 0) randomizeMiscParticlePosition(particle);
+        particle.img = state.miscParticleLayers[frame];
+      }
     }
-    state.miscParticle = state.miscParticleLayers[state.miscParticleLayer - 1];
     state.time += dt;
     if (state.deathVfxTime >= 0) {
       state.deathVfxTime += dt;
@@ -204,8 +214,10 @@ export function setup(host, showFloor, casualMode, hardMode) {
     );
     state.meter = state.meterLayers[state.meterLayer - 1];
     if (state.phase === 3) {
-      if (state.time < 1) state.meterShake = 6 * Math.max(0, 1 - state.time);
-      else state.meterShake = 12 * Math.max(0, 2 - state.time);
+      if (state.time < 0.9)
+        state.meterShake = 6 * Math.max(0, 1 - state.time / 0.9);
+      else if (state.time < 1) state.meterShake = 0;
+      else state.meterShake = 12 * Math.max(0, 1 - (state.time - 1) / 0.9);
     } else if (state.phase === 4) {
       state.meterShake = state.time < 2 ? 18 * (1 - state.time / 2) : 0;
     } else if (state.phase === 0) {
@@ -257,12 +269,14 @@ export function setup(host, showFloor, casualMode, hardMode) {
     if (state.phase === 4 || state.phase === 0) miscAlpha = 0.5;
     else if (state.phase === 1) miscAlpha = 0.5 * Math.max(0, 1 - state.time);
     if (miscAlpha > 0 && !uldm) {
-      ctx.save();
       ctx.globalAlpha = miscAlpha;
-      ctx.translate(state.miscParticleX, state.miscParticleY);
-      ctx.rotate(state.miscParticleRot);
-      ctx.drawImage(state.miscParticle, 0, 0);
-      ctx.restore();
+      for (const particle of state.miscParticles) {
+        ctx.save();
+        ctx.translate(particle.x, particle.y);
+        ctx.rotate(particle.rot);
+        if (particle.img) ctx.drawImage(particle.img, 0, 0);
+        ctx.restore();
+      }
     }
     let meterAlpha = 0;
     if (state.phase === 3 || state.phase === 4 || state.phase === 0)
