@@ -10,13 +10,15 @@ import {
 } from "../main.js";
 
 const Sigil = [];
+const Indicator = new Image();
 function loadAssets() {
   if (Sigil.length) return;
   for (let i = 1; i <= 75; i++) {
     const img = new Image();
-    img.src = `./ASSET/Enemies/Sigil/Layer ${i}.png`;
+    img.src = `./ASSET/Enemies/Sigil/SigilIdle/Layer ${i}.png`;
     Sigil.push(img);
   }
+  Indicator.src = "./ASSET/Enemies/Sigil/Indicator.png";
 }
 
 export function setup(host) {
@@ -394,6 +396,7 @@ export function setup(host) {
           state.beamAlpha * (state.phase === "shrink" ? state.w / 100 : 1);
         ctx.fillStyle = glow;
 
+        ctx.drawImage(Indicator, mouse.x - 50, mouse.y - 50, 100, 100);
         ctx.beginPath();
         ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
         ctx.fill();

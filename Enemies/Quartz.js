@@ -10,6 +10,7 @@ import {
 } from "../main.js";
 
 const Quartz = [];
+const Indicator = new Image();
 function loadAssets() {
   if (Quartz.length) return;
   for (let i = 1; i <= 75; i++) {
@@ -17,6 +18,7 @@ function loadAssets() {
     img.src = `./ASSET/Enemies/Quartz/Layer ${i}.png`;
     Quartz.push(img);
   }
+  Indicator.src = "./ASSET/Enemies/Sigil/Indicator.png";
 }
 
 export function setup(host) {
@@ -420,6 +422,7 @@ export function setup(host) {
           state.beamAlpha * (state.phase === "shrink" ? state.w / 100 : 1);;
         ctx.fillStyle = glow;
 
+        ctx.drawImage(Indicator, mouse.x - 50, mouse.y - 50, 100, 100);
         ctx.beginPath();
         ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
         ctx.fill();
