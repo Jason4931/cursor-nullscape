@@ -170,10 +170,18 @@ const difficulties = beaten
 let difficultyIndex = localStorage.getItem("difficulty") ?? 1; // default = Normal
 let casualMode = difficultyIndex === 0;
 export let hardMode = difficultyIndex === 2;
+let celestialMode = beaten
+  ? (JSON.parse(localStorage.getItem("celestial")) ?? false)
+  : false;
 let chaosMode = beaten
   ? (JSON.parse(localStorage.getItem("chaos")) ?? false)
   : false;
 if (!beaten) document.getElementById("chaos-mode").style.display = "none";
+if (
+  !beaten ||
+  (!JSON.parse(localStorage.getItem("celestialEncounter")) ?? true)
+)
+  document.getElementById("celestial-mode").style.display = "none";
 const diffLabel = document.getElementById("diff-label");
 const diffLeft = document.getElementById("diff-left");
 const diffRight = document.getElementById("diff-right");
@@ -956,6 +964,7 @@ let musicVolume = localStorage.getItem("musicVolume")
 graphicsSlider.value = Number(localStorage.getItem("graphicsLevel")) || 0;
 
 document.getElementById("toggle-chaos").checked = chaosMode;
+document.getElementById("toggle-celestial").checked = celestialMode;
 document.getElementById("toggle-grids").checked = showGrids;
 document.getElementById("toggle-skybox").checked = showSkybox;
 document.getElementById("toggle-timer").checked = showTimer;
@@ -982,6 +991,8 @@ graphicsSlider.dispatchEvent(new Event("input"));
 function checkDiff() {
   if (chaosMode) {
     diffLabel.style.color = "#600";
+  } else if (celestialMode) {
+    diffLabel.style.color = "#606";
   } else if (casualMode) {
     diffLabel.style.color = "#0f0";
   } else if (hardMode) {
@@ -991,13 +1002,13 @@ function checkDiff() {
   }
   if (casualMode) {
     document.getElementById("entity-panel-diff").textContent =
-      `Casual${chaosMode ? " (CHAOS)" : ""}`;
+      `Casual${chaosMode ? " (CHAOS)" : celestialMode ? " (Celestial)" : ""}`;
   } else if (hardMode) {
     document.getElementById("entity-panel-diff").textContent =
-      `Extreme${chaosMode ? " (CHAOS)" : ""}`;
+      `Extreme${chaosMode ? " (CHAOS)" : celestialMode ? " (Celestial)" : ""}`;
   } else {
     document.getElementById("entity-panel-diff").textContent =
-      `Standard${chaosMode ? " (CHAOS)" : ""}`;
+      `Standard${chaosMode ? " (CHAOS)" : celestialMode ? " (Celestial)" : ""}`;
   }
 }
 settingsBtn.addEventListener("click", () => {
@@ -1018,6 +1029,20 @@ graphicsSlider.addEventListener("input", () => {
 });
 toggle("toggle-chaos", (v) => {
   chaosMode = v;
+  if (v) {
+    celestialMode = false;
+    localStorage.removeItem("celestial");
+    document.getElementById("toggle-celestial").checked = celestialMode;
+  }
+  checkDiff();
+});
+toggle("toggle-celestial", (v) => {
+  celestialMode = v;
+  if (v) {
+    chaosMode = false;
+    localStorage.removeItem("chaos");
+    document.getElementById("toggle-chaos").checked = chaosMode;
+  }
   checkDiff();
 });
 toggle("toggle-grids", (v) => {
@@ -3124,6 +3149,7 @@ function spawnCatalystIntro() {
   }, 15000);
 }
 export function spawnCelestialIntro() {
+  localStorage.setItem("celestialEncounter", "true");
   stopAllSounds();
   soundStopped = false;
   setGiftMultiplier(1);
@@ -5827,6 +5853,11 @@ function updateCamera() {
             activateShield();
             activateShield();
             activateShield();
+          }
+          if (celestialMode) {
+            if (cheatDetector) disableProgression = true;
+            activateShield();
+            spawnCelestialIntro();
           }
           for (let i = 1; i <= 10; i++) {
             if (i <= 5) {
