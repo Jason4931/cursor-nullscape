@@ -666,7 +666,7 @@ const ENTITY_POOL = [
       dontTouchMeActive[0] = true;
     },
     start: 0,
-    src: "./ASSET/Enemies/Placeholder.png",
+    src: "./ASSET/Enemies/DontTouchMe.png",
     desc: "Don't ring Bell..",
     chaosOnly: true,
     curseType: true,
@@ -701,8 +701,8 @@ const ENTITY_POOL = [
       blueprintCrossBeamsActive[0] = true;
     },
     start: 0,
-    src: "./ASSET/Enemies/Placeholder.png",
-    desc: "Lasers now cross.",
+    src: "./ASSET/Enemies/BlueprintCrossBeams.png",
+    desc: "Scrapmaw's lasers now form a rectangular grid when firing.",
     chaosOnly: true,
     curseType: true,
   },
