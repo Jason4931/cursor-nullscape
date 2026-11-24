@@ -1020,7 +1020,7 @@ function checkDiff() {
   if (chaosMode) {
     diffLabel.style.color = "#600";
   } else if (celestialMode) {
-    diffLabel.style.color = "#606";
+    diffLabel.style.color = "#f0f";
   } else if (casualMode) {
     diffLabel.style.color = "#0f0";
   } else if (hardMode) {
