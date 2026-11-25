@@ -2207,10 +2207,7 @@ export function activateProtection() {
 }
 export function activatePassage() {
   lastAltar = "Passage";
-  passageGoldPattern += 10;
-  setTimeout(() => {
-    passageGoldPattern += 5;
-  }, 6000);
+  passageGoldPattern += 15;
 }
 export function activateEcho() {
   const beforeLastAltar = lastAltar;

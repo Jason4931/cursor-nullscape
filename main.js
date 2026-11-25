@@ -278,11 +278,7 @@ function getRiftGlowCanvas() {
   glow.height = RIFT_GLOW_SIZE;
   const gctx = glow.getContext("2d");
   const offset = (RIFT_GLOW_SIZE - 512) / 2;
-  for (
-    let i = 40;
-    i >= 4;
-    i -= 4
-  ) {
+  for (let i = 40; i >= 4; i -= 4) {
     gctx.filter = `blur(${i}px)`;
     gctx.globalAlpha = 1;
     gctx.drawImage(source, offset, offset, 512, 512);
@@ -1754,7 +1750,7 @@ topLeftInput.addEventListener("keydown", function (event) {
     }
     if (input === "icetile") {
       isIceTileEnabled = true;
-      if (!disableIceTile && passageGoldPattern == 0) {
+      if (!disableIceTile) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -1763,39 +1759,7 @@ topLeftInput.addEventListener("keydown", function (event) {
           const r3 = rotateMatrix90(r2);
           return [r0, r1, r2, r3];
         });
-        setTimeout(() => {
-          changePatterns();
-          ROTATED_PATTERNS = PATTERNS.map((base) => {
-            const r0 = base;
-            const r1 = rotateMatrix90(r0);
-            const r2 = rotateMatrix90(r1);
-            const r3 = rotateMatrix90(r2);
-            return [r0, r1, r2, r3];
-          });
-        }, 6000);
       }
-      setInterval(() => {
-        if (!disableIceTile && passageGoldPattern == 0) {
-          changePatterns("ice");
-          ROTATED_PATTERNS = PATTERNS.map((base) => {
-            const r0 = base;
-            const r1 = rotateMatrix90(r0);
-            const r2 = rotateMatrix90(r1);
-            const r3 = rotateMatrix90(r2);
-            return [r0, r1, r2, r3];
-          });
-          setTimeout(() => {
-            changePatterns();
-            ROTATED_PATTERNS = PATTERNS.map((base) => {
-              const r0 = base;
-              const r1 = rotateMatrix90(r0);
-              const r2 = rotateMatrix90(r1);
-              const r3 = rotateMatrix90(r2);
-              return [r0, r1, r2, r3];
-            });
-          }, 6000);
-        }
-      }, 60000);
       topLeftInput.value = "";
     }
     if (input === "commandlist") {
@@ -2702,7 +2666,7 @@ export function isCursorOnFloor(custom) {
           t.wall[0] ||
           (t.deco[0] && t.deco[1] && t.deco[3] >= 0.4 && t.deco[3] <= 0.6)
         )
-          if (t.wall[1] == 6 || t.wall[1] == 66) {
+          if (t.wall[1] == 6 || t.wall[1] == 66 || t.wall[1] == 56) {
             wallScale = 0.5;
           } else if (t.wall[1] == 36) {
             wallScale = 0.01;
@@ -3053,7 +3017,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
-    const connectors = new Set([8, 9, 29, 39]);
+    const connectors = new Set([8, 9, 29, 39, 58, 59]);
 
     for (const neighbor of left) {
       const offsetY = (sy - neighbor.sy) * SUPER_TILE;
@@ -3191,6 +3155,14 @@ export function spawnCelestialIntro() {
   disablespawn = true;
   disableIceTile = true;
   highriseEnabled = false;
+  changePatterns("none");
+  ROTATED_PATTERNS = PATTERNS.map((base) => {
+    const r0 = base;
+    const r1 = rotateMatrix90(r0);
+    const r2 = rotateMatrix90(r1);
+    const r3 = rotateMatrix90(r2);
+    return [r0, r1, r2, r3];
+  });
   collectedCountBeforeCelestial = actualCollectedCount;
   actualCollectedCount = 5000;
   collectedCount = hardMode
@@ -3532,7 +3504,7 @@ function ENTITY_SPAWN(
     }
     if (collectedCount >= 800 && !isIceTileEnabled) {
       isIceTileEnabled = true;
-      if (!disableIceTile && passageGoldPattern == 0) {
+      if (!disableIceTile) {
         changePatterns("ice");
         ROTATED_PATTERNS = PATTERNS.map((base) => {
           const r0 = base;
@@ -3541,39 +3513,7 @@ function ENTITY_SPAWN(
           const r3 = rotateMatrix90(r2);
           return [r0, r1, r2, r3];
         });
-        setTimeout(() => {
-          changePatterns();
-          ROTATED_PATTERNS = PATTERNS.map((base) => {
-            const r0 = base;
-            const r1 = rotateMatrix90(r0);
-            const r2 = rotateMatrix90(r1);
-            const r3 = rotateMatrix90(r2);
-            return [r0, r1, r2, r3];
-          });
-        }, 6000);
       }
-      setInterval(() => {
-        if (!disableIceTile && passageGoldPattern == 0) {
-          changePatterns("ice");
-          ROTATED_PATTERNS = PATTERNS.map((base) => {
-            const r0 = base;
-            const r1 = rotateMatrix90(r0);
-            const r2 = rotateMatrix90(r1);
-            const r3 = rotateMatrix90(r2);
-            return [r0, r1, r2, r3];
-          });
-          setTimeout(() => {
-            changePatterns();
-            ROTATED_PATTERNS = PATTERNS.map((base) => {
-              const r0 = base;
-              const r1 = rotateMatrix90(r0);
-              const r2 = rotateMatrix90(r1);
-              const r3 = rotateMatrix90(r2);
-              return [r0, r1, r2, r3];
-            });
-          }, 6000);
-        }
-      }, 60000);
     }
     if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
       isSeamineEnabled = true;
@@ -3854,11 +3794,8 @@ export function activatePassage(echo = false) {
     return;
   }
   lastAltar = "Passage";
-  passageGoldPattern += 10;
-  setTimeout(() => {
-    passageGoldPattern += 5;
-  }, 6000);
-  changePatterns();
+  passageGoldPattern += 15;
+  changePatterns("passage");
   ROTATED_PATTERNS = PATTERNS.map((base) => {
     const r0 = base;
     const r1 = rotateMatrix90(r0);
@@ -3973,6 +3910,7 @@ let ROTATED_PATTERNS = PATTERNS.map((base) => {
   const r3 = rotateMatrix90(r2);
   return [r0, r1, r2, r3];
 });
+let lastPatternSource = PATTERNS;
 
 /* ===== PATTERN PLACEMENT ===== */
 function canPlaceSuper(sx, sy, pattern) {
@@ -4054,7 +3992,14 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 39 ||
         pattern[y][x] === 41 ||
         pattern[y][x] === 42 ||
-        pattern[y][x] === 66
+        pattern[y][x] === 66 ||
+        pattern[y][x] === 51 ||
+        pattern[y][x] === 52 ||
+        pattern[y][x] === 54 ||
+        pattern[y][x] === 55 ||
+        pattern[y][x] === 56 ||
+        pattern[y][x] === 58 ||
+        pattern[y][x] === 59
       ) {
         floorTiles.push({
           x: wx,
@@ -4070,7 +4015,10 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 16,
           garden: pattern[y][x] === 13,
           wall: [
-            pattern[y][x] === 6 || pattern[y][x] === 36 || pattern[y][x] === 66,
+            pattern[y][x] === 6 ||
+              pattern[y][x] === 36 ||
+              pattern[y][x] === 66 ||
+              pattern[y][x] === 56,
             pattern[y][x],
           ],
           ice:
@@ -4091,6 +4039,14 @@ function placeSuper(sx, sy, pattern) {
               pattern[y][x] === 42,
             pattern[y][x],
           ],
+          passage:
+            pattern[y][x] === 51 ||
+            pattern[y][x] === 52 ||
+            pattern[y][x] === 54 ||
+            pattern[y][x] === 55 ||
+            pattern[y][x] === 56 ||
+            pattern[y][x] === 58 ||
+            pattern[y][x] === 59,
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
@@ -4130,7 +4086,10 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 32 ||
         pattern[y][x] === 35 ||
         pattern[y][x] === 39 ||
-        pattern[y][x] === 42
+        pattern[y][x] === 42 ||
+        pattern[y][x] === 52 ||
+        pattern[y][x] === 55 ||
+        pattern[y][x] === 59
       ) {
         const r = Math.random();
         let type = "gift";
@@ -4183,7 +4142,16 @@ function placeSuper(sx, sy, pattern) {
   for (let y = 0; y < pattern.length; y++) {
     for (let x = 0; x < pattern[0].length; x++) {
       const v = pattern[y][x];
-      if (v === 4 || v === 5 || v === 14 || v === 15 || v === 16 || v === 25) {
+      if (
+        v === 4 ||
+        v === 5 ||
+        v === 14 ||
+        v === 15 ||
+        v === 16 ||
+        v === 25 ||
+        v === 54 ||
+        v === 55
+      ) {
         coords4or5.push({ x, y });
       }
     }
@@ -4201,7 +4169,19 @@ function placeSuper(sx, sy, pattern) {
     coords4or5,
     passageGoldPattern: passageGoldPattern > 0,
   });
-  if (passageGoldPattern > 0) passageGoldPattern--;
+  if (passageGoldPattern > 0) {
+    passageGoldPattern--;
+    if (passageGoldPattern === 0) {
+      changePatterns("normal");
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
+    }
+  }
 }
 
 function destroyPattern(p) {
@@ -4431,7 +4411,13 @@ function drawGrid() {
         if (glow) {
           ctx.save();
           ctx.globalAlpha = 0.5;
-          ctx.drawImage(glow, -RIFT_GLOW_SIZE / 2, -RIFT_GLOW_SIZE / 2, RIFT_GLOW_SIZE, RIFT_GLOW_SIZE);
+          ctx.drawImage(
+            glow,
+            -RIFT_GLOW_SIZE / 2,
+            -RIFT_GLOW_SIZE / 2,
+            RIFT_GLOW_SIZE,
+            RIFT_GLOW_SIZE,
+          );
           ctx.restore();
         }
         ctx.drawImage(rift, -256, -256, 512, 512);
@@ -4491,7 +4477,14 @@ function drawGrid() {
       const up = floorSet.has(key(t.x, t.y - TILE));
       const down = floorSet.has(key(t.x, t.y + TILE));
       const isEdge = !left || !right || !up || !down;
-      if (!t.diorite && !t.wood && !t.ice && isEdge && !t.collapsing[1]) {
+      if (
+        !t.diorite &&
+        !t.wood &&
+        !t.ice &&
+        !t.passage &&
+        isEdge &&
+        !t.collapsing[1]
+      ) {
         ctx.fillStyle =
           t.wall[0] || t.highrise[0]
             ? "#222"
@@ -4536,6 +4529,41 @@ function drawGrid() {
         ctx.fillStyle = corrupted
           ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
           : "#98f";
+        ctx.fillRect(t.x, t.y, h, h);
+        ctx.fillRect(t.x + 2 * h, t.y, h, h);
+        ctx.fillRect(t.x, t.y + 2 * h, h, h);
+      }
+      if (t.passage) {
+        const h = TILE / 2;
+
+        // top-left
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#800";
+        ctx.fillRect(t.x + h, t.y - h, h, h);
+        ctx.fillRect(t.x - h, t.y + h, h, h);
+        ctx.fillRect(t.x + h, t.y + h, h, h);
+
+        // top-right
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#600";
+        ctx.fillRect(t.x, t.y - h, h, h);
+        ctx.fillRect(t.x, t.y + h, h, h);
+        ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
+
+        // bottom-left
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#600";
+        ctx.fillRect(t.x - h, t.y, h, h);
+        ctx.fillRect(t.x + h, t.y, h, h);
+        ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
+
+        // bottom-right
+        ctx.fillStyle = corrupted
+          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
+          : "#800";
         ctx.fillRect(t.x, t.y, h, h);
         ctx.fillRect(t.x + 2 * h, t.y, h, h);
         ctx.fillRect(t.x, t.y + 2 * h, h, h);
@@ -4592,6 +4620,7 @@ function drawGrid() {
         !t.diorite &&
         !t.wood &&
         !t.ice &&
+        !t.passage &&
         isEdge &&
         t.deco[4] &&
         !t.wall[0] &&
@@ -4752,25 +4781,7 @@ function drawGrid() {
         ctx.fillStyle = `rgba(${90 + Math.random() * 60}, 0, 0, 1)`;
         ctx.fillRect(t.x, t.y, TILE, TILE);
       } else {
-        if (t.passageGoldPattern) {
-          const h = TILE / 2;
-
-          // top-left
-          ctx.fillStyle = "#800";
-          ctx.fillRect(t.x, t.y, h, h);
-
-          // top-right
-          ctx.fillStyle = "#600";
-          ctx.fillRect(t.x + h, t.y, h, h);
-
-          // bottom-left
-          ctx.fillStyle = "#600";
-          ctx.fillRect(t.x, t.y + h, h, h);
-
-          // bottom-right
-          ctx.fillStyle = "#800";
-          ctx.fillRect(t.x + h, t.y + h, h, h);
-        } else if (t.diorite) {
+        if (t.diorite) {
           const h = TILE / 2;
 
           // top-left
@@ -4804,11 +4815,15 @@ function drawGrid() {
         } else if (t.wall[0]) {
           if (t.wall[1] == 6 || t.wall[1] == 66) {
             ctx.fillStyle = "#aaa";
+            ctx.fillRect(t.x, t.y, TILE, TILE);
           } else if (t.wall[1] == 36) {
             ctx.fillStyle = "#444";
+            ctx.fillRect(t.x, t.y, TILE, TILE);
+          } else if (t.wall[1] == 56) {
+            ctx.fillStyle = "#080";
+            ctx.fillRect(t.x, t.y, TILE, TILE);
           }
-          ctx.fillRect(t.x, t.y, TILE, TILE);
-        } else if (t.ice) {
+        } else if (t.ice || t.passage) {
         } else if (t.highrise[0]) {
           if (
             t.highrise[1] == 31 ||
@@ -5257,115 +5272,6 @@ function drawGrid() {
           }
         }
       }
-      if (t.wall[0] && t.wall[1] == 66) {
-        ctx.fillStyle = "#333";
-        ctx.beginPath();
-        ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
-        ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
-        ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
-        ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
-        ctx.closePath();
-        ctx.fill();
-        function roundRect(cx, cy, w, h, r, rot) {
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(rot);
-          ctx.beginPath();
-          ctx.moveTo(-w / 2 + r, -h / 2);
-          ctx.lineTo(w / 2 - r, -h / 2);
-          ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
-          ctx.lineTo(w / 2, h / 2 - r);
-          ctx.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
-          ctx.lineTo(-w / 2 + r, h / 2);
-          ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
-          ctx.lineTo(-w / 2, -h / 2 + r);
-          ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
-          ctx.closePath();
-          ctx.fill();
-          const grad = ctx.createRadialGradient(
-            0,
-            0,
-            0,
-            0,
-            0,
-            Math.max(w, h) * 0.5,
-          );
-          grad.addColorStop(0, "rgba(255,255,255,0)");
-          grad.addColorStop(0.65, "rgba(0,0,0,0)");
-          grad.addColorStop(1, "rgba(0,0,0,0.25)");
-          ctx.fillStyle = grad;
-          ctx.fill();
-          ctx.restore();
-        }
-        function rect(cx, cy, w, h, rot) {
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(rot);
-          ctx.fillRect(-w / 2, -h / 2, w, h);
-          const grad = ctx.createRadialGradient(
-            0,
-            0,
-            0,
-            0,
-            0,
-            Math.max(w, h) * 0.5,
-          );
-          grad.addColorStop(0, "rgba(255,255,255,0)");
-          grad.addColorStop(0.65, "rgba(0,0,0,0)");
-          grad.addColorStop(1, "rgba(0,0,0,0.25)");
-          ctx.fillStyle = grad;
-          ctx.fillRect(-w / 2, -h / 2, w, h);
-          ctx.restore();
-        }
-        // right leg
-        ctx.fillStyle = "#555";
-        rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
-        // left arm
-        ctx.fillStyle = "#555";
-        rect(t.x - TILE * 0.1, t.y - TILE * 2.2, TILE * 0.5, TILE * 1.25, -0.2);
-        // body
-        ctx.fillStyle = "#666";
-        rect(t.x + TILE * 0.5, t.y - TILE * 1.2, TILE * 1, TILE * 1.25, 0.1);
-        // left leg
-        ctx.fillStyle = "#777";
-        rect(t.x + TILE * 0, t.y - TILE * 0.3, TILE * 0.5, TILE * 1.25, 0.05);
-        // right arm
-        ctx.fillStyle = "#777";
-        rect(t.x + TILE * 1.3, t.y - TILE * 1, TILE * 0.5, TILE * 1.25, -0.1);
-        // head
-        ctx.fillStyle = "#777";
-        roundRect(
-          t.x + TILE * 0.7,
-          t.y - TILE * 2.05,
-          TILE * 0.6,
-          TILE * 0.6,
-          TILE * 0.2,
-          0.5,
-        );
-        // gift
-        ctx.fillStyle = "#505";
-        rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
-        ctx.fillStyle = "#606";
-        rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
-        // left bow loop
-        ctx.strokeStyle = "#707";
-        ctx.lineWidth = TILE * 0.05;
-        ctx.save();
-        ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
-        ctx.rotate(0.8);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-        // right bow loop
-        ctx.save();
-        ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
-        ctx.rotate(-0.3);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
     }
   }
   // gifts (center inside the tile)
@@ -5412,6 +5318,166 @@ function drawGrid() {
         GIFT_SIZE,
         GIFT_SIZE,
       );
+    }
+  }
+
+  for (const t of floorTiles) {
+    if (
+      t.x + TILE < visibleX ||
+      t.x > visibleX + visibleW ||
+      t.y + TILE < visibleY ||
+      t.y > visibleY + visibleH
+    )
+      continue;
+    const dx = t.x + TILE / 2 - mouse.x;
+    const dy = t.y + TILE / 2 - mouse.y;
+    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+    if (t.wall[0] && t.wall[1] == 56) {
+      const cx = t.x + TILE / 2;
+      const cy = t.y + TILE / 2;
+      const blobs = [
+        [0, 0, 1.15, "#035"],
+        [-0.55, -0.45, 0.8, "#045"],
+        [0.55, -0.45, 0.8, "#045"],
+        [-0.55, 0.5, 0.8, "#055"],
+        [0.55, 0.5, 0.8, "#055"],
+        [0, -0.85, 0.72, "#055"],
+        [0, 0.85, 0.72, "#045"],
+        [-0.9, 0, 0.68, "#055"],
+        [0.9, 0, 0.68, "#055"],
+        [-0.75, -0.75, 0.55, "#065"],
+        [0.75, -0.75, 0.55, "#065"],
+        [-0.75, 0.75, 0.55, "#075"],
+        [0.75, 0.75, 0.55, "#075"],
+        [-0.45, -0.15, 0.7, "#075"],
+        [0.45, -0.15, 0.7, "#075"],
+        [-0.4, 0.35, 0.68, "#085"],
+        [0.4, 0.35, 0.68, "#085"],
+        [0, -0.45, 0.62, "#085"],
+        [0, 0.45, 0.62, "#065"],
+        [-0.2, -0.6, 0.5, "#095"],
+        [0.2, -0.6, 0.5, "#095"],
+        [0, 0, 0.5, "#0a5"],
+      ];
+      for (const [ox, oy, r, color] of blobs) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(cx + ox * TILE, cy + oy * TILE, r * TILE, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // ctx.fillStyle = "#630";
+      // ctx.beginPath();
+      // ctx.arc(cx, cy, TILE * 0.18, 0, Math.PI * 2);
+      // ctx.fill();
+    }
+    if (t.wall[0] && t.wall[1] == 66) {
+      ctx.fillStyle = "#333";
+      ctx.beginPath();
+      ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
+      ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
+      ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
+      ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
+      ctx.closePath();
+      ctx.fill();
+      function roundRect(cx, cy, w, h, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.moveTo(-w / 2 + r, -h / 2);
+        ctx.lineTo(w / 2 - r, -h / 2);
+        ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+        ctx.lineTo(w / 2, h / 2 - r);
+        ctx.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+        ctx.lineTo(-w / 2 + r, h / 2);
+        ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+        ctx.lineTo(-w / 2, -h / 2 + r);
+        ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+        ctx.closePath();
+        ctx.fill();
+        const grad = ctx.createRadialGradient(
+          0,
+          0,
+          0,
+          0,
+          0,
+          Math.max(w, h) * 0.5,
+        );
+        grad.addColorStop(0, "rgba(255,255,255,0)");
+        grad.addColorStop(0.65, "rgba(0,0,0,0)");
+        grad.addColorStop(1, "rgba(0,0,0,0.25)");
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+      function rect(cx, cy, w, h, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.fillRect(-w / 2, -h / 2, w, h);
+        const grad = ctx.createRadialGradient(
+          0,
+          0,
+          0,
+          0,
+          0,
+          Math.max(w, h) * 0.5,
+        );
+        grad.addColorStop(0, "rgba(255,255,255,0)");
+        grad.addColorStop(0.65, "rgba(0,0,0,0)");
+        grad.addColorStop(1, "rgba(0,0,0,0.25)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(-w / 2, -h / 2, w, h);
+        ctx.restore();
+      }
+      // right leg
+      ctx.fillStyle = "#555";
+      rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
+      // left arm
+      ctx.fillStyle = "#555";
+      rect(t.x - TILE * 0.1, t.y - TILE * 2.2, TILE * 0.5, TILE * 1.25, -0.2);
+      // body
+      ctx.fillStyle = "#666";
+      rect(t.x + TILE * 0.5, t.y - TILE * 1.2, TILE * 1, TILE * 1.25, 0.1);
+      // left leg
+      ctx.fillStyle = "#777";
+      rect(t.x + TILE * 0, t.y - TILE * 0.3, TILE * 0.5, TILE * 1.25, 0.05);
+      // right arm
+      ctx.fillStyle = "#777";
+      rect(t.x + TILE * 1.3, t.y - TILE * 1, TILE * 0.5, TILE * 1.25, -0.1);
+      // head
+      ctx.fillStyle = "#777";
+      roundRect(
+        t.x + TILE * 0.7,
+        t.y - TILE * 2.05,
+        TILE * 0.6,
+        TILE * 0.6,
+        TILE * 0.2,
+        0.5,
+      );
+      // gift
+      ctx.fillStyle = "#505";
+      rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
+      ctx.fillStyle = "#606";
+      rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
+      // left bow loop
+      ctx.strokeStyle = "#707";
+      ctx.lineWidth = TILE * 0.05;
+      ctx.save();
+      ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
+      ctx.rotate(0.8);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+      // right bow loop
+      ctx.save();
+      ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
+      ctx.rotate(-0.3);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
     }
   }
 
@@ -6027,7 +6093,7 @@ function updateCamera() {
           }
           if (collectedCount >= 800 && !isIceTileEnabled) {
             isIceTileEnabled = true;
-            if (!disableIceTile && passageGoldPattern == 0) {
+            if (!disableIceTile) {
               changePatterns("ice");
               ROTATED_PATTERNS = PATTERNS.map((base) => {
                 const r0 = base;
@@ -6036,39 +6102,7 @@ function updateCamera() {
                 const r3 = rotateMatrix90(r2);
                 return [r0, r1, r2, r3];
               });
-              setTimeout(() => {
-                changePatterns();
-                ROTATED_PATTERNS = PATTERNS.map((base) => {
-                  const r0 = base;
-                  const r1 = rotateMatrix90(r0);
-                  const r2 = rotateMatrix90(r1);
-                  const r3 = rotateMatrix90(r2);
-                  return [r0, r1, r2, r3];
-                });
-              }, 6000);
             }
-            setInterval(() => {
-              if (!disableIceTile && passageGoldPattern == 0) {
-                changePatterns("ice");
-                ROTATED_PATTERNS = PATTERNS.map((base) => {
-                  const r0 = base;
-                  const r1 = rotateMatrix90(r0);
-                  const r2 = rotateMatrix90(r1);
-                  const r3 = rotateMatrix90(r2);
-                  return [r0, r1, r2, r3];
-                });
-                setTimeout(() => {
-                  changePatterns();
-                  ROTATED_PATTERNS = PATTERNS.map((base) => {
-                    const r0 = base;
-                    const r1 = rotateMatrix90(r0);
-                    const r2 = rotateMatrix90(r1);
-                    const r3 = rotateMatrix90(r2);
-                    return [r0, r1, r2, r3];
-                  });
-                }, 6000);
-              }
-            }, 60000);
           }
           if (collectedCount >= 1000 && !isSeamineEnabled && !disablespawn) {
             isSeamineEnabled = true;
@@ -6201,6 +6235,17 @@ function loop(now) {
   }
 
   loop.lastTime = now;
+
+  if (lastPatternSource !== PATTERNS) {
+    lastPatternSource = PATTERNS;
+    ROTATED_PATTERNS = PATTERNS.map((base) => {
+      const r0 = base;
+      const r1 = rotateMatrix90(r0);
+      const r2 = rotateMatrix90(r1);
+      const r3 = rotateMatrix90(r2);
+      return [r0, r1, r2, r3];
+    });
+  }
 
   if (dies) {
     requestAnimationFrame(loop);
