@@ -4534,39 +4534,11 @@ function drawGrid() {
         ctx.fillRect(t.x, t.y + 2 * h, h, h);
       }
       if (t.passage) {
-        const h = TILE / 2;
-
-        // top-left
         ctx.fillStyle = corrupted
           ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
-          : "#800";
-        ctx.fillRect(t.x + h, t.y - h, h, h);
-        ctx.fillRect(t.x - h, t.y + h, h, h);
-        ctx.fillRect(t.x + h, t.y + h, h, h);
-
-        // top-right
-        ctx.fillStyle = corrupted
-          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
-          : "#600";
-        ctx.fillRect(t.x, t.y - h, h, h);
-        ctx.fillRect(t.x, t.y + h, h, h);
-        ctx.fillRect(t.x + 2 * h, t.y + h, h, h);
-
-        // bottom-left
-        ctx.fillStyle = corrupted
-          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
-          : "#600";
-        ctx.fillRect(t.x - h, t.y, h, h);
-        ctx.fillRect(t.x + h, t.y, h, h);
-        ctx.fillRect(t.x + h, t.y + 2 * h, h, h);
-
-        // bottom-right
-        ctx.fillStyle = corrupted
-          ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
-          : "#800";
-        ctx.fillRect(t.x, t.y, h, h);
-        ctx.fillRect(t.x + 2 * h, t.y, h, h);
-        ctx.fillRect(t.x, t.y + 2 * h, h, h);
+          : "#833";
+        ctx.fillRect(t.x - TILE / 2, t.y, TILE * 2, TILE);
+        ctx.fillRect(t.x, t.y - TILE / 2, TILE, TILE * 2);
       }
     }
     for (const t of floorTiles) {
@@ -4620,7 +4592,6 @@ function drawGrid() {
         !t.diorite &&
         !t.wood &&
         !t.ice &&
-        !t.passage &&
         isEdge &&
         t.deco[4] &&
         !t.wall[0] &&
@@ -4823,7 +4794,10 @@ function drawGrid() {
             ctx.fillStyle = "#080";
             ctx.fillRect(t.x, t.y, TILE, TILE);
           }
-        } else if (t.ice || t.passage) {
+        } else if (t.ice) {
+        } else if (t.passage) {
+          ctx.fillStyle = "#933";
+          ctx.fillRect(t.x, t.y, TILE, TILE);
         } else if (t.highrise[0]) {
           if (
             t.highrise[1] == 31 ||
