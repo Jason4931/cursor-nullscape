@@ -5266,7 +5266,7 @@ function drawGrid() {
         }
       }
       if (t.passage && t.wall[1] != 56) {
-        if (t.deco[11] < 0.3) {
+        if (t.deco[11] < 0.25) {
           const fx = t.x + TILE / 2 + (t.deco[3] - 0.5) * TILE;
           const fy = t.y + TILE / 2 + (t.deco[9] - 0.5) * TILE;
           const v = t.deco[2];
@@ -5310,7 +5310,7 @@ function drawGrid() {
           ctx.arc(fx, fy, TILE * 0.08, 0, Math.PI * 2);
           ctx.fillStyle = gradient || fill;
           ctx.fill();
-        } else if (t.deco[6] < 0.2) {
+        } else if (t.deco[6] < 0.25) {
           const hasLeft = floorSet.has(key(t.x - TILE, t.y));
           const hasRight = floorSet.has(key(t.x + TILE, t.y));
           const hasUp = floorSet.has(key(t.x, t.y - TILE));
@@ -5323,8 +5323,10 @@ function drawGrid() {
           if (sides.length) {
             const [sx, sy] =
               sides[Math.floor(t.deco[8] * sides.length) % sides.length];
-            const bx = t.x + TILE / 2 + sx * TILE * 0.5;
-            const by = t.y + TILE / 2 + sy * TILE * 0.5;
+            const bx =
+              t.x + TILE / 2 + sx * TILE * (t.deco[7] < 0.5 ? 0.5 : 0.075);
+            const by =
+              t.y + TILE / 2 + sy * TILE * (t.deco[7] < 0.5 ? 0.5 : 0.075);
             const ex = bx + sx * TILE * 0.7;
             const ey = by + sy * TILE * 0.7;
             const nx = -sy;
