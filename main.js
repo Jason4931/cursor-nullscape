@@ -952,6 +952,8 @@ const goldGift = new Image();
 goldGift.src = "./ASSET/Misc/GoldGifts.png";
 const tripmine = new Image();
 tripmine.src = "./ASSET/Curses/Tripmine.png";
+const guardian = new Image();
+guardian.src = "./ASSET/Enemies/Guardian/Guardian_Idle_Animation/Layer 1.png";
 
 /* ===== SETTINGS ===== */
 let settingsEnabled = true;
@@ -4063,6 +4065,12 @@ function placeSuper(sx, sy, pattern) {
                 Math.max(0.01, Number(graphicsSlider.value) * 0.025),
               ),
             Math.random() < 0.5,
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
           ],
           collapsing: [false, false],
         });
@@ -4537,8 +4545,8 @@ function drawGrid() {
         ctx.fillStyle = corrupted
           ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
           : "#833";
-        ctx.fillRect(t.x - TILE / 2, t.y, TILE * 2, TILE);
-        ctx.fillRect(t.x, t.y - TILE / 2, TILE, TILE * 2);
+        ctx.fillRect(t.x - TILE * 0.51, t.y - TILE * 0.01, TILE * 2.02, TILE * 1.02);
+        ctx.fillRect(t.x - TILE * 0.01, t.y - TILE * 0.51, TILE * 1.02, TILE * 2.02);
       }
     }
     for (const t of floorTiles) {
@@ -4592,6 +4600,7 @@ function drawGrid() {
         !t.diorite &&
         !t.wood &&
         !t.ice &&
+        !t.passage &&
         isEdge &&
         t.deco[4] &&
         !t.wall[0] &&
@@ -5243,6 +5252,133 @@ function drawGrid() {
               Math.PI * 2,
             );
             ctx.fill();
+          }
+        }
+      }
+      if (t.passage && t.wall[1] != 56) {
+        if (t.deco[11] < 0.3) {
+          const fx = t.x + TILE / 2 + (t.deco[3] - 0.5) * TILE;
+          const fy = t.y + TILE / 2 + (t.deco[9] - 0.5) * TILE;
+          const v = t.deco[2];
+          let fill = "#dd0";
+          let stroke = null;
+          let gradient = null;
+          if (v < 0.2) {
+            gradient = ctx.createRadialGradient(fx, fy, 0, fx, fy, TILE * 0.3);
+            gradient.addColorStop(0, "#00f");
+            gradient.addColorStop(1, "#9cf");
+            stroke = "#fff";
+          } else if (v < 0.4) {
+            gradient = ctx.createRadialGradient(fx, fy, 0, fx, fy, TILE * 0.3);
+            gradient.addColorStop(0, "#0a0");
+            gradient.addColorStop(1, "#ee0");
+            stroke = "#ee0";
+          } else if (v < 0.55) fill = "#dd0";
+          else if (v < 0.7) fill = "#0a0";
+          else if (v < 0.85) fill = "#d00";
+          else fill = "#44f";
+          for (let i = 0; i < 5; i++) {
+            const a = (i * Math.PI * 2) / 5;
+            const px = fx + Math.cos(a) * TILE * 0.16;
+            const py = fy + Math.sin(a) * TILE * 0.16;
+            ctx.beginPath();
+            ctx.arc(px, py, TILE * 0.12, 0, Math.PI * 2);
+            ctx.fillStyle = gradient || fill;
+            ctx.fill();
+            if (stroke) {
+              ctx.strokeStyle = stroke;
+              ctx.lineWidth = TILE * 0.04;
+              ctx.stroke();
+            }
+          }
+          ctx.beginPath();
+          ctx.arc(fx, fy, TILE * 0.08, 0, Math.PI * 2);
+          ctx.fillStyle = gradient || fill;
+          ctx.fill();
+        } else if (t.deco[6] < 0.2) {
+          const hasLeft = floorSet.has(key(t.x - TILE, t.y));
+          const hasRight = floorSet.has(key(t.x + TILE, t.y));
+          const hasUp = floorSet.has(key(t.x, t.y - TILE));
+          const hasDown = floorSet.has(key(t.x, t.y + TILE));
+          const sides = [];
+          if (!hasLeft) sides.push([-1, 0]);
+          if (!hasRight) sides.push([1, 0]);
+          if (!hasUp) sides.push([0, -1]);
+          if (!hasDown) sides.push([0, 1]);
+          if (sides.length) {
+            const [sx, sy] =
+              sides[Math.floor(t.deco[8] * sides.length) % sides.length];
+            const bx = t.x + TILE / 2 + sx * TILE * 0.5;
+            const by = t.y + TILE / 2 + sy * TILE * 0.5;
+            const ex = bx + sx * TILE * 0.7;
+            const ey = by + sy * TILE * 0.7;
+            const nx = -sy;
+            const ny = sx;
+            const wave = TILE * 0.08;
+            const mx = bx + (ex - bx) / 2;
+            const my = by + (ey - by) / 2;
+            ctx.strokeStyle = "#933";
+            ctx.lineWidth = TILE * 0.18;
+            ctx.beginPath();
+            ctx.moveTo(bx, by);
+            ctx.quadraticCurveTo(
+              bx + (ex - bx) / 3 + nx * wave,
+              by + (ey - by) / 3 + ny * wave,
+              mx,
+              my,
+            );
+            ctx.quadraticCurveTo(
+              bx + ((ex - bx) * 2) / 3 - nx * wave,
+              by + ((ey - by) * 2) / 3 - ny * wave,
+              ex,
+              ey,
+            );
+            ctx.stroke();
+            ctx.fillStyle = "#933";
+            ctx.beginPath();
+            ctx.moveTo(ex + sx * TILE * 0.25, ey + sy * TILE * 0.25);
+            ctx.lineTo(
+              ex - nx * TILE * 0.1 - sx * TILE * 0.05,
+              ey - ny * TILE * 0.1 - sy * TILE * 0.05,
+            );
+            ctx.lineTo(
+              ex + nx * TILE * 0.1 - sx * TILE * 0.05,
+              ey + ny * TILE * 0.1 - sy * TILE * 0.05,
+            );
+            ctx.closePath();
+            ctx.fill();
+            if (t.deco[7] < 0.5) {
+              const bushBlobs = [
+                [0, 0, 0.38, "#035"],
+                [-0.15, -0.12, 0.28, "#045"],
+                [0.15, -0.12, 0.28, "#045"],
+                [-0.15, 0.14, 0.28, "#055"],
+                [0.15, 0.14, 0.28, "#055"],
+                [0, -0.25, 0.23, "#055"],
+                [0, 0.25, 0.23, "#045"],
+                [0, 0, 0.18, "#065"],
+              ];
+              for (const [ox, oy, r, color] of bushBlobs) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(
+                  ex + ox * TILE,
+                  ey + oy * TILE,
+                  r * TILE,
+                  0,
+                  Math.PI * 2,
+                );
+                ctx.fill();
+              }
+            }
+          }
+        } else if (t.deco[9] < 0.05) {
+          if (guardian && guardian.complete && guardian.naturalWidth) {
+            ctx.save();
+            ctx.translate(t.x + TILE / 2, t.y + TILE / 2);
+            ctx.rotate((t.deco[10] - 0.5) * 0.3);
+            ctx.drawImage(guardian, -TILE / 2, -TILE / 2, TILE, TILE);
+            ctx.restore();
           }
         }
       }
