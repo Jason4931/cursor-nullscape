@@ -76,7 +76,7 @@ v celestial
 v altarChance [gamble]
 v altarChaos [1 chaos enemy, +1 yield]
 x AltarEcho [echo altars]
-x AltarPassage [15 passage tiles]
+v AltarPassage [15 passage tiles]
 v AltarProtection [1 shield, -1000 gift]
 v AltarPurgatory [5 temp enemy, +2 yield]
 v AltarPurification [exchange 1 enemy, -{enemystart} gift]

@@ -4545,8 +4545,18 @@ function drawGrid() {
         ctx.fillStyle = corrupted
           ? `rgba(${90 + Math.random() * 60}, 0, 0, 1)`
           : "#833";
-        ctx.fillRect(t.x - TILE * 0.51, t.y - TILE * 0.01, TILE * 2.02, TILE * 1.02);
-        ctx.fillRect(t.x - TILE * 0.01, t.y - TILE * 0.51, TILE * 1.02, TILE * 2.02);
+        ctx.fillRect(
+          t.x - TILE * 0.51,
+          t.y - TILE * 0.01,
+          TILE * 2.02,
+          TILE * 1.02,
+        );
+        ctx.fillRect(
+          t.x - TILE * 0.01,
+          t.y - TILE * 0.51,
+          TILE * 1.02,
+          TILE * 2.02,
+        );
       }
     }
     for (const t of floorTiles) {
@@ -5431,163 +5441,165 @@ function drawGrid() {
     }
   }
 
-  for (const t of floorTiles) {
-    if (
-      t.x + TILE < visibleX ||
-      t.x > visibleX + visibleW ||
-      t.y + TILE < visibleY ||
-      t.y > visibleY + visibleH
-    )
-      continue;
-    const dx = t.x + TILE / 2 - mouse.x;
-    const dy = t.y + TILE / 2 - mouse.y;
-    if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
-    if (t.wall[0] && t.wall[1] == 56) {
-      const cx = t.x + TILE / 2;
-      const cy = t.y + TILE / 2;
-      const blobs = [
-        [0, 0, 1.15, "#035"],
-        [-0.55, -0.45, 0.8, "#045"],
-        [0.55, -0.45, 0.8, "#045"],
-        [-0.55, 0.5, 0.8, "#055"],
-        [0.55, 0.5, 0.8, "#055"],
-        [0, -0.85, 0.72, "#055"],
-        [0, 0.85, 0.72, "#045"],
-        [-0.9, 0, 0.68, "#055"],
-        [0.9, 0, 0.68, "#055"],
-        [-0.75, -0.75, 0.55, "#065"],
-        [0.75, -0.75, 0.55, "#065"],
-        [-0.75, 0.75, 0.55, "#075"],
-        [0.75, 0.75, 0.55, "#075"],
-        [-0.45, -0.15, 0.7, "#075"],
-        [0.45, -0.15, 0.7, "#075"],
-        [-0.4, 0.35, 0.68, "#085"],
-        [0.4, 0.35, 0.68, "#085"],
-        [0, -0.45, 0.62, "#085"],
-        [0, 0.45, 0.62, "#065"],
-        [-0.2, -0.6, 0.5, "#095"],
-        [0.2, -0.6, 0.5, "#095"],
-        [0, 0, 0.5, "#0a5"],
-      ];
-      for (const [ox, oy, r, color] of blobs) {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(cx + ox * TILE, cy + oy * TILE, r * TILE, 0, Math.PI * 2);
-        ctx.fill();
+  if (showFloor) {
+    for (const t of floorTiles) {
+      if (
+        t.x + TILE < visibleX ||
+        t.x > visibleX + visibleW ||
+        t.y + TILE < visibleY ||
+        t.y > visibleY + visibleH
+      )
+        continue;
+      const dx = t.x + TILE / 2 - mouse.x;
+      const dy = t.y + TILE / 2 - mouse.y;
+      if (dx * dx + dy * dy > RENDER_RADIUS * RENDER_RADIUS) continue;
+      if (t.wall[0] && t.wall[1] == 56) {
+        const cx = t.x + TILE / 2;
+        const cy = t.y + TILE / 2;
+        const blobs = [
+          [0, 0, 1.15, "#035"],
+          [-0.55, -0.45, 0.8, "#045"],
+          [0.55, -0.45, 0.8, "#045"],
+          [-0.55, 0.5, 0.8, "#055"],
+          [0.55, 0.5, 0.8, "#055"],
+          [0, -0.85, 0.72, "#055"],
+          [0, 0.85, 0.72, "#045"],
+          [-0.9, 0, 0.68, "#055"],
+          [0.9, 0, 0.68, "#055"],
+          [-0.75, -0.75, 0.55, "#065"],
+          [0.75, -0.75, 0.55, "#065"],
+          [-0.75, 0.75, 0.55, "#075"],
+          [0.75, 0.75, 0.55, "#075"],
+          [-0.45, -0.15, 0.7, "#075"],
+          [0.45, -0.15, 0.7, "#075"],
+          [-0.4, 0.35, 0.68, "#085"],
+          [0.4, 0.35, 0.68, "#085"],
+          [0, -0.45, 0.62, "#085"],
+          [0, 0.45, 0.62, "#065"],
+          [-0.2, -0.6, 0.5, "#095"],
+          [0.2, -0.6, 0.5, "#095"],
+          [0, 0, 0.5, "#0a5"],
+        ];
+        for (const [ox, oy, r, color] of blobs) {
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(cx + ox * TILE, cy + oy * TILE, r * TILE, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // ctx.fillStyle = "#630";
+        // ctx.beginPath();
+        // ctx.arc(cx, cy, TILE * 0.18, 0, Math.PI * 2);
+        // ctx.fill();
       }
-      // ctx.fillStyle = "#630";
-      // ctx.beginPath();
-      // ctx.arc(cx, cy, TILE * 0.18, 0, Math.PI * 2);
-      // ctx.fill();
-    }
-    if (t.wall[0] && t.wall[1] == 66) {
-      ctx.fillStyle = "#333";
-      ctx.beginPath();
-      ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
-      ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
-      ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
-      ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
-      ctx.closePath();
-      ctx.fill();
-      function roundRect(cx, cy, w, h, r, rot) {
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rot);
+      if (t.wall[0] && t.wall[1] == 66) {
+        ctx.fillStyle = "#333";
         ctx.beginPath();
-        ctx.moveTo(-w / 2 + r, -h / 2);
-        ctx.lineTo(w / 2 - r, -h / 2);
-        ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
-        ctx.lineTo(w / 2, h / 2 - r);
-        ctx.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
-        ctx.lineTo(-w / 2 + r, h / 2);
-        ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
-        ctx.lineTo(-w / 2, -h / 2 + r);
-        ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+        ctx.moveTo(t.x + TILE * 0.5, t.y - TILE * 0.75);
+        ctx.lineTo(t.x + TILE * 1.75, t.y + TILE * 0.5);
+        ctx.lineTo(t.x + TILE * 0.5, t.y + TILE * 1.75);
+        ctx.lineTo(t.x - TILE * 0.75, t.y + TILE * 0.5);
         ctx.closePath();
         ctx.fill();
-        const grad = ctx.createRadialGradient(
-          0,
-          0,
-          0,
-          0,
-          0,
-          Math.max(w, h) * 0.5,
+        function roundRect(cx, cy, w, h, r, rot) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rot);
+          ctx.beginPath();
+          ctx.moveTo(-w / 2 + r, -h / 2);
+          ctx.lineTo(w / 2 - r, -h / 2);
+          ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+          ctx.lineTo(w / 2, h / 2 - r);
+          ctx.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+          ctx.lineTo(-w / 2 + r, h / 2);
+          ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+          ctx.lineTo(-w / 2, -h / 2 + r);
+          ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+          ctx.closePath();
+          ctx.fill();
+          const grad = ctx.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            Math.max(w, h) * 0.5,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0)");
+          grad.addColorStop(0.65, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,0.25)");
+          ctx.fillStyle = grad;
+          ctx.fill();
+          ctx.restore();
+        }
+        function rect(cx, cy, w, h, rot) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(rot);
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          const grad = ctx.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            Math.max(w, h) * 0.5,
+          );
+          grad.addColorStop(0, "rgba(255,255,255,0)");
+          grad.addColorStop(0.65, "rgba(0,0,0,0)");
+          grad.addColorStop(1, "rgba(0,0,0,0.25)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          ctx.restore();
+        }
+        // right leg
+        ctx.fillStyle = "#555";
+        rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
+        // left arm
+        ctx.fillStyle = "#555";
+        rect(t.x - TILE * 0.1, t.y - TILE * 2.2, TILE * 0.5, TILE * 1.25, -0.2);
+        // body
+        ctx.fillStyle = "#666";
+        rect(t.x + TILE * 0.5, t.y - TILE * 1.2, TILE * 1, TILE * 1.25, 0.1);
+        // left leg
+        ctx.fillStyle = "#777";
+        rect(t.x + TILE * 0, t.y - TILE * 0.3, TILE * 0.5, TILE * 1.25, 0.05);
+        // right arm
+        ctx.fillStyle = "#777";
+        rect(t.x + TILE * 1.3, t.y - TILE * 1, TILE * 0.5, TILE * 1.25, -0.1);
+        // head
+        ctx.fillStyle = "#777";
+        roundRect(
+          t.x + TILE * 0.7,
+          t.y - TILE * 2.05,
+          TILE * 0.6,
+          TILE * 0.6,
+          TILE * 0.2,
+          0.5,
         );
-        grad.addColorStop(0, "rgba(255,255,255,0)");
-        grad.addColorStop(0.65, "rgba(0,0,0,0)");
-        grad.addColorStop(1, "rgba(0,0,0,0.25)");
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
-      }
-      function rect(cx, cy, w, h, rot) {
+        // gift
+        ctx.fillStyle = "#505";
+        rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
+        ctx.fillStyle = "#606";
+        rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
+        // left bow loop
+        ctx.strokeStyle = "#707";
+        ctx.lineWidth = TILE * 0.05;
         ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rot);
-        ctx.fillRect(-w / 2, -h / 2, w, h);
-        const grad = ctx.createRadialGradient(
-          0,
-          0,
-          0,
-          0,
-          0,
-          Math.max(w, h) * 0.5,
-        );
-        grad.addColorStop(0, "rgba(255,255,255,0)");
-        grad.addColorStop(0.65, "rgba(0,0,0,0)");
-        grad.addColorStop(1, "rgba(0,0,0,0.25)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(-w / 2, -h / 2, w, h);
+        ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
+        ctx.rotate(0.8);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+        // right bow loop
+        ctx.save();
+        ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
+        ctx.rotate(-0.3);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
+        ctx.stroke();
         ctx.restore();
       }
-      // right leg
-      ctx.fillStyle = "#555";
-      rect(t.x + TILE * 0.9, t.y + TILE * 0, TILE * 0.5, TILE * 1.25, -0.3);
-      // left arm
-      ctx.fillStyle = "#555";
-      rect(t.x - TILE * 0.1, t.y - TILE * 2.2, TILE * 0.5, TILE * 1.25, -0.2);
-      // body
-      ctx.fillStyle = "#666";
-      rect(t.x + TILE * 0.5, t.y - TILE * 1.2, TILE * 1, TILE * 1.25, 0.1);
-      // left leg
-      ctx.fillStyle = "#777";
-      rect(t.x + TILE * 0, t.y - TILE * 0.3, TILE * 0.5, TILE * 1.25, 0.05);
-      // right arm
-      ctx.fillStyle = "#777";
-      rect(t.x + TILE * 1.3, t.y - TILE * 1, TILE * 0.5, TILE * 1.25, -0.1);
-      // head
-      ctx.fillStyle = "#777";
-      roundRect(
-        t.x + TILE * 0.7,
-        t.y - TILE * 2.05,
-        TILE * 0.6,
-        TILE * 0.6,
-        TILE * 0.2,
-        0.5,
-      );
-      // gift
-      ctx.fillStyle = "#505";
-      rect(t.x - TILE * 0.3, t.y - TILE * 3.2, TILE * 0.75, TILE * 0.75, 0.2);
-      ctx.fillStyle = "#606";
-      rect(t.x - TILE * 0.25, t.y - TILE * 3.5, TILE * 0.85, TILE * 0.2, 0.2);
-      // left bow loop
-      ctx.strokeStyle = "#707";
-      ctx.lineWidth = TILE * 0.05;
-      ctx.save();
-      ctx.translate(t.x - TILE * 0.35, t.y - TILE * 3.65);
-      ctx.rotate(0.8);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-      // right bow loop
-      ctx.save();
-      ctx.translate(t.x - TILE * 0.1, t.y - TILE * 3.6);
-      ctx.rotate(-0.3);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
     }
   }
 
