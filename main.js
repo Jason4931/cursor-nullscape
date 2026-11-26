@@ -5283,9 +5283,14 @@ function drawGrid() {
             gradient.addColorStop(0, "#0a0");
             gradient.addColorStop(1, "#ee0");
             stroke = "#ee0";
-          } else if (v < 0.55) fill = "#dd0";
-          else if (v < 0.7) fill = "#0a0";
-          else if (v < 0.85) fill = "#d00";
+          } else if (v < 0.6) {
+            gradient = ctx.createRadialGradient(fx, fy, 0, fx, fy, TILE * 0.3);
+            gradient.addColorStop(0, "#f00");
+            gradient.addColorStop(1, "#500");
+            stroke = "#a0f";
+          } else if (v < 0.7) fill = "#dd0";
+          else if (v < 0.8) fill = "#0a0";
+          else if (v < 0.9) fill = "#d00";
           else fill = "#44f";
           for (let i = 0; i < 5; i++) {
             const a = (i * Math.PI * 2) / 5;
