@@ -22,10 +22,35 @@ export function setup(host, casualMode, hardMode) {
     ellipseFX: [],
 
     deathSound: null,
+    prevMouseX: NaN,
+    prevMouseY: NaN,
+    predDirX: 1,
+    predDirY: 0,
   };
 
   function update(dt) {
     if (!Number.isFinite(mouse.x) || !Number.isFinite(mouse.y)) return;
+
+    if (Number.isFinite(state.prevMouseX)) {
+      const dxm = mouse.x - state.prevMouseX;
+      const dym = mouse.y - state.prevMouseY;
+      const len = Math.hypot(dxm, dym);
+
+      if (len > 0.001) {
+        const tx = dxm / len;
+        const ty = dym / len;
+
+        state.predDirX += (tx - state.predDirX) * Math.min(1, dt * 4);
+        state.predDirY += (ty - state.predDirY) * Math.min(1, dt * 4);
+
+        const d = Math.hypot(state.predDirX, state.predDirY) || 1;
+        state.predDirX /= d;
+        state.predDirY /= d;
+      }
+    }
+
+    state.prevMouseX = mouse.x;
+    state.prevMouseY = mouse.y;
 
     for (const lz of state.lasers) {
       lz.t += dt;
@@ -151,6 +176,7 @@ export function setup(host, casualMode, hardMode) {
           });
         }
         if (blueprintCrossBeamsActive[0]) {
+          const spacing = 200;
           const nx2 = Math.cos(ang + Math.PI / 2);
           const ny2 = Math.sin(ang + Math.PI / 2);
           const px2 = -ny2;
@@ -285,22 +311,29 @@ export function setup(host, casualMode, hardMode) {
         state.phaseT = 0;
 
         if (hardMode) {
-          const dx = mouse.x - l.cx;
-          const dy = mouse.y - l.cy;
-          const len = Math.hypot(dx, dy) || 1;
-
-          const nx = dx / len;
-          const ny = dy / len;
+          const nx = state.predDirX;
+          const ny = state.predDirY;
 
           state.lasers.push({
-            x: l.cx,
-            y: l.cy,
+            x: mouse.x,
+            y: mouse.y,
             nx,
             ny,
             t: 0,
             life: 1,
             bold: true,
           });
+          if (blueprintCrossBeamsActive[0]) {
+            state.lasers.push({
+              x: mouse.x,
+              y: mouse.y,
+              nx: -ny,
+              ny: nx,
+              t: 0,
+              life: 1,
+              bold: true,
+            });
+          }
           playSound("./ASSET/Sound/Enemies/Scrapmaw/ScrapmawLazerFire.ogg", 2);
         }
 
