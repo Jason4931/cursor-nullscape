@@ -247,6 +247,7 @@ let scorchedTime = 0;
 let scorchedTimeout = null;
 let debtAltar = null;
 let spawnedAltar = [false, false, false, false];
+let spawnedGardenBiome = false;
 let spawnedPylon = false;
 let spawnedCatalyst = false;
 let jumppadActive = false;
@@ -1764,6 +1765,20 @@ topLeftInput.addEventListener("keydown", function (event) {
       }
       topLeftInput.value = "";
     }
+    if (input === "garden") {
+      if (!spawnedGardenBiome) {
+        spawnedGardenBiome = true;
+        changePatterns("garden");
+        ROTATED_PATTERNS = PATTERNS.map((base) => {
+          const r0 = base;
+          const r1 = rotateMatrix90(r0);
+          const r2 = rotateMatrix90(r1);
+          const r3 = rotateMatrix90(r2);
+          return [r0, r1, r2, r3];
+        });
+      }
+      topLeftInput.value = "";
+    }
     if (input === "commandlist") {
       document.getElementById("spawn-input-commands").style.opacity = 1;
       topLeftInput.value = "";
@@ -2672,6 +2687,8 @@ export function isCursorOnFloor(custom) {
             wallScale = 0.5;
           } else if (t.wall[1] == 36) {
             wallScale = 0.01;
+          } else if (t.wall[1] == 76) {
+            wallScale = 0.9;
           }
         if (t.highrise[0] && t.highrise[1] == 38) {
           scorched = true;
@@ -3019,7 +3036,7 @@ function pickBiasedRotatedPattern(baseIndex, sx, sy, patternsState) {
 
     const h = pat.length;
     const w = pat[0].length;
-    const connectors = new Set([8, 9, 29, 39, 58, 59]);
+    const connectors = new Set([8, 9, 29, 39, 58, 59, 78, 79]);
 
     for (const neighbor of left) {
       const offsetY = (sy - neighbor.sy) * SUPER_TILE;
@@ -3535,6 +3552,17 @@ function ENTITY_SPAWN(
       spawnGrindrail(entityHost);
       spawnGrindrail(entityHost);
     }
+    if (actualCollectedCount >= 1500 && !spawnedGardenBiome) {
+      spawnedGardenBiome = true;
+      changePatterns("garden");
+      ROTATED_PATTERNS = PATTERNS.map((base) => {
+        const r0 = base;
+        const r1 = rotateMatrix90(r0);
+        const r2 = rotateMatrix90(r1);
+        const r3 = rotateMatrix90(r2);
+        return [r0, r1, r2, r3];
+      });
+    }
     if (actualCollectedCount >= 3500 && !spawnedPylon && !disablespawn) {
       spawnedPylon = true;
       spawnPylons(entityHost);
@@ -4001,7 +4029,15 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 55 ||
         pattern[y][x] === 56 ||
         pattern[y][x] === 58 ||
-        pattern[y][x] === 59
+        pattern[y][x] === 59 ||
+        pattern[y][x] === 71 ||
+        pattern[y][x] === 72 ||
+        pattern[y][x] === 73 ||
+        pattern[y][x] === 74 ||
+        pattern[y][x] === 75 ||
+        pattern[y][x] === 76 ||
+        pattern[y][x] === 78 ||
+        pattern[y][x] === 79
       ) {
         floorTiles.push({
           x: wx,
@@ -4020,7 +4056,8 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 6 ||
               pattern[y][x] === 36 ||
               pattern[y][x] === 66 ||
-              pattern[y][x] === 56,
+              pattern[y][x] === 56 ||
+              pattern[y][x] === 76,
             pattern[y][x],
           ],
           ice:
@@ -4049,6 +4086,15 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 56 ||
             pattern[y][x] === 58 ||
             pattern[y][x] === 59,
+          gardenBiome:
+            pattern[y][x] === 71 ||
+            pattern[y][x] === 72 ||
+            pattern[y][x] === 73 ||
+            pattern[y][x] === 74 ||
+            pattern[y][x] === 75 ||
+            pattern[y][x] === 76 ||
+            pattern[y][x] === 78 ||
+            pattern[y][x] === 79,
           deco: [
             pattern[y][x] === 1 || pattern[y][x] === 13,
             Math.random() <
@@ -4097,7 +4143,10 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 42 ||
         pattern[y][x] === 52 ||
         pattern[y][x] === 55 ||
-        pattern[y][x] === 59
+        pattern[y][x] === 59 ||
+        pattern[y][x] === 72 ||
+        pattern[y][x] === 75 ||
+        pattern[y][x] === 79
       ) {
         const r = Math.random();
         let type = "gift";
@@ -4158,7 +4207,9 @@ function placeSuper(sx, sy, pattern) {
         v === 16 ||
         v === 25 ||
         v === 54 ||
-        v === 55
+        v === 55 ||
+        v === 74 ||
+        v === 75
       ) {
         coords4or5.push({ x, y });
       }
@@ -4438,6 +4489,23 @@ function drawGrid() {
   if (showFloor) {
     const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
     const floorSet = new Set(floorTiles.map((t) => key(t.x, t.y)));
+    const gardenCornerCenter = (t, left, right, up, down) => {
+      if (t.wall[1] !== 73) return null;
+      if ((!left ? 1 : 0) + (!right ? 1 : 0) !== 1) return null;
+      if ((!up ? 1 : 0) + (!down ? 1 : 0) !== 1) return null;
+      if (!left && !up) return [t.x + TILE, t.y + TILE];
+      if (!right && !up) return [t.x, t.y + TILE];
+      if (!left && !down) return [t.x + TILE, t.y];
+      return [t.x, t.y];
+    };
+    const gardenQuarterPath = (t, center, radius) => {
+      const [cx, cy] = center;
+      const baseAngle = Math.atan2(t.y + TILE / 2 - cy, t.x + TILE / 2 - cx);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, radius, baseAngle - Math.PI / 4, baseAngle + Math.PI / 4);
+      ctx.closePath();
+    };
     for (const t of floorTiles) {
       if (
         t.x + TILE < visibleX ||
@@ -4494,17 +4562,23 @@ function drawGrid() {
         !t.collapsing[1]
       ) {
         ctx.fillStyle =
-          t.wall[0] || t.highrise[0]
+          (t.wall[0] && t.wall[1] != 76) || t.highrise[0]
             ? "#222"
             : corrupted || t.passageGoldPattern || t.deco[4]
               ? "#800"
               : "#666";
-        ctx.fillRect(
-          t.x - TILE * 0.1,
-          t.y - TILE * 0.1,
-          TILE * 1.2,
-          TILE * 1.2,
-        );
+        const gardenCorner = gardenCornerCenter(t, left, right, up, down);
+        if (gardenCorner) {
+          gardenQuarterPath(t, gardenCorner, TILE * 1.1);
+          ctx.fill();
+        } else {
+          ctx.fillRect(
+            t.x - TILE * 0.1,
+            t.y - TILE * 0.1,
+            TILE * 1.2,
+            TILE * 1.2,
+          );
+        }
       }
       if (t.ice) {
         const h = TILE / 2;
@@ -4802,7 +4876,7 @@ function drawGrid() {
         } else if (t.garden) {
           ctx.fillStyle = "#800";
           ctx.fillRect(t.x, t.y, TILE, TILE);
-        } else if (t.wall[0]) {
+        } else if (t.wall[0] && t.wall[1] != 76) {
           if (t.wall[1] == 6 || t.wall[1] == 66) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(t.x, t.y, TILE, TILE);
@@ -4902,6 +4976,39 @@ function drawGrid() {
             ctx.fillStyle = "#444";
             ctx.fillRect(t.x + h, t.y + h, h, h);
           }
+        } else if (t.gardenBiome) {
+          const h = TILE / 3;
+          const hasLeft = floorSet.has(key(t.x - TILE, t.y));
+          const hasRight = floorSet.has(key(t.x + TILE, t.y));
+          const hasUp = floorSet.has(key(t.x, t.y - TILE));
+          const hasDown = floorSet.has(key(t.x, t.y + TILE));
+          const gardenCorner = gardenCornerCenter(
+            t,
+            hasLeft,
+            hasRight,
+            hasUp,
+            hasDown,
+          );
+          ctx.fillStyle = "#f44";
+          if (gardenCorner) {
+            gardenQuarterPath(t, gardenCorner, TILE);
+            ctx.fill();
+          } else {
+            ctx.fillRect(t.x, t.y, TILE, TILE);
+          }
+
+          ctx.fillStyle = "#8004";
+          if (gardenCorner) {
+            ctx.save();
+            gardenQuarterPath(t, gardenCorner, TILE);
+            ctx.clip();
+          }
+          ctx.fillRect(t.x, t.y, h, h);
+          ctx.fillRect(t.x + h * 2, t.y, h, h);
+          ctx.fillRect(t.x, t.y + h * 2, h, h);
+          ctx.fillRect(t.x + h * 2, t.y + h * 2, h, h);
+          ctx.fillRect(t.x + h, t.y + h, h, h);
+          if (gardenCorner) ctx.restore();
         } else {
           const h = TILE / 2;
 
@@ -5449,6 +5556,12 @@ function drawGrid() {
   }
 
   if (showFloor) {
+    const tileMap = new Map(
+      floorTiles.map((tile) => [
+        `${Math.round(tile.x)},${Math.round(tile.y)}`,
+        tile,
+      ]),
+    );
     for (const t of floorTiles) {
       if (
         t.x + TILE < visibleX ||
@@ -5606,6 +5719,47 @@ function drawGrid() {
         ctx.ellipse(0, 0, TILE * 0.16, TILE * 0.08, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
+      }
+      if (t.wall[1] === 76) {
+        for (const [ox, oy, rot] of [
+          [TILE * 2, 0, 0],
+          [0, TILE * 2, Math.PI / 2],
+        ]) {
+          const other = tileMap.get(
+            `${Math.round(t.x + ox)},${Math.round(t.y + oy)}`,
+          );
+          if (!other || other.wall[1] !== 76) continue;
+          ctx.save();
+          ctx.translate(t.x + (rot ? TILE : 0), t.y);
+          if (rot) ctx.rotate(rot);
+          const w = TILE * 3;
+          const h = TILE;
+          ctx.fillStyle = "#aaa";
+          ctx.fillRect(0, h * 0.5, TILE * 0.3, h * 0.5);
+          ctx.fillRect(w - TILE * 0.3, h * 0.5, TILE * 0.3, h * 0.5);
+          ctx.fillStyle = "#888";
+          ctx.beginPath();
+          ctx.moveTo(0, h * 0.7);
+          ctx.quadraticCurveTo(w / 2, -h * 0.35, w, h * 0.7);
+          ctx.lineTo(w, h * 0.4);
+          ctx.quadraticCurveTo(w / 2, -h * 0.6, 0, h * 0.4);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = "#fff";
+          ctx.beginPath();
+          for (let i = 0; i < 8; i++) {
+            const a = (i * Math.PI) / 4 - Math.PI / 2;
+            const r = i % 2 === 0 ? TILE * 0.2 : TILE * 0.07;
+            const px = w / 2 + Math.cos(a) * r;
+            const py = -h * 0.1 + Math.sin(a) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+          break;
+        }
       }
     }
   }
@@ -6049,6 +6203,17 @@ function updateCamera() {
         lvlEl.textContent = `Lvl ${Math.floor(latestCollectedCount / (hardMode ? 100 : 50))}`;
       }
 
+      if (actualCollectedCount >= 1500 && !spawnedGardenBiome) {
+        spawnedGardenBiome = true;
+        changePatterns("garden");
+        ROTATED_PATTERNS = PATTERNS.map((base) => {
+          const r0 = base;
+          const r1 = rotateMatrix90(r0);
+          const r2 = rotateMatrix90(r1);
+          const r3 = rotateMatrix90(r2);
+          return [r0, r1, r2, r3];
+        });
+      }
       if (actualCollectedCount >= 3500 && !spawnedPylon && !disablespawn) {
         spawnedPylon = true;
         spawnPylons(entityHost);
