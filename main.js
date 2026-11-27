@@ -2688,7 +2688,7 @@ export function isCursorOnFloor(custom) {
           } else if (t.wall[1] == 36) {
             wallScale = 0.01;
           } else if (t.wall[1] == 76) {
-            wallScale = 0.9;
+            wallScale = Math.min(wallScale, 0.75);
           }
         if (t.highrise[0] && t.highrise[1] == 38) {
           scorched = true;
