@@ -5562,6 +5562,11 @@ function drawGrid() {
         tile,
       ]),
     );
+    const hasGatePair = (x, y, dx, dy) => {
+      const a = tileMap.get(`${Math.round(x)},${Math.round(y)}`);
+      const b = tileMap.get(`${Math.round(x + dx)},${Math.round(y + dy)}`);
+      return a?.wall[1] === 76 && b?.wall[1] === 76;
+    };
     for (const t of floorTiles) {
       if (
         t.x + TILE < visibleX ||
@@ -5729,34 +5734,120 @@ function drawGrid() {
             `${Math.round(t.x + ox)},${Math.round(t.y + oy)}`,
           );
           if (!other || other.wall[1] !== 76) continue;
+          const isVertical = rot !== 0;
+          const hasMate = isVertical
+            ? hasGatePair(t.x + TILE, t.y, 0, TILE * 2) ||
+              hasGatePair(t.x - TILE, t.y, 0, TILE * 2)
+            : hasGatePair(t.x, t.y + TILE, TILE * 2, 0) ||
+              hasGatePair(t.x, t.y - TILE, TILE * 2, 0);
+          const isPrimary = isVertical
+            ? hasGatePair(t.x + TILE, t.y, 0, TILE * 2)
+            : hasGatePair(t.x, t.y + TILE, TILE * 2, 0);
           ctx.save();
-          ctx.translate(t.x + (rot ? TILE : 0), t.y);
-          if (rot) ctx.rotate(rot);
-          const w = TILE * 3;
-          const h = TILE;
-          ctx.fillStyle = "#aaa";
-          ctx.fillRect(0, h * 0.5, TILE * 0.3, h * 0.5);
-          ctx.fillRect(w - TILE * 0.3, h * 0.5, TILE * 0.3, h * 0.5);
-          ctx.fillStyle = "#888";
-          ctx.beginPath();
-          ctx.moveTo(0, h * 0.7);
-          ctx.quadraticCurveTo(w / 2, -h * 0.35, w, h * 0.7);
-          ctx.lineTo(w, h * 0.4);
-          ctx.quadraticCurveTo(w / 2, -h * 0.6, 0, h * 0.4);
-          ctx.closePath();
-          ctx.fill();
-          ctx.fillStyle = "#fff";
-          ctx.beginPath();
-          for (let i = 0; i < 8; i++) {
-            const a = (i * Math.PI) / 4 - Math.PI / 2;
-            const r = i % 2 === 0 ? TILE * 0.2 : TILE * 0.07;
-            const px = w / 2 + Math.cos(a) * r;
-            const py = -h * 0.1 + Math.sin(a) * r;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
+          if (isPrimary) {
+            ctx.save();
+            const p0 = t.y + TILE + TILE * 0.7;
+            const p1 = t.y + TILE - TILE * 0.35;
+            const archY = (u) =>
+              (1 - u) ** 2 * p0 + 2 * (1 - u) * u * p1 + u ** 2 * p0;
+            const archAngle = (u) =>
+              Math.atan2(2 * (p1 - p0) * (1 - 2 * u), TILE * 3);
+            ctx.strokeStyle = "#aaa";
+            ctx.lineWidth = TILE * 0.1;
+            for (let i = 0; i < 3; i++) {
+              const u = (i + 0.5) / 3;
+              const px = isVertical
+                ? t.x + TILE
+                : t.x + TILE * 0.7 + i * TILE * 0.8;
+              const py = isVertical
+                ? t.y + TILE * 0.5 + i * TILE
+                : archY(u) - TILE * 0.6 - Math.abs(i - 1) * TILE * 0.1;
+              const s = TILE * 0.5;
+              ctx.save();
+              if (!isVertical) {
+                ctx.translate(px, py);
+                ctx.rotate(archAngle(u));
+                ctx.beginPath();
+                ctx.moveTo(-s, -s);
+                ctx.lineTo(s, s);
+                ctx.moveTo(s, -s);
+                ctx.lineTo(-s, s);
+                ctx.stroke();
+              } else {
+                ctx.beginPath();
+                ctx.moveTo(px - s, py - s);
+                ctx.lineTo(px + s, py + s);
+                ctx.moveTo(px + s, py - s);
+                ctx.lineTo(px - s, py + s);
+                ctx.stroke();
+              }
+              ctx.restore();
+            }
+            const cx = isVertical ? t.x + TILE : t.x + TILE * 1.5;
+            const cy = isVertical ? t.y + TILE * 1.5 : archY(0.5) - TILE * 0.6;
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+              const a = (i * Math.PI) / 4 - Math.PI / 2;
+              const r = i % 2 === 0 ? TILE * 0.35 : TILE * 0.12;
+              const px = cx + Math.cos(a) * r;
+              const py = cy + Math.sin(a) * r;
+              if (i === 0) ctx.moveTo(px, py);
+              else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
           }
-          ctx.closePath();
-          ctx.fill();
+          ctx.restore();
+          ctx.save();
+          if (isVertical) {
+            ctx.fillStyle = "#888";
+            ctx.fillRect(t.x + TILE * 0.35, t.y, TILE * 0.3, TILE * 3);
+            if (!hasMate) {
+              ctx.fillStyle = "#fff";
+              ctx.beginPath();
+              for (let i = 0; i < 8; i++) {
+                const a = (i * Math.PI) / 4 - Math.PI / 2;
+                const r = i % 2 === 0 ? TILE * 0.2 : TILE * 0.07;
+                const px = t.x + TILE / 2 + Math.cos(a) * r;
+                const py = t.y + TILE * 1.5 + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+              }
+              ctx.closePath();
+              ctx.fill();
+            }
+          } else {
+            ctx.translate(t.x, t.y);
+            const w = TILE * 3;
+            const h = TILE;
+            ctx.fillStyle = "#aaa";
+            ctx.fillRect(0, h * 0.5, TILE * 0.3, h * 0.5);
+            ctx.fillRect(w - TILE * 0.3, h * 0.5, TILE * 0.3, h * 0.5);
+            ctx.fillStyle = "#888";
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.7);
+            ctx.quadraticCurveTo(w / 2, -h * 0.35, w, h * 0.7);
+            ctx.lineTo(w, h * 0.4);
+            ctx.quadraticCurveTo(w / 2, -h * 0.6, 0, h * 0.4);
+            ctx.closePath();
+            ctx.fill();
+            if (!hasMate) {
+              ctx.fillStyle = "#fff";
+              ctx.beginPath();
+              for (let i = 0; i < 8; i++) {
+                const a = (i * Math.PI) / 4 - Math.PI / 2;
+                const r = i % 2 === 0 ? TILE * 0.2 : TILE * 0.07;
+                const px = w / 2 + Math.cos(a) * r;
+                const py = -h * 0.1 + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+              }
+              ctx.closePath();
+              ctx.fill();
+            }
+          }
           ctx.restore();
           break;
         }
