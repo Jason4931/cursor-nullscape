@@ -4036,6 +4036,7 @@ function placeSuper(sx, sy, pattern) {
         pattern[y][x] === 74 ||
         pattern[y][x] === 75 ||
         pattern[y][x] === 76 ||
+        pattern[y][x] === 77 ||
         pattern[y][x] === 78 ||
         pattern[y][x] === 79
       ) {
@@ -4051,7 +4052,7 @@ function placeSuper(sx, sy, pattern) {
             pattern[y][x] === 12 ||
             pattern[y][x] === 15 ||
             pattern[y][x] === 16,
-          garden: pattern[y][x] === 13,
+          garden: pattern[y][x] === 13 || pattern[y][x] === 77,
           wall: [
             pattern[y][x] === 6 ||
               pattern[y][x] === 36 ||
@@ -4490,7 +4491,7 @@ function drawGrid() {
     const key = (x, y) => `${Math.round(x)},${Math.round(y)}`;
     const floorSet = new Set(floorTiles.map((t) => key(t.x, t.y)));
     const gardenCornerCenter = (t, left, right, up, down) => {
-      if (t.wall[1] !== 73) return null;
+      if (t.wall[1] !== 73 && t.wall[1] !== 77) return null;
       if ((!left ? 1 : 0) + (!right ? 1 : 0) !== 1) return null;
       if ((!up ? 1 : 0) + (!down ? 1 : 0) !== 1) return null;
       if (!left && !up) return [t.x + TILE, t.y + TILE];
@@ -4874,8 +4875,23 @@ function drawGrid() {
           ctx.fillStyle = "#744";
           ctx.fillRect(t.x + h, t.y, h, TILE);
         } else if (t.garden) {
+          const gardenCorner =
+            t.wall[1] === 77
+              ? gardenCornerCenter(
+                  t,
+                  floorSet.has(key(t.x - TILE, t.y)),
+                  floorSet.has(key(t.x + TILE, t.y)),
+                  floorSet.has(key(t.x, t.y - TILE)),
+                  floorSet.has(key(t.x, t.y + TILE)),
+                )
+              : null;
           ctx.fillStyle = "#800";
-          ctx.fillRect(t.x, t.y, TILE, TILE);
+          if (gardenCorner) {
+            gardenQuarterPath(t, gardenCorner, TILE);
+            ctx.fill();
+          } else {
+            ctx.fillRect(t.x, t.y, TILE, TILE);
+          }
         } else if (t.wall[0] && t.wall[1] != 76) {
           if (t.wall[1] == 6 || t.wall[1] == 66) {
             ctx.fillStyle = "#aaa";
